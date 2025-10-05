@@ -13,6 +13,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+ font-family: "VGA_8x16";
+ src: local("VGA_8x16"),
+ url("./fonts/Px437_IGS_VGA_8x16.ttf") format("truetype");
+//  font-weight: bold;
+}
+
 a {
   font-weight: 500;
   color: #646cff;

@@ -1,11 +1,14 @@
 import './styles/css/App.css'
 
-import AsciiCanvas from './components/AsciiCanvas'
+import SceneCanvas from './components/SceneCanvas'
+import MainScene from './components/MainScene'
 
 function App() {
   return (
     <>
-      <AsciiCanvas/>
+      <SceneCanvas>
+        <MainScene />  
+      </SceneCanvas>
     </>
   )
 }

@@ -1,9 +1,14 @@
-import { Color, Texture, Uniform } from "three";
+import { Color, NearestFilter, RepeatWrapping, Texture, Uniform } from "three";
 import { useMemo, forwardRef } from "react";
-import { useControls } from 'leva'
+import { useControls } from "leva";
 import { BlendFunction, Effect } from "postprocessing";
 
-const newLocal = `
+import { TextureLoader } from "three";
+import { useLoader } from "@react-three/fiber";
+
+import { CanvasTexture } from "three";
+
+const fragmentShader = `
     uniform sampler2D uFontMap;
     uniform float uCharLength;
     uniform float uCharSize;
@@ -32,7 +37,6 @@ const newLocal = `
         float cIndex = floor( gray * uCharLength);
         float cIndexX = mod(cIndex, cSize.x);
         float cIndexY = floor(cIndex / cSize.x);
-        
   
         vec2 offset = vec2(cIndexX, cIndexY) / cSize;
         vec2 charUV = fract(uv * division) / cSize;  // fractional inside cell, normalized for font map cell size
@@ -45,12 +49,10 @@ const newLocal = `
         if(uColorOverride) {
             color.rgb = uColor;
         }
-
         
         outputColor = vec4(color.rgb * ascii, ascii);
     }
 `;
-const fragmentShader = newLocal;
 
 let uFontMap: Texture;
 let uCharSize: number;
@@ -59,7 +61,7 @@ let uColorOverride: boolean;
 let uColor: Color;
 
 type AsciiEffectProps = {
-    fontMap: Texture;
+    fontMap?: Texture;
     charSize?: number;
     charLength?: number;
     colorOverride?: boolean;
@@ -68,7 +70,13 @@ type AsciiEffectProps = {
 
 // Effect implementation
 class AsciiEffectImpl extends Effect {
-    constructor({ fontMap, charSize = 8, charLength = 64, colorOverride = false, color = new Color("#ffffff") }: AsciiEffectProps) {
+    constructor({
+        fontMap = null,
+        charSize = 8,
+        charLength = 64,
+        colorOverride = false,
+        color = new Color("#ffffff"),
+    }: AsciiEffectProps) {
         super("AsciiEffect", fragmentShader, {
             blendFunction: BlendFunction.NORMAL,
             uniforms: new Map<string, Uniform<any>>([
@@ -84,7 +92,7 @@ class AsciiEffectImpl extends Effect {
         uFontMap = fontMap;
         uCharLength = charLength;
         uColorOverride = colorOverride;
-        uColor = color
+        uColor = color;
     }
 
     update() {
@@ -96,21 +104,68 @@ class AsciiEffectImpl extends Effect {
     }
 }
 
+function createFontTexture(
+    width = 1024,
+    height = 1024,
+    fontSize = 128,
+    cellSize = 128
+) {
+    const size = 8;
+    const characters =
+        "@%#WMB8&$#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:         ";
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext("2d")!;
+    ctx.clearRect(0, 0, width, height);
+
+    const texture = new CanvasTexture(canvas);
+
+    ctx.font = `${fontSize}px monospace`;
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    const charactersArray = characters.split("");
+    charactersArray.forEach((character, i) => {
+        const x = (i % size) * cellSize + cellSize / 2;
+        const y = Math.floor(i / size) * cellSize + cellSize / 2;
+
+        ctx.fillStyle = "white";
+        ctx.fillText(character, x, y);
+    });
+
+    texture.needsUpdate = true;
+
+    return texture;
+}
+
 // Effect component
 export const AsciiEffect = forwardRef<AsciiEffectImpl, AsciiEffectProps>(
-    ({ fontMap, }, ref) => {
+    ({}, ref) => {
+        const fontMap = useLoader(TextureLoader, "/font-map.png");
+        // const fontMap = createFontTexture();
 
         const { charSize, charLength, colorOverride, color } = useControls({
-            charSize: { value: 8, min: 1, max: 20, step: 1 },
+            charSize: { value: 12, min: 1, max: 20, step: 1 },
             charLength: { value: 64, min: 2, max: 128, step: 1 },
             colorOverride: false,
-            color: { value: "#ffffff" }
+            color: { value: "#ffffff" },
         });
 
         const colorObj = useMemo(() => new Color(color), [color]);
 
         const effect = useMemo(
-            () => new AsciiEffectImpl({ fontMap, charSize, charLength, colorOverride, color: colorObj }),
+            () =>
+                new AsciiEffectImpl({
+                    fontMap,
+                    charSize,
+                    charLength,
+                    colorOverride,
+                    color: colorObj,
+                }),
             [fontMap, charSize, charLength, colorOverride, colorObj]
         );
         return <primitive ref={ref} object={effect} dispose={null} />;
