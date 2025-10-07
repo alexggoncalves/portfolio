@@ -12,9 +12,10 @@ function RotatingBox() {
     });
 
     return (
-        <mesh ref={ref}>
+        <mesh ref={ref} position={[-3, 0, 0]} receiveShadow>
+            
             <boxGeometry args={[2, 2, 2]} />
-            <meshStandardMaterial color="green" />
+            <meshLambertMaterial  color={"green"}/>
         </mesh>
     );
 }
@@ -23,14 +24,14 @@ function MainScene() {
     return (
         <group>
             {/* Colors and background */}
-            {/* <color attach="background" args={["black"]} /> */}
-            <hemisphereLight intensity={4} />
+            
+            <hemisphereLight intensity={2} />
             <spotLight
                 decay={0}
                 position={[10, 20, 10]}
                 angle={0.6}
                 penumbra={1}
-                intensity={4}
+                intensity={5}
                 castShadow
                 shadow-mapSize={1024}
             />
@@ -40,12 +41,12 @@ function MainScene() {
             <RotatingBox />
             <Image
                 url="/cat.jpg"
-                rotation={[0, -Math.PI / 4, 0]}
-                position={[2, 0, 1.5]}
-                scale={6}
+                rotation={[0, 0, 0]}
+                position={[4, 0, 1.5]}
+                scale={3}
             />
             <mesh
-                position={[-2, 0, -1.5]}
+                position={[0, 0, 1]}
                 receiveShadow
                 rotation={[-Math.PI / 2, 0, 0]}
             >

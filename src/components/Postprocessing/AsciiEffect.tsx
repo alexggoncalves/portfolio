@@ -1,15 +1,22 @@
-import { Color, NearestFilter, RepeatWrapping, Texture, Uniform } from "three";
-import { useMemo, forwardRef } from "react";
+import {
+    Color,
+    NearestFilter,
+    RepeatWrapping,
+    Texture,
+    Uniform,
+    CanvasTexture,
+    ClampToEdgeWrapping,
+} from "three";
+import { useMemo, forwardRef, useEffect } from "react";
 import { useControls } from "leva";
 import { BlendFunction, Effect } from "postprocessing";
 
 import { TextureLoader } from "three";
 import { useLoader } from "@react-three/fiber";
-
-import { CanvasTexture } from "three";
+import useAsciiStore from "../../stores/asciiStore";
 
 const fragmentShader = `
-    uniform sampler2D uFontMap;
+    uniform sampler2D uFontAtlas;
     uniform float uCharLength;
     uniform float uCharSize;
     uniform bool uColorOverride;
@@ -20,48 +27,54 @@ const fragmentShader = `
     }
 
     void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
-        vec2 cSize = vec2(8.,8.);                   // Size of each character in the font map
-        float cLength = cSize.x * cSize.y;          // Total number of characters in the font map
+        vec2 atlasGridSize = vec2(10.,10.);                        // Size of the atlas grid
+        float cLength = atlasGridSize.x * atlasGridSize.y;          // Total number of characters in the font atlas
 
         vec2 division = resolution / uCharSize;     // Number of characters that fit on the screen (horizontally and vertically)
-        vec2 d = 1. / division;                        // Size of each character on the screen (in UV coordinates)
+        vec2 d = uCharSize / resolution;            // Size of each character on the screen (in UV coordinates)
 
         vec2 pixelizationUv = d * (floor(uv / d) + 0.5);
 
         vec4 color = texture(inputBuffer, pixelizationUv);
 
         // Convert to grayscale (brightness)
-        // Find the character in the font map that corresponds to this brightness
         float gray = grayscale(color.rgb);
+        if (color.a == 0.0) discard;
     
-        float cIndex = floor( gray * uCharLength);
-        float cIndexX = mod(cIndex, cSize.x);
-        float cIndexY = floor(cIndex / cSize.x);
+        // Find the character in the font map that corresponds to the brightness
+        float cIndex = floor(gray * (uCharLength - 1.0));
+        float cIndexX = mod(cIndex, atlasGridSize.x);
+        float cIndexY = floor(cIndex / atlasGridSize.x);
   
-        vec2 offset = vec2(cIndexX, cIndexY) / cSize;
-        vec2 charUV = fract(uv * division) / cSize;  // fractional inside cell, normalized for font map cell size
-        float ascii = texture(uFontMap, charUV + offset).a;
+        vec2 offset = vec2(cIndexX, cIndexY) / atlasGridSize;
+
+
+        vec2 charCellUV = fract(uv * division);          // correct fractional position inside the cell [0..1)
+        vec2 cellSize = 1.0 / atlasGridSize;
+        vec2 sampleUV = offset + charCellUV * cellSize;  // final UV inside the font atlas
         
-        if(color.a == 0.) {
-            ascii = 0.;
-        }
+        
+        float ascii =  texture(uFontAtlas, sampleUV).r;
+
 
         if(uColorOverride) {
-            color.rgb = uColor;
+            color.rgb = gray * uColor;
         }
+
+        float alpha = ascii * color.a;
         
-        outputColor = vec4(color.rgb * ascii, ascii);
+        outputColor = vec4(color.rgb * ascii, alpha);
     }
 `;
 
-let uFontMap: Texture;
+let uFontAtlas: Texture;
 let uCharSize: number;
 let uCharLength: number;
 let uColorOverride: boolean;
 let uColor: Color;
 
 type AsciiEffectProps = {
-    fontMap?: Texture;
+    fontAtlas: Texture;
     charSize?: number;
     charLength?: number;
     colorOverride?: boolean;
@@ -71,8 +84,8 @@ type AsciiEffectProps = {
 // Effect implementation
 class AsciiEffectImpl extends Effect {
     constructor({
-        fontMap = null,
-        charSize = 8,
+        fontAtlas,
+        charSize = 16,
         charLength = 64,
         colorOverride = false,
         color = new Color("#ffffff"),
@@ -81,7 +94,7 @@ class AsciiEffectImpl extends Effect {
             blendFunction: BlendFunction.NORMAL,
             uniforms: new Map<string, Uniform<any>>([
                 ["uCharSize", new Uniform(charSize)],
-                ["uFontMap", new Uniform(fontMap)],
+                ["uFontAtlas", new Uniform(fontAtlas)],
                 ["uCharLength", new Uniform(charLength)],
                 ["uColorOverride", new Uniform(colorOverride)],
                 ["uColor", new Uniform(color)],
@@ -89,14 +102,14 @@ class AsciiEffectImpl extends Effect {
         });
 
         uCharSize = charSize;
-        uFontMap = fontMap;
+        uFontAtlas = fontAtlas;
         uCharLength = charLength;
         uColorOverride = colorOverride;
         uColor = color;
     }
 
     update() {
-        this.uniforms.get("uFontMap")!.value = uFontMap;
+        this.uniforms.get("uFontAtlas")!.value = uFontAtlas;
         this.uniforms.get("uCharSize")!.value = uCharSize;
         this.uniforms.get("uCharLength")!.value = uCharLength;
         this.uniforms.get("uColorOverride")!.value = uColorOverride;
@@ -104,69 +117,36 @@ class AsciiEffectImpl extends Effect {
     }
 }
 
-function createFontTexture(
-    width = 1024,
-    height = 1024,
-    fontSize = 128,
-    cellSize = 128
-) {
-    const size = 8;
-    const characters =
-        "@%#WMB8&$#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/|()1{}[]?-_+~<>i!lI;:         ";
-
-    const canvas = document.createElement("canvas");
-    canvas.width = width;
-    canvas.height = height;
-
-    const ctx = canvas.getContext("2d")!;
-    ctx.clearRect(0, 0, width, height);
-
-    const texture = new CanvasTexture(canvas);
-
-    ctx.font = `${fontSize}px monospace`;
-    ctx.fillStyle = "white";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    const charactersArray = characters.split("");
-    charactersArray.forEach((character, i) => {
-        const x = (i % size) * cellSize + cellSize / 2;
-        const y = Math.floor(i / size) * cellSize + cellSize / 2;
-
-        ctx.fillStyle = "white";
-        ctx.fillText(character, x, y);
-    });
-
-    texture.needsUpdate = true;
-
-    return texture;
-}
-
 // Effect component
-export const AsciiEffect = forwardRef<AsciiEffectImpl, AsciiEffectProps>(
-    ({}, ref) => {
-        const fontMap = useLoader(TextureLoader, "/font-map.png");
-        // const fontMap = createFontTexture();
+export const AsciiEffect = forwardRef(
+    ({ fontAtlasSrc, charSize }: { fontAtlasSrc: string, charSize: number }, ref) => {
+        const fontAtlas = useLoader(TextureLoader, fontAtlasSrc);
 
-        const { charSize, charLength, colorOverride, color } = useControls({
-            charSize: { value: 12, min: 1, max: 20, step: 1 },
-            charLength: { value: 64, min: 2, max: 128, step: 1 },
+        const {setCharSize} = useAsciiStore()
+
+        const { cSize, charLength, colorOverride, color } = useControls({
+            cSize: { value: charSize, min: 1, max: 50, step: 2 },
+            charLength: { value: 100, min: 2, max: 128, step: 1 },
             colorOverride: false,
             color: { value: "#ffffff" },
         });
 
         const colorObj = useMemo(() => new Color(color), [color]);
 
+        useEffect(()=>{
+           setCharSize (cSize)
+        },[cSize])
+
         const effect = useMemo(
             () =>
                 new AsciiEffectImpl({
-                    fontMap,
+                    fontAtlas,
                     charSize,
                     charLength,
                     colorOverride,
                     color: colorObj,
                 }),
-            [fontMap, charSize, charLength, colorOverride, colorObj]
+            [fontAtlas, cSize, charLength, colorOverride, colorObj]
         );
         return <primitive ref={ref} object={effect} dispose={null} />;
     }
