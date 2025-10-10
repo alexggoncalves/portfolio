@@ -1,45 +1,38 @@
-import { CanvasTexture, NearestFilter } from "three";
-import { useMemo } from "react";
-import { useThree } from "@react-three/fiber";
+import { CanvasTexture, Color, NearestFilter, Texture, Vector2 } from "three";
+import { useEffect, useRef, useState } from "react";
+import { useThree, useFrame } from "@react-three/fiber";
+
 import useAsciiStore from "../stores/asciiStore";
-import type { element } from "three/tsl";
+
+// import elements from "./../assets/asciiElements.json";
+import { ASCIIBlock, type ASCIIElement } from "./ASCIIElement";
+import Color4 from "three/src/renderers/common/Color4.js";
+import { premultiplyAlpha } from "three/tsl";
 
 type AsciiGlyphFieldProps = {
-    charSize: number;
+    charSize: Vector2;
 };
 
 function AsciiGlyphField({ charSize }: AsciiGlyphFieldProps) {
-    const { viewport, size, camera } = useThree();
+    const { viewport, size } = useThree();
+    const { uiTexture, backgroundTexture, setUI, setBackground } =
+        useAsciiStore();
+        
+    const uiTexRef = useRef<Texture>(null);
+    const uiContextRef = useRef<CanvasRenderingContext2D>(null);
+    const backgroundTexRef = useRef<Texture>(null);
+    const backgroundContextRef = useRef<CanvasRenderingContext2D>(null);
 
-    const { width, height } = size;
-
-    const { asciiSequence } = useAsciiStore();
-
-    // console.log(asciiSequence)
-
-    const brightnessMap = useMemo(() => {
-        const asciiArray = asciiSequence.split("");
-        const map = new Map<string, number>();
-
-        asciiArray.forEach((char, index) => {
-            const mappedBrightness = index / (asciiArray.length - 1);
-            map.set(char, mappedBrightness);
-        });
-
-        console.log(map);
-
-        return map;
-    }, [asciiSequence]);
+    const elements = useRef<ASCIIElement[]>([]);
 
     function createTexture(width: number, height: number) {
         const canvas = document.createElement("canvas");
-        canvas.width = (width / charSize) * viewport.dpr;
-        canvas.height = (height / charSize) * viewport.dpr;
+        canvas.width = width * viewport.dpr;
+        canvas.height = height * viewport.dpr;
 
-        const ctx = canvas.getContext("2d")!;
-        ctx.clearRect(0, 0, width, height);
-
-        drawFrame(ctx);
+        const ctx = canvas.getContext("2d", { alpha: true})!;
+        ctx.imageSmoothingEnabled = true;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         const texture = new CanvasTexture(canvas);
 
@@ -48,40 +41,71 @@ function AsciiGlyphField({ charSize }: AsciiGlyphFieldProps) {
         texture.generateMipmaps = false;
         texture.needsUpdate = true;
 
-        return texture;
+        return { texture, ctx };
     }
 
-    const drawFrame = (ctx: CanvasRenderingContext2D) => {
-        ctx.fillStyle = "white";
-        ctx.fillRect(1, 1, ctx.canvas.width - 2, 1);
-        ctx.fillRect(1, 1, 1, ctx.canvas.height - 2);
-        ctx.fillRect(ctx.canvas.width - 2, 1, 1, ctx.canvas.height - 2);
-        ctx.fillRect(1, ctx.canvas.height - 2, ctx.canvas.width - 2, 1);
+    useFrame(() => {
+        if (!uiTexture || !backgroundTexture) return;
 
-        ctx.beginPath();
-        ctx.ellipse(20, 20, 10, 10, 0, 0, 2 * Math.PI); // x, y, radiusX, radiusY, rotation, startAngle, endAngle
-        ctx.fill();
-    };
+        if (uiContextRef.current && backgroundContextRef.current) {
+            uiContextRef.current.clearRect(0, 0, size.width / charSize.x, size.height / charSize.y);
+            backgroundContextRef.current.clearRect(0, 0, size.width, size.height);
 
-    const texture = useMemo(
-        () => createTexture(size.width, size.height),
-        [size, charSize]
-    );
+            elements.current.forEach((element) => {
+                element.draw(uiContextRef.current!,backgroundContextRef.current!);
+            });
+        }
 
-    // compute how large the plane must be at z=0 to cover the screen from this camera
-    const z = 0;
-    const distance = camera.position.z - z;
-    const fovInRad = (45 * Math.PI) / 180;
+        uiTexture.needsUpdate = true;
+        backgroundTexture.needsUpdate = true;
+    });
 
-    const visibleHeight = 2 * Math.tan(fovInRad / 2) * distance;
-    const visibleWidth = visibleHeight * viewport.aspect;
+    useEffect(() => {
+        const uiTex = createTexture(size.width / charSize.x, size.height / charSize.y);
+        const backgroundTex = createTexture(size.width, size.height);
 
-    return (
-        <mesh position={[0, 0, z]}>
-            <planeGeometry args={[visibleWidth, visibleHeight]} />
-            <meshBasicMaterial map={texture} transparent={true} />
-        </mesh>
-    );
+        setUI(uiTex.texture, uiTex.ctx);
+        setBackground(backgroundTex.texture, backgroundTex.ctx);
+
+        uiTexRef.current = uiTex.texture;
+        uiContextRef.current = uiTex.ctx;
+        backgroundTexRef.current = backgroundTex.texture;
+        backgroundContextRef.current = backgroundTex.ctx;
+
+        const test = `
+    :::     :::        :::::::::: :::    ::: 
+  :+: :+:   :+:        :+:        :+:    :+: 
+ +:+   +:+  +:+        +:+         +:+  +:+  
++#++:++#++: +#+        +#++:++#     +#++:+   
++#+     +#+ +#+        +#+         +#+  +#+  
+#+#     #+# #+#        #+#        #+#    #+# 
+###     ### ########## ########## ###    ### `;
+
+const test2 = ` Ola, sou a patricia `;
+
+        elements.current.push(
+            new ASCIIBlock(
+                test,
+                new Vector2(5, 5),
+                new Vector2(0, 0),
+                new Color("white"),
+                new Color4(0,0.4,0.4,1)
+            )
+        );
+
+        elements.current.push(
+            new ASCIIBlock(
+                test2,
+                new Vector2(5, 20),
+                new Vector2(0, 0),
+                new Color("white"),
+                new Color4(1,0.3,0.4,1)
+            )
+        );
+        
+    }, [size, charSize]);
+
+    return null;
 }
 
 export default AsciiGlyphField;

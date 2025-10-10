@@ -7,18 +7,25 @@ import { useEffect, useState } from "react";
 
 import useAsciiStore from "../stores/asciiStore";
 
-function useGridCanvasSize(charSize: number) {
+import { Perf } from 'r3f-perf'
+
+import FontBrightnessSorter from "./Brightness"
+import type { Vector2 } from "three";
+
+
+function useGridCanvasSize(charSize: Vector2) {
     const [size, setSize] = useState({ width: 0, height: 0 });
+    
 
     useEffect(() => {
         function updateSize() {
             setSize({
                 width:
-                    Math.floor(window.innerWidth / charSize) * charSize -
-                    2 * charSize,
+                    Math.floor(window.innerWidth / charSize.x) * charSize.x +
+                    2 * charSize.x,
                 height:
-                    Math.floor(window.innerHeight / charSize) * charSize -
-                    2 * charSize,
+                    Math.floor(window.innerHeight / charSize.y) * charSize.y +
+                    2 * charSize.y,
             });
         }
 
@@ -41,23 +48,27 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
     if (width === 0 || height === 0) return null;
     return (
         <div className="canvas-container">
+             {/* <FontBrightnessSorter/> */}
             <Canvas
                 shadows
-                dpr={2}
+                dpr={[1,2]}
                 camera={{ position: [0, 0, 10], fov: 45, near: 0.01, far: 20 }}
                 gl={{
                     antialias: true,
                     alpha: true,
                     powerPreference: "high-performance",
                 }}
-                // flat
+                flat
                 style={{
                     width,
                     height,
                     overflow: "hidden"
                 }}
             >
+                {/* <Perf position="top-left" /> */}
+
                 {children}
+               
                 <AsciiGlyphField charSize={charSize} />
                 <PostProcessing />
             </Canvas>
@@ -66,3 +77,4 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
 }
 
 export default SceneCanvas;
+

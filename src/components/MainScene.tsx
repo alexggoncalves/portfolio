@@ -15,7 +15,7 @@ function RotatingBox() {
         <mesh ref={ref} position={[-3, 0, 0]} receiveShadow>
             
             <boxGeometry args={[2, 2, 2]} />
-            <meshLambertMaterial  color={"green"}/>
+            <meshStandardMaterial color={"green"}/>
         </mesh>
     );
 }
@@ -24,7 +24,7 @@ function MainScene() {
     return (
         <group>
             {/* Colors and background */}
-            
+            /
             <hemisphereLight intensity={2} />
             <spotLight
                 decay={0}
