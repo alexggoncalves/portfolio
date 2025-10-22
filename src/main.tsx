@@ -2,11 +2,28 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './styles/css/index.css'
 import App from './App.tsx'
+import ReactDOM from "react-dom/client";
 
-import '/fonts/Px437_IGS_VGA_8x16.ttf'
+import { createBrowserRouter } from "react-router";
+import { RouterProvider } from "react-router/dom";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <App></App>,
+    children:[
+      
+    ]
+  },
+  {
+    path: "/mobile",
+    element: <h1>under construction</h1>
+  }
+]);
+
+
+const root = document.getElementById("root");
+
+ReactDOM.createRoot(root!).render(
+  <RouterProvider router={router} />,
+);

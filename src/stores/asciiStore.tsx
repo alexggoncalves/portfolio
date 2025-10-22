@@ -6,6 +6,9 @@ type ASCIIState = {
     atlasGridSize: Vector2
     asciiSequence: string
     fontAtlas: string
+    pixelRatio: number
+    canvasOffset: Vector2
+
 
     uiTexture: CanvasTexture | null
     uiContext: CanvasRenderingContext2D | null
@@ -14,23 +17,26 @@ type ASCIIState = {
 
     setUI:(uiTexture: CanvasTexture, uiContext: CanvasRenderingContext2D ) => void
     setBackground:(backgroundTexture: CanvasTexture, backgroundContext: CanvasRenderingContext2D ) => void
+    setCanvasOffset:(left:number,top:number) => void
 }
 
 const useAsciiStore = create<ASCIIState>((set) => ({
     charSize: new Vector2(16,16),
-    atlasGridSize: new Vector2(10,10),
-    fontAtlas: "/fontAtlas-10x10-128px_aa.png",
-    asciiSequence: '       .`,:’;_”-!il^Ir1v\\jft*~|LJc/?xT+()7Y<>nuz=y{}oFskVahe[]4CX23AbdpqUZwKPESHG5O0gD69mNQR8B&%MW#$',
-    
+    atlasGridSize: new Vector2(16,9),
+    pixelRatio: 1,
+    canvasOffset: new Vector2(0,0),
+
+    fontAtlas: "/font_atlas/fontAtlas-ibmplex-16x9(16-16).png",
+    asciiSequence: '       \`·.-\',_:;"~°º!¡ª÷+=^|)<>(\\/L«≈»v*c[¿?T±rxi≤≥zuìí]t√l7Y{nJ}IFjyîsç1oúùeπaCµ24ZhVfûk3P¢òóE£w95èpXébàáS6mAUGÇqôdH#KΩêÉOâD&¥%R0Æ8NBMg@QW$░▒▓█',
     uiTexture: null,
     uiContext: null,
     backgroundTexture: null,
     backgroundContext: null,
 
     setUI:(uiTexture: CanvasTexture, uiContext: CanvasRenderingContext2D ) => set({uiTexture: uiTexture,uiContext: uiContext }),
-    setBackground:(backgroundTexture: CanvasTexture, backgroundContext: CanvasRenderingContext2D ) => set({backgroundTexture: backgroundTexture, backgroundContext: backgroundContext })
-
-    
+    setBackground:(backgroundTexture: CanvasTexture, backgroundContext: CanvasRenderingContext2D ) => set({backgroundTexture: backgroundTexture, backgroundContext: backgroundContext }),
+    setPixelRatio:(pixelRatio: number) => set({pixelRatio: pixelRatio }),
+    setCanvasOffset:(left:number,top:number) => set({canvasOffset:new Vector2(left,top)})
 }));
 
 export default useAsciiStore

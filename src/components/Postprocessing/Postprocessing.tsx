@@ -29,27 +29,28 @@ function Postprocessing() {
 
                 ></AsciiEffect>
 
-                {/* <Glitch
-                    delay={new Vector2(3.5, 10)} // min and max glitch delay
-                    duration={new Vector2(0.2, 0.3)} // min and max glitch duration
-                    strength={new Vector2(0.02, 0.03)} // min and max glitch strength
-                    chromaticAberrationOffset={new Vector2(0.5, 0.6)} // min and max chromatic aberration offset
-                    mode={GlitchMode.SPORADIC} // glitch mode
-                /> */}
+                
                 {/* <Bloom
                     luminanceThreshold={0.9}
                     luminanceSmoothing={2}
                     height={400}
                 /> */}
-                {/* <ChromaticAberration offset={[0.0002, 0.0002]} />
+                <ChromaticAberration offset={[0, 0]} />
                 <LensDistortion
-                    distortion={new Vector2(0.01, 0.01)}
+                    distortion={new Vector2(0.01, 0.03)}
                     principalPoint={new Vector2(0, 0)}
                     focalLength={new Vector2(1, 1)}
                     skew={0}
 
-                /> */}
-                {/* <Noise opacity={0.15} /> */}
+                />
+                <Noise opacity={0.05} />
+                <Glitch
+                    delay={new Vector2(3.5, 10)} // min and max glitch delay
+                    duration={new Vector2(0.2, 0.5)} // min and max glitch duration
+                    strength={new Vector2(0.02, 0.03)} // min and max glitch strength
+                    chromaticAberrationOffset={new Vector2(0.5, 0.6)} // min and max chromatic aberration offset
+                    mode={GlitchMode.SPORADIC} // glitch mode
+                />
             </EffectComposer>
         </>
     );

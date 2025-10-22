@@ -12,7 +12,7 @@ function RotatingBox() {
     });
 
     return (
-        <mesh ref={ref} position={[-3, 0, 0]} receiveShadow>
+        <mesh ref={ref} position={[4, 0, 1.5]} receiveShadow>
             
             <boxGeometry args={[2, 2, 2]} />
             <meshStandardMaterial color={"green"}/>
@@ -39,20 +39,20 @@ function MainScene() {
             {/* Objects */}
 
             <RotatingBox />
-            <Image
-                url="/cat.jpg"
+            {/* <Image
+                url="/images/cat.jpg"
                 rotation={[0, 0, 0]}
                 position={[4, 0, 1.5]}
                 scale={3}
-            />
-            <mesh
+            /> */}
+            {/* <mesh
                 position={[0, 0, 1]}
                 receiveShadow
                 rotation={[-Math.PI / 2, 0, 0]}
             >
                 <sphereGeometry args={[0.8, 24, 24]} />
                 <meshPhongMaterial color="royalblue" />
-            </mesh>
+            </mesh> */}
         </group>
     );
 }
