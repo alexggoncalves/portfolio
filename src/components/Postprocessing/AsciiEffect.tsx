@@ -29,8 +29,12 @@ const fragmentShader = `
         vec2 pixelizationUv = d * (floor(uv / d) + 0.5);
 
         vec4 color = texture(inputBuffer, pixelizationUv);
+
         vec4 uiColor = texture(uUITexture,pixelizationUv);
+        uiColor.a = pow(uiColor.a, 0.99); // Correct gamma (???)
+        
         vec4 backgroundColor = texture(uBackgroundTexture, uv);
+        backgroundColor.rgb = pow(backgroundColor.rgb, vec3(1.6)); // Correct gamma
 
         // Convert to grayscale (brightness)
         float gray = grayscale(color.rgb);
@@ -70,6 +74,7 @@ const fragmentShader = `
             if (backgroundColor.a > 0.) {
                 vec3 bgMix = mix(color.rgb * ascii, backgroundColor.rgb, backgroundColor.a);
                 finalColor = mix(bgMix, color.rgb, ascii);
+                // finalColor = backgroundColor.rgb;
                 alpha = backgroundColor.a;
             } else {
                 finalColor = color.rgb * ascii;

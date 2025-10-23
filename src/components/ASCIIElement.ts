@@ -7,7 +7,7 @@ const createBrightnessMap = (asciiSequence: string) => {
     const map = new Map<string, number>();
 
     asciiArray.forEach((char, index) => {
-        const mappedBrightness = index / (asciiArray.length - 1.9);
+        const mappedBrightness = index / (asciiArray.length - 1);
         map.set(char, mappedBrightness);
     });
 
@@ -25,63 +25,89 @@ const charSize = useAsciiStore.getState().charSize;
 ///////////////////////////////////////////
 
 export class ASCIIElement {
-    position: Vector2;
-    size: Vector2 = new Vector2(1, 1);
+    position: Vector2; // Position in relation to ascii grid
+    size: Vector2 = new Vector2(1, 1); // Size in relation to ascii grid
+    horizontalAlign: "left" | "center" | "right" = "left"; // Horizontal alignment
+    verticalAlign: "top" | "middle" | "bottom" = "top"; // Vertical alignment
+
+    // Colors
     color: Color = new Color("white");
     backgroundColor: Color4 = new Color4("transparent");
-    alignment: string = "left";
     opacity: number = 1.0;
 
     //Behaviour flags
     interactive: boolean = false;
     animated: boolean = false;
-
     needsUpdate: boolean = false;
 
     constructor(
         position: Vector2,
         color?: Color,
-        backgroundColor?: Color4
-        // alignment: "left"
+        backgroundColor?: Color4,
+        horizontalAlign?: "left" | "center" | "right",
+        verticalAlign?: "top" | "middle" | "bottom"
     ) {
         this.position = position;
         if (color) this.color = color;
         if (backgroundColor) this.backgroundColor = backgroundColor;
-
-        // this.alignment = alignment;
+        if (horizontalAlign) this.horizontalAlign = horizontalAlign;
+        if (verticalAlign) this.verticalAlign = verticalAlign;
     }
 
-    setSize(text: string): void {
-        const lines = (text.match(/\n/g) || "").length + 1;
-        const maxlength = Math.max(
-            ...text.split("\n").map((line) => line.length)
-        );
-        this.size.x = maxlength;
-        this.size.y = lines;
+    setSize(text: string): void;
+    setSize(x: number, y: number): void;
+
+    // Calculate ascii block size ([x]: max line lenght | [y]: number of lines)
+    setSize(arg1: string | number, arg2?: number): void {
+        if (typeof arg1 === "string") {
+            const lines = (arg1.match(/\n/g) || "").length + 1;
+            const maxlength = Math.max(
+                ...arg1.split("\n").map((line) => line.length)
+            );
+            this.size.x = maxlength;
+            this.size.y = lines;
+        } else {
+            this.size.x = arg1;
+            if (arg2) this.size.y = arg2;
+        }
     }
 
-    draw(
-        _ui: CanvasRenderingContext2D,
-        _background: CanvasRenderingContext2D
-    ): void {}
+    // Apply horizontal and vertical alignment
+    applyAlignment() {
+        const uiResolution = useAsciiStore.getState().uiResolution;
+        const offset = new Vector2(0, 0);
 
-    update(_delta?: number, _mousePos?: Vector2, _mouseDown?: boolean): void {}
+        if (this.horizontalAlign === "right") {
+            offset.x = uiResolution.x - this.size.x;
+        } else if (this.horizontalAlign === "center") {
+            offset.x = (uiResolution.x - this.size.x) / 2;
+        }
 
+        if (this.verticalAlign === "bottom") {
+            offset.y = uiResolution.y - this.size.y;
+        } else if (this.verticalAlign === "middle") {
+            offset.y = (uiResolution.y - this.size.y) / 2;
+        }
+
+        this.position.x += offset.x;
+        this.position.y += offset.y;
+    }
+
+    // Paint pixel on ui canvas
     drawPixel(
         x: number,
         y: number,
         color: Color4,
-        context: CanvasRenderingContext2D
+        ui: CanvasRenderingContext2D
     ): void {
-        // Set ui color
-        context.fillStyle = `rgba(${color.r * 255},
+        // Set color
+        ui.fillStyle = `rgba(${color.r * 255},
         ${color.g * 255},
         ${color.b * 255},
         ${color.a * this.opacity})`;
 
         // Clear and draw new character pixel
-        context.clearRect(x, y, 1, 1);
-        context.fillRect(x, y, 1, 1);
+        ui.fillRect(x, y, 1, 1);
     }
 
     drawBlock(
@@ -151,7 +177,50 @@ export class ASCIIElement {
         context.fillRect(x * w, y * h, w, h);
     }
 
+    draw(
+        _ui: CanvasRenderingContext2D,
+        _background: CanvasRenderingContext2D
+    ): void {}
+
+    update(_delta?: number, _mousePos?: Vector2, _mouseDown?: boolean): void {}
+
     destroy(): void {}
+}
+
+///////////////////////////////////////////
+// Ascii Block Class
+///////////////////////////////////////////
+
+export class ASCIIBlock extends ASCIIElement {
+    text: string;
+
+    constructor(
+        text: string,
+        position: Vector2,
+        color: Color,
+        backgroundColor: Color4,
+        horizontalAlign?: "left" | "center" | "right",
+        verticalAlign?: "top" | "middle" | "bottom"
+    ) {
+        super(position, color, backgroundColor, horizontalAlign, verticalAlign);
+
+        this.text = text;
+        this.setSize(this.text);
+        this.applyAlignment();
+    }
+
+    draw(
+        ui: CanvasRenderingContext2D,
+        background: CanvasRenderingContext2D
+    ): void {
+        this.drawBlock(this.text, ui, background);
+    }
+
+    update(): void {}
+
+    fadeIn(): void {}
+
+    fadeOut(): void {}
 }
 
 ///////////////////////////////////////////
@@ -161,50 +230,58 @@ export class ASCIIElement {
 export class ASCIIButton extends ASCIIElement {
     text: string = "";
     domButton: HTMLButtonElement;
-    callback?: () => void;
+    callback: () => void;
 
     // flags
     isMouseOver: boolean = false;
 
     constructor(
         text: string,
+        callback: () => void,
         position: Vector2,
         color: Color,
         backgroundColor: Color4,
-        callback?: () => void
-        // alignment?: ASCIIElementAlignment
+
+        horizontalAlign?: "left" | "center" | "right",
+        verticalAlign?: "top" | "middle" | "bottom"
     ) {
-        super(position, color, backgroundColor);
+        super(position, color, backgroundColor, horizontalAlign, verticalAlign);
 
         this.text = text;
         this.interactive = true;
         this.callback = callback;
 
         this.setSize(this.text);
+        this.applyAlignment();
 
+        // Create html button
+        this.domButton = document.createElement("button");
+        this.createHTML();
+        document.body.appendChild(this.domButton);
+    }
+
+    createHTML(): void {
         const canvasOffset = useAsciiStore.getState().canvasOffset;
+        const pixelRatio = useAsciiStore.getState().pixelRatio;
 
         // Create invisible html button
-        this.domButton = document.createElement("button");
         this.domButton.classList.add("asciiButton");
         this.domButton.textContent = this.text;
         this.domButton.style.left = `${
-            this.position.x * (charSize.x / window.devicePixelRatio)
+            this.position.x * (charSize.x / pixelRatio)
         }px`;
-        console.log(" aa", canvasOffset);
         this.domButton.style.top = `${
-            this.position.y * (charSize.y / window.devicePixelRatio) -
-            canvasOffset.y
+            this.position.y * (charSize.y / pixelRatio) - canvasOffset.y
         }px`;
         this.domButton.style.width = `${
-            this.size.x * (charSize.y / devicePixelRatio)
+            this.size.x * (charSize.y / pixelRatio)
         }px`;
         this.domButton.style.height = `${
-            this.size.y * (charSize.y / devicePixelRatio)
+            this.size.y * (charSize.y / pixelRatio)
         }px`;
         this.domButton.style.cursor = "pointer";
-        document.body.appendChild(this.domButton);
 
+        // Set mouse event listeners
         this.domButton.addEventListener("click", () => this.onClick());
         this.domButton.addEventListener("mouseenter", () =>
             this.onMouseEnter()
@@ -219,12 +296,14 @@ export class ASCIIButton extends ASCIIElement {
         color: Color4,
         context: CanvasRenderingContext2D
     ): void {
+
         const x = this.position.x * charSize.x;
         const y = this.position.y * charSize.y;
         const w = this.size.x * charSize.x;
         const h = this.size.y * charSize.y;
+        
 
-        // Set ui color
+        // Set color and stroke
         context.strokeStyle = `rgba(${color.r * 255},
         ${color.g * 255},
         ${color.b * 255},
@@ -232,20 +311,8 @@ export class ASCIIButton extends ASCIIElement {
 
         context.lineWidth = strokeWeight;
 
+        // Draw rectangle
         context.strokeRect(x, y, w, h);
-    }
-
-    onClick(): void {
-        console.log("click");
-
-        if (this.callback) this.callback();
-    }
-
-    onMouseEnter(): void {
-        this.isMouseOver = true;
-    }
-    onMouseLeave(): void {
-        this.isMouseOver = false;
     }
 
     draw(
@@ -261,6 +328,18 @@ export class ASCIIButton extends ASCIIElement {
 
     update(_delta?: number, _mousePos?: Vector2, _mouseDown?: boolean): void {}
 
+    onClick(): void {
+        if (this.callback) this.callback();
+    }
+
+    onMouseEnter(): void {
+        this.isMouseOver = true;
+    }
+
+    onMouseLeave(): void {
+        this.isMouseOver = false;
+    }
+
     destroy() {
         this.domButton.removeEventListener("click", () => this.onClick?.());
         this.domButton.removeEventListener("mouseenter", () =>
@@ -271,39 +350,6 @@ export class ASCIIButton extends ASCIIElement {
         );
         this.domButton.remove();
     }
-}
-
-///////////////////////////////////////////
-// Ascii Block Class
-///////////////////////////////////////////
-
-export class ASCIIBlock extends ASCIIElement {
-    text: string;
-
-    constructor(
-        text: string,
-        position: Vector2,
-        color: Color,
-        backgroundColor: Color4
-    ) {
-        super(position, color, backgroundColor);
-
-        this.text = text;
-        this.setSize(this.text);
-    }
-
-    draw(
-        ui: CanvasRenderingContext2D,
-        background: CanvasRenderingContext2D
-    ): void {
-        this.drawBlock(this.text, ui, background);
-    }
-
-    update(): void {}
-
-    fadeIn(): void {}
-
-    fadeOut(): void {}
 }
 
 ///////////////////////////////////////////
@@ -346,21 +392,26 @@ export class ASCIIImage extends ASCIIElement {
     targetOpacity: number = 1; // Opacity to fade to
     fadeSpeed: number = 0.01; // Opacity fade speed
     fadeRate: number = 2; // higher = faster fade
-    startOpacity: number = 0; // store opacity at fade start
+    startOpacity: number = 1; // store opacity at fade start
     fadeTimer: number = 0; // time since fade started
-    fadeDuration: number = 1; // total fade time in seconds
+    fadeDuration: number = 0.5; // total fade time in seconds
 
     constructor(
         position: Vector2,
         image: CanvasImageSource,
         width: number,
-        aspectRatio: number
+        aspectRatio: number,
+        horizontalAlign?: "left" | "center" | "right",
+        verticalAlign?: "top" | "middle" | "bottom"
     ) {
-        super(position);
+        super(position,undefined,undefined,horizontalAlign,verticalAlign);
         this.image = image;
-        this.size = new Vector2(width, width / aspectRatio);
+
         this.animated = true;
         this.interactive = true;
+
+        this.setSize(width, width / aspectRatio);
+        this.applyAlignment();
     }
 
     draw(

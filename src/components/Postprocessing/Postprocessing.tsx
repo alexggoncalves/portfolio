@@ -4,6 +4,9 @@ import {
     EffectComposer,
     Glitch,
     Noise,
+    Vignette,
+    DepthOfField,
+    SMAA
 } from "@react-three/postprocessing";
 import { Vector2 } from "three";
 
@@ -15,7 +18,8 @@ import { LensDistortion } from "./LensDistortion";
 import useAsciiStore from "../../stores/asciiStore";
 
 function Postprocessing() {
-    const { fontAtlas, charSize, atlasGridSize, backgroundTexture, uiTexture } = useAsciiStore();
+    const { fontAtlas, charSize, atlasGridSize, backgroundTexture, uiTexture } =
+        useAsciiStore();
 
     return (
         <>
@@ -26,20 +30,12 @@ function Postprocessing() {
                     atlasGridSize={atlasGridSize}
                     backgroundTexture={backgroundTexture!}
                     uiTexture={uiTexture!}
-
                 ></AsciiEffect>
-
-                
-                {/* <Bloom
-                    luminanceThreshold={0.9}
-                    luminanceSmoothing={2}
-                    height={400}
-                /> */}
                 <ChromaticAberration offset={[0, 0]} />
                 <LensDistortion
-                    distortion={new Vector2(0.01, 0.03)}
+                    distortion={new Vector2(0.01, 0.026)}
                     principalPoint={new Vector2(0, 0)}
-                    focalLength={new Vector2(1, 1)}
+                    focalLength={new Vector2(0.978, 0.97)}
                     skew={0}
 
                 />
@@ -51,6 +47,8 @@ function Postprocessing() {
                     chromaticAberrationOffset={new Vector2(0.5, 0.6)} // min and max chromatic aberration offset
                     mode={GlitchMode.SPORADIC} // glitch mode
                 />
+
+                <Vignette eskil={false} offset={0.3} darkness={0.2} />
             </EffectComposer>
         </>
     );

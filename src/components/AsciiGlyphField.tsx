@@ -13,15 +13,20 @@ import {
 } from "./ASCIIElement";
 import { ASCIILayer } from "./ASCIILayer";
 import Color4 from "three/src/renderers/common/Color4.js";
+import { useNavigate } from "react-router";
 
 type AsciiGlyphFieldProps = {
     charSize: Vector2;
 };
 
 function AsciiGlyphField({ charSize }: AsciiGlyphFieldProps) {
-    const { viewport, size } = useThree();
+    const { viewport, size, gl } = useThree();
+    const setPixelRatio = useAsciiStore((state) => state.setPixelRatio);
+
     const { uiTexture, backgroundTexture, setUI, setBackground, canvasOffset } =
         useAsciiStore();
+
+    const navigate = useNavigate();
 
     const uiTexRef = useRef<Texture>(null);
     const uiContextRef = useRef<CanvasRenderingContext2D>(null);
@@ -37,7 +42,9 @@ function AsciiGlyphField({ charSize }: AsciiGlyphFieldProps) {
         canvas.height = height * viewport.dpr;
 
         const ctx = canvas.getContext("2d", { alpha: true })!;
-        ctx.imageSmoothingEnabled = false;
+        // ctx.imageSmoothingEnabled = false;
+        ctx.globalCompositeOperation = "source-over";
+        ctx.globalAlpha = 1;
 
         const texture = new CanvasTexture(canvas);
 
@@ -49,7 +56,7 @@ function AsciiGlyphField({ charSize }: AsciiGlyphFieldProps) {
         return { texture, ctx };
     }
 
-    useFrame((state, delta) => {
+    useFrame((_state, delta) => {
         if (!uiTexture || !backgroundTexture) return;
 
         if (uiContextRef.current && backgroundContextRef.current) {
@@ -74,7 +81,7 @@ function AsciiGlyphField({ charSize }: AsciiGlyphFieldProps) {
                     uiContextRef.current!,
                     backgroundContextRef.current!
                 );
-                layer.update(delta)
+                layer.update(delta, new Vector2(0, 0));
             });
         }
 
@@ -83,6 +90,9 @@ function AsciiGlyphField({ charSize }: AsciiGlyphFieldProps) {
     });
 
     useEffect(() => {
+        // setPixelRatio
+        setPixelRatio(gl.getPixelRatio());
+
         // Create a texture to draw the UI as ASCII and the background on the GPU
         const uiTex = createTexture(
             size.width / charSize.x,
@@ -110,7 +120,10 @@ function AsciiGlyphField({ charSize }: AsciiGlyphFieldProps) {
 +#++:++#++: +#+        +#++:++#     +#++:+   
 +#+     +#+ +#+        +#+         +#+  +#+  
 #+#     #+# #+#        #+#        #+#    #+# 
-###     ### ########## ########## ###    ### `;
+###     ### ########## ########## ###    ### 
+
+
+CREATIVE DEVELOPER`;
 
         const frameLayer = new ASCIILayer("frame", []);
 
@@ -118,38 +131,78 @@ function AsciiGlyphField({ charSize }: AsciiGlyphFieldProps) {
             new ASCIIScreenFrame(new Color(1, 1, 1), new Color4("transparent"))
         );
 
+        frameLayer.addElement(
+            new ASCIIButton(
+                "work",
+                () => navigate("/work"),
+                new Vector2(-4, 4),
+                new Color("white"),
+                new Color4(0, 0.4, 0.4, 0),
+                "right",
+                "top"
+            )
+        );
+
+        frameLayer.addElement(
+            new ASCIIButton(
+                "contacts",
+                () => navigate("/contacts"),
+                new Vector2(-4, 6),
+                new Color("white"),
+                new Color4(0, 0.4, 0.4, 0),
+                "right",
+                "top"
+            )
+        );
+
+        frameLayer.addElement(
+            new ASCIIButton(
+                "more",
+                () => navigate("/more"),
+                new Vector2(-4, 8),
+                new Color("white"),
+                new Color4(0, 0.4, 0.4, 0),
+                "right",
+                "top"
+            )
+        );
+
         const homeLayer = new ASCIILayer("home", []);
         homeLayer.addElement(
             new ASCIIBlock(
                 test,
-                new Vector2(5, 5),
+                new Vector2(5, 4),
                 new Color("white"),
-                new Color4(0, 0.4, 0.4, 0)
+                new Color4(0, 0.4, 0.4, 0),
+                "left",
+                "top"
             )
         );
 
         const img = new Image();
         img.src = "/images/endlesspurrs_cover.png";
+        
         const testImage = new ASCIIImage(
-            new Vector2(10, 26),
+            new Vector2(5, -5),
             img,
             16 * 2,
-            16 / 9
+            16 / 9,
+            "left",
+            "bottom"
         );
 
         const toggleImage = () => {
-            if(testImage.currentOpacity >.5) testImage.fadeOut();
+            if (testImage.currentOpacity > 0.5) testImage.fadeOut();
             else testImage.fadeIn();
-            
         };
 
         homeLayer.addElement(
             new ASCIIButton(
                 "click here",
-                new Vector2(24, 24),
+                toggleImage,
+                new Vector2(10, 29),
                 new Color("white"),
-                new Color4(0, 0.4, 0.4, 0),
-                toggleImage
+                new Color4(0, 0.4, 0.4, 0)
             )
         );
 

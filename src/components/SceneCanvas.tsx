@@ -1,15 +1,13 @@
-import { Canvas } from "@react-three/fiber";
+import { Canvas, useThree } from "@react-three/fiber";
+import { useEffect, useState, useRef, useLayoutEffect } from "react";
+// import { Perf } from "r3f-perf";
 
 import AsciiGlyphField from "./AsciiGlyphField";
 import PostProcessing from "./Postprocessing/Postprocessing";
 
-import { useEffect, useState, useRef, useLayoutEffect } from "react";
-
 import useAsciiStore from "../stores/asciiStore";
 
-import { Perf } from "r3f-perf";
-
-import FontBrightnessSorter from "./Brightness";
+// import FontBrightnessSorter from "./Brightness";
 
 import { LinearToneMapping, type Vector2 } from "three";
 
@@ -28,8 +26,8 @@ function useGridCanvasSize(
                 Math.floor(window.innerHeight / charSize.y) * charSize.y +
                 2 * charSize.y;
 
-            let left = (width - window.innerWidth)/2;
-            let top = (height - window.innerHeight)/2;
+            let left = (width - window.innerWidth) / 2;
+            let top = (height - window.innerHeight) / 2;
 
             setSize({
                 width,
@@ -54,16 +52,14 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
     const setCanvasOffset = useAsciiStore((state) => state.setCanvasOffset);
     const charSize = useAsciiStore((state: any) => state.charSize);
 
-    const { width, height, left, top } = useGridCanvasSize(
-        charSize,
-        canvasRef
-    );
+    const { width, height, left, top } = useGridCanvasSize(charSize, canvasRef);
 
     useEffect(() => {
         setCanvasOffset(left, top);
     }, [width, height, left, top, setCanvasOffset]);
 
-    // Don’t render the Canvas until the browser size is known
+
+    // Don’t render the canvas until the browser size is known
     if (width === 0 || height === 0) return null;
 
     return (
@@ -72,7 +68,7 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
             <Canvas
                 ref={canvasRef}
                 shadows
-                dpr={[1,2]}
+                dpr={[1, 2]}
                 camera={{ position: [0, 0, 10], fov: 45, near: 0.01, far: 20 }}
                 gl={{
                     antialias: true,
@@ -80,7 +76,7 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
                     powerPreference: "high-performance",
                     toneMapping: LinearToneMapping,
                 }}
-                flat
+                // flat
                 style={{
                     width,
                     height,
