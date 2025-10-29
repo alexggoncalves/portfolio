@@ -4,7 +4,7 @@ import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
 import App from "./App.tsx";
-import ErrorElement from "./components/ErrorElement.tsx";
+import ErrorElement from "./components/SceneHandler/ErrorElement.tsx";
 
 const router = createBrowserRouter([
     {

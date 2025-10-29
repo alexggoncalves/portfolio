@@ -3,6 +3,7 @@ import { CanvasTexture, Vector2 } from "three";
 
 type ASCIIState = {
     charSize: Vector2;
+    canvasSize: Vector2;
     atlasGridSize: Vector2;
     asciiSequence: string;
     fontAtlas: string;
@@ -26,6 +27,8 @@ type ASCIIState = {
         backgroundContext: CanvasRenderingContext2D
     ) => void;
 
+    setCanvasSize: (width: number, height: number) => void;
+
     setCanvasOffset: (left: number, top: number) => void;
 
     setPixelRatio: (pixelRatio: number) => void;
@@ -33,6 +36,7 @@ type ASCIIState = {
 
 const useAsciiStore = create<ASCIIState>((set) => ({
     charSize: new Vector2(16, 16),
+    canvasSize: new Vector2(0, 0),
     atlasGridSize: new Vector2(16, 9),
     pixelRatio: 1,
     canvasOffset: new Vector2(0, 0),
@@ -52,10 +56,7 @@ const useAsciiStore = create<ASCIIState>((set) => ({
         set({
             uiTexture: uiTexture,
             uiContext: uiContext,
-            uiResolution: new Vector2(
-                uiTexture.width,
-                uiTexture.height
-            ),
+            uiResolution: new Vector2(uiTexture.width, uiTexture.height),
         }),
 
     setBackground: (
@@ -70,10 +71,14 @@ const useAsciiStore = create<ASCIIState>((set) => ({
                 backgroundTexture.height
             ),
         }),
+
+    setCanvasSize: (width: number, height: number) =>
+        set({ canvasSize: new Vector2(width, height) }),
+
     setPixelRatio: (pixelRatio: number) => set({ pixelRatio: pixelRatio }),
+
     setCanvasOffset: (left: number, top: number) =>
         set({ canvasOffset: new Vector2(left, top) }),
-
 }));
 
 export default useAsciiStore;

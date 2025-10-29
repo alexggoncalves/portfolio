@@ -1,14 +1,20 @@
-import type { Vector2 } from "three";
+import { Vector2 } from "three";
 import type { ASCIIElement } from "./ASCIIElement";
+//-------------------------------
+//          LAYER CLASS
+//-------------------------------
 
 export class ASCIILayer {
     name: string;
     elements: Array<ASCIIElement> = [];
+    opacity: number = 1.0;
 
     constructor(name: string, elements: Array<ASCIIElement>) {
         this.name = name;
         this.elements = elements;
     }
+
+    init(): void {}
 
     update(delta: number, mousePos: Vector2): void {
         this.elements.forEach((element: ASCIIElement) => {
@@ -39,3 +45,5 @@ export class ASCIILayer {
         });
     }
 }
+
+

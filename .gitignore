@@ -27,4 +27,4 @@ dist-ssr
 
 refs.txt
 
-src/components/Brightness.tsx
+src/components/ASCIIField/Brightness.tsx

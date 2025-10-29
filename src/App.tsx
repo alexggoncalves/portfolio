@@ -1,11 +1,11 @@
 import "./styles/css/App.css";
 
-import SceneCanvas from "./components/SceneCanvas";
-import MainScene from "./components/MainScene";
-import ErrorElement from "./components/ErrorElement";
+import ErrorElement from "./components/SceneHandler/ErrorElement";
 
-import { useNavigate, Outlet, useRouteError, useLocation } from "react-router";
+import { useNavigate, Outlet, useRouteError } from "react-router";
 import { useEffect, useState } from "react";
+
+import SceneHandler from "./components/SceneHandler/SceneHandler";
 
 function App() {
     const navigate = useNavigate();
@@ -29,9 +29,7 @@ function App() {
 
     return (
         <>
-            <SceneCanvas>
-                <MainScene />
-            </SceneCanvas>
+            <SceneHandler />
 
             {showError ? <ErrorElement /> : <Outlet />}
         </>

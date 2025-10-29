@@ -1,11 +1,10 @@
-import { CanvasTexture, Color, Texture, Uniform, Vector2 } from "three";
-import { useMemo, forwardRef, useEffect } from "react";
-import { useControls } from "leva";
+import { CanvasTexture, Texture, Uniform, Vector2 } from "three";
+import { useMemo, forwardRef } from "react";
 import { BlendFunction, Effect } from "postprocessing";
-
 import { TextureLoader } from "three";
 import { useLoader } from "@react-three/fiber";
-import useAsciiStore from "../../stores/asciiStore";
+
+// import { useControls } from "leva";
 
 const fragmentShader = `
     uniform sampler2D uFontAtlas;
@@ -31,7 +30,7 @@ const fragmentShader = `
         vec4 color = texture(inputBuffer, pixelizationUv);
 
         vec4 uiColor = texture(uUITexture,pixelizationUv);
-        uiColor.a = pow(uiColor.a, 0.99); // Correct gamma (???)
+        
         
         vec4 backgroundColor = texture(uBackgroundTexture, uv);
         backgroundColor.rgb = pow(backgroundColor.rgb, vec3(1.6)); // Correct gamma
@@ -44,7 +43,7 @@ const fragmentShader = `
         }
     
         // Find the character in the font map that corresponds to the brightness
-        float cIndex = floor(gray * (atlasCount - 1.0));
+        float cIndex = floor(gray * (atlasCount));
         float cIndexX = mod(cIndex, uAtlasGridSize.x);
         float cIndexY = floor(cIndex / uAtlasGridSize.x);
 
@@ -153,7 +152,7 @@ export const AsciiEffect = forwardRef(
                     atlasGridSize,
                     pixelDensity,
                 }),
-            [fontAtlas, uiTexture, backgroundTexture, charSize]
+            [fontAtlas, uiTexture, backgroundTexture, charSize.x, charSize.y, atlasGridSize.x, atlasGridSize.y, pixelDensity]
         );
         return <primitive ref={ref} object={effect} dispose={null} />;
     }

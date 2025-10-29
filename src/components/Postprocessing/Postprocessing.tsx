@@ -1,12 +1,12 @@
 import {
-    Bloom,
+    // Bloom,
     ChromaticAberration,
     EffectComposer,
     Glitch,
-    Noise,
+    // Noise,
     Vignette,
-    DepthOfField,
-    SMAA
+    // DepthOfField,
+    // SMAA
 } from "@react-three/postprocessing";
 import { Vector2 } from "three";
 
@@ -39,7 +39,7 @@ function Postprocessing() {
                     skew={0}
 
                 />
-                <Noise opacity={0.05} />
+                {/* <Noise opacity={0.05} /> */}
                 <Glitch
                     delay={new Vector2(3.5, 10)} // min and max glitch delay
                     duration={new Vector2(0.2, 0.5)} // min and max glitch duration

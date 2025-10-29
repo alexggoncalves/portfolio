@@ -1,33 +1,31 @@
-import { Canvas, useThree } from "@react-three/fiber";
-import { useEffect, useState, useRef, useLayoutEffect } from "react";
-// import { Perf } from "r3f-perf";
+import { Canvas } from "@react-three/fiber";
+import { useEffect, useState, useRef} from "react";
+import { LinearToneMapping, type Vector2 } from "three";
 
-import AsciiGlyphField from "./AsciiGlyphField";
-import PostProcessing from "./Postprocessing/Postprocessing";
-
-import useAsciiStore from "../stores/asciiStore";
+import PostProcessing from "../Postprocessing/Postprocessing";
+import useAsciiStore from "../../stores/asciiStore";
 
 // import FontBrightnessSorter from "./Brightness";
 
-import { LinearToneMapping, type Vector2 } from "three";
+
 
 function useGridCanvasSize(
+    container: React.RefObject<HTMLElement> | React.RefObject<null>,
     charSize: Vector2,
-    container: React.RefObject<HTMLElement> | React.RefObject<null>
+    pixelRatio: number
 ) {
     const [size, setSize] = useState({ width: 0, height: 0, left: 0, top: 0 });
 
     useEffect(() => {
         function updateSize() {
-            const width =
-                Math.floor(window.innerWidth / charSize.x) * charSize.x +
-                2 * charSize.x;
-            const height =
-                Math.floor(window.innerHeight / charSize.y) * charSize.y +
-                2 * charSize.y;
+            const scaledWidth = window.innerWidth * pixelRatio;
+            const scaledHeight = window.innerHeight * pixelRatio;
 
-            let left = (width - window.innerWidth) / 2;
-            let top = (height - window.innerHeight) / 2;
+            const width = Math.floor(scaledWidth / charSize.x ) * charSize.x;
+            const height = Math.floor(scaledHeight / charSize.y) * charSize.y;
+
+            let left = Math.floor((width - scaledWidth) / 2);
+            let top = Math.floor((height - scaledHeight) / 2);
 
             setSize({
                 width,
@@ -36,8 +34,9 @@ function useGridCanvasSize(
                 top,
             });
         }
-
-        updateSize(); // run once
+        
+        updateSize();
+        
         window.addEventListener("resize", updateSize);
         return () => window.removeEventListener("resize", updateSize);
     }, [charSize.x, charSize.y, container]);
@@ -49,15 +48,18 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const setCanvasOffset = useAsciiStore((state) => state.setCanvasOffset);
-    const charSize = useAsciiStore((state: any) => state.charSize);
+    const {charSize, pixelRatio, setCanvasOffset ,setCanvasSize} = useAsciiStore();
 
-    const { width, height, left, top } = useGridCanvasSize(charSize, canvasRef);
+    const { width, height, left, top } = useGridCanvasSize(
+        canvasRef,
+        charSize,
+        pixelRatio
+    );
 
     useEffect(() => {
+        setCanvasSize(width, height);
         setCanvasOffset(left, top);
-    }, [width, height, left, top, setCanvasOffset]);
-
+    }, [width, height, left, top]);
 
     // Don’t render the canvas until the browser size is known
     if (width === 0 || height === 0) return null;
@@ -83,13 +85,13 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
                     overflow: "hidden",
                 }}
             >
-                {/* <Perf position="top-left" /> */}
+                
 
                 {children}
-
-                <AsciiGlyphField charSize={charSize} />
                 <PostProcessing />
+                
             </Canvas>
+            
         </div>
     );
 }

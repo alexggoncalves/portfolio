@@ -1,5 +1,5 @@
 import { Color, Vector2 } from "three";
-import useAsciiStore from "../stores/asciiStore";
+import useAsciiStore from "../../stores/asciiStore";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 const createBrightnessMap = (asciiSequence: string) => {
@@ -7,10 +7,11 @@ const createBrightnessMap = (asciiSequence: string) => {
     const map = new Map<string, number>();
 
     asciiArray.forEach((char, index) => {
-        const mappedBrightness = index / (asciiArray.length - 1);
+        let mappedBrightness = index / (asciiArray.length - 0.9);
+        // mappedBrightness = Math.pow(Number(mappedBrightness.toFixed(3)),1.0) 
         map.set(char, mappedBrightness);
     });
-
+    console.log([...map.entries()]);
     return map;
 };
 
@@ -256,6 +257,7 @@ export class ASCIIButton extends ASCIIElement {
 
         // Create html button
         this.domButton = document.createElement("button");
+        this.domButton.classList.add("asciiButton")
         this.createHTML();
         document.body.appendChild(this.domButton);
     }
@@ -265,7 +267,7 @@ export class ASCIIButton extends ASCIIElement {
         const pixelRatio = useAsciiStore.getState().pixelRatio;
 
         // Create invisible html button
-        this.domButton.classList.add("asciiButton");
+        ;
         this.domButton.textContent = this.text;
         this.domButton.style.left = `${
             this.position.x * (charSize.x / pixelRatio)
