@@ -5,7 +5,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import useAsciiStore from "../../stores/asciiStore";
 
 import { ASCIILayer } from "./ASCIILayer";
-import { ASCIIPage } from "../Pages/ASCIIPage";
+import { ASCIIPage } from "./ASCIIPage";
 
 type AsciiGlyphFieldProps = {
     currentPage?: ASCIIPage | null;
@@ -27,7 +27,6 @@ function AsciiGlyphField({
         backgroundTexture,
         setUI,
         setBackground,
-        canvasOffset,
     } = useAsciiStore();
 
     const uiTexRef = useRef<Texture>(null);
@@ -72,24 +71,28 @@ function AsciiGlyphField({
             // Draw Frame + Navigation
             if (fixedElements) {
                 fixedElements.forEach((layer: ASCIILayer) => {
-                    layer.draw(uiContext, bgContext);
+                    layer.draw(uiContext, bgContext, 1);
                 });
             }
 
             // Draw and update current page
             if (currentPage) {
-                currentPage.layers.forEach((layer: ASCIILayer) => {
-                    layer.update(delta, canvasOffset);
-                    layer.draw(uiContext, bgContext);
-                });
+                currentPage.update(
+                    uiContext,
+                    bgContext,
+                    delta,
+                    new Vector2(0, 0)
+                );
             }
 
             // Draw next page if exists (for transitions)
             if (nextPage) {
-                nextPage.layers.forEach((layer: ASCIILayer) => {
-                    layer.update(delta, new Vector2(0, 0));
-                    layer.draw(uiContext!, bgContext!);
-                });
+                nextPage.update(
+                    uiContext,
+                    bgContext,
+                    delta,
+                    new Vector2(0, 0)
+                );
             }
         }
 

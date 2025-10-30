@@ -11,7 +11,7 @@ const createBrightnessMap = (asciiSequence: string) => {
         // mappedBrightness = Math.pow(Number(mappedBrightness.toFixed(3)),1.0) 
         map.set(char, mappedBrightness);
     });
-    console.log([...map.entries()]);
+    // console.log([...map.entries()]);
     return map;
 };
 
@@ -73,6 +73,10 @@ export class ASCIIElement {
         }
     }
 
+    setOpacity(value: number):void{
+        this.opacity = value;
+    }
+
     // Apply horizontal and vertical alignment
     applyAlignment() {
         const uiResolution = useAsciiStore.getState().uiResolution;
@@ -102,9 +106,9 @@ export class ASCIIElement {
         ui: CanvasRenderingContext2D
     ): void {
         // Set color
-        ui.fillStyle = `rgba(${color.r * 255},
-        ${color.g * 255},
-        ${color.b * 255},
+        ui.fillStyle = `rgba(${color.r * 255 * this.opacity},
+        ${color.g * 255 * this.opacity},
+        ${color.b * 255 * this.opacity},
         ${color.a * this.opacity})`;
 
         // Clear and draw new character pixel
@@ -168,9 +172,9 @@ export class ASCIIElement {
         context: CanvasRenderingContext2D
     ): void {
         // Set ui color
-        context.fillStyle = `rgba(${color.r * 255},
-        ${color.g * 255},
-        ${color.b * 255},
+        context.fillStyle = `rgba(${color.r * 255 * this.opacity},
+        ${color.g * 255 * this.opacity},
+        ${color.b * 255 * this.opacity},
         ${color.a * this.opacity})`;
 
         // Clear and draw new character pixel
@@ -193,7 +197,7 @@ export class ASCIIElement {
 ///////////////////////////////////////////
 
 export class ASCIIBlock extends ASCIIElement {
-    text: string;
+    text: string; // Ascii formated string
 
     constructor(
         text: string,
@@ -229,12 +233,13 @@ export class ASCIIBlock extends ASCIIElement {
 ///////////////////////////////////////////
 
 export class ASCIIButton extends ASCIIElement {
-    text: string = "";
-    domButton: HTMLButtonElement;
-    callback: () => void;
+    text: string = ""; // Text to display on button
+    domButton: HTMLButtonElement; // Html button dom element
+    callback: () => void; // Button's function
 
     // flags
     isMouseOver: boolean = false;
+    isMouseDown: boolean = false;
 
     constructor(
         text: string,
@@ -390,17 +395,17 @@ export class ASCIIScreenFrame extends ASCIIElement {
 
 export class ASCIIImage extends ASCIIElement {
     image: CanvasImageSource; // Image to draw
-    currentOpacity: number = 0; // 0 = fully background, 1 = fully UI
+    currentOpacity: number = 1; // 0 = fully background, 1 = fully UI
     targetOpacity: number = 1; // Opacity to fade to
-    fadeSpeed: number = 0.01; // Opacity fade speed
-    fadeRate: number = 2; // higher = faster fade
+    fadeSpeed: number = 0.02; // Opacity fade speed
+    fadeRate: number = 4; // higher = faster fade
     startOpacity: number = 1; // store opacity at fade start
     fadeTimer: number = 0; // time since fade started
-    fadeDuration: number = 0.5; // total fade time in seconds
+    fadeDuration: number = 2; // total fade time in seconds
 
     constructor(
-        position: Vector2,
         image: CanvasImageSource,
+        position: Vector2,
         width: number,
         aspectRatio: number,
         horizontalAlign?: "left" | "center" | "right",
@@ -458,7 +463,10 @@ export class ASCIIImage extends ASCIIElement {
             const brightness = r * 0.299 + g * 0.587 + b * 0.114;
 
             // Set brightness as the alpha for the ascii renderer (combined with the current opacity)
-            data[i + 3] = brightness * this.currentOpacity;
+            data[i] = r * this.opacity;
+            data[i + 1] = g * this.opacity;
+            data[i + 2] = b * this.opacity;
+            data[i + 3] = (brightness * this.currentOpacity) * this.opacity;
         }
 
         // Update image data
@@ -470,7 +478,7 @@ export class ASCIIImage extends ASCIIElement {
     private drawImage(background: CanvasRenderingContext2D): void {
         // Draw background (full picture)
         background.save();
-        background.globalAlpha = 1 - this.currentOpacity;
+        background.globalAlpha = (1 - this.currentOpacity) * this.opacity;
 
         background.drawImage(
             this.image,
@@ -505,13 +513,13 @@ export class ASCIIImage extends ASCIIElement {
             (this.targetOpacity - this.startOpacity) * eased;
     }
 
-    fadeIn(): void {
+    fadeToAscii(): void {
         this.startOpacity = this.currentOpacity;
         this.targetOpacity = 1;
         this.fadeTimer = 0;
     }
 
-    fadeOut(): void {
+    fadeToFullImage(): void {
         this.startOpacity = this.currentOpacity;
         this.targetOpacity = 0;
         this.fadeTimer = 0;

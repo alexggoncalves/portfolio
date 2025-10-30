@@ -70,7 +70,7 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
             <Canvas
                 ref={canvasRef}
                 shadows
-                dpr={[1, 2]}
+                dpr={[1, 3]}
                 camera={{ position: [0, 0, 10], fov: 45, near: 0.01, far: 20 }}
                 gl={{
                     antialias: true,

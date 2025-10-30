@@ -6,18 +6,26 @@ import { useNavigate, Outlet, useRouteError } from "react-router";
 import { useEffect, useState } from "react";
 
 import SceneHandler from "./components/SceneHandler/SceneHandler";
+import useSceneStore from "./stores/sceneStore";
+import useAsciiStore from "./stores/asciiStore";
+import useWorkStore from "./stores/workStore";
 
 function App() {
-    const navigate = useNavigate();
     const error = useRouteError();
 
     const [showError, setShowError] = useState(false);
 
-    // Redirect to mobile version
-    useEffect(() => {
-        if (window.innerWidth < 600) navigate("/mobile");
-    }, []);
+    const { setIsMobile } = useSceneStore();
+    const { canvasSize } = useAsciiStore();
 
+    const { loadWork, works } = useWorkStore();
+
+    // Detect mobile screen size
+    useEffect(() => {
+        if (window.innerWidth < 600) setIsMobile(true);
+    }, [canvasSize.x, canvasSize.y]);
+
+    // 
     useEffect(() => {
         if (error) {
             setShowError(true);
@@ -26,6 +34,10 @@ function App() {
             setShowError(false);
         }
     }, [error, location]);
+
+    useEffect(()=>{
+        loadWork(); 
+    },[])
 
     return (
         <>

@@ -1,8 +1,9 @@
-import { ASCIIPage } from "./ASCIIPage";
-import { ASCIILayer } from "../ASCIIField/ASCIILayer";
 import { Vector2, Color } from "three";
-import { ASCIIBlock } from "../ASCIIField/ASCIIElement";
 import Color4 from "three/src/renderers/common/Color4.js";
+
+import { ASCIIPage } from "../ASCIIField/ASCIIPage";
+import { ASCIILayer } from "../ASCIIField/ASCIILayer";
+import { ASCIIBlock } from "../ASCIIField/ASCIIElement";
 
 const title = 
 `    :::     :::        :::::::::: :::    ::: 
@@ -16,39 +17,55 @@ const title =
 
 CREATIVE DEVELOPER`;
 
+const titleMobile = 
+`   :::    ::     :::::  ::    ::
+  +: :+   :+     :+      +:  :+
+ ++   ++  +:     +:       :++: 
++#+:++#+: +#     +#++#    #++#  
++#     #+ +#     +#      #+  +# 
+#+     +# #+     #+     +#    #+
+##     ## ###### ##### ##      ##
+
+
+CREATIVE DEVELOPER`;
+
+const cities =
+`based in : Lisbon
+
+from: Madeira
+`
+
 export class HomePage extends ASCIIPage {
 
     constructor(layers?: ASCIILayer[]) {
         super("home", layers);
     }
 
-    init(): void {
+    init(isMobile: boolean): void {
         const mainLayer = new ASCIILayer("home",[])
 
         mainLayer.addElement(
             new ASCIIBlock(
-                title,
+                isMobile ? titleMobile : title,
                 new Vector2(5, 4),
                 new Color("white"),
-                new Color4(0, 0.4, 0.4, 0),
+                new Color4(0,0,0,0),
                 "left",
                 "top"
             )
         )
 
-        this.layers.push(mainLayer);
-    }
+        mainLayer.addElement(
+            new ASCIIBlock(
+                cities,
+                new Vector2(5,-4),
+                new Color(1,1,1),
+                new Color4(0.4,0.4,0.6,0.05),
+                "left",
+                "bottom" 
+            )
+        )
 
-    update(
-        ui: CanvasRenderingContext2D,
-        background: CanvasRenderingContext2D,
-        delta: number,
-        mousePos: Vector2,
-        // _mouseDown?: boolean
-    ): void {
-        this.layers.forEach((layer: ASCIILayer) => {
-            layer.update(delta,mousePos)
-            layer.draw(ui, background);
-        });
+        this.layers.push(mainLayer);
     }
 }

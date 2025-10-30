@@ -31,14 +31,14 @@ function Postprocessing() {
                     backgroundTexture={backgroundTexture!}
                     uiTexture={uiTexture!}
                 ></AsciiEffect>
-                <ChromaticAberration offset={[0, 0]} />
-                <LensDistortion
+                <ChromaticAberration offset={[0.00005, 0.00005]} />
+                {/* <LensDistortion
                     distortion={new Vector2(0.01, 0.026)}
                     principalPoint={new Vector2(0, 0)}
                     focalLength={new Vector2(0.978, 0.97)}
                     skew={0}
 
-                />
+                /> */}
                 {/* <Noise opacity={0.05} /> */}
                 <Glitch
                     delay={new Vector2(3.5, 10)} // min and max glitch delay

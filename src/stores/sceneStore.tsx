@@ -8,6 +8,7 @@ type SceneState = {
     setInitialScene: (scene: string) => void;
     setScene: (scene: string) => void;
     endTransition: () => void;
+    setIsMobile: (isMobile: boolean) => void;
 };
 
 const useSceneStore = create<SceneState>((set) => ({
@@ -25,6 +26,8 @@ const useSceneStore = create<SceneState>((set) => ({
             currentScene: state.nextScene,
             nextScene: null,
         })),
+
+    setIsMobile: (isMobile: boolean) => set({ isMobile: isMobile }),
 }));
 
 export default useSceneStore;

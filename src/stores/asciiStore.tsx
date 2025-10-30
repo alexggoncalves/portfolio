@@ -75,7 +75,9 @@ const useAsciiStore = create<ASCIIState>((set) => ({
     setCanvasSize: (width: number, height: number) =>
         set({ canvasSize: new Vector2(width, height) }),
 
-    setPixelRatio: (pixelRatio: number) => set({ pixelRatio: pixelRatio }),
+    setPixelRatio: (pixelRatio: number) => {
+        set({ pixelRatio: pixelRatio });
+    },
 
     setCanvasOffset: (left: number, top: number) =>
         set({ canvasOffset: new Vector2(left, top) }),

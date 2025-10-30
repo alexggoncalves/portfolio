@@ -1,13 +1,12 @@
 import { Vector2 } from "three";
 import type { ASCIIElement } from "./ASCIIElement";
+
 //-------------------------------
 //          LAYER CLASS
 //-------------------------------
-
 export class ASCIILayer {
     name: string;
     elements: Array<ASCIIElement> = [];
-    opacity: number = 1.0;
 
     constructor(name: string, elements: Array<ASCIIElement>) {
         this.name = name;
@@ -16,7 +15,13 @@ export class ASCIILayer {
 
     init(): void {}
 
-    update(delta: number, mousePos: Vector2): void {
+    update(
+        uiContext: CanvasRenderingContext2D,
+        backgroundContext: CanvasRenderingContext2D,
+        delta: number,
+        mousePos: Vector2,
+        opacity: number
+    ): void {
         this.elements.forEach((element: ASCIIElement) => {
             if (element.animated) {
                 element.update(delta);
@@ -24,13 +29,17 @@ export class ASCIILayer {
                 element.update(delta, mousePos, false);
             }
         });
+
+        this.draw(uiContext,backgroundContext,opacity)
     }
 
     draw(
         uiContext: CanvasRenderingContext2D,
-        backgroundContext: CanvasRenderingContext2D
+        backgroundContext: CanvasRenderingContext2D,
+        opacity: number
     ): void {
         this.elements.forEach((element: ASCIIElement) => {
+            element.setOpacity(opacity);
             element.draw(uiContext, backgroundContext);
         });
     }
@@ -41,9 +50,7 @@ export class ASCIILayer {
 
     destroy(): void {
         this.elements.forEach((element: ASCIIElement) => {
-            element.destroy();
+            element.destroy?.();
         });
     }
 }
-
-

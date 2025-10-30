@@ -16,17 +16,16 @@ export class Navigation extends ASCIILayer {
         this.goTo = goTo;
     }
 
-    init(): void {
-
+    init(isMobile?: boolean): void {
         this.addElement(
             new ASCIIButton(
                 "home",
                 () => this.goTo("/"),
-                new Vector2(-4, 4),
+                isMobile ? new Vector2(-4, -8) : new Vector2(-4, 4),
                 new Color("white"),
                 new Color4(0, 0.4, 0.4, 0),
                 "right",
-                "top"
+                isMobile ? "bottom" : "top"
             )
         );
 
@@ -34,11 +33,11 @@ export class Navigation extends ASCIILayer {
             new ASCIIButton(
                 "work",
                 () => this.goTo("/work"),
-                new Vector2(-4, 6),
+                isMobile ? new Vector2(-4, -6) : new Vector2(-4, 6),
                 new Color("white"),
                 new Color4(0, 0.4, 0.4, 0),
                 "right",
-                "top"
+                isMobile ? "bottom" : "top"
             )
         );
 
@@ -46,11 +45,11 @@ export class Navigation extends ASCIILayer {
             new ASCIIButton(
                 "contacts",
                 () => this.goTo("/contacts"),
-                new Vector2(-4, 8),
+                isMobile ? new Vector2(-4, -4) : new Vector2(-4, 8),
                 new Color("white"),
                 new Color4(0, 0.4, 0.4, 0),
                 "right",
-                "top"
+                isMobile ? "bottom" : "top"
             )
         );
     }

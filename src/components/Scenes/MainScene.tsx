@@ -21,7 +21,7 @@ function MainScene() {
                 shadow-mapSize={1024}
             />
             {/* Objects */}
-            <RotatingModel ySpeed={2} position={[3, -0.5, -2]}>
+            <RotatingModel ySpeed={2} xSpeed={0.5} position={[3, -0.5, -2]}>
                 <OBJModel
                     path="/models/banana2"
                     position={[0, 0, 0]}
@@ -29,21 +29,20 @@ function MainScene() {
                     rotation={[0, 3, -0.3]}
                 />
             </RotatingModel>
-            {/* <RotatingBox /> */}
             {/* <Image
                 url="/images/cat.jpg"
                 rotation={[0, 0, 0]}
                 position={[4, 0, 1.5]}
                 scale={3}
             /> */}
-            {/* <mesh
+            <mesh
                 position={[0, 0, 1]}
                 receiveShadow
                 rotation={[-Math.PI / 2, 0, 0]}
             >
                 <sphereGeometry args={[0.8, 24, 24]} />
                 <meshPhongMaterial color="royalblue" />
-            </mesh> */}
+            </mesh>
         </group>
     );
 }

@@ -1,19 +1,26 @@
-import { ASCIIPage } from "./ASCIIPage";
+import { ASCIIPage } from "../ASCIIField/ASCIIPage";
 import { ASCIILayer } from "../ASCIIField/ASCIILayer";
 import { Vector2, Color } from "three";
-import { ASCIIBlock } from "../ASCIIField/ASCIIElement";
+import { ASCIIBlock, ASCIIImage } from "../ASCIIField/ASCIIElement";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-const title = 
-`WORK`;
+const title = `WORK`;
+
+import type { Work } from "../../stores/workStore";
+
+import useWorkStore from "../../stores/workStore";
 
 export class WorkPage extends ASCIIPage {
-    constructor(layers?: ASCIILayer[]) {
-        super("work", layers);
+    works: Work[];
+    images: ASCIIImage[] = [];
+
+    constructor(work: Work[]) {
+        super("work", []);
+        this.works = work;
     }
 
     init(): void {
-        const mainLayer = new ASCIILayer("work",[])
+        const mainLayer = new ASCIILayer("work", []);
 
         mainLayer.addElement(
             new ASCIIBlock(
@@ -24,21 +31,30 @@ export class WorkPage extends ASCIIPage {
                 "left",
                 "top"
             )
-        )
+        );
+
+        if (this.works[0]) {
+            const asciiImage = new ASCIIImage(
+                this.works[0].images[0],
+                new Vector2(20, 20),
+                16 * 2,
+                16 / 9
+            );
+            this.images.push(asciiImage);
+            mainLayer.addElement(asciiImage);
+        }
 
         this.layers.push(mainLayer);
     }
 
-    update(
-        ui: CanvasRenderingContext2D,
-        background: CanvasRenderingContext2D,
-        delta: number,
-        mousePos: Vector2,
-        // _mouseDown?: boolean
-    ): void {
-        this.layers.forEach((layer: ASCIILayer) => {
-            layer.update(delta,mousePos)
-            layer.draw(ui, background);
+    fadeImagesToAscii(): void {
+        this.images.forEach((image : ASCIIImage)=> {
+            image.fadeToAscii();
+        });
+    }
+    fadeToFullImages(): void {
+        this.images.forEach((image : ASCIIImage)=> {
+            image.fadeToFullImage();
         });
     }
 }

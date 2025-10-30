@@ -17,21 +17,21 @@ const router = createBrowserRouter([
                 children: [
                   {
                     index: true,
-                    element: <h1 className="temp_text"> work</h1>
+                    element: <></>
                   },
                   {
                     path: ":project_title",
-                    element: <h1 className="temp_text"> work #x </h1>
+                    element: <></>
                   }
                 ]
             },
             {
                 path: "contacts",
-                element: <h1 className="temp_text">contacts</h1>,
+                element: <></>,
             },
             {
                 path: "more",
-                element: <h1 className="temp_text">more</h1>,
+                element: <></>,
             },
             {
                 path: "*",

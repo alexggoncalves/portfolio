@@ -1,0 +1,58 @@
+[
+    {
+        "id": "endles-purrs",
+        "title": "Endless Purrs",
+        "roles": ["Designer", "Coder"],
+        "description": "Where are the cats?",
+        "year": "2023",
+        "tags": ["Game dev", "3D", "Game design"],
+        "technologies": ["Unity", "Blender", "C#"],
+        "assets": [
+            {
+                "type": "image",
+                "src": "./images/endless-purrs/endless-purrs_cover.png",
+                "alt": "aa"
+            }
+        ],
+        "collaborators": [
+            {
+                "name": "Margarida",
+                "roles": ["Coder", "Designer"],
+                "link": ""
+            },
+            {
+                "name": "Maria",
+                "roles": ["Sound Designer"],
+                "link": ""
+            }
+        ]
+    },
+    {
+        "id": "malleus",
+        "title": "Malleus",
+        "roles": ["Designer", "Coder"],
+        "description": "Create new sounds with your own hands.",
+        "year": "2022",
+        "tags": ["Game dev"],
+        "technologies": ["Unity", "C#", "Python"],
+        "assets": [
+            {
+                "type": "image",
+                "src": "/images/endless-purrs/endless-purrs_cover.png",
+                "alt": "aa"
+            }
+        ],
+        "collaborators": [
+            {
+                "name": "João",
+                "roles": ["Coder", "Designer"],
+                "link": ""
+            },
+            {
+                "name": "Luís",
+                "roles": ["Sound Designer"],
+                "link": ""
+            }
+        ]
+    }
+]
