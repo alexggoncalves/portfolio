@@ -1,7 +1,7 @@
 import { ASCIIPage } from "../ASCIIField/ASCIIPage";
 import { ASCIILayer } from "../ASCIIField/ASCIILayer";
 import { Vector2, Color } from "three";
-import { ASCIIBlock } from "../ASCIIField/ASCIIElement";
+import { ASCIIBlock } from "../ASCIIField/ASCIIElement/ASCIIElement";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 const title = `CONTACTS`;

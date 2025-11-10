@@ -35,16 +35,14 @@ type ASCIIState = {
 };
 
 const useAsciiStore = create<ASCIIState>((set) => ({
-    charSize: new Vector2(16, 16),
+    charSize: new Vector2(12, 16),
     canvasSize: new Vector2(0, 0),
     atlasGridSize: new Vector2(16, 9),
     pixelRatio: 1,
     canvasOffset: new Vector2(0, 0),
 
-    fontAtlas: "/font_atlas/fontAtlas-ibmplex-16x9(16-16).png",
-    asciiSequence:
-        "       `·.-',_:;\"~°º!¡ª÷+=^|)<>(\\/L«≈»v*c[¿?T±rxi≤≥zuìí]t√l7Y{nJ}IFjyîsç1oúùeπaCµ24ZhVfûk3P¢òóE£w95èpXébàáS6mAUGÇqôdH#KΩêÉOâD&¥%R0Æ8NBMg@QW$░▒▓█",
-
+    fontAtlas: "/font_atlas/fontAtlas-ibmplex-16x9(12-16).png",
+    asciiSequence:`       \`·.-\',_:;\"~°º!¡ª÷+=^|)<>(\\/L«≈»v*c[¿?T±rxi≤≥zuìí]t√l7Y{nJ}IFjyîsç1oúùeπaCµ24ZhVfûk3P¢òóE£w95èpXébàáS6mAUGÇqôdH#KΩêÉOãâD&%R0Æ8NBMg@QW$░▒▓█`,
     uiTexture: null,
     uiContext: null,
     uiResolution: new Vector2(0, 0),

@@ -3,7 +3,7 @@ import Color4 from "three/src/renderers/common/Color4.js";
 
 import { ASCIIPage } from "../ASCIIField/ASCIIPage";
 import { ASCIILayer } from "../ASCIIField/ASCIILayer";
-import { ASCIIBlock } from "../ASCIIField/ASCIIElement";
+import { ASCIIBlock } from "../ASCIIField/ASCIIElement/ASCIIElement";
 
 const title = 
 `    :::     :::        :::::::::: :::    ::: 

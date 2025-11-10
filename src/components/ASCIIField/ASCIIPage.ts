@@ -11,7 +11,7 @@ export class ASCIIPage {
     layers: ASCIILayer[] = [];
     opacity: number = 0.0;
     targetOpacity: number = 1.0;
-    fadeSpeed: number = 5;
+    fadeSpeed: number = 6;
 
     onFadeOutComplete?: () => void;
 
@@ -40,10 +40,16 @@ export class ASCIIPage {
             delta
         );
 
-        // Trigger the fade out completion event 
+        // Trigger the fade out completion event
         // (to destroy the fading out page)
-        if (this.targetOpacity === 0 && this.opacity <= 0) {
-            this.onFadeOutComplete?.();
+        if (
+            this.targetOpacity === 0 &&
+            this.opacity <= 0.003 &&
+            this.onFadeOutComplete
+        ) {
+            const callback = this.onFadeOutComplete;
+            this.onFadeOutComplete = undefined; // prevent multiple calls
+            callback();
         }
 
         // Update and draw all page layers
@@ -52,11 +58,15 @@ export class ASCIIPage {
         });
     }
 
-    destroy(): void {
-        this.layers.forEach((layer: ASCIILayer)=>{
-            layer.destroy?.();
-        })
+    resetFade(opacity = 0, target = 1, speed = 5) {
+        this.opacity = opacity;
+        this.targetOpacity = target;
+        this.fadeSpeed = speed;
     }
 
-    
+    destroy(): void {
+        this.layers.forEach((layer: ASCIILayer) => {
+            layer.destroy();
+        });
+    }
 }

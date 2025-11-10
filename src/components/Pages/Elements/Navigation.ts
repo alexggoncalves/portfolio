@@ -1,8 +1,8 @@
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { ASCIIButton } from "../ASCIIField/ASCIIElement";
-import { ASCIILayer } from "../ASCIIField/ASCIILayer";
+import { ASCIIButton } from "../../ASCIIField/ASCIIElement/ASCIIButton";
+import { ASCIILayer } from "../../ASCIIField/ASCIILayer";
 
 //-------------------------------
 //          FRAME LAYER
@@ -10,10 +10,15 @@ import { ASCIILayer } from "../ASCIIField/ASCIILayer";
 
 export class Navigation extends ASCIILayer {
     goTo: (path: string) => void;
+    nav: HTMLElement;
 
     constructor(goTo: (path: string) => void) {
         super("frame", []);
         this.goTo = goTo;
+
+        this.nav = document.createElement("nav");
+        const header = document.querySelector("header");
+        header?.appendChild(this.nav);
     }
 
     init(isMobile?: boolean): void {
@@ -25,7 +30,8 @@ export class Navigation extends ASCIILayer {
                 new Color("white"),
                 new Color4(0, 0.4, 0.4, 0),
                 "right",
-                isMobile ? "bottom" : "top"
+                isMobile ? "bottom" : "top",
+                this.nav
             )
         );
 
@@ -37,7 +43,8 @@ export class Navigation extends ASCIILayer {
                 new Color("white"),
                 new Color4(0, 0.4, 0.4, 0),
                 "right",
-                isMobile ? "bottom" : "top"
+                isMobile ? "bottom" : "top",
+                this.nav
             )
         );
 
@@ -49,8 +56,13 @@ export class Navigation extends ASCIILayer {
                 new Color("white"),
                 new Color4(0, 0.4, 0.4, 0),
                 "right",
-                isMobile ? "bottom" : "top"
+                isMobile ? "bottom" : "top",
+                this.nav
             )
         );
+    }
+
+    destroy(): void {
+        this.nav.remove();
     }
 }

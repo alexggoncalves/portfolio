@@ -1,5 +1,5 @@
 import { Vector2 } from "three";
-import type { ASCIIElement } from "./ASCIIElement";
+import type { ASCIIElement } from "./ASCIIElement/ASCIIElement";
 
 //-------------------------------
 //          LAYER CLASS
@@ -44,13 +44,15 @@ export class ASCIILayer {
         });
     }
 
-    addElement(element: ASCIIElement): void {
+    addElement(element: ASCIIElement): ASCIIElement {
         this.elements.push(element);
+
+        return element;
     }
 
     destroy(): void {
         this.elements.forEach((element: ASCIIElement) => {
-            element.destroy?.();
+            element.destroy();
         });
     }
 }

@@ -1,13 +1,9 @@
 import { Canvas } from "@react-three/fiber";
-import { useEffect, useState, useRef} from "react";
+import { useEffect, useState, useRef } from "react";
 import { LinearToneMapping, type Vector2 } from "three";
 
 import PostProcessing from "../Postprocessing/Postprocessing";
 import useAsciiStore from "../../stores/asciiStore";
-
-// import FontBrightnessSorter from "./Brightness";
-
-
 
 function useGridCanvasSize(
     container: React.RefObject<HTMLElement> | React.RefObject<null>,
@@ -21,11 +17,11 @@ function useGridCanvasSize(
             const scaledWidth = window.innerWidth * pixelRatio;
             const scaledHeight = window.innerHeight * pixelRatio;
 
-            const width = Math.floor(scaledWidth / charSize.x ) * charSize.x;
+            const width = Math.floor(scaledWidth / charSize.x) * charSize.x;
             const height = Math.floor(scaledHeight / charSize.y) * charSize.y;
 
-            let left = Math.floor((width - scaledWidth) / 2);
-            let top = Math.floor((height - scaledHeight) / 2);
+            const left = Math.floor((width - scaledWidth) / 2);
+            const top = Math.floor((height - scaledHeight) / 2);
 
             setSize({
                 width,
@@ -34,9 +30,9 @@ function useGridCanvasSize(
                 top,
             });
         }
-        
+
         updateSize();
-        
+
         window.addEventListener("resize", updateSize);
         return () => window.removeEventListener("resize", updateSize);
     }, [charSize.x, charSize.y, container]);
@@ -45,10 +41,10 @@ function useGridCanvasSize(
 }
 
 function SceneCanvas({ children }: { children?: React.ReactNode }) {
-    const containerRef = useRef<HTMLDivElement>(null);
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const {charSize, pixelRatio, setCanvasOffset ,setCanvasSize} = useAsciiStore();
+    const { charSize, pixelRatio, setCanvasOffset, setCanvasSize } =
+        useAsciiStore();
 
     const { width, height, left, top } = useGridCanvasSize(
         canvasRef,
@@ -65,34 +61,27 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
     if (width === 0 || height === 0) return null;
 
     return (
-        <div ref={containerRef} className="canvas-container">
-            {/* <FontBrightnessSorter/> */}
-            <Canvas
-                ref={canvasRef}
-                shadows
-                dpr={[1, 3]}
-                camera={{ position: [0, 0, 10], fov: 45, near: 0.01, far: 20 }}
-                gl={{
-                    antialias: true,
-                    alpha: true,
-                    powerPreference: "high-performance",
-                    toneMapping: LinearToneMapping,
-                }}
-                // flat
-                style={{
-                    width,
-                    height,
-                    overflow: "hidden",
-                }}
-            >
-                
-
-                {children}
-                <PostProcessing />
-                
-            </Canvas>
-            
-        </div>
+        <Canvas
+            ref={canvasRef}
+            shadows
+            dpr={[1, 3]}
+            camera={{ position: [0, 0, 10], fov: 45, near: 0.01, far: 20 }}
+            gl={{
+                antialias: true,
+                alpha: true,
+                powerPreference: "high-performance",
+                toneMapping: LinearToneMapping,
+            }}
+            // flat
+            style={{
+                width,
+                height,
+                overflow: "hidden",
+            }}
+        >
+            {children}
+            <PostProcessing />
+        </Canvas>
     );
 }
 

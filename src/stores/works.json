@@ -1,57 +1,63 @@
 [
     {
-        "id": "endles-purrs",
+        "id": "endless-purrs",
         "title": "Endless Purrs",
-        "roles": ["Designer", "Coder"],
-        "description": "Where are the cats?",
+        "subtitle": "Where are the cats? - A game",
+        "description": "In Endless Purrs, you step into the boots of a forest wizard who's misplaced his most treasured companions, his cats. Guided by meows and memories, you journey through an ever-shifting forest in search of them.\nThe game's environment is generated using the Wave Function Collapse algorithm, ensuring that every playthrough is a unique experience.",
+        "link": "",
+        "git": "",
         "year": "2023",
-        "tags": ["Game dev", "3D", "Game design"],
-        "technologies": ["Unity", "Blender", "C#"],
+        "tags": ["Game Dev", "3D", "Game Design"],
+        "tools": ["Unity", "Blender", "C#"],
+        "roles": ["Designer", "Coder"],
+        "team": [
+            {
+                "name": "Margarida Mendonça",
+                "roles": ["Coder", "Designer"],
+                "link": "https://www.youtube.com/watch?v=xvFZjo5PgG0"
+            },
+            {
+                "name": "Maria Carrilho",
+                "roles": ["Sound Designer"],
+                "link": ""
+            }
+        ],
         "assets": [
             {
                 "type": "image",
                 "src": "./images/endless-purrs/endless-purrs_cover.png",
                 "alt": "aa"
             }
-        ],
-        "collaborators": [
-            {
-                "name": "Margarida",
-                "roles": ["Coder", "Designer"],
-                "link": ""
-            },
-            {
-                "name": "Maria",
-                "roles": ["Sound Designer"],
-                "link": ""
-            }
         ]
     },
     {
         "id": "malleus",
         "title": "Malleus",
-        "roles": ["Designer", "Coder"],
+        "subtitle": "Ding dong",
         "description": "Create new sounds with your own hands.",
+        "link": "",
+        "git": "",
         "year": "2022",
         "tags": ["Game dev"],
-        "technologies": ["Unity", "C#", "Python"],
-        "assets": [
+        "tools": ["Unity", "C#", "Python"],
+        "roles": ["Designer", "Coder"],
+        "team": [
             {
-                "type": "image",
-                "src": "/images/endless-purrs/endless-purrs_cover.png",
-                "alt": "aa"
-            }
-        ],
-        "collaborators": [
-            {
-                "name": "João",
+                "name": "João Cristóvão",
                 "roles": ["Coder", "Designer"],
                 "link": ""
             },
             {
-                "name": "Luís",
+                "name": "Luís Costa",
                 "roles": ["Sound Designer"],
                 "link": ""
+            }
+        ],
+        "assets": [
+            {
+                "type": "image",
+                "src": "/images/malleus/malleus_cover.png",
+                "alt": "aa"
             }
         ]
     }

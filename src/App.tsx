@@ -2,7 +2,7 @@ import "./styles/css/App.css";
 
 import ErrorElement from "./components/SceneHandler/ErrorElement";
 
-import { useNavigate, Outlet, useRouteError } from "react-router";
+import { Outlet, useRouteError } from "react-router";
 import { useEffect, useState } from "react";
 
 import SceneHandler from "./components/SceneHandler/SceneHandler";
@@ -18,11 +18,12 @@ function App() {
     const { setIsMobile } = useSceneStore();
     const { canvasSize } = useAsciiStore();
 
-    const { loadWork, works } = useWorkStore();
+    const { loadWork } = useWorkStore();
 
     // Detect mobile screen size
     useEffect(() => {
         if (window.innerWidth < 600) setIsMobile(true);
+        else setIsMobile(false)
     }, [canvasSize.x, canvasSize.y]);
 
     // 
@@ -42,6 +43,11 @@ function App() {
     return (
         <>
             <SceneHandler />
+            
+            <div id="dom-overlay">
+                <header></header>
+                <main></main>
+            </div>
 
             {showError ? <ErrorElement /> : <Outlet />}
         </>

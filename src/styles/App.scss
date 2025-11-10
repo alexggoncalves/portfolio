@@ -1,4 +1,4 @@
-.canvas-container {
+.canvas-container, .canvas-container div {
     height: 100vh;
     width: 100vw;
     display: flex;
@@ -7,33 +7,25 @@
     overflow-y: hidden;
 }
 
-.canvas-container div {
-    width: 100vw;
+#dom-overlay {
+    position: absolute;
+    opacity: 0;
+    visibility: visible;
+    display: block;
     height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    width: 100vw;
+    top: 0;
+    left: 0;
 }
 
 .asciiButton {
     position: absolute;
-    font-size: 6pt;
-    // color: transparent;
+    font-size: 5pt;
+    color: transparent;
     overflow: hidden;
-    opacity: 0;
-    padding: 5px;
-    transform: translate(-5px, -5px);
     box-sizing: content-box;
-}
-
-.temp_text {
-    font-family: "IBMPlexMono";
-    font-size: 20px;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
+    
+    padding: 0;
 }
 
 p {

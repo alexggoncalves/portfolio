@@ -39,7 +39,7 @@ const fragmentShader = `
         float gray = grayscale(color.rgb);
         
         if(uiColor.a > 0.) {
-            gray = uiColor.a;
+            gray = grayscale(vec3(uiColor.a));
         }
     
         // Find the character in the font map that corresponds to the brightness

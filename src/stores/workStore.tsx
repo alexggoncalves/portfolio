@@ -8,7 +8,7 @@ export type Asset = {
     alt?: string;
 };
 
-export type Collaborator = {
+export type TeamMember = {
     name: string;
     roles: string[];
     link?: string;
@@ -17,14 +17,18 @@ export type Collaborator = {
 export type Work = {
     id: string;
     title: string;
-    roles: string[];
+    subtitle: string;
+    link?: string;
+    git?:string;
     year: string;
     tags: string[];
     description: string;
-    technologies: string[];
+    tools: string[];
+    roles: string[];
+    team: TeamMember[];
 
     assets: Asset[];
-    collaborators: Collaborator[];
+    
 
     images: CanvasImageSource[];
 };
@@ -71,7 +75,6 @@ const useWorkStore = create<WorkState>((set, _get) => ({
                         }
                     }
                 }
-                console.log('loaded');
                 set({ loaded: true });
             })
         );
@@ -81,7 +84,8 @@ const useWorkStore = create<WorkState>((set, _get) => ({
         });
     },
 
-    setCurrentWork: (work: string) => {
+    // Doesnt do anything
+    setCurrentWork: (_work: string) => {
         set({ currentWork: null });
     },
 }));

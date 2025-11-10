@@ -66,14 +66,7 @@ function AsciiGlyphField({
 
             // Clear ui and background textures
             uiContext.clearRect(0, 0, uiCanvas.width, uiCanvas.height);
-            bgContext.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-
-            // Draw Frame + Navigation
-            if (fixedElements) {
-                fixedElements.forEach((layer: ASCIILayer) => {
-                    layer.draw(uiContext, bgContext, 1);
-                });
-            }
+            bgContext.clearRect(0, 0, bgCanvas.width, bgCanvas.height);            
 
             // Draw and update current page
             if (currentPage) {
@@ -93,6 +86,13 @@ function AsciiGlyphField({
                     delta,
                     new Vector2(0, 0)
                 );
+            }
+
+            // Draw Frame + Navigation
+            if (fixedElements) {
+                fixedElements.forEach((layer: ASCIILayer) => {
+                    layer.draw(uiContext, bgContext, 1);
+                });
             }
         }
 
