@@ -3,11 +3,11 @@ import useAsciiStore from "../../../stores/asciiStore";
 import { useEffect, useState } from "react";
 
 import { useSpring, animated } from "@react-spring/web";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation } from "react-router";
 
 function MediaViewer() {
     const { isOpen, media, close, size, position } = useMediaViewerStore();
-    const { charSize,pixelRatio } = useAsciiStore();
+    const { pixelRatio } = useAsciiStore();
 
     const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -23,7 +23,10 @@ function MediaViewer() {
     });
 
     useEffect(() => {
-        if (isOpen) setVisible(true);
+        if (isOpen) {
+            setCurrentIndex(0);
+            setVisible(true);
+        }
     }, [isOpen]);
 
     const location = useLocation();
@@ -33,7 +36,7 @@ function MediaViewer() {
 
     // Only render if visible is true
     if (!visible || !media || media.length === 0) return null;
-    
+
     const currentAsset = media[currentIndex];
 
     if (!visible && !currentAsset) return null;
@@ -43,10 +46,10 @@ function MediaViewer() {
             id="media-viewer"
             style={{
                 position: "absolute",
-                left: position.x /pixelRatio,
-                top: position.y/pixelRatio,
-                width: size.x/pixelRatio,
-                height: size.y/pixelRatio,
+                left: position.x / pixelRatio,
+                top: position.y / pixelRatio,
+                width: size.x / pixelRatio,
+                height: size.y / pixelRatio,
                 ...fadeInOut,
             }}
         >
