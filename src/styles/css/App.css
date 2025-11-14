@@ -1,0 +1,51 @@
+.canvas-container,
+.canvas-container div {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: hidden;
+}
+
+#dom-overlay {
+  position: absolute;
+  opacity: 0;
+  visibility: visible;
+  display: block;
+  height: 100vh;
+  width: 100vw;
+  top: 0;
+  left: 0;
+}
+
+#media-viewer {
+  background-color: white;
+  aspect-ratio: 16/9;
+  position: absolute;
+  opacity: 0;
+}
+#media-viewer img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.asciiButton {
+  position: absolute;
+  font-size: 5pt;
+  color: transparent;
+  overflow: hidden;
+  box-sizing: content-box;
+  padding: 0;
+}
+
+p {
+  left: "78px";
+  top: "50%";
+  position: "absolute";
+  font-family: "IBMPlexMono";
+  font-size: "12pt";
+  max-width: "40%";
+  color: "rgba(238, 238, 238, 1)";
+}/*# sourceMappingURL=App.css.map */

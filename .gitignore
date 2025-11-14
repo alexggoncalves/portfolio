@@ -11,8 +11,6 @@ node_modules
 dist
 dist-ssr
 *.local
-*.css
-*.css.map
 
 # Editor directories and files
 .vscode/*
@@ -26,5 +24,3 @@ dist-ssr
 *.sw?
 
 refs.txt
-
-src/components/ASCIIField/Brightness.tsx
