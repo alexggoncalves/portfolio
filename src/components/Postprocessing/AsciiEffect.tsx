@@ -20,24 +20,25 @@ const fragmentShader = `
     }
 
     void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
-        float atlasCount = uAtlasGridSize.x * uAtlasGridSize.y;
-    
+        float atlasCount = uAtlasGridSize.x * uAtlasGridSize.y; // number of cells in the ascii atlas
+
+        // Calculate UV to sample pixelized colors from input buffer
         vec2 division = resolution / uCharSize;     // Number of characters that fit on the screen (horizontally and vertically)
         vec2 d = uCharSize / resolution;            // Size of each character on the screen (in UV coordinates)
-
         vec2 pixelizationUv = d * (floor(uv / d) + 0.5);
-
-        vec4 color = texture(inputBuffer, pixelizationUv);
-
+        
+        // Sample colors from the pixelized input buffer and from already pixelized UI texture
+        vec4 pixelizedColor = texture(inputBuffer, pixelizationUv);
         vec4 uiColor = texture(uUITexture,pixelizationUv);
         
-        
+        // Sample color from background texture and adjust it's gamma
         vec4 backgroundColor = texture(uBackgroundTexture, uv);
-        backgroundColor.rgb = pow(backgroundColor.rgb, vec3(1.6)); // Correct gamma
+        backgroundColor.rgb = pow(backgroundColor.rgb, vec3(1.6)); 
 
         // Convert to grayscale (brightness)
-        float gray = grayscale(color.rgb);
+        float gray = grayscale(pixelizedColor.rgb);
         
+        // If there is UI on this pixel override the gray value (place UI on top)
         if(uiColor.a > 0.) {
             gray = grayscale(vec3(uiColor.a));
         }
@@ -47,42 +48,38 @@ const fragmentShader = `
         float cIndexX = mod(cIndex, uAtlasGridSize.x);
         float cIndexY = floor(cIndex / uAtlasGridSize.x);
 
+        // Get UV corresponding to the right ascii character in the atlas
         vec2 offset = vec2(cIndexX, cIndexY) / uAtlasGridSize;
         vec2 atlasTexel = 1.0 / uAtlasGridSize;
         vec2 charCellUV = fract(uv * division); 
-        vec2 sampleUV = offset + charCellUV * atlasTexel;  // final UV inside the font atlas
+        vec2 atlasUV = offset + charCellUV * atlasTexel; 
         
         // Sample from font atlas
-        float ascii =  texture(uFontAtlas, sampleUV).r;
+        float ascii =  texture(uFontAtlas, atlasUV).r;
 
-        // Choose final color layer
-        vec3 finalColor;
-        float alpha = 1.0;
-
-        if (uiColor.a > 0.) {
-            if (backgroundColor.a > 0.) {
-                // blend background and text using ascii
-                vec3 bgMix = mix(color.rgb, backgroundColor.rgb, backgroundColor.a);
-                finalColor = mix(bgMix, uiColor.rgb, ascii);
-                alpha = mix(backgroundColor.a, uiColor.a * ascii, ascii);
-            } else {
-                finalColor = uiColor.rgb * ascii;
-                alpha = uiColor.a * ascii;
-            }
-        } else {
-            if (backgroundColor.a > 0.) {
-                vec3 bgMix = mix(color.rgb * ascii, backgroundColor.rgb, backgroundColor.a);
-                finalColor = mix(bgMix, color.rgb, ascii);
-                // finalColor = backgroundColor.rgb;
-                alpha = backgroundColor.a;
-            } else {
-                finalColor = color.rgb * ascii;
-                alpha = ascii;
-            }
+        // Determine base color for this pixel
+        vec3 baseColor = backgroundColor.rgb;
+        if(ascii > 0.0){
+            if(uiColor.a > 0.0) baseColor = uiColor.rgb;
+            else baseColor = pixelizedColor.rgb;
         }
 
-        // Output final color
-        outputColor = vec4(finalColor, alpha);
+        // Overlay UI if it exists
+        vec3 finalColor = baseColor;
+
+        if (uiColor.a > 0.0 && ascii > 0.0) {
+            // Keep the ASCII shape but tint it with UI RGB
+            finalColor = uiColor.rgb * ascii;
+        } else if (ascii > 0.0) {
+            // Use base color modulated by ASCII
+            finalColor = baseColor * ascii;
+        }
+
+        // Blend ASCII over background using its "opacity" (ascii)
+        finalColor = mix(backgroundColor.rgb, baseColor, ascii);
+
+        // Output
+        outputColor = vec4(finalColor, 1.0);
     }
 `;
 
@@ -152,7 +149,16 @@ export const AsciiEffect = forwardRef(
                     atlasGridSize,
                     pixelDensity,
                 }),
-            [fontAtlas, uiTexture, backgroundTexture, charSize.x, charSize.y, atlasGridSize.x, atlasGridSize.y, pixelDensity]
+            [
+                fontAtlas,
+                uiTexture,
+                backgroundTexture,
+                charSize.x,
+                charSize.y,
+                atlasGridSize.x,
+                atlasGridSize.y,
+                pixelDensity,
+            ]
         );
         return <primitive ref={ref} object={effect} dispose={null} />;
     }

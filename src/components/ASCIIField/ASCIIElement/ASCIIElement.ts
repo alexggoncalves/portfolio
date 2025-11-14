@@ -200,7 +200,6 @@ export class ASCIIElement {
         context.fillStyle = this.getColor(color);
 
         // Clear and draw new character pixel
-        context.clearRect(x * w, y * h, w, h);
         context.fillRect(x * w, y * h, w, h);
 
         context.restore();

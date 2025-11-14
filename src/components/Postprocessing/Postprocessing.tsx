@@ -4,7 +4,7 @@ import {
     EffectComposer,
     Glitch,
     // Noise,
-    Vignette,
+    // Vignette,
     // DepthOfField,
     // SMAA
 } from "@react-three/postprocessing";
@@ -50,7 +50,7 @@ function Postprocessing() {
                     mode={GlitchMode.SPORADIC} // glitch mode
                 />
 
-                <Vignette eskil={false} offset={0} darkness={0.4}  />
+                {/* <Vignette eskil={false} offset={0} darkness={0.4}  /> */}
             </EffectComposer>
         </>
     );

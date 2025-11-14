@@ -66,7 +66,11 @@ function AsciiGlyphField({
 
             // Clear ui and background textures
             uiContext.clearRect(0, 0, uiCanvas.width, uiCanvas.height);
-            bgContext.clearRect(0, 0, bgCanvas.width, bgCanvas.height);            
+            bgContext.clearRect(0, 0, bgCanvas.width, bgCanvas.height);    
+            bgContext.fillStyle = "#131315ff"; // can be any CSS color
+
+            // Fill the entire canvas
+            bgContext.fillRect(0, 0, bgCanvas.width, bgCanvas.height);        
 
             // Draw and update current page
             if (currentPage) {
