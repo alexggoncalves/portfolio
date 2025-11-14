@@ -4,7 +4,7 @@ import Color4 from "three/src/renderers/common/Color4.js";
 import { ASCIIButton } from "../../ASCIIField/ASCIIElement/ASCIIButton";
 import { ASCIILayer } from "../../ASCIIField/ASCIILayer";
 
-import type { Asset, TeamMember, Work } from "../../../stores/contentStore";
+import type { Asset } from "../../../stores/contentStore";
 import { ASCIIBlock } from "../../ASCIIField/ASCIIElement/ASCIIElement";
 // import useContentStore from "../../../stores/contentStore";
 // import { ASCIIBlock } from "../../ASCIIField/ASCIIElement/ASCIIElement";
