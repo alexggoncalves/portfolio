@@ -3,7 +3,7 @@ import {
     ChromaticAberration,
     EffectComposer,
     Glitch,
-    Noise,
+    // Noise,
     Vignette,
     // DepthOfField,
     // SMAA
@@ -39,16 +39,18 @@ function Postprocessing() {
                     skew={0}
 
                 /> */}
-                <Noise opacity={0.02} />
+                {/* <Noise opacity={0.02} /> */}
                 <Glitch
-                    delay={new Vector2(3.5, 10)} // min and max glitch delay
-                    duration={new Vector2(0.2, 0.5)} // min and max glitch duration
+                    delay={new Vector2(10, 20)} // min and max glitch delay
+                    duration={new Vector2(0.2, 0.4)} // min and max glitch duration
                     strength={new Vector2(0.02, 0.03)} // min and max glitch strength
-                    chromaticAberrationOffset={new Vector2(0.5, 0.6)} // min and max chromatic aberration offset
+                    chromaticAberrationOffset={new Vector2(0, 20)} // min and max chromatic aberration offset
+
+
                     mode={GlitchMode.SPORADIC} // glitch mode
                 />
 
-                <Vignette eskil={false} offset={0.3} darkness={0.2} />
+                <Vignette eskil={false} offset={0} darkness={0.4}  />
             </EffectComposer>
         </>
     );

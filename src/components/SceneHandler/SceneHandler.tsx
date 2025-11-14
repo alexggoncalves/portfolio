@@ -3,24 +3,25 @@ import { useEffect, useState } from "react";
 
 import useSceneStore from "../../stores/sceneStore";
 import useAsciiStore from "../../stores/asciiStore";
-import useWorkStore from "../../stores/workStore";
+import useWorkStore from "../../stores/contentStore";
 
-import type { Work } from "../../stores/workStore";
+import type { Work } from "../../stores/contentStore";
 
 import SceneCanvas from "./SceneCanvas";
 import AsciiGlyphField from "../ASCIIField/AsciiGlyphField";
 import { ASCIILayer } from "../ASCIIField/ASCIILayer";
 import { ASCIIPage } from "../ASCIIField/ASCIIPage";
 
-import MainScene from "../3DScenes/MainScene";
+import MainScene from "./3DScenes/MainScene";
+import MediaViewer from "../Pages/MediaViewer/MediaViewer";
 
-import { Frame } from "../Pages/Elements/Frame";
-import { Navigation } from "../Pages/Elements/Navigation";
+import { Frame } from "../Pages/Layers/Frame";
+import { Navigation } from "../Pages/Layers/Navigation";
 
 import { HomePage } from "../Pages/HomePage";
 import { WorkPage } from "../Pages/WorkPage";
 import { ContactsPage } from "../Pages/ContactsPage";
-import { WorkDetails } from "../Pages/WorkDetails";
+import { WorkDetailsPage } from "../Pages/WorkDetailsPage";
 
 //---------------------------------------------------------------------
 // useFixedElements (Hook): Initialize the fixed layers (Nav + Frame)
@@ -82,7 +83,7 @@ function createPage(
             // If there is a workID open work details, else open works page
             const work = works.find((work) => work.id == parts[1]);
             if (work) {
-                const workDetailsPage = new WorkDetails(work, goTo);
+                const workDetailsPage = new WorkDetailsPage(work, goTo);
                 workDetailsPage.init(isMobile);
                 page = workDetailsPage;
             } else {
@@ -185,6 +186,8 @@ function SceneHandler() {
 
                 
             </SceneCanvas>
+
+            <MediaViewer/>
         </>
     );
 }

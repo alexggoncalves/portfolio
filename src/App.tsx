@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import SceneHandler from "./components/SceneHandler/SceneHandler";
 import useSceneStore from "./stores/sceneStore";
 import useAsciiStore from "./stores/asciiStore";
-import useWorkStore from "./stores/workStore";
+import useWorkStore from "./stores/contentStore";
 
 function App() {
     const error = useRouteError();

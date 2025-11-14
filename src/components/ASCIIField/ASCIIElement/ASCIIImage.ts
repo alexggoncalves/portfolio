@@ -10,22 +10,27 @@ import { ASCIIElement } from "./ASCIIElement";
 export class ASCIIImage extends ASCIIElement {
     image: CanvasImageSource; // Image to draw
 
+    renderAscii: boolean;
+
     currentOpacity: number = 1; // 0 = fully UI , 1 = fully background
     targetOpacity: number = 0;
     startOpacity: number = 1;
     fadeTimer: number = 0;
-    fadeDuration: number = 0.6;
+    fadeDuration: number = 1
 
     constructor(
         image: CanvasImageSource,
+        
         position: Vector2,
         width: number,
         aspectRatio: number,
         horizontalAlign?: "left" | "center" | "right",
-        verticalAlign?: "top" | "middle" | "bottom"
+        verticalAlign?: "top" | "middle" | "bottom",
+        renderAscii: boolean = false
     ) {
         super(position, undefined, undefined, horizontalAlign, verticalAlign);
         this.image = image;
+        this.renderAscii = renderAscii
 
         this.animated = true;
         this.interactive = true;
@@ -42,14 +47,16 @@ export class ASCIIImage extends ASCIIElement {
             return;
         }
         this.drawImage(background);
+
+        if(this.renderAscii)
         this.drawAscii(ui);
     }
 
     private drawAscii(ui: CanvasRenderingContext2D): void {
         // Draw ui (picture converted to pixels for ascii shader)
         ui.save();
-        // ui.globalAlpha = this.currentOpacity * this.opacity;
-        ui.globalAlpha = 0.5;
+        ui.globalAlpha = this.opacity;
+        // ui.globalAlpha = 0.5;
         // Pixelate image on the canvas
         ui.drawImage(
             this.image,
@@ -76,10 +83,10 @@ export class ASCIIImage extends ASCIIElement {
             const brightness = r * 0.299 + g * 0.587 + b * 0.114;
 
             // Set brightness as the alpha for the ascii renderer (combined with the current opacity)
-            data[i] = r * (1-this.currentOpacity);
-            data[i + 1] = g * (1-this.currentOpacity);
-            data[i + 2] = b * (1-this.currentOpacity);
-            data[i + 3] = brightness * (1-this.currentOpacity);
+            data[i] = r * (this.opacity);
+            data[i + 1] = g * (this.opacity);
+            data[i + 2] = b * (this.opacity);
+            data[i + 3] = brightness * (this.opacity);
         }
 
         // Update image data
@@ -93,7 +100,7 @@ export class ASCIIImage extends ASCIIElement {
 
         // Draw background (full picture)
         background.save();
-        background.globalAlpha = (1 - this.currentOpacity) * this.opacity;
+        background.globalAlpha = this.opacity;
         background.drawImage(
             this.image,
             this.position.x * charSize.x,

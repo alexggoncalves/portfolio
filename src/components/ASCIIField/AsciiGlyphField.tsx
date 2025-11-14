@@ -41,7 +41,7 @@ function AsciiGlyphField({
         canvas.height = height * viewport.dpr;
 
         const ctx = canvas.getContext("2d", { alpha: true })!;
-        // ctx.imageSmoothingEnabled = false;
+        ctx.imageSmoothingEnabled = true;
         ctx.globalCompositeOperation = "source-over";
         ctx.globalAlpha = 1;
 

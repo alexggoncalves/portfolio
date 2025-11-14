@@ -1,0 +1,32 @@
+[
+    {
+        "id": "me",
+        "name": "Alexandre Gonçalves",
+        "imageSrc": "/images/1748878390298.jpg",
+        "link": ""
+    },
+    {
+        "id": "margarida-mendonca",
+        "name": "Margarida Mendonça",
+        "imageSrc": "",
+        "link": "https://www.youtube.com/watch?v=xvFZjo5PgG0"
+    },
+    {
+        "id": "maria-carrilho",
+        "name": "Maria Carrilho",
+        "imageSrc": "",
+        "link": ""
+    },
+    {
+        "id": "joao-cristovao",
+        "name": "João Cristóvão",
+        "imageSrc": "",
+        "link": ""
+    },
+    {
+        "id": "luis-costa",
+        "name": "Luís Costa",
+        "imageSrc": "",
+        "link": ""
+    }
+]

@@ -32,7 +32,7 @@ export class ASCIIElement {
 
     // Colors
     color: Color = new Color("white");
-    backgroundColor: Color4 = new Color4("transparent");
+    backgroundColor: Color4 = new Color4(0,0,0,0);
     opacity: number = 1.0;
 
     //Behaviour flags

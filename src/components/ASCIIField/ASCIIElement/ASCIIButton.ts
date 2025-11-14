@@ -26,7 +26,8 @@ export class ASCIIButton extends ASCIIElement {
 
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
-        parent?: HTMLElement
+        parent?: HTMLElement,
+        size?: Vector2
     ) {
         super(position, color, backgroundColor, horizontalAlign, verticalAlign);
 
@@ -34,16 +35,28 @@ export class ASCIIButton extends ASCIIElement {
         this.interactive = true;
         this.callback = callback;
 
-        this.setSize(this.text);
+        if (!size) {
+            this.setSize(this.text);
+        } else this.setSize(size.x,size.y)
+
         this.applyAlignment();
 
         // Create html button
-        this.domButton = this.createHTMLLink(`Go to ${this.text}`,this.position,this.size,parent);
+        this.domButton = this.createHTMLLink(
+            text,
+            this.position,
+            this.size,
+            parent
+        );
 
-         // Set mouse event listeners
+        // Set mouse event listeners
         this.domButton.addEventListener("click", () => this.onClick());
-        this.domButton.addEventListener("mouseenter", () => this.onMouseEnter());
-        this.domButton.addEventListener("mouseleave", () => this.onMouseLeave());
+        this.domButton.addEventListener("mouseenter", () =>
+            this.onMouseEnter()
+        );
+        this.domButton.addEventListener("mouseleave", () =>
+            this.onMouseLeave()
+        );
     }
 
     createHTML(parent?: HTMLElement): HTMLButtonElement {
@@ -64,9 +77,7 @@ export class ASCIIButton extends ASCIIElement {
         button.style.top = `${this.position.y * (charSize.y / pixelRatio)}px`;
         button.style.width = `${this.size.x * (charSize.x / pixelRatio)}px`;
         button.style.height = `${this.size.y * (charSize.y / pixelRatio)}px`;
-        button.style.outline = "0px"
-
-       
+        button.style.outline = "0px";
 
         parent?.appendChild(button);
         return button;
@@ -121,7 +132,7 @@ export class ASCIIButton extends ASCIIElement {
         this.isMouseOver = false;
     }
 
-    destroyHTML(){
+    destroyHTML() {
         this.domButton.removeEventListener("click", () => this.onClick?.());
         this.domButton.removeEventListener("mouseenter", () =>
             this.onMouseEnter?.()

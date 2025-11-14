@@ -3,7 +3,7 @@
         "id": "endless-purrs",
         "title": "Endless Purrs",
         "subtitle": "Where are the cats? - A game",
-        "description": "In Endless Purrs, you step into the boots of a forest wizard who's misplaced his most treasured companions, his cats. Guided by meows and memories, you journey through an ever-shifting forest in search of them.\nThe game's environment is generated using the Wave Function Collapse algorithm, ensuring that every playthrough is a unique experience.",
+        "description": "In Endless Purrs, you step into the boots of a forest wizard who's lost his most treasured companions, his cats. Guided by meows, you journey through an ever-changing forest in search of them.\nThe game's environment is generated using an optimized implementation of the Wave Function Collapse algorithm, ensuring that every playthrough is a unique experience.",
         "link": "",
         "git": "",
         "year": "2023",
@@ -12,14 +12,12 @@
         "roles": ["Designer", "Coder"],
         "team": [
             {
-                "name": "Margarida Mendonça",
-                "roles": ["Coder", "Designer"],
-                "link": "https://www.youtube.com/watch?v=xvFZjo5PgG0"
+                "id": "margarida-mendonca",
+                "roles": ["Coder", "Designer"]
             },
             {
-                "name": "Maria Carrilho",
-                "roles": ["Sound Designer"],
-                "link": ""
+                "id": "maria-carrilho",
+                "roles": ["Sound Designer"]
             }
         ],
         "assets": [
@@ -43,14 +41,12 @@
         "roles": ["Designer", "Coder"],
         "team": [
             {
-                "name": "João Cristóvão",
-                "roles": ["Coder", "Designer"],
-                "link": ""
+                "id": "joao-cristovao",
+                "roles": ["Coder", "Designer"]
             },
             {
-                "name": "Luís Costa",
-                "roles": ["Sound Designer"],
-                "link": ""
+                "id": "luis-costa",
+                "roles": ["Sound Designer"]
             }
         ],
         "assets": [

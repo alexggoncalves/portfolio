@@ -2,12 +2,12 @@ import { ASCIIPage } from "../ASCIIField/ASCIIPage";
 import { ASCIILayer } from "../ASCIIField/ASCIILayer";
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
-import type { Work } from "../../stores/workStore";
+import type { Work } from "../../stores/contentStore";
 import useAsciiStore from "../../stores/asciiStore";
 
 import { ASCIIBlock, ASCIILine } from "../ASCIIField/ASCIIElement/ASCIIElement";
 import { ASCIIImage } from "../ASCIIField/ASCIIElement/ASCIIImage";
-import { WorkCard } from "./Elements/WorkCard";
+import { WorkCard } from "./Layers/WorkCard";
 import { createASCIITitle } from "../ASCIIField/asciiFonts";
 
 const title = createASCIITitle("WORK")

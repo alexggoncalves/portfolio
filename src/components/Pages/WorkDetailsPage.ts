@@ -1,27 +1,27 @@
-import { ASCIIPage } from "../ASCIIField/ASCIIPage";
-import { ASCIILayer } from "../ASCIIField/ASCIILayer";
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
-import type { TeamMember, Work } from "../../stores/workStore";
-import useAsciiStore from "../../stores/asciiStore";
 
+import type { TeamMember, Work } from "../../stores/contentStore";
+import { TeamMemberCard } from "./Layers/TeamMemberCard";
+
+import useMediaViewerStore from "../../stores/mediaViewerStore";
+import { MediaViewerLayer } from "./Layers/MediaViewerLayer";
+
+import useAsciiStore from "../../stores/asciiStore";
+import { createASCIITitle } from "../ASCIIField/asciiFonts";
+import { ASCIIPage } from "../ASCIIField/ASCIIPage";
+import { ASCIILayer } from "../ASCIIField/ASCIILayer";
 import { ASCIIBlock } from "../ASCIIField/ASCIIElement/ASCIIElement";
 import { ASCIIText } from "../ASCIIField/ASCIIElement/ASCIIText";
 import { ASCIIButton } from "../ASCIIField/ASCIIElement/ASCIIButton";
-import { createASCIITitle } from "../ASCIIField/asciiFonts";
-import { TeamMemberCard } from "./Elements/TeamMemberCard";
 import { ASCIITitleFrame } from "../ASCIIField/ASCIIElement/ASCIIFrame";
 
-export class WorkDetails extends ASCIIPage {
+export class WorkDetailsPage extends ASCIIPage {
     work: Work | null = null;
     pageContainer: HTMLElement;
-    // workId: string;
 
-    myTeamMemberObj: TeamMember = {
-        name: "Alexandre Gonçalves",
-        link: "",
-        roles: [],
-    };
+    teamContainer: HTMLElement;
+    // workId: string;
 
     asciiCanvasSize: Vector2;
     goTo: (path: string) => void;
@@ -41,13 +41,15 @@ export class WorkDetails extends ASCIIPage {
 
         this.pageContainer = document.createElement("section");
         this.pageContainer.id = "work";
+        this.teamContainer = document.createElement("div");
+        this.pageContainer.append(this.teamContainer);
+
         const main = document.querySelector("main");
         main?.appendChild(this.pageContainer);
     }
 
-    init(_isMobile: boolean): void {
+    init(isMobile: boolean): void {
         if (!this.work) return;
-        this.myTeamMemberObj.roles = this.work.roles;
 
         const mainLayer = new ASCIILayer("work", []);
 
@@ -79,8 +81,8 @@ export class WorkDetails extends ASCIIPage {
                 "top"
             )
         );
-
         position.y += title.size.y + 1;
+
         // Subtitle
         mainLayer.addElement(
             new ASCIIBlock(
@@ -92,11 +94,10 @@ export class WorkDetails extends ASCIIPage {
                 "top"
             )
         );
-
         position.y += 2;
+
         // Tags
         this.placeTags(this.work.tags, position);
-
         position.y += 4;
 
         // Description
@@ -111,23 +112,24 @@ export class WorkDetails extends ASCIIPage {
                 "top"
             )
         );
-
         position.y += description.size.y + 3;
 
-        
         // Tools
         this.placeTools(this.work.tools, position.clone());
         position.y += 4;
 
         // Team
-        const teamMemberCardSize = new Vector2(10, 9);
-        this.placeTeam(this.work.team, position.clone(), teamMemberCardSize);
+        const teamMemberCardSize = new Vector2(10, 8);
+        this.placeTeam(
+            this.work.team,
+            position.clone(),
+            teamMemberCardSize,
+            isMobile
+        );
         position.y += teamMemberCardSize.y + 4;
 
-        
-
-        // Image Carrousel
-        // ...
+        // Media Viewer
+        this.placeMediaViewer(new Vector2(60,14), new Vector2(70,30), isMobile);
 
         // const barXPosition = Math.floor(this.asciiCanvasSize.x / 5);
 
@@ -158,7 +160,43 @@ export class WorkDetails extends ASCIIPage {
         this.pageContainer.append(tagsContainer);
     }
 
-    placeTeam(team: TeamMember[], position: Vector2, cardSize: Vector2) {
+    placeMediaViewer(position: Vector2, size: Vector2, isMobile: boolean) {
+        if (!this.work?.assets) return;
+
+        const charSize = useAsciiStore.getState().charSize;
+
+        const mediaViewerLayer = new MediaViewerLayer(
+            position,
+            size,
+            this.goTo,
+            this.pageContainer,
+            isMobile,
+            this.work.assets
+        );
+
+        const { open, setMediaViewerPosition, setMediaViewerSize } =
+            useMediaViewerStore.getState();
+
+        // Set media viewer size and position
+        setMediaViewerPosition(
+            new Vector2(position.x * charSize.x, position.y * charSize.y)
+        );
+        setMediaViewerSize(
+            new Vector2(size.x * charSize.x, size.y * charSize.y)
+        );
+
+        // Open media viewer
+        open(this.work.assets);
+
+        this.layers.push(mediaViewerLayer);
+    }
+
+    placeTeam(
+        team: TeamMember[],
+        position: Vector2,
+        cardSize: Vector2,
+        isMobile: boolean
+    ) {
         const teamLayer = new ASCIILayer("team", []);
         const teamContainer = document.createElement("div");
 
@@ -167,31 +205,37 @@ export class WorkDetails extends ASCIIPage {
 
         let frameWidth = offsetX;
 
-        teamLayer.addElement(
-            new TeamMemberCard(
-                this.myTeamMemberObj,
-                new Vector2(position.x + offsetX, position.y + 1),
-                this.goTo,
-                this.pageContainer,
-                new Color(0.7, 0.6, 0.2),
-                new Color4(0, 0.4, 0.4, 0)
-            )
+        // Add my card with my roles
+        const myCard = new TeamMemberCard(
+            {
+                id: "me",
+                roles: this.work?.roles || [],
+            },
+            new Vector2(position.x + offsetX, position.y + 2),
+            cardSize,
+            new Color(0.7, 0.6, 0.2),
+            this.goTo,
+            this.teamContainer,
+            isMobile
         );
+
+        this.layers.push(myCard);
 
         offsetX += cardSize.x + margin;
         frameWidth += cardSize.x + margin;
 
         team.forEach((teamMember, index) => {
-            const teamMemberCard = teamLayer.addElement(
-                new TeamMemberCard(
-                    teamMember,
-                    new Vector2(position.x + offsetX, position.y + 1),
-                    this.goTo,
-                    this.pageContainer,
-                    new Color(0.7, 0.7, 0.7),
-                    new Color4(0, 0.4, 0.4, 0)
-                )
+            const teamMemberCard = new TeamMemberCard(
+                teamMember,
+                new Vector2(position.x + offsetX, position.y + 2),
+                cardSize,
+                new Color(1, 1, 1),
+                this.goTo,
+                this.teamContainer,
+                isMobile
             );
+
+            this.layers.push(teamMemberCard);
 
             if (index < team.length - 1) frameWidth += cardSize.x + margin;
             else frameWidth += teamMemberCard.size.x + 1;
@@ -204,7 +248,7 @@ export class WorkDetails extends ASCIIPage {
                 "=",
                 "TEAM",
                 position,
-                new Vector2(frameWidth, cardSize.y),
+                new Vector2(frameWidth, cardSize.y + 3),
                 new Color(1, 1, 1),
                 new Color4(0, 0, 0, 0)
             )
@@ -217,7 +261,7 @@ export class WorkDetails extends ASCIIPage {
     placeTools(tools: string[], position: Vector2): void {
         const toolsLayer = new ASCIILayer("tools", []);
 
-        let string = `BUILT WITH: ${tools[0]}` ;
+        let string = `BUILT WITH: ${tools[0]}`;
 
         for (let i = 1; i < tools.length; i++) {
             if (i < tools.length - 1) {
