@@ -3,12 +3,13 @@ import "./styles/css/App.css";
 import ErrorElement from "./components/SceneHandler/ErrorElement";
 
 import { Outlet, useRouteError } from "react-router";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 
 import SceneHandler from "./components/SceneHandler/SceneHandler";
 import useSceneStore from "./stores/sceneStore";
 import useAsciiStore from "./stores/asciiStore";
 import useWorkStore from "./stores/contentStore";
+import MainContentLoader from "./components/Loading/MainContentLoader";
 
 function App() {
     const error = useRouteError();
@@ -16,17 +17,17 @@ function App() {
     const [showError, setShowError] = useState(false);
 
     const { setIsMobile } = useSceneStore();
-    const { canvasSize } = useAsciiStore();
+    // const { canvasSize } = useAsciiStore();
 
-    const { loadWork } = useWorkStore();
+    // const { loadWork } = useWorkStore();
 
     // Detect mobile screen size
     useEffect(() => {
         if (window.innerWidth < 600) setIsMobile(true);
-        else setIsMobile(false)
-    }, [canvasSize.x, canvasSize.y]);
+        else setIsMobile(false);
+    }, [window.innerWidth, window.innerHeight]);
 
-    // 
+    //
     useEffect(() => {
         if (error) {
             setShowError(true);
@@ -36,12 +37,15 @@ function App() {
         }
     }, [error, location]);
 
-    useEffect(()=>{
-        loadWork(); 
-    },[])
+    // Initial Load
+
+    useEffect(() => {
+        // loadWork();
+    }, []);
 
     return (
         <>
+            <MainContentLoader/>
             <SceneHandler />
             
             <div id="dom-overlay">

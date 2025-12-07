@@ -8,15 +8,15 @@ import useMediaViewerStore from "../../stores/mediaViewerStore";
 import { MediaViewerLayer } from "./Layers/MediaViewerLayer";
 
 import useAsciiStore from "../../stores/asciiStore";
-import { createASCIITitle } from "../ASCIIField/asciiFonts";
-import { ASCIIPage } from "../ASCIIField/ASCIIPage";
-import { ASCIILayer } from "../ASCIIField/ASCIILayer";
-import { ASCIIBlock } from "../ASCIIField/ASCIIElement/ASCIIElement";
-import { ASCIIText } from "../ASCIIField/ASCIIElement/ASCIIText";
-import { ASCIIButton } from "../ASCIIField/ASCIIElement/ASCIIButton";
-import { ASCIITitleFrame } from "../ASCIIField/ASCIIElement/ASCIIFrame";
+import { createASCIITitle } from "../../helpers/asciiFonts";
+import { Page } from "../PageRenderer/Page";
+import { Layer } from "../PageRenderer/Layer";
+import { ASCIIBlock } from "../PageRenderer/Elements/Element";
+import { ASCIIText } from "../PageRenderer/Elements/ASCIIText";
+import { ASCIIButton } from "../PageRenderer/Elements/ASCIIButton";
+import { ASCIITitleFrame } from "../PageRenderer/Elements/ASCIIFrame";
 
-export class WorkDetailsPage extends ASCIIPage {
+export class WorkDetailsPage extends Page {
     work: Work | null = null;
     pageContainer: HTMLElement;
 
@@ -31,13 +31,11 @@ export class WorkDetailsPage extends ASCIIPage {
         this.work = work;
         this.goTo = goTo;
 
-        const canvasSize = useAsciiStore.getState().canvasSize;
+        const bgResolution = useAsciiStore.getState().backgroundResolution;
+
         const charSize = useAsciiStore.getState().charSize;
 
-        this.asciiCanvasSize = new Vector2(
-            canvasSize.x / charSize.x,
-            canvasSize.y / charSize.y
-        );
+        this.asciiCanvasSize = useAsciiStore.getState().uiResolution;
 
         this.pageContainer = document.createElement("section");
         this.pageContainer.id = "work";
@@ -51,7 +49,7 @@ export class WorkDetailsPage extends ASCIIPage {
     init(isMobile: boolean): void {
         if (!this.work) return;
 
-        const mainLayer = new ASCIILayer("work", []);
+        const mainLayer = new Layer("work", []);
 
         // Back button
         mainLayer.addElement(
@@ -75,8 +73,8 @@ export class WorkDetailsPage extends ASCIIPage {
             new ASCIIBlock(
                 asciiTitle,
                 position.clone(),
-                new Color("white"),
-                new Color4(0, 0.4, 0.4, 0),
+                new Color(1,1,1),
+                new Color4(1, 1, 1, 0.1),
                 "left",
                 "top"
             )
@@ -137,7 +135,7 @@ export class WorkDetailsPage extends ASCIIPage {
     }
 
     placeTags(tags: string[], position: Vector2) {
-        const tagsLayer = new ASCIILayer("collaborators", []);
+        const tagsLayer = new Layer("collaborators", []);
         const tagsContainer = document.createElement("div");
 
         let offsetX = 0;
@@ -197,7 +195,7 @@ export class WorkDetailsPage extends ASCIIPage {
         cardSize: Vector2,
         isMobile: boolean
     ) {
-        const teamLayer = new ASCIILayer("team", []);
+        const teamLayer = new Layer("team", []);
         const teamContainer = document.createElement("div");
 
         let offsetX = 1;
@@ -259,7 +257,7 @@ export class WorkDetailsPage extends ASCIIPage {
     }
 
     placeTools(tools: string[], position: Vector2): void {
-        const toolsLayer = new ASCIILayer("tools", []);
+        const toolsLayer = new Layer("tools", []);
 
         let string = `BUILT WITH: ${tools[0]}`;
 

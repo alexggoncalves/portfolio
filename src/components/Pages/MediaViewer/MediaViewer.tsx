@@ -6,16 +6,16 @@ import { useSpring, animated } from "@react-spring/web";
 import { useLocation } from "react-router";
 
 function MediaViewer() {
-    const { isOpen, media, close, size, position } = useMediaViewerStore();
-    const { pixelRatio } = useAsciiStore();
-
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const { isOpen, media, close, size, position, currentIndex } = useMediaViewerStore();
+    const { pixelRatio, canvasOffset } = useAsciiStore();
 
     const [visible, setVisible] = useState(isOpen);
+    
     const fadeInOut = useSpring({
         opacity: isOpen ? 1 : 0,
         config: {
             duration: isOpen ? 1200 : 600,
+            clamp: true
         },
         onRest: () => {
             if (!isOpen) setVisible(false);
@@ -24,7 +24,6 @@ function MediaViewer() {
 
     useEffect(() => {
         if (isOpen) {
-            setCurrentIndex(0);
             setVisible(true);
         }
     }, [isOpen]);
@@ -46,8 +45,8 @@ function MediaViewer() {
             id="media-viewer"
             style={{
                 position: "absolute",
-                left: position.x / pixelRatio,
-                top: position.y / pixelRatio,
+                left: position.x / pixelRatio - canvasOffset.x,
+                top: position.y / pixelRatio - canvasOffset.y,
                 width: size.x / pixelRatio,
                 height: size.y / pixelRatio,
                 ...fadeInOut,
@@ -67,7 +66,7 @@ function MediaViewer() {
                     src={currentAsset.src}
                     style={{ maxWidth: "100%", maxHeight: "100%" }}
                     controls
-                    autoPlay
+                    autoPlay={false}
                 />
             ) : null}
         </animated.div>

@@ -2,8 +2,8 @@ import { create } from "zustand";
 import { CanvasTexture, Vector2 } from "three";
 
 type ASCIIState = {
+    texelSize: Vector2;
     charSize: Vector2;
-    canvasSize: Vector2;
     atlasGridSize: Vector2;
     asciiSequence: string;
     fontAtlas: string;
@@ -27,22 +27,21 @@ type ASCIIState = {
         backgroundContext: CanvasRenderingContext2D
     ) => void;
 
-    setCanvasSize: (width: number, height: number) => void;
-
     setCanvasOffset: (left: number, top: number) => void;
 
     setPixelRatio: (pixelRatio: number) => void;
 };
 
-const useAsciiStore = create<ASCIIState>((set) => ({
+const useAsciiStore = create<ASCIIState>((set, get) => ({
+    // texelSize: new Vector2(10, 14),
+    texelSize: new Vector2(12,16),
     charSize: new Vector2(12, 16),
-    canvasSize: new Vector2(0, 0),
     atlasGridSize: new Vector2(16, 9),
-    pixelRatio: 1,
+    pixelRatio: window.devicePixelRatio,
     canvasOffset: new Vector2(0, 0),
 
     fontAtlas: "/font_atlas/fontAtlas-ibmplex-16x9(12-16).png",
-    asciiSequence:`       \`·.-\',_:;\"~°º!¡ª÷+=^|)<>(\\/L«≈»v*c[¿?T±rxi≤≥zuìí]t√l7Y{nJ}IFjyîsç1oúùeπaCµ24ZhVfûk3P¢òóE£w95èpXébàáS6mAUGÇqôdH#KΩêÉOãâD&%R0Æ8NBMg@QW$░▒▓█`,
+    asciiSequence: `       \`·.-\',_:;\"~°º!¡ª÷+=^|)<>(\\/L«≈»v*c[¿?T±rxi≤≥zuìí]t√l7Y{nJ}IFjyîsç1oúùeπaCµ24ZhVfûk3P¢òóE£w95èpXébàáS6mAUGÇqôdH#KΩêÉOãâD&%R0Æ8NBMg@QW$░▒▓█`,
     uiTexture: null,
     uiContext: null,
     uiResolution: new Vector2(0, 0),
@@ -70,11 +69,15 @@ const useAsciiStore = create<ASCIIState>((set) => ({
             ),
         }),
 
-    setCanvasSize: (width: number, height: number) =>
-        set({ canvasSize: new Vector2(width, height) }),
-
     setPixelRatio: (pixelRatio: number) => {
-        set({ pixelRatio: pixelRatio });
+        const { texelSize } = get();
+        set({
+            pixelRatio: pixelRatio,
+            charSize: new Vector2(
+                texelSize.x * pixelRatio,
+                texelSize.y * pixelRatio
+            ),
+        });
     },
 
     setCanvasOffset: (left: number, top: number) =>

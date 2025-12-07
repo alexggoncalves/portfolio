@@ -1,23 +1,23 @@
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { ASCIIButton } from "../../ASCIIField/ASCIIElement/ASCIIButton";
-import { ASCIILayer } from "../../ASCIIField/ASCIILayer";
+import { ASCIIButton } from "../../PageRenderer/Elements/ASCIIButton";
+import { Layer } from "../../PageRenderer/Layer";
 
 import type { TeamMember } from "../../../stores/contentStore";
 import useContentStore from "../../../stores/contentStore";
-import { ASCIIBlock } from "../../ASCIIField/ASCIIElement/ASCIIElement";
-import { ASCIIImage } from "../../ASCIIField/ASCIIElement/ASCIIImage";
+import { ASCIIBlock } from "../../PageRenderer/Elements/Element";
+import { CanvasImage } from "../../PageRenderer/Elements/CanvasImage";
 
 //-------------------------------
 //          FRAME LAYER
 //-------------------------------
 
-export class TeamMemberCard extends ASCIILayer {
+export class TeamMemberCard extends Layer {
     imageSize: Vector2 = new Vector2(4, 3);
     size: Vector2;
     nameColor: Color;
-    link?:string;
+    link?: string;
 
     position: Vector2;
 
@@ -46,7 +46,7 @@ export class TeamMemberCard extends ASCIILayer {
         this.nameColor = nameColor;
 
         const person = useContentStore.getState().getPersonById(teamMember.id);
-        this.avatar = person?.image;
+        
 
         if (person) {
             this.name = this.parseName(person.name);
@@ -58,19 +58,17 @@ export class TeamMemberCard extends ASCIILayer {
             this.name = "";
         }
 
-        
-
         this.init(isMobile);
     }
 
     init(_isMobile?: boolean): void {
         if (this.avatar)
             this.addElement(
-                new ASCIIImage(
+                new CanvasImage(
                     this.avatar,
                     new Vector2(this.position.x, this.position.y),
                     8,
-                    8/5.5
+                    8 / 5.5
                 )
             );
 
@@ -83,25 +81,30 @@ export class TeamMemberCard extends ASCIILayer {
             )
         );
 
-        this.addElement(
-            new ASCIIButton(
-                "",
-                () => this.goTo("/contacts"),
-                this.position,
-                new Color(1, 1, 1),
-                new Color4(0, 0, 0, 0),
-                "left",
-                "top",
-                this.cardContainer,
-                this.size
-            )
-        );
+        if (this.link) {
+            console.log(this.link);
+            this.addElement(
+                new ASCIIButton(
+                    "",
+                    () => {
+                        if (this.link) window.open(this.link);
+                    },
+                    this.position,
+                    new Color(1, 1, 1),
+                    new Color4(0, 0, 0, 0),
+                    "left",
+                    "top",
+                    this.cardContainer,
+                    this.size
+                )
+            );
+        }
     }
 
     parseName(name: string): string {
         const parts = name.split(" ");
 
-        if(parts.length < 2) return name;
+        if (parts.length < 2) return name;
 
         // const surnameOffset:number = this.size.x - parts[1].length;
         // parts[1] = ' '.repeat(surnameOffset) + parts[1];

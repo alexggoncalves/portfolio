@@ -1,16 +1,10 @@
 import { create } from "zustand";
 
-import worksData from "./works.json";
-import peopleData from "./people.json";
-
-const defaultAvatar = "/images/default/default_avatar.jpg";
-const defaultProjectThumbnail = "";
-
 export type Person = {
     id: string;
     name: string;
     link?: string;
-    imageSrc?: string;
+    avatar?: Asset;
 
     image: CanvasImageSource;
 };
@@ -41,6 +35,7 @@ export type Work = {
 
     assets: Asset[];
 
+    thumbnail: CanvasImageSource | void;       
     images: CanvasImageSource[];
 };
 
@@ -49,92 +44,120 @@ type ContentState = {
     people: Person[];
     loaded: boolean;
 
-    loadWork: () => void;
-    loadInitialAssets: ()=> void;
+    // loadedImages: Set<string>;
+
+    // loadWork: () => void;
+    // loadInitialContent: () => void;
     getPersonById: (id: string) => Person | null;
 };
+
 
 const useContentStore = create<ContentState>((set, get) => ({
     works: [],
     people: [],
     loaded: false,
 
-    loadWork: async () => {
-        // Get work and people data from json files
-        const works = worksData as Work[];
-        const people = peopleData as Person[];
+    // // Cache of already-loaded URLs
+    // loadedImages: new Set<string>(),
+    
+    // loadInitialContent: async () => {
+    //     // Get work and people data from json files
+    //     const works = worksData as Work[];
+    //     const people = peopleData as Person[];
 
-        // Preload all work assets
-        await Promise.all(
-            works.map(async (work: Work) => {
-                work.images = [];
 
-                for (const asset of work.assets) {
-                    if (asset.type == "image" || asset.type == "thumbnail") {
-                        try {
-                            // Create image object
-                            const img = new Image();
+    //     // Preload all work thumbnails
+    //       // Preload all work assets
+    //     await Promise.all(
+    //         works.map(async (work: Work) => {
+    //             work.images = [];
 
-                            // Set image source
-                            if (asset.src) {
-                                img.src = asset.src;
-                            } else {
-                                if (asset.type == "thumbnail")
-                                    img.src = defaultProjectThumbnail;
-                                else return;
-                            }
+    //             for (const asset of work.assets) {
+    //                 const src = asset.src;
 
-                            img.alt = asset.alt ?? "";
+    //                 if (!src || loadedImages.has(src)) continue; // skip if already loaded
 
-                            // Wait for image to load
-                            await img.decode();
+    //                 if (asset.type == "image" || asset.type == "thumbnail") {
+    //                     try {
+    //                         // Create image object
+    //                         const img = await loadImage(src,loadedImages)
 
-                            // Add preloaded image to the works array
-                            work.images.push(img);
-                        } catch (error) {
-                            console.log(`failed to load: ${asset.src}`, error);
-                        }
-                    } else if (asset.type == "video") {
-                    }
-                }
-            })
-        );
+    //                         // Add preloaded image to the works array
+    //                         work.images.push(img);
 
-        // Preload team avatars
-        await Promise.all(
-            people.map(async (person: Person) => {
-                try {
-                    // Create image object
-                    const img = new Image();
+    //                         loadedImages.add(src)
+    //                         set({ loadedImages: new Set(loadedImages) });
+    //                     } catch (error) {
+    //                         console.log(`failed to load: ${asset.src}`, error);
+    //                     }
+    //                 } else if (asset.type == "video") {
+                        
+    //                 }
+    //             }
+    //         })
+    //     );
 
-                    if (person.imageSrc) img.src = person.imageSrc;
-                    else img.src = defaultAvatar;
+    // },
 
-                    img.alt = person.name;
+    // loadWork: async () => {
+    //     const loadedImages = get().loadedImages;
+    
 
-                    // Wait for image to load
-                    await img.decode();
+    //     // Preload all work assets
+    //     await Promise.all(
+    //         works.map(async (work: Work) => {
+    //             work.images = [];
 
-                    // Add preloaded image to each person
-                    person.image = img;
-                } catch (error) {
-                    console.log(`failed to load: ${person.name} avatar`, error);
-                }
-            })
-        );
+    //             for (const asset of work.assets) {
+    //                 const src = asset.src;
 
-        console.log("all loaded");
+    //                 if (!src || loadedImages.has(src)) continue; // skip if already loaded
 
-        set({
-            works,
-            people,
-            loaded: true,
-        });
-    },
+    //                 if (asset.type == "image" || asset.type == "thumbnail") {
+    //                     try {
+    //                         // Create image object
+    //                         const img = await loadImage(src,loadedImages)
 
-    loadInitialAssets: ()=> {
+    //                         // Add preloaded image to the works array
+    //                         work.images.push(img);
 
-    },
+    //                         loadedImages.add(src)
+    //                         set({ loadedImages: new Set(loadedImages) });
+    //                     } catch (error) {
+    //                         console.log(`failed to load: ${asset.src}`, error);
+    //                     }
+    //                 } else if (asset.type == "video") {
+                        
+    //                 }
+    //             }
+    //         })
+    //     );
+
+    //     // Preload team avatars
+    //     await Promise.all(
+    //         people.map(async (person: Person) => {
+                
+    //             const src = person.imageSrc ? person.imageSrc : defaultAvatar
+    //             // if(loadedImages.has(src)) return;
+    //             try {
+    //                 // Create image object
+    //                 const img = await loadImage(src, loadedImages);
+    //                 // Add preloaded image to each person
+    //                 person.image = img;
+    //             } catch (error) {
+    //                 console.log(`failed to load: ${person.name} avatar`, error);
+    //             }
+    //         })
+    //     );
+
+    //     console.log("all loaded");
+
+    //     set({
+    //         works,
+    //         people,
+    //         loaded: true,
+    //     });
+    // },
 
     getPersonById: (id: string) => {
         const { people } = get();
@@ -142,5 +165,27 @@ const useContentStore = create<ContentState>((set, get) => ({
         return person || null;
     },
 }));
+
+const loadImage = (src: string, loadedImages: Set<string>): Promise<HTMLImageElement> =>
+  new Promise((resolve, reject) => {
+    if (!src) return reject(new Error("Empty image src"));
+
+    // If image is already loaded, skip network request
+    if (loadedImages.has(src)) {
+      const cachedImg = new Image();
+      cachedImg.src = src;
+      // If already cached by the browser, it should load instantly
+      if (cachedImg.complete && cachedImg.naturalHeight !== 0) {
+        resolve(cachedImg);
+        return;
+      }
+    }
+
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = (err) => reject(err);
+    img.src = src;
+  });
+
 
 export default useContentStore;

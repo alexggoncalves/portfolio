@@ -1,9 +1,9 @@
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { ASCIIPage } from "../ASCIIField/ASCIIPage";
-import { ASCIILayer } from "../ASCIIField/ASCIILayer";
-import { ASCIIBlock } from "../ASCIIField/ASCIIElement/ASCIIElement";
+import { Page } from "../PageRenderer/Page";
+import { Layer } from "../PageRenderer/Layer";
+import { ASCIIBlock } from "../PageRenderer/Elements/Element";
 
 const title = 
 `    :::     :::        :::::::::: :::    ::: 
@@ -35,14 +35,14 @@ const cities =
 from: Madeira
 `
 
-export class HomePage extends ASCIIPage {
+export class HomePage extends Page {
 
-    constructor(layers?: ASCIILayer[]) {
+    constructor(layers?: Layer[]) {
         super("home", layers);
     }
 
     init(isMobile: boolean): void {
-        const mainLayer = new ASCIILayer("home",[])
+        const mainLayer = new Layer("home",[])
 
         mainLayer.addElement(
             new ASCIIBlock(

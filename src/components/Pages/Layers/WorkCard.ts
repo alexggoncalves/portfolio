@@ -1,25 +1,27 @@
-import { Vector2, Color } from "three";
+import { Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import {
-    ASCIIBlock,
-    ASCIIElement,
-} from "../../ASCIIField/ASCIIElement/ASCIIElement";
-import { ASCIIImage } from "../../ASCIIField/ASCIIElement/ASCIIImage";
+import { Element } from "../../PageRenderer/Elements/Element";
+import { CanvasImage } from "../../PageRenderer/Elements/CanvasImage";
+import useAsciiStore from "../../../stores/asciiStore";
 
-export class WorkCard extends ASCIIElement {
+export class WorkCard extends Element {
     title: string;
     image: CanvasImageSource;
     workId: string;
 
-    asciiImage: ASCIIImage;
-    asciiTitle: ASCIIBlock;
+    canvasImage: CanvasImage;
 
     domLink: HTMLElement;
     onClick: () => void;
 
+    isMouseOver: boolean = false;
+
+    padding = 10;
+    scrollOffset = 0;
+
     constructor(
-        image: CanvasImageSource,
+        image: HTMLImageElement,
         title: string,
         workId: string,
         position: Vector2,
@@ -36,21 +38,13 @@ export class WorkCard extends ASCIIElement {
         this.animated = true;
 
         // Place cover image
-        this.asciiImage = new ASCIIImage(image, this.position, size.x, size.y);
-        this.setSize(this.asciiImage.size.x, this.asciiImage.size.y);
-
-        // Place title
-        const titlePosition = new Vector2(
-            position.x,
-            position.y + this.asciiImage?.size.height + 1
+        this.canvasImage = new CanvasImage(
+            image,
+            this.position,
+            size.x,
+            size.y
         );
-
-        this.asciiTitle = new ASCIIBlock(
-            this.title,
-            titlePosition,
-            new Color(1, 1, 1),
-            new Color4(1, 1, 1, 0)
-        );
+        this.setSize(size.x, size.y);
 
         this.domLink = this.createHTMLLink(
             "Go to " + title,
@@ -66,32 +60,51 @@ export class WorkCard extends ASCIIElement {
         this.domLink.addEventListener("mouseleave", () => this.onMouseLeave());
     }
 
-    onMouseEnter(): void {}
+    onMouseEnter(): void {
+        this.isMouseOver = true;
+        console.log("hovering on", this.title);
+    }
 
-    onMouseLeave(): void {}
+    onMouseLeave(): void {
+        this.isMouseOver = false;
+    }
 
     draw(
         ui: CanvasRenderingContext2D,
         background: CanvasRenderingContext2D
     ): void {
-        this.asciiImage.setOpacity(this.opacity);
-        this.asciiImage?.draw(ui, background);
-        this.asciiTitle.setOpacity(this.opacity);
-        this.asciiTitle?.draw(ui, background);
+        const { charSize, canvasOffset } = useAsciiStore.getState();
+
+        const yOffset = this.position.y - this.scrollOffset;
+
+        if (this.isMouseOver) {
+            this.drawBackgroundRect(
+                this.position.x * charSize.x - this.padding / 2,
+                yOffset * charSize.y - this.padding / 2,
+                this.size.x * charSize.x + this.padding,
+                this.size.y * charSize.y + this.padding,
+                14,
+                true,
+                new Color4(1, 1, 1, 0.8),
+                background
+            );
+        }
+
+        this.domLink.style.top = `${yOffset * charSize.y - canvasOffset.y}px`;
+
+        this.canvasImage.setYOffset(this.scrollOffset * charSize.y);
+
+        this.canvasImage.setOpacity(this.opacity);
+
+        this.canvasImage?.draw(ui, background);
     }
 
     update(delta: number, _mousePos?: Vector2, _mouseDown?: boolean): void {
-        this.asciiImage?.update(delta);
-        this.asciiTitle?.update();
-    }
-
-    getImage(): ASCIIImage {
-        return this.asciiImage;
+        this.canvasImage?.update(delta);
     }
 
     destroy(): void {
-        this.asciiImage.destroy();
-        this.asciiTitle.destroy();
+        this.canvasImage.destroy();
 
         this.domLink.removeEventListener("click", () => this.onClick?.());
         this.domLink.removeEventListener("mouseenter", () =>

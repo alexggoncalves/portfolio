@@ -1,20 +1,20 @@
-import { ASCIIPage } from "../ASCIIField/ASCIIPage";
-import { ASCIILayer } from "../ASCIIField/ASCIILayer";
+import { Page } from "../PageRenderer/Page";
+import { Layer } from "../PageRenderer/Layer";
 import { Vector2, Color } from "three";
-import { ASCIIBlock } from "../ASCIIField/ASCIIElement/ASCIIElement";
+import { ASCIIBlock } from "../PageRenderer/Elements/Element";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 const title = `CONTACTS`;
 
 const titleMobile = `CONTACTS-mobile`;
 
-export class ContactsPage extends ASCIIPage {
-    constructor(layers?: ASCIILayer[]) {
+export class ContactsPage extends Page {
+    constructor(layers?: Layer[]) {
         super("contacts", layers);
     }
 
     init(isMobile: boolean): void {
-        const mainLayer = new ASCIILayer("contacts", []);
+        const mainLayer = new Layer("contacts", []);
 
         mainLayer.addElement(
             new ASCIIBlock(

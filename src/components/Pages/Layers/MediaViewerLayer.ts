@@ -1,26 +1,28 @@
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { ASCIIButton } from "../../ASCIIField/ASCIIElement/ASCIIButton";
-import { ASCIILayer } from "../../ASCIIField/ASCIILayer";
+import { ASCIIButton } from "../../PageRenderer/Elements/ASCIIButton";
+import { Layer } from "../../PageRenderer/Layer";
 
 import type { Asset } from "../../../stores/contentStore";
-import { ASCIIBlock } from "../../ASCIIField/ASCIIElement/ASCIIElement";
-// import useContentStore from "../../../stores/contentStore";
-// import { ASCIIBlock } from "../../ASCIIField/ASCIIElement/ASCIIElement";
-// import { ASCIIImage } from "../../ASCIIField/ASCIIElement/ASCIIImage";
+import { ASCIIBlock } from "../../PageRenderer/Elements/Element";
+
+import useMediaViewerStore from "../../../stores/mediaViewerStore";
+
+import { Element } from "../../PageRenderer/Elements/Element";
 
 //-------------------------------
 //          FRAME LAYER
 //-------------------------------
 
-export class MediaViewerLayer extends ASCIILayer {
+export class MediaViewerLayer extends Layer {
     imageSize: Vector2 = new Vector2(4, 3);
     size: Vector2;
 
     position: Vector2;
 
-    assets?: Asset[];
+    media?: Asset[];
+    mediaLength: number = 0;
     currentIndex: number = 0;
 
     goTo: (path: string) => void;
@@ -34,12 +36,12 @@ export class MediaViewerLayer extends ASCIILayer {
         goTo: (path: string) => void,
         parent: HTMLElement,
         isMobile: boolean,
-        assets?: Asset[]
+        media?: Asset[]
     ) {
         super("frame", []);
         this.goTo = goTo;
 
-        this.assets = assets;
+        this.media = media;
         this.position = position;
         this.size = size;
 
@@ -51,11 +53,14 @@ export class MediaViewerLayer extends ASCIILayer {
     }
 
     init(_isMobile?: boolean): void {
+        const next = useMediaViewerStore.getState().next;
+        const prev = useMediaViewerStore.getState().prev;
+
         // Left
         this.addElement(
             new ASCIIButton(
                 "   \n < \n   ",
-                () => {console.log("left")},
+                prev,
                 new Vector2(this.position.x, this.position.y + this.size.y),
                 new Color(1, 1, 1),
                 new Color4(0.4, 0.4, 0.4, 0.1),
@@ -70,11 +75,8 @@ export class MediaViewerLayer extends ASCIILayer {
         this.addElement(
             new ASCIIButton(
                 "   \n > \n   ",
-                () => {console.log("right")},
-                new Vector2(
-                    this.position.x + 3,
-                    this.position.y + this.size.y
-                ),
+                next,
+                new Vector2(this.position.x + 3, this.position.y + this.size.y),
                 new Color(1, 1, 1),
                 new Color4(0.4, 0.4, 0.4, 0.1),
                 "left",
@@ -87,7 +89,7 @@ export class MediaViewerLayer extends ASCIILayer {
         // Index indicator
         this.indexIndicator = this.addElement(
             new ASCIIBlock(
-                "01/16",
+                `00/00`,
                 new Vector2(
                     this.position.x + 7,
                     this.position.y + this.size.y + 1
@@ -100,9 +102,43 @@ export class MediaViewerLayer extends ASCIILayer {
         ) as ASCIIBlock;
     }
 
-    setIndicatorString(indicator: string) {
-        if (!this.indexIndicator) return
-        this.indexIndicator.text = indicator;
+    update(
+        uiContext: CanvasRenderingContext2D,
+        backgroundContext: CanvasRenderingContext2D,
+        delta: number,
+        mousePos: Vector2,
+        opacity: number
+    ): void {
+        this.setIndicator();
+
+        this.elements.forEach((element: Element) => {
+            if (element.animated) {
+                element.update(delta);
+            } else if (element.interactive) {
+                element.update(delta, mousePos, false);
+            }
+        });
+
+        this.draw(uiContext, backgroundContext, opacity);
+    }
+
+    setIndicator() {
+        const currentIndex = useMediaViewerStore.getState().currentIndex;
+        const mediaLength = useMediaViewerStore.getState().mediaLength;
+
+        if (
+            this.currentIndex != currentIndex ||
+            this.mediaLength != mediaLength
+        ) {
+            let indicatorString = `${currentIndex < 10 ? `0${currentIndex + 1}` : currentIndex + 1}`;
+            indicatorString += `/${mediaLength < 10 ? `0${mediaLength}`: mediaLength}`
+
+            if (this.indexIndicator) {
+                this.indexIndicator.text = indicatorString;
+            }
+        }
+
+        this.currentIndex = currentIndex;
     }
 
     destroy(): void {

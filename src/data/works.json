@@ -1,0 +1,321 @@
+[
+    {
+        "id": "endless-purrs",
+        "title": "Endless Purrs",
+        "subtitle": "Where are the cats? - A game",
+        "description": "In Endless Purrs, you step into the boots of a forest wizard who's lost his most treasured companions, his cats. Guided by meows, you journey through an ever-changing forest in search of them.\nThe game's environment is generated using an optimized implementation of the Wave Function Collapse algorithm, ensuring that every playthrough is a unique experience.",
+        "link": "",
+        "git": "",
+        "year": "2023",
+        "tags": ["Game Dev", "3D", "Game Design"],
+        "tools": ["Unity", "Blender", "C#"],
+        "roles": ["Designer", "Coder"],
+        "team": [
+            {
+                "id": "margarida-mendonca",
+                "roles": ["Coder", "Designer"]
+            },
+            {
+                "id": "maria-carrilho",
+                "roles": ["Sound Designer"]
+            }
+        ],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/endless-purrs-thumbnail.png",
+                "alt": "aa"
+            },
+            {
+                "type": "image",
+                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-1.png",
+                "alt": "aa"
+            },
+            {
+                "type": "video",
+                "src": "/images/endless-purrs/endless-purrs-video.mp4",
+                "alt": "aa"
+            },
+            {
+                "type": "image",
+                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-2.png",
+                "alt": "aa"
+            },
+            {
+                "type": "image",
+                "src": "/images/endless-purrs/endless-purrs-3.png",
+                "alt": "aa"
+            },
+            {
+                "type": "image",
+                "src": "/images/endless-purrs/endless-purrs-4.png",
+                "alt": "aa"
+            },
+            {
+                "type": "image",
+                "src": "/images/endless-purrs/endless-purrs-5.png",
+                "alt": "aa"
+            }
+        ]
+    },
+    {
+        "id": "gary",
+        "title": "Gary - The Wizard",
+        "subtitle": "Character Design and Animation",
+        "description": "meow",
+        "link": "",
+        "git": "",
+        "year": "2023",
+        "tags": ["Game Dev", "3D", "Game Design"],
+        "tools": ["Unity", "Blender", "C#", "Substance Painter"],
+        "roles": ["Designer", "Coder"],
+        "team": [],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/gary-thumbnail.png"
+            }
+        ]
+    },
+    {
+        "id": "pipe-quest",
+        "title": "PipeQuest",
+        "subtitle": "Plumbing VR Training",
+        "description": "glug",
+        "link": "",
+        "git": "",
+        "year": "2023",
+        "tags": ["Game Dev", "3D", "Game Design"],
+        "tools": ["Unity", "Blender", "C#"],
+        "roles": ["Designer", "Coder"],
+        "team": [],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/pipe-quest-thumbnail.png"
+            }
+        ]
+    },
+    {
+        "id": "mirage",
+        "title": "Mirage - Tiny World",
+        "subtitle": "Modelation and Materialization",
+        "description": "wowowowowow",
+        "link": "",
+        "git": "",
+        "year": "2023",
+        "tags": ["Game Dev", "3D", "Game Design"],
+        "tools": ["Unity", "Blender", "C#"],
+        "roles": ["Designer"],
+        "team": [],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/mirage-thumbnail.png"
+            }
+        ]
+    },
+    {
+        "id": "feels-lab",
+        "title": "FeelsLab.",
+        "subtitle": "AI Medicine Generator",
+        "description": "iiiiiiiiiii",
+        "link": "",
+        "git": "",
+        "year": "2023",
+        "tags": ["Game Dev", "3D", "Game Design"],
+        "tools": ["Unity", "Blender", "C#"],
+        "roles": ["Designer"],
+        "team": [],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/feels-lab-thumbnail.png"
+            }
+        ]
+    },
+    {
+        "id": "endless",
+        "title": "endless",
+        "subtitle": "Infinite Music",
+        "description": "lalalala",
+        "link": "",
+        "git": "",
+        "year": "2023",
+        "tags": ["Game Dev", "3D", "Game Design"],
+        "tools": ["Unity", "Blender", "C#"],
+        "roles": ["Designer"],
+        "team": [],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/endless-thumbnail.png"
+            }
+        ]
+    },
+    {
+        "id": "muse",
+        "title": "Muse",
+        "subtitle": "Art",
+        "description": "uuuuuuuu",
+        "link": "",
+        "git": "",
+        "year": "2023",
+        "tags": ["Game Dev", "3D", "Game Design"],
+        "tools": ["Unity", "Blender", "C#"],
+        "roles": ["Designer"],
+        "team": [],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/muse-thumbnail.png"
+            }
+        ]
+    },
+    {
+        "id": "radicals",
+        "title": "Radicals",
+        "subtitle": "Radical Sports",
+        "description": "oooooooooooooo",
+        "link": "",
+        "git": "",
+        "year": "2023",
+        "tags": ["Game Dev", "3D", "Game Design"],
+        "tools": ["Unity", "Blender", "C#"],
+        "roles": ["Designer"],
+        "team": [],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/radicals-thumbnail.png"
+            }
+        ]
+    },
+    {
+        "id": "alta-baixa-web",
+        "title": "Alta & Baixa - Web",
+        "subtitle": "Typography Magazine",
+        "description": "eeeeeeee",
+        "link": "",
+        "git": "",
+        "year": "2023",
+        "tags": ["Game Dev", "3D", "Game Design"],
+        "tools": ["Unity", "Blender", "C#"],
+        "roles": ["Designer"],
+        "team": [],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/alta-e-baixa-thumbnail.png"
+            }
+        ]
+    },
+    {
+        "id": "frames",
+        "title": "Frames",
+        "subtitle": "Old LDMovies",
+        "description": "rrrrrrrrrrrr",
+        "link": "",
+        "git": "",
+        "year": "2023",
+        "tags": ["Game Dev", "3D", "Game Design"],
+        "tools": ["Unity", "Blender", "C#"],
+        "roles": ["Designer"],
+        "team": [],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/frames-thumbnail.png"
+            }
+        ]
+    },
+    {
+        "id": "malleus",
+        "title": "Malleus",
+        "subtitle": "Ding dong",
+        "description": "Create new sounds with your own hands.",
+        "link": "",
+        "git": "",
+        "year": "2022",
+        "tags": ["Game dev"],
+        "tools": ["Unity", "C#", "Python"],
+        "roles": ["Designer", "Coder"],
+        "team": [
+            {
+                "id": "joao-cristovao",
+                "roles": ["Coder", "Designer"]
+            },
+            {
+                "id": "luis-costa",
+                "roles": ["Sound Designer"]
+            }
+        ],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/malleus-thumbnail.png",
+                "alt": "aa"
+            }
+        ]
+    },
+    {
+        "id": "waver",
+        "title": "Waver",
+        "subtitle": "Learning Music Scales",
+        "description": "Create new sounds with your own hands.",
+        "link": "",
+        "git": "",
+        "year": "2022",
+        "tags": ["Game dev"],
+        "tools": ["Unity", "C#", "Python"],
+        "roles": ["Designer", "Coder"],
+        "team": [],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/waver-thumbnail.png",
+                "alt": "aa"
+            }
+        ]
+    },
+    {
+        "id": "samar",
+        "title": "Samar",
+        "subtitle": "Interactive Installation",
+        "description": "fffffffffffff",
+        "link": "",
+        "git": "",
+        "year": "2022",
+        "tags": ["Game dev"],
+        "tools": ["Unity", "C#", "Python"],
+        "roles": ["Designer", "Coder"],
+        "team": [],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/samar-thumbnail.png",
+                "alt": "aa"
+            }
+        ]
+    },
+    {
+        "id": "visualizers",
+        "title": "Music Visualizers",
+        "subtitle": "(experiments)",
+        "description": "nanananana",
+        "link": "",
+        "git": "",
+        "year": "2022",
+        "tags": ["Game dev"],
+        "tools": ["Unity", "C#", "Python"],
+        "roles": ["Designer", "Coder"],
+        "team": [],
+        "assets": [
+            {
+                "type": "thumbnail",
+                "src": "/images/thumbnails/visualizers-thumbnail.png",
+                "alt": "aa"
+            }
+        ]
+    }
+]

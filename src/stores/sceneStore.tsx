@@ -1,8 +1,11 @@
 import { create } from "zustand";
 import type { To, NavigateOptions } from "react-router";
+import { Color } from "three";
+
 
 type SceneState = {
     isMobile: boolean;
+    backgroundColor: Color;
     currentScene: string | null;
     nextScene: string | null;
     navigate: (to: To, options?: NavigateOptions) => void | null;
@@ -15,6 +18,7 @@ type SceneState = {
 
 const useSceneStore = create<SceneState>((set) => ({
     isMobile: window.innerWidth < 600,
+    backgroundColor: new Color("rgba(87, 87, 87, 1)"),
     currentScene: null,
     nextScene: null,
     navigate: () => {},

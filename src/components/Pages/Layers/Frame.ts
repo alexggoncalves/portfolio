@@ -1,14 +1,14 @@
 import { Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { ASCIIScreenFrame } from "../../ASCIIField/ASCIIElement/ASCIIFrame";
-import { ASCIILayer } from "../../ASCIIField/ASCIILayer";
+import { ASCIIScreenFrame } from "../../PageRenderer/Elements/ASCIIFrame";
+import { Layer } from "../../PageRenderer/Layer";
 
 //-------------------------------
 //          FRAME LAYER
 //-------------------------------
 
-export class Frame extends ASCIILayer {
+export class Frame extends Layer {
     constructor() {
         super("frame", []);
     }

@@ -17,6 +17,7 @@
   width: 100vw;
   top: 0;
   left: 0;
+  overflow: hidden;
 }
 
 #media-viewer {
@@ -24,8 +25,14 @@
   aspect-ratio: 16/9;
   position: absolute;
   opacity: 0;
+  z-index: 10;
 }
 #media-viewer img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+#media-viewer video {
   height: 100%;
   width: 100%;
   object-fit: cover;

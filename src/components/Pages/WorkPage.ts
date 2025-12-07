@@ -1,37 +1,27 @@
-import { ASCIIPage } from "../ASCIIField/ASCIIPage";
-import { ASCIILayer } from "../ASCIIField/ASCIILayer";
+import { Page } from "../PageRenderer/Page";
+import { Layer } from "../PageRenderer/Layer";
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 import type { Work } from "../../stores/contentStore";
+
+import { ASCIIBlock } from "../PageRenderer/Elements/Element";
+import { createASCIITitle } from "../../helpers/asciiFonts";
+import { WorksGrid } from "./Layers/WorksGrid";
 import useAsciiStore from "../../stores/asciiStore";
 
-import { ASCIIBlock, ASCIILine } from "../ASCIIField/ASCIIElement/ASCIIElement";
-import { ASCIIImage } from "../ASCIIField/ASCIIElement/ASCIIImage";
-import { WorkCard } from "./Layers/WorkCard";
-import { createASCIITitle } from "../ASCIIField/asciiFonts";
+const title = createASCIITitle("WORK");
 
-const title = createASCIITitle("WORK")
-
-export class WorkPage extends ASCIIPage {
+export class WorkPage extends Page {
     works: Work[] = [];
-    images: ASCIIImage[] = [];
+    workGrid: WorksGrid | null = null;
 
-    asciiCanvasSize: Vector2;
     goTo: (path: string) => void;
-
     pageContainer: HTMLElement;
 
     constructor(works: Work[], goTo: (path: string) => void) {
         super("work", []);
         this.works = works;
         this.goTo = goTo;
-
-        const canvasSize = useAsciiStore.getState().canvasSize;
-        const charSize = useAsciiStore.getState().charSize;
-        this.asciiCanvasSize = new Vector2(
-            canvasSize.x / charSize.x,
-            canvasSize.y / charSize.y
-        );
 
         const container = document.createElement("div");
         container.id = "work-container";
@@ -43,104 +33,71 @@ export class WorkPage extends ASCIIPage {
     }
 
     init(): void {
+        const uiResolution = useAsciiStore.getState().uiResolution;
+        const margin = Math.ceil(uiResolution.x * 0.12);
+
         // Place title and filters
-        const mainLayer = new ASCIILayer("work", []);
+        const mainLayer = new Layer("work", []);
         mainLayer.addElement(
             new ASCIIBlock(
                 title,
-                new Vector2(5, 4),
+                new Vector2(margin-3, 3),
                 new Color("white"),
                 new Color4(0, 0.4, 0.4, 0),
                 "left",
                 "top"
             )
         );
-
-        // FILTERS HERE
-        mainLayer.addElement(
-            new ASCIIBlock(
-                "FILTERS",
-                new Vector2(5, 12),
-                new Color("white"),
-                new Color4(0, 0.4, 0.4, 0),
-                "left",
-                "top"
-            )
-        );
-
-        const barXPosition = Math.floor(this.asciiCanvasSize.x / 5);
-
-        // Bar (vertical line)
-        mainLayer.addElement(
-            new ASCIILine(
-                "x",
-                new Vector2(barXPosition, 10),
-                new Vector2(barXPosition, this.asciiCanvasSize.y - 4),
-                1,
-                new Color("white"),
-                new Color4(0, 0.4, 0.4, 0)
-            )
-        );
-
-        this.createWorkGrid(this.asciiCanvasSize);
-
         this.layers.push(mainLayer);
+
+        // Place grid of works
+        
+        const gap = 1;
+        const gridWidth = uiResolution.x - margin * 2;
+
+        const cols = this.calculateGridColumns(gridWidth,18,25,gap)
+
+        this.workGrid = new WorksGrid(
+            this.works,
+            new Vector2(0, 0), // position
+            gridWidth,
+            cols,
+            margin,
+            gap,
+            this.goTo,
+            this.pageContainer,
+            false
+        );
+        this.layers.push(this.workGrid);
     }
 
-    setWorks(works: Work[]) {
-        this.works = works;
+    calculateGridColumns(
+        gridWidth: number,
+        minCardWidth: number,
+        maxCardWidth: number,
+        gap: number,
+    ):number {
+        let cols = 1
 
-        // Place work cards
-        this.createWorkGrid(this.asciiCanvasSize);
-    }
+        for(let testCols = 1; testCols <= 5;testCols++){
+            const totalGapWidth = gap * (testCols-1)
+            const cardWidth = (gridWidth-totalGapWidth)/testCols;
 
-    // INCOMPLETE
-    createWorkGrid(canvasSize: Vector2): void {
-        const workGrid = new ASCIILayer("workGrid", []);
+            if(cardWidth < minCardWidth){
+                cols = Math.max(1,testCols - 1)
+                break;
+            } 
+            
+            if( cardWidth >= minCardWidth && cardWidth <= maxCardWidth){
+                cols = testCols;
+            }
 
-        // Grid's top left corner
-        const startPosition = new Vector2(Math.floor(canvasSize.x / 5) + 2, 11);
+            if(cardWidth > maxCardWidth){
+                cols = testCols;
+            }
+        }
 
-        const offset = new Vector2(0, 0);
-        const imageWidth = 18;
-        const aspectRatio = 1 / 8;
-        const margin = 2;
-        // const imageHeight = 9 + 2; // height + title
-
-        this.works.forEach((work: Work, index) => {
-            offset.x = (imageWidth + margin) * index;
-            offset.y; // Calculate y (!!!)
-
-            const card = new WorkCard(
-                work.images[0], // Cover image
-                work.title,
-                work.id,
-                new Vector2( // Position
-                    startPosition.x + offset.x,
-                    startPosition.y + offset.y
-                ),
-                new Vector2(imageWidth, imageWidth * aspectRatio), // Size,
-                this.goTo,
-                this.pageContainer
-            );
-
-            this.images.push(card.getImage());
-
-            workGrid.addElement(card);
-        });
-
-        this.layers.push(workGrid);
-    }
-
-    fadeImagesToAscii(): void {
-        this.images.forEach((image: ASCIIImage) => {
-            image.fadeToAscii();
-        });
-    }
-    fadeToFullImages(): void {
-        this.images.forEach((image: ASCIIImage) => {
-            image.fadeToFullImage();
-        });
+        return cols;
     }
 
     destroy(): void {

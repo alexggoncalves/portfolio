@@ -21,14 +21,14 @@ function MainScene() {
                 shadow-mapSize={1024}
             />
             {/* Objects */}
-            <RotatingModel ySpeed={2} position={[3, -0.5, -2]}>
+            {/* <RotatingModel ySpeed={2} position={[3, -0.5, -2]}>
                 <OBJModel
                     path="/models/banana2"
                     position={[0, 0, 0]}
                     scale={2.9}
                     rotation={[0, 3, -0.3]}
                 />
-            </RotatingModel>
+            </RotatingModel> */}
             {/* <Image
                 url="/images/cat.jpg"
                 rotation={[0, 0, 0]}
