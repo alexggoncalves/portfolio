@@ -3,7 +3,7 @@
 // import { Mesh } from "three";
 // import { Image } from "@react-three/drei";
 
-import { OBJModel, RotatingModel } from "./ModelComponents";
+// import { OBJModel, RotatingModel } from "./ModelComponents";
 
 function MainScene() {
     return (

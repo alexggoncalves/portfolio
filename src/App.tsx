@@ -3,12 +3,12 @@ import "./styles/css/App.css";
 import ErrorElement from "./components/SceneHandler/ErrorElement";
 
 import { Outlet, useRouteError } from "react-router";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import SceneHandler from "./components/SceneHandler/SceneHandler";
 import useSceneStore from "./stores/sceneStore";
-import useAsciiStore from "./stores/asciiStore";
-import useWorkStore from "./stores/contentStore";
+// import useAsciiStore from "./stores/asciiStore";
+// import useWorkStore from "./stores/contentStore";
 import MainContentLoader from "./components/Loading/MainContentLoader";
 
 function App() {
