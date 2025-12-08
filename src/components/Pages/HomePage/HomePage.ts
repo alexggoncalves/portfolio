@@ -1,9 +1,9 @@
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { Page } from "../PageRenderer/Page";
-import { Layer } from "../PageRenderer/Layer";
-import { ASCIIBlock } from "../PageRenderer/Elements/Element";
+import { Page } from "../../PageRenderer/Page";
+import { Layer } from "../../PageRenderer/Layer";
+import { ASCIIBlock } from "../../PageRenderer/Elements/Element";
 
 const title = 
 `    :::     :::        :::::::::: :::    ::: 

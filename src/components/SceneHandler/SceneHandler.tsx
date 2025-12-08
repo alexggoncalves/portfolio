@@ -8,11 +8,10 @@ import SceneCanvas from "./SceneCanvas";
 import PageRenderer from "../PageRenderer/PageRenderer";
 import Postprocessing from "../PageRenderer/Postprocessing/Postprocessing";
 
-import MediaViewer from "../Pages/MediaViewer/MediaViewer";
+import MediaViewer from "../Pages/WorkDetailsPage/MediaViewer";
 
 import MainScene from "./3DScenes/MainScene";
 import usePageManager from "../../hooks/usePageManager";
-import { ScrollControls } from "@react-three/drei";
 
 //---------------------------------------------------------------------
 // Scene Handler: Handle page layout and 3d Scene + transitions

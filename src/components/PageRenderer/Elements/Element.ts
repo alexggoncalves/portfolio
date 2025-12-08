@@ -1,6 +1,7 @@
 import { Color, Vector2 } from "three";
 import useAsciiStore from "../../../stores/asciiStore";
 import Color4 from "three/src/renderers/common/Color4.js";
+import getColorString from "../../../helpers/getColorString";
 
 const createBrightnessMap = (asciiSequence: string) => {
     const asciiArray = asciiSequence.split("");
@@ -106,7 +107,7 @@ export class Element {
     ): void {
         // Set color
         ui.save();
-        ui.fillStyle = this.getColor(color);
+        ui.fillStyle = getColorString(color, this.opacity);
 
         // Clear and draw new character pixel
         ui.fillRect(x, y, 1, 1);
@@ -178,7 +179,7 @@ export class Element {
         context: CanvasRenderingContext2D
     ): void {
         // Set color
-        context.strokeStyle = this.getColor(color);
+        context.strokeStyle = getColorString(color, this.opacity);
 
         context.lineWidth = strokeWidth;
         context.beginPath();
@@ -197,10 +198,10 @@ export class Element {
     ): void {
         context.save();
         // Set ui color
-        context.fillStyle = this.getColor(color);
+        context.fillStyle = getColorString(color, this.opacity);
 
         // Clear and draw new character pixel
-        context.fillRect(x* w , y * h, w, h);
+        context.fillRect(x * w, y * h, w, h);
 
         context.restore();
     }
@@ -223,23 +224,16 @@ export class Element {
         context.roundRect(x, y, w, h, radius);
 
         if (strokeOnly) {
-            context.strokeStyle = this.getColor(color);
+            context.strokeStyle = getColorString(color, this.opacity);
             context.lineWidth = 2 * devicePixelRatio;
             context.stroke();
         } else {
-            context.fillStyle = this.getColor(color);
+            context.fillStyle = getColorString(color, this.opacity);
             context.fill();
         }
 
         context.closePath();
         context.restore();
-    }
-
-    getColor(color: Color4): string {
-        return `rgba(${color.r * 255 * this.opacity},
-        ${color.g * 255 * this.opacity},
-        ${color.b * 255 * this.opacity},
-        ${color.a * this.opacity})`;
     }
 
     getBrightnessFromChar(char: string): number {

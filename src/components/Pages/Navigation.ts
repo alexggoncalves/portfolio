@@ -1,8 +1,8 @@
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { ASCIIButton } from "../../PageRenderer/Elements/ASCIIButton";
-import { Layer } from "../../PageRenderer/Layer";
+import { ASCIIButton } from "../PageRenderer/Elements/ASCIIButton";
+import { Layer } from "../PageRenderer/Layer";
 
 //-------------------------------
 //          FRAME LAYER

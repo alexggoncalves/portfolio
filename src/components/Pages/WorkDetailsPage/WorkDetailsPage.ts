@@ -1,20 +1,20 @@
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import type { TeamMember, Work } from "../../stores/contentStore";
-import { TeamMemberCard } from "./Layers/TeamMemberCard";
+import type { TeamMember, Work } from "../../../stores/contentStore";
+import { TeamMemberCard } from "./TeamMemberCard";
 
-import useMediaViewerStore from "../../stores/mediaViewerStore";
-import { MediaViewerLayer } from "./Layers/MediaViewerLayer";
+import useMediaViewerStore from "../../../stores/mediaViewerStore";
+import { MediaViewerLayer } from "./MediaViewerLayer";
 
-import useAsciiStore from "../../stores/asciiStore";
-import { createASCIITitle } from "../../helpers/asciiFonts";
-import { Page } from "../PageRenderer/Page";
-import { Layer } from "../PageRenderer/Layer";
-import { ASCIIBlock } from "../PageRenderer/Elements/Element";
-import { ASCIIText } from "../PageRenderer/Elements/ASCIIText";
-import { ASCIIButton } from "../PageRenderer/Elements/ASCIIButton";
-import { ASCIITitleFrame } from "../PageRenderer/Elements/ASCIIFrame";
+import useAsciiStore from "../../../stores/asciiStore";
+import { createASCIITitle } from "../../../helpers/asciiFonts";
+import { Page } from "../../PageRenderer/Page";
+import { Layer } from "../../PageRenderer/Layer";
+import { ASCIIBlock } from "../../PageRenderer/Elements/Element";
+import { ASCIIText } from "../../PageRenderer/Elements/ASCIIText";
+import { ASCIIButton } from "../../PageRenderer/Elements/ASCIIButton";
+import { ASCIITitleFrame } from "../../PageRenderer/Elements/ASCIIFrame";
 
 export class WorkDetailsPage extends Page {
     work: Work | null = null;
@@ -31,9 +31,8 @@ export class WorkDetailsPage extends Page {
         this.work = work;
         this.goTo = goTo;
 
-        const bgResolution = useAsciiStore.getState().backgroundResolution;
-
-        const charSize = useAsciiStore.getState().charSize;
+        // const bgResolution = useAsciiStore.getState().backgroundResolution;
+        // const charSize = useAsciiStore.getState().charSize;
 
         this.asciiCanvasSize = useAsciiStore.getState().uiResolution;
 

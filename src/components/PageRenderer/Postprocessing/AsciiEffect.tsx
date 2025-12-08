@@ -1,5 +1,5 @@
-import { CanvasTexture, LinearFilter, NearestFilter, Texture, Uniform, Vector2 } from "three";
-import { useMemo, forwardRef, useEffect } from "react";
+import { CanvasTexture, Texture, Uniform, Vector2 } from "three";
+import { useMemo, forwardRef } from "react";
 import { BlendFunction, Effect } from "postprocessing";
 import { TextureLoader } from "three";
 import { useLoader } from "@react-three/fiber";
@@ -57,7 +57,7 @@ const fragmentShader = `
         float ascii = texture(uFontAtlas, atlasUV).r;
 
         // Smooth, subtle contrast adjustment
-        float sharpness = 2.0;  // Much gentler sharpening
+        float sharpness = 20.0;  // Much gentler sharpening
         ascii = clamp((ascii - 0.5) * sharpness + 0.5, 0.0, 1.0);
         ascii = pow(ascii, 2.0);  // Softer contrast curve
 

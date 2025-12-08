@@ -1,13 +1,13 @@
-import { Page } from "../PageRenderer/Page";
-import { Layer } from "../PageRenderer/Layer";
+import { Page } from "../../PageRenderer/Page";
+import { Layer } from "../../PageRenderer/Layer";
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
-import type { Work } from "../../stores/contentStore";
+import type { Work } from "../../../stores/contentStore";
 
-import { ASCIIBlock } from "../PageRenderer/Elements/Element";
-import { createASCIITitle } from "../../helpers/asciiFonts";
-import { WorksGrid } from "./Layers/WorksGrid";
-import useAsciiStore from "../../stores/asciiStore";
+import { ASCIIBlock } from "../../PageRenderer/Elements/Element";
+import { createASCIITitle } from "../../../helpers/asciiFonts";
+import { WorksGrid } from "./WorksGrid";
+import useAsciiStore from "../../../stores/asciiStore";
 
 const title = createASCIITitle("WORK");
 
@@ -34,14 +34,14 @@ export class WorkPage extends Page {
 
     init(): void {
         const uiResolution = useAsciiStore.getState().uiResolution;
-        const margin = Math.ceil(uiResolution.x * 0.12);
+        const margin = Math.ceil(uiResolution.x * 0.05);
 
         // Place title and filters
         const mainLayer = new Layer("work", []);
         mainLayer.addElement(
             new ASCIIBlock(
                 title,
-                new Vector2(margin-3, 3),
+                new Vector2(margin, 3),
                 new Color("white"),
                 new Color4(0, 0.4, 0.4, 0),
                 "left",
@@ -52,7 +52,7 @@ export class WorkPage extends Page {
 
         // Place grid of works
         
-        const gap = 1;
+        const gap = 1.2;
         const gridWidth = uiResolution.x - margin * 2;
 
         const cols = this.calculateGridColumns(gridWidth,18,25,gap)

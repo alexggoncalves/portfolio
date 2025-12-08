@@ -1,11 +1,14 @@
 import { useEffect } from "react";
 
-import useContentStore from "../../stores/contentStore"; // your Zustand store
 import worksData from "../../data/works.json";
 import peopleData from "../../data/people.json";
-import type { Work, Person, Asset } from "../../stores/contentStore";
-import { useLoader } from "@react-three/fiber";
-import { ImageLoader } from "three";
+import tagsData from "../../data/tags.json"
+
+import useContentStore from "../../stores/contentStore"; // your Zustand store
+
+import type { Work, Person, Asset, Tag } from "../../stores/contentStore";
+// import { useLoader } from "@react-three/fiber";
+// import { ImageLoader } from "three";
 import { useProgress, useTexture } from "@react-three/drei";
 
 const defaultAvatarSrc = "/images/default/default_avatar.jpg";
@@ -13,10 +16,11 @@ const defaultProjectThumbnail = "/images/default/default_avatar.jpg";
 
 const works = worksData as Work[];
 const people = peopleData as Person[];
+const tags = tagsData as Tag[];
 
 // Load thumbnails, 3d models and team pictures
 function MainContentLoader() {
-    // const { progress, item, loaded } = useProgress();
+    const { progress, item } = useProgress();
 
     // const { setProgress, set}
 
@@ -57,7 +61,7 @@ function MainContentLoader() {
                             });
                             
                         } else if (asset.type === "video") {
-                            return new Promise<void>((resolve, reject) => {
+                            return new Promise<void>((resolve, _reject) => {
                                 useTexture.preload(asset.src);
                                 resolve();
                             });
@@ -76,6 +80,7 @@ function MainContentLoader() {
             useContentStore.setState({
                 works,
                 people,
+                tags,
                 loaded: true,
             });
         }
@@ -92,7 +97,7 @@ function MainContentLoader() {
                 zIndex: "2",
             }}
         >
-            {/* {progress} : {item} */}
+            {progress} : {item}
         </div>
     );
 }

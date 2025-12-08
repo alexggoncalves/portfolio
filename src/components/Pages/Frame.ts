@@ -1,8 +1,8 @@
 import { Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { ASCIIScreenFrame } from "../../PageRenderer/Elements/ASCIIFrame";
-import { Layer } from "../../PageRenderer/Layer";
+import { ASCIIScreenFrame } from "../PageRenderer/Elements/ASCIIFrame";
+import { Layer } from "../PageRenderer/Layer";
 
 //-------------------------------
 //          FRAME LAYER

@@ -35,36 +35,74 @@ export type Work = {
 
     assets: Asset[];
 
-    thumbnail: CanvasImageSource | void;       
+    thumbnail: CanvasImageSource | void;
     images: CanvasImageSource[];
+};
+
+export type Tag = {
+    id: string;
+    name: string;
+    color: string;
 };
 
 type ContentState = {
     works: Work[];
+    tags: Tag[];
     people: Person[];
+
     loaded: boolean;
 
-    // loadedImages: Set<string>;
+    getWorkById: (id: string) => Work | null;
+    getPersonById: (id: string) => Person | null;
+    getTagById: (id: string) => Tag | null;
+    getTags: (tags: string[]) => Tag[];
 
+    // loadedImages: Set<string>;
     // loadWork: () => void;
     // loadInitialContent: () => void;
-    getPersonById: (id: string) => Person | null;
 };
 
-
-const useContentStore = create<ContentState>((set, get) => ({
+const useContentStore = create<ContentState>((_set, get) => ({
     works: [],
+    tags: [],
     people: [],
+
     loaded: false,
+    
+    getWorkById: (id: string) => {
+        const { works } = get();
+        const work = works.find((work: Work) => work.id === id);
+        return work || null;
+    },
+    getPersonById: (id: string) => {
+        const { people } = get();
+        const person = people.find((person: Person) => person.id === id);
+        return person || null;
+    },
+    getTagById: (id: string) => {
+        const { tags } = get();
+        const tag = tags.find((tag: Tag) => tag.id === id);
+        return tag || null;
+    },
+    getTags: (tags: string[]): Tag[] => {
+        const { getTagById } = get();
+        const output = [] as Tag[];
+
+        tags.forEach((id) => {
+            const tag = getTagById(id);
+            if (tag !== null) output.push(tag);
+        });
+
+        return output;
+    },
 
     // // Cache of already-loaded URLs
     // loadedImages: new Set<string>(),
-    
+
     // loadInitialContent: async () => {
     //     // Get work and people data from json files
     //     const works = worksData as Work[];
     //     const people = peopleData as Person[];
-
 
     //     // Preload all work thumbnails
     //       // Preload all work assets
@@ -91,7 +129,7 @@ const useContentStore = create<ContentState>((set, get) => ({
     //                         console.log(`failed to load: ${asset.src}`, error);
     //                     }
     //                 } else if (asset.type == "video") {
-                        
+
     //                 }
     //             }
     //         })
@@ -101,7 +139,6 @@ const useContentStore = create<ContentState>((set, get) => ({
 
     // loadWork: async () => {
     //     const loadedImages = get().loadedImages;
-    
 
     //     // Preload all work assets
     //     await Promise.all(
@@ -127,7 +164,7 @@ const useContentStore = create<ContentState>((set, get) => ({
     //                         console.log(`failed to load: ${asset.src}`, error);
     //                     }
     //                 } else if (asset.type == "video") {
-                        
+
     //                 }
     //             }
     //         })
@@ -136,7 +173,7 @@ const useContentStore = create<ContentState>((set, get) => ({
     //     // Preload team avatars
     //     await Promise.all(
     //         people.map(async (person: Person) => {
-                
+
     //             const src = person.imageSrc ? person.imageSrc : defaultAvatar
     //             // if(loadedImages.has(src)) return;
     //             try {
@@ -158,34 +195,30 @@ const useContentStore = create<ContentState>((set, get) => ({
     //         loaded: true,
     //     });
     // },
-
-    getPersonById: (id: string) => {
-        const { people } = get();
-        const person = people.find((person: Person) => person.id === id);
-        return person || null;
-    },
 }));
 
-const loadImage = (src: string, loadedImages: Set<string>): Promise<HTMLImageElement> =>
-  new Promise((resolve, reject) => {
-    if (!src) return reject(new Error("Empty image src"));
+// const loadImage = (
+//     src: string,
+//     loadedImages: Set<string>
+// ): Promise<HTMLImageElement> =>
+//     new Promise((resolve, reject) => {
+//         if (!src) return reject(new Error("Empty image src"));
 
-    // If image is already loaded, skip network request
-    if (loadedImages.has(src)) {
-      const cachedImg = new Image();
-      cachedImg.src = src;
-      // If already cached by the browser, it should load instantly
-      if (cachedImg.complete && cachedImg.naturalHeight !== 0) {
-        resolve(cachedImg);
-        return;
-      }
-    }
+//         // If image is already loaded, skip network request
+//         if (loadedImages.has(src)) {
+//             const cachedImg = new Image();
+//             cachedImg.src = src;
+//             // If already cached by the browser, it should load instantly
+//             if (cachedImg.complete && cachedImg.naturalHeight !== 0) {
+//                 resolve(cachedImg);
+//                 return;
+//             }
+//         }
 
-    const img = new Image();
-    img.onload = () => resolve(img);
-    img.onerror = (err) => reject(err);
-    img.src = src;
-  });
-
+//         const img = new Image();
+//         img.onload = () => resolve(img);
+//         img.onerror = (err) => reject(err);
+//         img.src = src;
+//     });
 
 export default useContentStore;

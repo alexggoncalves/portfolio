@@ -7,7 +7,7 @@ import { Layer } from "../../PageRenderer/Layer";
 import type { TeamMember } from "../../../stores/contentStore";
 import useContentStore from "../../../stores/contentStore";
 import { ASCIIBlock } from "../../PageRenderer/Elements/Element";
-import { CanvasImage } from "../../PageRenderer/Elements/CanvasImage";
+// import { CanvasImage } from "../../PageRenderer/Elements/CanvasImage";
 
 //-------------------------------
 //          FRAME LAYER
@@ -63,14 +63,14 @@ export class TeamMemberCard extends Layer {
 
     init(_isMobile?: boolean): void {
         if (this.avatar)
-            this.addElement(
-                new CanvasImage(
-                    this.avatar,
-                    new Vector2(this.position.x, this.position.y),
-                    8,
-                    8 / 5.5
-                )
-            );
+            // this.addElement(
+            //     new CanvasImage(
+            //         this.avatar,
+            //         new Vector2(this.position.x, this.position.y),
+            //         8,
+            //         8 / 5.5
+            //     )
+            // );
 
         this.addElement(
             new ASCIIBlock(

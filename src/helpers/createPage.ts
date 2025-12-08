@@ -1,7 +1,7 @@
-import { HomePage } from "../components/Pages/HomePage";
-import { WorkPage } from "../components/Pages/WorkPage";
-import { ContactsPage } from "../components/Pages/ContactsPage";
-import { WorkDetailsPage } from "../components/Pages/WorkDetailsPage";
+import { HomePage } from "../components/Pages/HomePage/HomePage";
+import { WorkPage } from "../components/Pages/WorkPage/WorkPage";
+import { ContactsPage } from "../components/Pages/ContactsPage/ContactsPage";
+import { WorkDetailsPage } from "../components/Pages/WorkDetailsPage/WorkDetailsPage";
 import type { Work } from "../stores/contentStore";
 import { Page } from "../components/PageRenderer/Page";
 

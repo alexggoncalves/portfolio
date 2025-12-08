@@ -1,0 +1,57 @@
+[
+    {
+        "id": "game-dev",
+        "name": "Game Dev",
+        "color": "#7B61FF"
+    },
+    {
+        "id": "frontend",
+        "name": "Frontend",
+        "color": "#00abda"
+    },
+    {
+        "id": "backend",
+        "name": "Backend",
+        "color": "#2EC4B6"
+    },
+    {
+        "id": "3d",
+        "name": "3D",
+        "color": "#FF6B6B"
+    },
+    {
+        "id": "vr",
+        "name": "VR",
+        "color": "#FFA534"
+    },
+    {
+        "id": "interaction-design",
+        "name": "Interaction Design",
+        "color": "#FF8ED4"
+    },
+    {
+        "id": "ai",
+        "name": "AI",
+        "color": "#00A8E8"
+    },
+    {
+        "id": "generative",
+        "name": "Generative",
+        "color": "#9BDE7E"
+    },
+    {
+        "id": "animation",
+        "name": "Motion/Animation",
+        "color": "#FAD000"
+    },
+    {
+        "id": "film",
+        "name": "Film",
+        "color": "#6A7F98"
+    },
+    {
+        "id": "graphic-design",
+        "name": "Graphic Design",
+        "color": "#E94E77"
+    }
+]

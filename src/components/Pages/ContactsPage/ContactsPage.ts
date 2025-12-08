@@ -1,7 +1,7 @@
-import { Page } from "../PageRenderer/Page";
-import { Layer } from "../PageRenderer/Layer";
+import { Page } from "../../PageRenderer/Page";
+import { Layer } from "../../PageRenderer/Layer";
 import { Vector2, Color } from "three";
-import { ASCIIBlock } from "../PageRenderer/Elements/Element";
+import { ASCIIBlock } from "../../PageRenderer/Elements/Element";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 const title = `CONTACTS`;
