@@ -9,19 +9,13 @@ import type { Tag, Work } from "../../../stores/contentStore";
 import useContentStore from "../../../stores/contentStore";
 import TagLabel from "./TagLabel";
 
-export class WorkCard extends Element {
-    work: Work;
-
-    tagLabels: TagLabel[] = [];
-
-    padding = 10;
-    scrollOffset = 0;
-    yOffset = 0;
+export class Filters extends Element {
 
     isMouseOver: boolean = false;
+    isOpen: boolean = false;
 
-    canvasImage: CanvasImage | undefined;
-    domLink: HTMLElement;
+    openButton: HTMLElement;
+
     onClick: () => void;
 
     constructor(
@@ -32,14 +26,12 @@ export class WorkCard extends Element {
         parent?: HTMLElement
     ) {
         super(position);
-        this.work = work;
         this.setSize(size.x, size.y);
         this.animated = true;
 
-        // Get work's tags and initialize label elements
-        const { getTags } = useContentStore.getState();
-        const tagObjects = getTags(this.work.tags);
-        this.initializeTagLabels(tagObjects);
+        // Get all tags 
+        const { tags } = useContentStore.getState();
+        console.log(tags)
 
         // Get thumbnail asset source
         const thumbnailSrc = work.assets.find(
@@ -63,7 +55,7 @@ export class WorkCard extends Element {
 
         this.domLink = this.createHTMLLink(
             "Go to " + this.work.title,
-            this.position.clone(),
+            this.position,
             this.size,
             parent
         );
@@ -102,10 +94,8 @@ export class WorkCard extends Element {
 
         this.yOffset = (this.position.y - this.scrollOffset) * charSize.y;
 
-        const domTop = Math.round((this.yOffset - canvasOffset.y) / devicePixelRatio);
-
         // Update dom button position
-        this.domLink.style.top = `${domTop}px`;
+        this.domLink.style.top = `${this.yOffset - canvasOffset.y}px`;
 
         // Update image
         if (this.canvasImage) {

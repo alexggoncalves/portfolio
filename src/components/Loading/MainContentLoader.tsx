@@ -11,7 +11,7 @@ import type { Work, Person, Asset, Tag } from "../../stores/contentStore";
 // import { ImageLoader } from "three";
 import { useProgress, useTexture } from "@react-three/drei";
 
-const defaultAvatarSrc = "/images/default/default_avatar.jpg";
+const defaultAvatarSrc = "/images/avatars/default_avatar.jpg";
 const defaultProjectThumbnail = "/images/default/default_avatar.jpg";
 
 const works = worksData as Work[];

@@ -15,7 +15,7 @@ export class Frame extends Layer {
 
     init(): void {
         this.addElement(
-            new ASCIIScreenFrame(new Color(1, 1, 1), new Color4("transparent"))
+            new ASCIIScreenFrame(new Color(1, 1, 1), new Color4(1,1,1,0))
         );
     }
 }

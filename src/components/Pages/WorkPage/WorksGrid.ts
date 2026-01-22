@@ -68,7 +68,7 @@ export class WorksGrid extends Layer {
 
         // Image size in the ascii grid dimensions
         const imageWidth =
-            (this.gridSize.x - (this.cols - 1) * this.gap) / this.cols;
+            ((this.gridSize.x - (this.cols - 1) * this.gap) / this.cols);
         const imageHeight = Math.floor(imageWidth / this.imageAspectRatio);
 
         // Determine initial visible height

@@ -17,7 +17,7 @@
   overflow: hidden;
 }
 
-@font-face {
+@font-face { 
   font-family: "VGA_8x16";
   src: local("VGA_8x16"), url("./fonts/Px437_IGS_VGA_8x16.ttf") format("truetype");
 }

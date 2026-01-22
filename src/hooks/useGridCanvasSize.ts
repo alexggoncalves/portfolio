@@ -1,9 +1,7 @@
-import { Vector2 } from "three"; 
+import { Vector2 } from "three";
 import { useState, useEffect } from "react";
 
-function useGridCanvasSize(
-    charSize: Vector2
-) {
+function useGridCanvasSize(charSize: Vector2) {
     const [size, setSize] = useState({ width: 0, height: 0, left: 0, top: 0 });
 
     useEffect(() => {
@@ -11,9 +9,10 @@ function useGridCanvasSize(
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
 
-             // Calculate grid dimensions that cover the viewport
-            const gridCols = Math.floor(viewportWidth / charSize.x) + Math.floor(4 / devicePixelRatio);
-            const gridRows = Math.floor(viewportHeight / charSize.y) +  Math.floor(4 / devicePixelRatio);
+            const extra = Math.round(4 / devicePixelRatio);
+
+            const gridCols = Math.floor(viewportWidth / charSize.x) + extra;
+            const gridRows = Math.floor(viewportHeight / charSize.y) + extra;
 
             const canvasWidth = gridCols * charSize.x;
             const canvasHeight = gridRows * charSize.y;
