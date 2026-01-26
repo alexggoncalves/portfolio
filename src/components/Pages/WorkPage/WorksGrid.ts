@@ -64,8 +64,8 @@ export class WorksGrid extends Layer {
     }
 
     createGrid(): void {
-        const uiResolution = useAsciiStore.getState().uiResolution;
-
+        const gridSize = useAsciiStore.getState().gridSize;
+        console.log(gridSize)
         // Image size in the ascii grid dimensions
         const imageWidth =
             ((this.gridSize.x - (this.cols - 1) * this.gap) / this.cols);
@@ -73,11 +73,11 @@ export class WorksGrid extends Layer {
 
         // Determine initial visible height
         const initialVisibleHeight = Math.min(
-            uiResolution.y,
+            gridSize.y,
             imageHeight * 1.5
         );
 
-        const topSpace = uiResolution.y - initialVisibleHeight - 2;
+        const topSpace = gridSize.y - initialVisibleHeight - 2;
 
         // Calculate total grid height
         this.gridSize.y = (imageHeight + this.gap) * this.rows - this.gap;
@@ -116,15 +116,15 @@ export class WorksGrid extends Layer {
             new FadeGradient(
                 new Color(bgColor),
                 new Vector2(0, 2),
-                new Vector2(uiResolution.x, 5),
+                new Vector2(gridSize.x, 5),
                 "top"
             )
         );
         this.addElement(
             new FadeGradient(
                 new Color(bgColor),
-                new Vector2(0, uiResolution.y - 1.5),
-                new Vector2(uiResolution.x, 3),
+                new Vector2(0, gridSize.y - 1.5),
+                new Vector2(gridSize.x, 3),
                 "bottom"
             )
         );

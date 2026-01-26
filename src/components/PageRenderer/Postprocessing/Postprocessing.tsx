@@ -10,7 +10,7 @@ import {
 } from "@react-three/postprocessing";
 import { Vector2 } from "three";
 
-import { GlitchMode,} from "postprocessing";
+import { GlitchMode } from "postprocessing";
 
 import { AsciiEffect } from "./AsciiEffect";
 import { LensDistortion } from "./LensDistortion";
@@ -19,14 +19,14 @@ import useAsciiStore from "../../../stores/asciiStore";
 // import { useThree } from "@react-three/fiber";
 
 function Postprocessing() {
-    const { fontAtlas, charSize, atlasGridSize, backgroundTexture, uiTexture } =
-        useAsciiStore();
+    const { fontAtlas, charSize, atlasGridSize, backgroundTexture, uiTexture} = useAsciiStore();
+
+    
 
     return (
         <>
             // Selective effects (canvas elements except images)
             <EffectComposer multisampling={0}>
-                
                 <AsciiEffect
                     fontAtlasSrc={fontAtlas}
                     charSize={charSize}

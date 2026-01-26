@@ -27,18 +27,23 @@ export const RotatingModel = ({ children , xSpeed = 0, ySpeed = 0, position =[0,
 type OBJModelProps = { path: string , position?: [number, number, number], scale?: number, rotation?: [number, number, number]};    
 
 export const OBJModel = ({ path, position, scale, rotation }: OBJModelProps) => {
+    console.log(path)
     const materials = useLoader(MTLLoader, `${path}/materials.mtl`);
     const object = useLoader(OBJLoader, `${path}/model.obj`, (loader) => {
         materials.preload();
         loader.setMaterials(materials);
     });
+    
     object.traverse((child) => {
+        console.log(child);
         if ((child as Mesh).isMesh) {
             const mesh = child as Mesh;
             mesh.castShadow = true;
             mesh.receiveShadow = true;
+            
         }
     });
 
     return <primitive object={object} scale={scale} position={position} rotation={rotation}/>;
 };
+

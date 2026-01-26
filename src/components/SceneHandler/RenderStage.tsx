@@ -8,28 +8,26 @@ import SceneCanvas from "./SceneCanvas";
 import PageRenderer from "../PageRenderer/PageRenderer";
 import Postprocessing from "../PageRenderer/Postprocessing/Postprocessing";
 
-import MediaViewer from "../Pages/WorkDetailsPage/MediaViewer";
-
 import MainScene from "./3DScenes/MainScene";
 import usePageManager from "../../hooks/usePageManager";
+import { Cursor } from "../PageRenderer/Elements/Cursor";
+import { useState } from "react";
 
 //---------------------------------------------------------------------
-// Scene Handler: Handle page layout and 3d Scene + transitions
+// RenderStage: Handle page layout and 3d Scene + transitions
 //---------------------------------------------------------------------
-function SceneHandler() {
-    const { uiTexture } = useAsciiStore();
-
+function RenderStage() {
     const location = useLocation();
     const { isMobile } = useSceneStore();
-
+    const { gridSize } = useAsciiStore();
+    
     // Initialize frame and navigations layers
-    const fixedLayers = useFixedLayers([uiTexture?.width, uiTexture?.height]);
+    const fixedLayers = useFixedLayers([gridSize.x, gridSize.y, isMobile]);
 
     // Manage Pages (initialize and update)
-    const { currentPage, nextPage } = usePageManager(location, isMobile, [
-        uiTexture?.width,
-        uiTexture?.height,
-    ]);
+    const { currentPage, nextPage } = usePageManager(location, isMobile, [gridSize.x, gridSize.y]);
+
+    const [cursor] = useState<Cursor>(new Cursor()); 
 
     return (
         <>
@@ -40,14 +38,13 @@ function SceneHandler() {
                     fixedLayers={fixedLayers}
                     currentPage={currentPage}
                     nextPage={nextPage}
+                    cursor={cursor}
                 />
 
                 <Postprocessing/>
             </SceneCanvas>
-
-            <MediaViewer />
         </>
     );
 }
 
-export default SceneHandler;
+export default RenderStage;

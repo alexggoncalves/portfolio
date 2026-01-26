@@ -30,11 +30,6 @@
         "color": "#FF8ED4"
     },
     {
-        "id": "ai",
-        "name": "AI",
-        "color": "#00A8E8"
-    },
-    {
         "id": "generative",
         "name": "Generative",
         "color": "#9BDE7E"

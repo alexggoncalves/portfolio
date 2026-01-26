@@ -1,112 +1,74 @@
-import { Texture, Vector2 } from "three";
-import { useEffect, useRef } from "react";
-import { useThree, useFrame } from "@react-three/fiber";
-import {createAsciiRenderTarget, createBackgroundRenderTarget} from "../../helpers/createRenderTarget";
+import { Vector2 } from "three";
+import { useFrame } from "@react-three/fiber";
 
 import useSceneStore from "../../stores/sceneStore";
-import useAsciiStore from "../../stores/asciiStore";
 
 import { Layer } from "./Layer";
 import { Page } from "./Page";
 import useScroll from "../../hooks/useScroll";
+import useAsciiRenderTargets from "../../hooks/useAsciiRenderTargets";
+import type { Cursor } from "./Elements/Cursor";
+import useCustomCursor from "../../hooks/useCustomCursor";
 
 type PageRendererProps = {
     currentPage?: Page | null;
     nextPage?: Page | null;
     fixedLayers?: Layer[] | null;
+    cursor: Cursor;
 };
 
 function PageRenderer({
     currentPage,
     nextPage,
     fixedLayers,
+    cursor,
 }: PageRendererProps) {
-    const { size } = useThree();
     const scrollDelta = useScroll();
+    const { cursorPosition, cursorState, cursorEnabled } = useCustomCursor();
 
-    const { charSize, setUI, setBackground, pixelRatio } = useAsciiStore();
-
-    const uiTexRef = useRef<Texture>(null);
-    const uiContextRef = useRef<CanvasRenderingContext2D>(null);
-    const backgroundTexRef = useRef<Texture>(null);
-    const backgroundContextRef = useRef<CanvasRenderingContext2D>(null);
-
-    useEffect(() => {
-        const charSize = useAsciiStore.getState().charSize;
-        const gridWidth = size.width / charSize.x;
-        const gridHeight = size.height / charSize.y;
-
-        // Create a texture to draw ASCII on the GPU
-        const uiTex = createAsciiRenderTarget(gridWidth, gridHeight);
-
-        // Create a texture to draw bacground behind the ascii on the GPU
-        const backgroundTex = createBackgroundRenderTarget(size.width, size.height);
-
-        // Store the texture and the context for both canvas created on the asciiStore
-        setUI(uiTex.texture, uiTex.ctx);
-        setBackground(backgroundTex.texture, backgroundTex.ctx);
-
-        // Save references for the created objects
-        uiTexRef.current = uiTex.texture;
-        uiContextRef.current = uiTex.ctx;
-        backgroundTexRef.current = backgroundTex.texture;
-        backgroundContextRef.current = backgroundTex.ctx;
-    }, [size.width, size.height, charSize.x, charSize.y, pixelRatio]);
-
-    
-    const { uiTexture, backgroundTexture } = useAsciiStore();
+    const { backgroundColor } = useSceneStore();
+    const { ui, background, clearRenderTargets } = useAsciiRenderTargets();
 
     // Update and render pages (->layers->elements)
     useFrame((_state, delta) => {
-        const bgColor = useSceneStore.getState().backgroundColor;
+        const uiContext = ui.current?.context;
+        const bgContext = background.current?.context;
 
+        const uiTexture = ui.current?.texture;
+        const backgroundTexture = background.current?.texture;
+
+        if (!uiContext || !bgContext) return;
         if (!uiTexture || !backgroundTexture) return;
 
-        if (uiContextRef.current && backgroundContextRef.current) {
-            const uiContext = uiContextRef.current;
-            const bgContext = backgroundContextRef.current;
-            const uiCanvas = uiContext.canvas;
-            const bgCanvas = bgContext.canvas;
+        // Clear Render Targets
+        clearRenderTargets(uiContext, bgContext, backgroundColor);
 
-            // Clear ui and background textures
-            uiContext.clearRect(0, 0, uiCanvas.width, uiCanvas.height);
-            bgContext.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
-            bgContext.fillStyle = `rgb(${bgColor.r * 255},${bgColor.g * 255},${
-                bgColor.b * 255
-            }`;
+        // Update and draw current page
+        currentPage?.update(
+            uiContext,
+            bgContext,
+            delta,
+            new Vector2(0, 0),
+            !nextPage ? scrollDelta : 0,
+        );
 
-            // Fill the entire canvas
-            bgContext.fillRect(0, 0, bgCanvas.width, bgCanvas.height);
+        // Update and draw next page if it exists (for transitions)
+        nextPage?.update(
+            uiContext,
+            bgContext,
+            delta,
+            new Vector2(0, 0),
+            scrollDelta,
+        );
 
-            // Draw and update current page
-            if (currentPage) {
-                currentPage.update(
-                    uiContext,
-                    bgContext,
-                    delta,
-                    new Vector2(0, 0),
-                    !nextPage ? scrollDelta : 0
-                );
-            }
+        // Draw fixed layers
+        fixedLayers?.forEach((layer: Layer) => {
+            layer.draw(uiContext, bgContext, 1);
+        });
 
-            // Draw next page if it exists (for transitions)
-            if (nextPage) {
-                nextPage.update(
-                    uiContext,
-                    bgContext,
-                    delta,
-                    new Vector2(0, 0),
-                    scrollDelta
-                );
-            }
-
-            // Draw Frame + Navigation
-            if (fixedLayers) {
-                fixedLayers.forEach((layer: Layer) => {
-                    layer.draw(uiContext, bgContext, 1);
-                });
-            }
-        }
+        // Draw custom cursor
+        if(cursorEnabled)
+            cursor?.update(uiContext, bgContext, cursorPosition, cursorState);
 
         uiTexture.needsUpdate = true;
         backgroundTexture.needsUpdate = true;

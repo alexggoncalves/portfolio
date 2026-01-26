@@ -79,19 +79,20 @@ export class Element {
 
     // Apply horizontal and vertical alignment
     applyAlignment() {
-        const uiResolution = useAsciiStore.getState().uiResolution;
+        const gridSize = useAsciiStore.getState().gridSize;
         const offset = new Vector2(0, 0);
+        
 
         if (this.horizontalAlign === "right") {
-            offset.x = uiResolution.x - this.size.x;
+            offset.x = gridSize.x - this.size.x;
         } else if (this.horizontalAlign === "center") {
-            offset.x = (uiResolution.x - this.size.x) / 2;
+            offset.x = (gridSize.x - this.size.x) / 2;
         }
 
         if (this.verticalAlign === "bottom") {
-            offset.y = uiResolution.y - this.size.y;
+            offset.y = gridSize.y - this.size.y;
         } else if (this.verticalAlign === "middle") {
-            offset.y = (uiResolution.y - this.size.y) / 2;
+            offset.y = (gridSize.y - this.size.y) / 2;
         }
 
         this.position.x += offset.x;
@@ -186,6 +187,7 @@ export class Element {
         context.moveTo(pointA.x - strokeWidth / 2, pointA.y);
         context.lineTo(pointB.x - strokeWidth / 2, pointB.y);
         context.stroke();
+
     }
 
     drawBackgroundTexel(
@@ -256,7 +258,7 @@ export class Element {
         const link = document.createElement("button");
         link.classList.add("asciiButton");
         link.textContent = `Go to ${text}`;
-        link.style.cursor = "pointer";
+        link.style.cursor = "none";
         link.role = "link";
 
         // Set position and dimensions

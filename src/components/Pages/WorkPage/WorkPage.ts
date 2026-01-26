@@ -33,8 +33,8 @@ export class WorkPage extends Page {
     }
 
     init(): void {
-        const uiResolution = useAsciiStore.getState().uiResolution;
-        const margin = Math.ceil(uiResolution.x * 0.05);
+        const gridSize = useAsciiStore.getState().gridSize;
+        const margin = Math.ceil(gridSize.x * 0.05);
 
         // Place title and filters
         const mainLayer = new Layer("work", []);
@@ -53,7 +53,7 @@ export class WorkPage extends Page {
         // Place grid of works
         
         const gap = 1.2;
-        const gridWidth = uiResolution.x - margin * 2;
+        const gridWidth = gridSize.x - margin * 2;
 
         const cols = this.calculateGridColumns(gridWidth,18,25,gap)
 

@@ -6,9 +6,9 @@ export function createAsciiRenderTarget(width: number, height: number) {
     canvas.width = width * devicePixelRatio;
     canvas.height = height * devicePixelRatio;
 
-    const ctx = canvas.getContext("2d", { alpha: true })!;
-    ctx.imageSmoothingEnabled = false;
-    ctx.globalAlpha = 1;
+    const context = canvas.getContext("2d", { alpha: true })!;
+    context.imageSmoothingEnabled = false;
+    context.globalAlpha = 1;
 
     const texture = new CanvasTexture(canvas);
 
@@ -17,7 +17,7 @@ export function createAsciiRenderTarget(width: number, height: number) {
     texture.generateMipmaps = false;
     texture.needsUpdate = true;
 
-    return { texture, ctx };
+    return { texture, context };
 }
 
 export function createBackgroundRenderTarget(width: number, height: number) {
@@ -25,11 +25,11 @@ export function createBackgroundRenderTarget(width: number, height: number) {
     canvas.width = width * devicePixelRatio;
     canvas.height = height * devicePixelRatio;
 
-    const ctx = canvas.getContext("2d", { alpha: true })!;
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
+    const context = canvas.getContext("2d", { alpha: true })!;
+    context.imageSmoothingEnabled = true;
+    context.imageSmoothingQuality = "high";
 
-    ctx.globalAlpha = 1;
+    context.globalAlpha = 1;
 
     const texture = new CanvasTexture(canvas);
 
@@ -37,5 +37,5 @@ export function createBackgroundRenderTarget(width: number, height: number) {
     texture.minFilter = LinearFilter;
     texture.needsUpdate = true;
 
-    return { texture, ctx };
+    return { texture, context };
 }

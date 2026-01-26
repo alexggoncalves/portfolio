@@ -69,7 +69,7 @@ export class ASCIIButton extends Element {
         const button = document.createElement("button");
         button.textContent = `Go to ${this.text}`;
         button.classList.add("asciiButton");
-        button.style.cursor = "pointer";
+        button.style.cursor = "none";
         button.role = "link";
 
         // Set Position

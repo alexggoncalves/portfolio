@@ -5,11 +5,11 @@ import ErrorElement from "./components/SceneHandler/ErrorElement";
 import { Outlet, useRouteError } from "react-router";
 import { useEffect, useState } from "react";
 
-import SceneHandler from "./components/SceneHandler/SceneHandler";
 import useSceneStore from "./stores/sceneStore";
 // import useAsciiStore from "./stores/asciiStore";
 // import useWorkStore from "./stores/contentStore";
 import MainContentLoader from "./components/Loading/MainContentLoader";
+import RenderStage from "./components/SceneHandler/RenderStage";
 
 function App() {
     const error = useRouteError();
@@ -46,7 +46,7 @@ function App() {
     return (
         <>
             <MainContentLoader/>
-            <SceneHandler />
+            <RenderStage />
             
             <div id="dom-overlay">
                 <header></header>
