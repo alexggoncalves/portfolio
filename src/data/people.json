@@ -1,52 +1,38 @@
 [
     {
-        "id": "me",
+        "id": "alexandre-goncalves",
         "name": "Alexandre Gonçalves",
-        "avatar": {
-                "type": "image",
-                "src": "/images/1748878390298.jpg",
-                "alt": "aa"
-            },
+        "avatarSrc": "/images/1748878390298.jpg",
         "link": ""
     },
     {
         "id": "margarida-mendonca",
         "name": "Margarida Mendonça",
-        "avatar": {
-                "type": "image",
-                "src": "/images/1748878390298.jpg",
-                "alt": "aa"
-            },
+        "avatarSrc": "/images/1748878390298.jpg",
         "link": "https://www.youtube.com/watch?v=xvFZjo5PgG0"
     },
     {
         "id": "maria-carrilho",
         "name": "Maria Carrilho",
-        "avatar": {
-                "type": "image",
-                "src": "/images/1748878390298.jpg",
-                "alt": "aa"
-            },
+        "avatarSrc": "/images/1748878390298.jpg",
         "link": ""
     },
     {
         "id": "joao-cristovao",
         "name": "João Cristóvão",
-        "avatar": {
-                "type": "image",
-                "src": "/images/1748878390298.jpg",
-                "alt": "aa"
-            },
+        "avatarSrc": "/images/1748878390298.jpg",
         "link": "https://www.joaocristovao.com"
     },
     {
         "id": "luis-costa",
         "name": "Luís Costa",
-        "avatar": {
-                "type": "image",
-                "src": "https://cloud.alexgg.com/avatars/luis-costa.jpg",
-                "alt": "aa"
-            },
+        "avatarSrc": "/images/1748878390298.jpg",
         "link": "https://www.linkedin.com/in/lu%C3%ADs-costa-8b3908201/"
+    },
+    {
+        "id": "beatriz-ferreira",
+        "name": "Beatriz Ferreira",
+        "avatarSrc": "",
+        "link": ""
     }
 ]

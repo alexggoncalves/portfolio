@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 import useSceneStore from "./stores/sceneStore";
 // import useAsciiStore from "./stores/asciiStore";
 // import useWorkStore from "./stores/contentStore";
-import MainContentLoader from "./components/Loading/MainContentLoader";
+import MainContentLoader from "./components/SceneHandler/MainContentLoader";
 import RenderStage from "./components/SceneHandler/RenderStage";
 
 function App() {

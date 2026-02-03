@@ -25,14 +25,14 @@ function MainScene() {
                 shadow-mapSize={1024}
             />
             {/* Objects */}
-            <RotatingModel ySpeed={0.1} position={[0, 0, 0]}>
+            {/* <RotatingModel ySpeed={0.1} position={[0, 0, 0]}>
                 <OBJModel
                     path="/models/alex"
                     position={[0, 0, 0]}
                     scale={6}
                     rotation={[0, 0, 0]}
                 ></OBJModel>
-            </RotatingModel>
+            </RotatingModel> */}
 
             {/* <GradientTexture
                 stops={[0, 0.5]} // As many stops as you want

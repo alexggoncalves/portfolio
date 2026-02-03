@@ -5,7 +5,7 @@ import { useThree } from "@react-three/fiber";
 import {
     createAsciiRenderTarget,
     createBackgroundRenderTarget,
-} from "../helpers/createRenderTarget";
+} from "../utils/renderTargets";
 
 function useAsciiRenderTargets() {
     const { size } = useThree();

@@ -5,11 +5,11 @@ import { ASCIIButton } from "../../PageRenderer/Elements/ASCIIButton";
 import { Layer } from "../../PageRenderer/Layer";
 
 import type { Asset } from "../../../stores/contentStore";
-import { ASCIIBlock } from "../../PageRenderer/Elements/Element";
+import { ASCIIBlock } from "../../PageRenderer/Element";
 
 import useMediaViewerStore from "../../../stores/mediaViewerStore";
 
-import { Element } from "../../PageRenderer/Elements/Element";
+import { Element } from "../../PageRenderer/Element";
 
 //-------------------------------
 //          FRAME LAYER

@@ -1,7 +1,7 @@
 import { Vector2 } from "three";
 import useAsciiStore from "../../../stores/asciiStore";
 
-import { Element } from "./Element";
+import { Element } from "../Element";
 
 //------------------------------------------
 // Ascii Image Class
@@ -28,7 +28,7 @@ export class CanvasImage extends Element {
         height: number, // height in ascii cells
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
-        renderAscii: boolean = false
+        renderAscii: boolean = false,
     ) {
         super(position, undefined, undefined, horizontalAlign, verticalAlign);
         this.image = image;
@@ -45,7 +45,7 @@ export class CanvasImage extends Element {
 
     draw(
         _ui: CanvasRenderingContext2D,
-        background: CanvasRenderingContext2D
+        background: CanvasRenderingContext2D,
     ): void {
         if (!this.image) {
             return;
@@ -59,17 +59,17 @@ export class CanvasImage extends Element {
         // Draw background (full picture)
         background.save();
         background.globalAlpha = this.opacity;
-        
+
         background.drawImage(
             this.image,
             0,
             0,
-            800,
-            600,
+            this.imageSize.x,
+            this.imageSize.y,
             this.position.x * charSize.x,
             this.position.y * charSize.y - this.yOffset,
             this.size.x * charSize.x,
-            this.size.y * charSize.y
+            this.size.y * charSize.y,
         );
 
         // Restore global alpha
@@ -81,8 +81,8 @@ export class CanvasImage extends Element {
         return -(Math.cos(Math.PI * t) - 1) / 2;
     }
 
-    setYOffset(y:number):void {
-        this.yOffset = y
+    setYOffset(y: number): void {
+        this.yOffset = y;
     }
 
     update(delta: number): void {

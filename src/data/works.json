@@ -3,58 +3,61 @@
         "id": "endless-purrs",
         "title": "Endless Purrs",
         "subtitle": "Where are the cats? - A game",
-        "description": "In Endless Purrs, you step into the boots of a forest wizard who's lost his most treasured companions, his cats. Guided by meows, you journey through an ever-changing forest in search of them.\nThe game's environment is generated using an optimized implementation of the Wave Function Collapse algorithm, ensuring that every playthrough is a unique experience.",
-        "link": "",
-        "git": "",
-        "year": "2023",
         "tags": ["game-dev", "3d", "generative"],
+        "year": "2023",
+        "thumbnailSrc": "/images/thumbnails/endless-purrs-thumbnail.png",
+        "link": "",
+        "git": "https://github.com/alexggoncalves/endless-purrs",
         "tools": ["Unity", "Blender", "C#"],
-        "roles": ["Designer", "Coder"],
         "team": [
+            { "id": "alexandre-goncalves", "roles": ["Designer", "Coder"] },
+            { "id": "margarida-mendonca", "roles": ["Coder", "Designer"] },
+            { "id": "maria-carrilho", "roles": ["Sound Designer"] }
+        ],
+        "layout": [
             {
-                "id": "margarida-mendonca",
-                "roles": ["Coder", "Designer"]
+                "type": "heading",
+                "text": "Title"
             },
             {
-                "id": "maria-carrilho",
-                "roles": ["Sound Designer"]
-            }
-        ],
-        "assets": [
-            {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/endless-purrs-thumbnail.png",
-                "alt": "aa"
+                "type": "text",
+                "paragraphs": [
+                    "In Endless Purrs, you step into the boots of a forest wizard who's lost his most treasured companions, his cats. Guided by meows, you journey through an ever-changing forest in search of them.",
+                    "The game's environment is generated using an optimized implementation of the Wave Function Collapse algorithm, ensuring that every playthrough is a unique experience."
+                ]
             },
             {
                 "type": "image",
                 "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-1.png",
-                "alt": "aa"
+                "alt": "Endless Purrs - Game Screenshot 1"
+            },
+            {
+                "type": "image-pair",
+                "images": [
+                    {
+                        "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-2.png",
+                        "alt": "Endless Purrs - Game Screenshot 2"
+                    },
+                    {
+                        "src": "/images/endless-purrs/endless-purrs-3.png",
+                        "alt": "Endless Purrs - Game Screenshot 3"
+                    }
+                ]
             },
             {
                 "type": "video",
                 "src": "/images/endless-purrs/endless-purrs-video.mp4",
-                "alt": "aa"
-            },
-            {
-                "type": "image",
-                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-2.png",
-                "alt": "aa"
-            },
-            {
-                "type": "image",
-                "src": "/images/endless-purrs/endless-purrs-3.png",
-                "alt": "aa"
+                "alt": "Endless Purrs - Video"
             },
             {
                 "type": "image",
                 "src": "/images/endless-purrs/endless-purrs-4.png",
-                "alt": "aa"
+                "alt": "Endless Purrs - Game Screenshot 4"
             },
             {
                 "type": "image",
                 "src": "/images/endless-purrs/endless-purrs-5.png",
-                "alt": "aa"
+                "alt": "Endless Purrs - Game Screenshot 5"
             }
         ]
     },
@@ -62,18 +65,16 @@
         "id": "gary",
         "title": "Gary - The Wizard",
         "subtitle": "Character Design and Animation",
-        "description": "meow",
+        "tags": ["game-dev", "3D", "animation"],
+        "year": "2023",
+        "thumbnailSrc": "/images/thumbnails/gary-thumbnail.png",
         "link": "",
         "git": "",
-        "year": "2023",
-        "tags": ["game-dev", "3D", "animation"],
         "tools": ["Unity", "Blender", "C#", "Substance Painter"],
-        "roles": ["Designer", "Coder"],
-        "team": [],
-        "assets": [
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/gary-thumbnail.png"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     },
@@ -81,18 +82,22 @@
         "id": "pipe-quest",
         "title": "PipeQuest",
         "subtitle": "Plumbing VR Training",
-        "description": "glug",
+        "tags": ["game-dev", "3D", "vr", "interaction-design"],
+        "year": "2023",
+        "thumbnailSrc": "/images/thumbnails/pipe-quest-thumbnail.png",
         "link": "",
         "git": "",
-        "year": "2023",
-        "tags": ["game-dev", "3D", "vr", "interaction-design"],
         "tools": ["Unity", "Blender", "C#"],
-        "roles": ["Designer", "Coder"],
-        "team": [],
-        "assets": [
+        "team": [
+            { "id": "alexandre-goncalves", "roles": ["Designer", "3D"] },
+            { "id": "margarida-mendonca", "roles": ["Designer", "3D"] },
+            { "id": "goncalo-barroso", "roles": ["Designer"] },
+            { "id": "joao-santos", "roles": ["Coder"] }
+        ],
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/pipe-quest-thumbnail.png"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     },
@@ -100,18 +105,16 @@
         "id": "mirage",
         "title": "Mirage - Tiny World",
         "subtitle": "Modelation and Materialization",
-        "description": "wowowowowow",
+        "tags": ["3D"],
+        "year": "2023",
+        "thumbnailSrc": "/images/thumbnails/mirage-thumbnail.png",
         "link": "",
         "git": "",
-        "year": "2023",
-        "tags": ["3d"],
         "tools": ["Unity", "Blender", "C#"],
-        "roles": ["Designer"],
-        "team": [],
-        "assets": [
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/mirage-thumbnail.png"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     },
@@ -119,18 +122,16 @@
         "id": "feels-lab",
         "title": "FeelsLab.",
         "subtitle": "AI Medicine Generator",
-        "description": "iiiiiiiiiii",
+        "tags": ["frontend", "backend"],
+        "year": "2023",
+        "thumbnailSrc": "/images/thumbnails/feels-lab-thumbnail.png",
         "link": "",
         "git": "",
-        "year": "2023",
-        "tags": ["frontend", "backend"],
         "tools": ["Unity", "Blender", "C#"],
-        "roles": ["Designer"],
-        "team": [],
-        "assets": [
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/feels-lab-thumbnail.png"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     },
@@ -138,18 +139,16 @@
         "id": "endless",
         "title": "endless",
         "subtitle": "Infinite Music",
-        "description": "lalalala",
+        "tags": ["frontend", "backend", "generative"],
+        "year": "2023",
+        "thumbnailSrc": "/images/thumbnails/endless-thumbnail.png",
         "link": "",
         "git": "",
-        "year": "2023",
-        "tags": ["frontend", "backend", "generative"],
         "tools": ["Unity", "Blender", "C#"],
-        "roles": ["Designer"],
-        "team": [],
-        "assets": [
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/endless-thumbnail.png"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     },
@@ -157,18 +156,16 @@
         "id": "muse",
         "title": "Muse",
         "subtitle": "Art",
-        "description": "uuuuuuuu",
+        "tags": ["frontend"],
+        "year": "2023",
+        "thumbnailSrc": "/images/thumbnails/muse-thumbnail.png",
         "link": "",
         "git": "",
-        "year": "2023",
-        "tags": ["frontend"],
         "tools": ["Unity", "Blender", "C#"],
-        "roles": ["Designer"],
-        "team": [],
-        "assets": [
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/muse-thumbnail.png"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     },
@@ -176,18 +173,20 @@
         "id": "radicals",
         "title": "Radicals",
         "subtitle": "Radical Sports",
-        "description": "oooooooooooooo",
+        "tags": ["frontend", "backend"],
+        "year": "2023",
+        "thumbnailSrc": "/images/thumbnails/radicals-thumbnail.png",
         "link": "",
         "git": "",
-        "year": "2023",
-        "tags": ["frontend", "backend"],
         "tools": ["Unity", "Blender", "C#"],
-        "roles": ["Designer"],
-        "team": [],
-        "assets": [
+        "team": [
+            { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
+            { "id": "beatriz-ferreira", "roles": ["Coder", "Designer"] }
+        ],
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/radicals-thumbnail.png"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     },
@@ -195,18 +194,20 @@
         "id": "alta-baixa-web",
         "title": "Alta & Baixa - Web",
         "subtitle": "Typography Magazine",
-        "description": "eeeeeeee",
+        "tags": ["frontend"],
+        "year": "2023",
+        "thumbnailSrc": "/images/thumbnails/alta-e-baixa-thumbnail.png",
         "link": "",
         "git": "",
-        "year": "2023",
-        "tags": ["frontend"],
         "tools": ["Unity", "Blender", "C#"],
-        "roles": ["Designer"],
-        "team": [],
-        "assets": [
+        "team": [
+            { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
+            { "id": "ana-gil", "roles": ["Designer"] }
+        ],
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/alta-e-baixa-thumbnail.png"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     },
@@ -214,18 +215,20 @@
         "id": "frames",
         "title": "Frames",
         "subtitle": "Movie Store",
-        "description": "rrrrrrrrrrrr",
+        "tags": ["frontend", "backend"],
+        "year": "2023",
+        "thumbnailSrc": "/images/thumbnails/frames-thumbnail.png",
         "link": "",
         "git": "",
-        "year": "2023",
-        "tags": ["frontend", "backend"],
         "tools": ["Unity", "Blender", "C#"],
-        "roles": ["Designer"],
-        "team": [],
-        "assets": [
+        "team": [
+            { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
+            { "id": "joao-cristovao", "roles": ["Coder", "Designer"] }
+        ],
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/frames-thumbnail.png"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     },
@@ -233,28 +236,21 @@
         "id": "malleus",
         "title": "Malleus",
         "subtitle": "Ding dong",
-        "description": "Create new sounds with your own hands.",
+        "tags": ["interaction-design", "generative"],
+        "year": "2022",
+        "thumbnailSrc": "/images/thumbnails/malleus-thumbnail.png",
         "link": "",
         "git": "",
-        "year": "2022",
-        "tags": ["interaction-design","generative"],
         "tools": ["Unity", "C#", "Python"],
-        "roles": ["Designer", "Coder"],
         "team": [
-            {
-                "id": "joao-cristovao",
-                "roles": ["Coder", "Designer"]
-            },
-            {
-                "id": "luis-costa",
-                "roles": ["Sound Designer"]
-            }
+            { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
+            { "id": "joao-cristovao", "roles": ["Coder", "Designer"] },
+            { "id": "luis-costa", "roles": ["Sound Designer", "Designer"] }
         ],
-        "assets": [
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/malleus-thumbnail.png",
-                "alt": "aa"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     },
@@ -262,19 +258,21 @@
         "id": "waver",
         "title": "Waver",
         "subtitle": "Learning Music Scales",
-        "description": "Create new sounds with your own hands.",
-        "link": "",
-        "git": "",
-        "year": "2022",
         "tags": ["interaction-design", "generative"],
+        "year": "2022",
+        "thumbnailSrc": "/images/thumbnails/waver-thumbnail.png",
+        "link": "",
+        "git": "",        
         "tools": ["Unity", "C#", "Python"],
-        "roles": ["Designer", "Coder"],
-        "team": [],
-        "assets": [
+        "team": [
+            { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
+            { "id": "margarida-mendonca", "roles": ["Coder", "Designer"] },
+            { "id": "ema-lopes", "roles": ["Coder", "Designer"] }
+        ],
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/waver-thumbnail.png",
-                "alt": "aa"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     },
@@ -282,19 +280,23 @@
         "id": "samar",
         "title": "Samar",
         "subtitle": "Interactive Installation",
-        "description": "fffffffffffff",
+        "tags": ["interaction-design", "generative"],
+        "year": "2022",
+        "thumbnailSrc": "/images/thumbnails/samar-thumbnail.png",
         "link": "",
         "git": "",
-        "year": "2022",
-        "tags": ["interaction-design", "generative"],
         "tools": ["Unity", "C#", "Python"],
-        "roles": ["Designer", "Coder"],
-        "team": [],
-        "assets": [
+        "team": [
+            { "id": "alexandre-goncalves", "roles": ["Coder", "3D"] },
+            { "id": "daniela-mendes", "roles": ["Designer"] },
+            { "id": "ines-goncalves", "roles": ["Designer"] },
+            { "id": "jolanta-pavliukovic", "roles": ["Designer"] },
+            { "id": "pedro-mendes", "roles": ["Designer", "3D"] }
+        ],
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/samar-thumbnail.png",
-                "alt": "aa"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     },
@@ -302,19 +304,20 @@
         "id": "visualizers",
         "title": "Music Visualizers",
         "subtitle": "(experiments)",
-        "description": "nanananana",
+        "tags": ["generative", "animation"],
+        "year": "2022",
+        "thumbnailSrc": "/images/thumbnails/visualizers-thumbnail.png",
         "link": "",
         "git": "",
-        "year": "2022",
-        "tags": ["generative","animation"],
         "tools": ["Unity", "C#", "Python"],
-        "roles": ["", "Coder"],
-        "team": [],
-        "assets": [
+        "team": [
+            { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
+            { "id": "joao-cristovao", "roles": ["Coder", "Designer"] }
+        ],
+        "layout": [
             {
-                "type": "thumbnail",
-                "src": "/images/thumbnails/visualizers-thumbnail.png",
-                "alt": "aa"
+                "type": "heading",
+                "text": "Title"
             }
         ]
     }

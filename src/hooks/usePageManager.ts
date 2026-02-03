@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import type { Page } from "../components/PageRenderer/Page";
 
-import createPage from "../helpers/createPage";
+import createPage from "../utils/createPage";
 import useContentStore from "../stores/contentStore";
 
 function usePageManager(location: any, isMobile: boolean, deps: any[]) {

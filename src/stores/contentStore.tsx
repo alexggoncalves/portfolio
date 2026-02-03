@@ -1,49 +1,83 @@
 import { create } from "zustand";
 
-export type Person = {
-    id: string;
-    name: string;
-    link?: string;
-    avatar?: Asset;
-
-    image: CanvasImageSource;
+// Layout types
+export type HeadingBlock = {
+    type: "heading";
+    text: string;
 };
 
-export type TeamMember = {
-    id: string;
-    roles: string[];
+export type TextBlock = {
+    type: "text";
+    paragraphs: string[];
 };
 
-export type Asset = {
-    type: "image" | "video" | "thumbnail";
+export type ImageBlock = {
+    type: "image";
     src: string;
     alt?: string;
 };
 
-export type Work = {
-    id: string;
-    title: string;
-    subtitle: string;
-    link?: string;
-    git?: string;
-    year: string;
-    tags: string[];
-    description: string;
-    tools: string[];
-    roles: string[];
-    team: TeamMember[];
-
-    assets: Asset[];
-
-    thumbnail: CanvasImageSource | void;
-    images: CanvasImageSource[];
+export type ImagePairBlock = {
+    type: "image-pair";
+    images: { src: string; alt?: string }[];
 };
 
+export type VideoBlock = {
+    type: "video";
+    src: string;
+    alt?: string;
+};
+
+export type LayoutBlock =
+    | HeadingBlock
+    | TextBlock
+    | ImageBlock
+    | ImagePairBlock
+    | VideoBlock;
+
+// Person types
+export type Person = {
+    id: string;
+    name: string;
+    avatarSrc?: string;
+    link?: string;
+
+    image: CanvasImageSource;
+};
+
+export type TeamMember = { 
+    id: string; 
+    roles?: string[] 
+};
+
+// Tag type
 export type Tag = {
     id: string;
     name: string;
     color: string;
 };
+
+// Work type
+export type Work = {
+    id: string;
+    title: string;
+    subtitle: string;
+    tags: string[];
+    year: string;
+    thumbnailSrc: string;
+    link?: string;
+    git?: string;
+    tools: string[];
+    team?: TeamMember[];
+    layout: LayoutBlock[];
+
+    thumbnail: CanvasImageSource | void;
+    images: CanvasImageSource[];
+};
+
+//---------------------------------------------------------------------
+// Content Store: Store and manage works, people, and tags
+//---------------------------------------------------------------------
 
 type ContentState = {
     works: Work[];
@@ -68,7 +102,7 @@ const useContentStore = create<ContentState>((_set, get) => ({
     people: [],
 
     loaded: false,
-    
+
     getWorkById: (id: string) => {
         const { works } = get();
         const work = works.find((work: Work) => work.id === id);

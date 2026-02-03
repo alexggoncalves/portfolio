@@ -1,6 +1,6 @@
 import { Color, Vector2 } from "three";
 
-import { Element } from "./Element";
+import { Element } from "../Element";
 import useAsciiStore from "../../../stores/asciiStore";
 
 //------------------------------------------

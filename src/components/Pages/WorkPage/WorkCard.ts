@@ -1,7 +1,7 @@
 import { Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { Element } from "../../PageRenderer/Elements/Element";
+import { Element } from "../../PageRenderer/Element";
 import { CanvasImage } from "../../PageRenderer/Elements/CanvasImage";
 import useAsciiStore from "../../../stores/asciiStore";
 
@@ -41,19 +41,14 @@ export class WorkCard extends Element {
         const tagObjects = getTags(this.work.tags);
         this.initializeTagLabels(tagObjects);
 
-        // Get thumbnail asset source
-        const thumbnailSrc = work.assets.find(
-            (asset) => asset.type === "thumbnail"
-        )?.src;
-
-        // Create thumbnail image
+        // Create thumbnail image object
         const thumbnail = new Image();
-        if (thumbnailSrc) {
+        if (work.thumbnailSrc) {
             thumbnail.crossOrigin = "anonymous";
-            thumbnail.src = thumbnailSrc;
+            thumbnail.src = work.thumbnailSrc;
         }
 
-        // Place cover image
+        // Place thumbnail on canvas
         this.canvasImage = new CanvasImage(
             thumbnail,
             this.position,
@@ -61,6 +56,7 @@ export class WorkCard extends Element {
             size.y
         );
 
+        // Create DOM link element
         this.domLink = this.createHTMLLink(
             "Go to " + this.work.title,
             this.position.clone(),

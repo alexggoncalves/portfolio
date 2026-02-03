@@ -1,7 +1,7 @@
 import { Color, Vector2 } from "three";
-import useAsciiStore from "../../../stores/asciiStore";
+import useAsciiStore from "../../stores/asciiStore";
 import Color4 from "three/src/renderers/common/Color4.js";
-import getColorString from "../../../helpers/getColorString";
+import getColorString from "../../utils/color";
 
 const createBrightnessMap = (asciiSequence: string) => {
     const asciiArray = asciiSequence.split("");
@@ -27,6 +27,9 @@ const charSize = useAsciiStore.getState().charSize;
 
 export class Element {
     position: Vector2; // Position in relation to ascii grid
+    basePosition: Vector2; // store original position
+    scrollOffset: number = 0; // scroll delta applied in update
+
     size: Vector2 = new Vector2(1, 1); // Size in relation to ascii grid
     horizontalAlign: "left" | "center" | "right" = "left"; // Horizontal alignment
     verticalAlign: "top" | "middle" | "bottom" = "top"; // Vertical alignment
@@ -49,6 +52,8 @@ export class Element {
         verticalAlign?: "top" | "middle" | "bottom"
     ) {
         this.position = position;
+        this.basePosition = position.clone();
+        
         if (color) this.color = color;
         if (backgroundColor) this.backgroundColor = backgroundColor;
         if (horizontalAlign) this.horizontalAlign = horizontalAlign;

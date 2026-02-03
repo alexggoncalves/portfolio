@@ -1,7 +1,7 @@
 import { Vector2 } from "three";
 import type { Tag } from "../../../stores/contentStore";
 // import useAsciiStore from "../../../stores/asciiStore";
-import getColorString from "../../../helpers/getColorString";
+import getColorString from "../../../utils/color";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 class TagLabel {

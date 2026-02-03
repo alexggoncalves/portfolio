@@ -6,7 +6,7 @@ import { Layer } from "../../PageRenderer/Layer";
 
 import type { TeamMember } from "../../../stores/contentStore";
 import useContentStore from "../../../stores/contentStore";
-import { ASCIIBlock } from "../../PageRenderer/Elements/Element";
+import { ASCIIBlock } from "../../PageRenderer/Element";
 // import { CanvasImage } from "../../PageRenderer/Elements/CanvasImage";
 
 //-------------------------------

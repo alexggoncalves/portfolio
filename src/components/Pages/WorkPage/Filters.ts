@@ -1,7 +1,7 @@
 import { Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { Element } from "../../PageRenderer/Elements/Element";
+import { Element } from "../../PageRenderer/Element";
 import { CanvasImage } from "../../PageRenderer/Elements/CanvasImage";
 import useAsciiStore from "../../../stores/asciiStore";
 

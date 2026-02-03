@@ -4,8 +4,8 @@ import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 import type { Work } from "../../../stores/contentStore";
 
-import { ASCIIBlock } from "../../PageRenderer/Elements/Element";
-import { createASCIITitle } from "../../../helpers/asciiFonts";
+import { ASCIIBlock } from "../../PageRenderer/Element";
+import { createASCIITitle } from "../../../utils/asciiFonts";
 import { WorksGrid } from "./WorksGrid";
 import useAsciiStore from "../../../stores/asciiStore";
 
