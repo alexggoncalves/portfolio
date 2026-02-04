@@ -73,21 +73,20 @@ export class WorkLayoutLayer extends Layer {
 
     placeImage(src: string): void {
         if (!src) return;
-        const img = new Image();
-
-        img.crossOrigin = "anonymous";
-        img.src = src;
-
-        console.log(img)
 
         // Place thumbnail on canvas
-        const block = new CanvasImage(img, this.placementPosition.clone(), 21*4, 9*4);
+        const block = new CanvasImage(
+            src,
+            this.placementPosition.clone(),
+            21 * 4,
+            9 * 4,
+        );
 
         this.elements.push(block);
 
-        this.placementPosition.y += 9*4
+        this.placementPosition.y += 9 * 4;
 
-        this.layoutHeight += 9*4
+        this.layoutHeight += 9 * 4;
     }
 
     placeImagePair(isMobile: boolean): void {
@@ -120,7 +119,7 @@ export class WorkLayoutLayer extends Layer {
         //Apply scroll to layout elements
         this.elements.forEach((element: Element) => {
             if (element instanceof CanvasImage) {
-                element.scrollOffset = this.scrollOffset;
+                element.yOffset = this.scrollOffset;
             }
         });
     }

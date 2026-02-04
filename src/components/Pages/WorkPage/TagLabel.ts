@@ -3,9 +3,14 @@ import type { Tag } from "../../../stores/contentStore";
 // import useAsciiStore from "../../../stores/asciiStore";
 import getColorString from "../../../utils/color";
 import Color4 from "three/src/renderers/common/Color4.js";
+import useAsciiStore from "../../../stores/asciiStore";
+
+const charSize = useAsciiStore.getState().charSize
 
 class TagLabel {
     position: Vector2;
+    yOffset: number = 0;
+
     size: Vector2 | null = null;
     tag: Tag;
     textSize: Vector2 = new Vector2(0);
@@ -14,7 +19,6 @@ class TagLabel {
     opacity: number = 1;
 
     padding: Vector2;
-    yOffset: number = 0;
 
     isOpen = false;
 
@@ -56,7 +60,7 @@ class TagLabel {
         }
 
         const x = this.position.x - this.size.x + this.textSize.y/2 ;
-        const y = this.position.y - this.yOffset - this.textSize.y/2;
+        const y = this.position.y - (this.yOffset*charSize.y) - this.textSize.y/2;
 
         // background.fillRect(x, y, this.size.x, this.size.y);
         background.fillStyle = getColorString(

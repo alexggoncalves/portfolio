@@ -4,8 +4,8 @@ import { useEffect, useRef, useState } from "react";
 function useScroll(
     scrollSpeed: number = 0.002,
     scrollDecay: number = 0.9,
-    touchSpeed: number = 0.09,
-    touchDecay: number = 0.94
+    touchSpeed: number = 0.2,
+    touchDecay: number = 0.96
 ) {
     const [scrollDelta, setScrollDelta] = useState(0);
     const isTouch = useRef(false);

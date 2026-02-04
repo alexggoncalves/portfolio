@@ -1,8 +1,7 @@
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import type { TeamMember, Work } from "../../../stores/contentStore";
-import { TeamMemberCard } from "./TeamMemberCard";
+import type { Work } from "../../../stores/contentStore";
 
 import useAsciiStore from "../../../stores/asciiStore";
 import useSceneStore from "../../../stores/sceneStore";
@@ -12,7 +11,6 @@ import { Page } from "../../PageRenderer/Page";
 import { Layer } from "../../PageRenderer/Layer";
 import { ASCIIBlock } from "../../PageRenderer/Element";
 import { ASCIIButton } from "../../PageRenderer/Elements/ASCIIButton";
-import { ASCIITitleFrame } from "../../PageRenderer/Elements/ASCIIFrame";
 import { FadeGradient } from "../../PageRenderer/Elements/FadeGradient";
 import { WorkLayoutLayer } from "./WorkLayoutLayer";
 
@@ -67,8 +65,6 @@ export class WorkDetailsPage extends Page {
         
 
         this.layers.push(this.fixedLayer);
-
-        
     }
 
     placeBackButton() {

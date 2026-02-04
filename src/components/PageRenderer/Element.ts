@@ -27,8 +27,7 @@ const charSize = useAsciiStore.getState().charSize;
 
 export class Element {
     position: Vector2; // Position in relation to ascii grid
-    basePosition: Vector2; // store original position
-    scrollOffset: number = 0; // scroll delta applied in update
+    yOffset: number = 0; // scroll offset
 
     size: Vector2 = new Vector2(1, 1); // Size in relation to ascii grid
     horizontalAlign: "left" | "center" | "right" = "left"; // Horizontal alignment
@@ -37,7 +36,7 @@ export class Element {
     // Colors
     color: Color = new Color("white");
     backgroundColor: Color4 = new Color4(0, 0, 0, 0);
-    opacity: number = 1.0;
+    opacity: number;
 
     //Behaviour flags
     interactive: boolean = false;
@@ -52,7 +51,7 @@ export class Element {
         verticalAlign?: "top" | "middle" | "bottom"
     ) {
         this.position = position;
-        this.basePosition = position.clone();
+        this.opacity = 0;
         
         if (color) this.color = color;
         if (backgroundColor) this.backgroundColor = backgroundColor;
@@ -86,7 +85,6 @@ export class Element {
     applyAlignment() {
         const gridSize = useAsciiStore.getState().gridSize;
         const offset = new Vector2(0, 0);
-        
 
         if (this.horizontalAlign === "right") {
             offset.x = gridSize.x - this.size.x;

@@ -2,6 +2,7 @@ import { Color, Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 import { Element } from "../Element";
+
 //-----------------------------------------
 // Ascii Text Class
 //-----------------------------------------

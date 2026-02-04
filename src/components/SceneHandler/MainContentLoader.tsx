@@ -20,7 +20,7 @@ const tags = tagsData as Tag[];
 
 // Load thumbnails, 3d models and team pictures
 function MainContentLoader() {
-    const { progress, item } = useProgress();
+    // const { progress, item } = useProgress();
 
     // const { setProgress, set}
 
@@ -81,7 +81,7 @@ function MainContentLoader() {
                 zIndex: "2",
             }}
         >
-            {progress} : {item}
+            {/* {progress} : {item} */}
         </div>
     );
 }

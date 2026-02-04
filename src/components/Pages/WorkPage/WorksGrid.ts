@@ -135,7 +135,7 @@ export class WorksGrid extends Layer {
         // Apply scroll to work cards
         this.elements.forEach((element: Element) => {
             if (element instanceof WorkCard) {
-                element.scrollOffset = this.scrollOffset;
+                element.yOffset = this.scrollOffset;
             }
         });
         
@@ -147,8 +147,6 @@ export class WorksGrid extends Layer {
             opacity,
             scrollDelta,
         );
-
-        
     }
 
     destroy(): void {}
