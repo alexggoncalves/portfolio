@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { CanvasTexture, Texture, Vector2 } from "three";
+import { CanvasTexture, Vector2 } from "three";
 
 type ASCIIState = {
     texelSize: Vector2;
@@ -25,7 +25,6 @@ type ASCIIState = {
 };
 
 const useAsciiStore = create<ASCIIState>((set, get) => ({
-    // texelSize: new Vector2(10, 14),
     texelSize: new Vector2(12, 16),
     charSize: new Vector2(12, 16),
     atlasGridSize: new Vector2(16, 9),

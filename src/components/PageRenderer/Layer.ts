@@ -1,7 +1,5 @@
 import { Vector2 } from "three";
 import type { Element } from "./Element";
-import { clamp } from "three/src/math/MathUtils.js";
-
 //-------------------------------
 //          LAYER CLASS
 //-------------------------------
@@ -9,16 +7,15 @@ export class Layer {
     name: string;
     elements: Element[] = [];
 
-    // SCROLL
+    offset: Vector2;
+
     isScrollable: boolean = false;
-    scrollOffset: number = 0;
-    maxScroll: number = 0;
-    bottomScrollMargin: number = 0;
-    readonly scrollDampingRange: number = 6;
+    
 
     constructor(name: string, elements: Element[]) {
         this.name = name;
         this.elements = elements;
+        this.offset = new Vector2(0)
     }
 
     init(): void {}
@@ -29,11 +26,20 @@ export class Layer {
         delta: number,
         mousePos: Vector2,
         opacity: number,
-        scrollDelta: number,
+        offset: number,
     ): void {
-        this.applyScroll(scrollDelta);
+        this.offset.y = offset;
 
+        console.log(offset)
+
+        // Update all elements in the layer
         this.elements.forEach((element: Element) => {
+            // Apply scroll offset to elements
+            if(this.isScrollable){
+                element.offset.y = this.offset.y;
+            }
+
+            // Update element
             if (element.animated) {
                 element.update(delta);
             } else if (element.interactive) {
@@ -60,36 +66,10 @@ export class Layer {
         return element;
     }
 
-    applyScroll(scrollDelta: number): void {
-        if (!this.isScrollable || !scrollDelta) return;
-
-        const offset = this.scrollOffset;
-        const max =  this.maxScroll;
-        const distanceFromBottom = max - offset;
-
-        const dampingRange = this.scrollDampingRange;
-        let dampingMultiplier = 1;
-        // Apply damping when scrolling near the top
-        if (offset < dampingRange && scrollDelta < 0) {
-            dampingMultiplier *= Math.min(
-                dampingMultiplier,
-                offset / dampingRange,
-            );
-        }
-
-        // Apply damping when scrolling near the bottom
-        if (distanceFromBottom < dampingRange && scrollDelta > 0) {
-            dampingMultiplier *= Math.min(
-                dampingMultiplier,
-                distanceFromBottom / dampingRange,
-            );
-        }
-
-        // Apply the scroll delta with damping
-        this.scrollOffset += scrollDelta * dampingMultiplier;
-
-        // Clamp the scroll offset between limits
-        this.scrollOffset = clamp(this.scrollOffset,0,max)
+    appendLayer(layer:Layer):void {
+        layer.elements.forEach(element => {
+            console.log(element)
+        });
     }
 
     destroy(): void {

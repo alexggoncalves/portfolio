@@ -10,6 +10,7 @@ import useSceneStore from "./stores/sceneStore";
 // import useWorkStore from "./stores/contentStore";
 import MainContentLoader from "./components/SceneHandler/MainContentLoader";
 import RenderStage from "./components/SceneHandler/RenderStage";
+import CursorTracker from "./components/SceneHandler/CursorTracker";
 
 function App() {
     const error = useRouteError();
@@ -47,6 +48,8 @@ function App() {
         <>
             <MainContentLoader/>
             <RenderStage />
+            <CursorTracker/>
+
             
             <div id="dom-overlay">
                 <header></header>

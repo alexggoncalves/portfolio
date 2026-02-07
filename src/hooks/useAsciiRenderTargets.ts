@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
-import { Vector2, type Color, type Texture } from "three";
+import { Vector2, type Texture } from "three";
 import useAsciiStore from "../stores/asciiStore";
 import { useThree } from "@react-three/fiber";
 import {
     createAsciiRenderTarget,
     createBackgroundRenderTarget,
 } from "../utils/renderTargets";
+import type Color4 from "three/src/renderers/common/Color4.js";
 
 function useAsciiRenderTargets() {
     const { size } = useThree();
@@ -56,7 +57,7 @@ function useAsciiRenderTargets() {
     const clearRenderTargets = (
         uiContext: CanvasRenderingContext2D,
         bgContext: CanvasRenderingContext2D,
-        bgColor: Color,
+        bgColor: Color4,
     ) => {
         const { width: uiW, height: uiH } = uiContext.canvas;
         const { width: bgW, height: bgH } = bgContext.canvas;

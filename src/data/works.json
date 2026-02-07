@@ -5,7 +5,7 @@
         "subtitle": "Where are the cats? - A game",
         "tags": ["game-dev", "3d", "generative"],
         "year": "2023",
-        "thumbnailSrc": "/images/thumbnails/endless-purrs-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/endless-purrs-thumbnail.webp",
         "link": "",
         "git": "https://github.com/alexggoncalves/endless-purrs",
         "tools": ["Unity", "Blender", "C#"],
@@ -15,6 +15,11 @@
             { "id": "maria-carrilho", "roles": ["Sound Designer"] }
         ],
         "layout": [
+            {
+                "type": "video",
+                "src": "/images/endless-purrs/endless-purrs-video.mp4",
+                "alt": "Endless Purrs - Video"
+            },
             {
                 "type": "heading",
                 "text": "Title"
@@ -39,24 +44,19 @@
                         "alt": "Endless Purrs - Game Screenshot 2"
                     },
                     {
-                        "src": "/images/endless-purrs/endless-purrs-3.png",
+                        "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-3.png",
                         "alt": "Endless Purrs - Game Screenshot 3"
                     }
                 ]
             },
             {
-                "type": "video",
-                "src": "/images/endless-purrs/endless-purrs-video.mp4",
-                "alt": "Endless Purrs - Video"
-            },
-            {
                 "type": "image",
-                "src": "/images/endless-purrs/endless-purrs-4.png",
+                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-4.png",
                 "alt": "Endless Purrs - Game Screenshot 4"
             },
             {
                 "type": "image",
-                "src": "/images/endless-purrs/endless-purrs-5.png",
+                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-5.png",
                 "alt": "Endless Purrs - Game Screenshot 5"
             }
         ]
@@ -65,9 +65,9 @@
         "id": "gary",
         "title": "Gary - The Wizard",
         "subtitle": "Character Design and Animation",
-        "tags": ["game-dev", "3D", "animation"],
+        "tags": ["game-dev", "3d", "animation"],
         "year": "2023",
-        "thumbnailSrc": "/images/thumbnails/gary-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/gary-thumbnail.webp",
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#", "Substance Painter"],
@@ -82,9 +82,9 @@
         "id": "pipe-quest",
         "title": "PipeQuest",
         "subtitle": "Plumbing VR Training",
-        "tags": ["game-dev", "3D", "vr", "interaction-design"],
+        "tags": ["game-dev", "3d", "vr", "interaction-design"],
         "year": "2023",
-        "thumbnailSrc": "/images/thumbnails/pipe-quest-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/pipe-quest-thumbnail.webp",
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
@@ -103,11 +103,11 @@
     },
     {
         "id": "mirage",
-        "title": "Mirage - Tiny World",
-        "subtitle": "Modelation and Materialization",
-        "tags": ["3D"],
+        "title": "Mirage",
+        "subtitle": "Tiny World",
+        "tags": ["3d"],
         "year": "2023",
-        "thumbnailSrc": "/images/thumbnails/mirage-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/mirage-thumbnail.webp",
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
@@ -124,7 +124,7 @@
         "subtitle": "AI Medicine Generator",
         "tags": ["frontend", "backend"],
         "year": "2023",
-        "thumbnailSrc": "/images/thumbnails/feels-lab-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/feels-lab-thumbnail.webp",
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
@@ -141,7 +141,7 @@
         "subtitle": "Infinite Music",
         "tags": ["frontend", "backend", "generative"],
         "year": "2023",
-        "thumbnailSrc": "/images/thumbnails/endless-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/endless-thumbnail.webp",
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
@@ -158,7 +158,7 @@
         "subtitle": "Art",
         "tags": ["frontend"],
         "year": "2023",
-        "thumbnailSrc": "/images/thumbnails/muse-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/muse-thumbnail.webp",
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
@@ -175,7 +175,7 @@
         "subtitle": "Radical Sports",
         "tags": ["frontend", "backend"],
         "year": "2023",
-        "thumbnailSrc": "/images/thumbnails/radicals-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/radicals-thumbnail.webp",
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
@@ -196,7 +196,7 @@
         "subtitle": "Typography Magazine",
         "tags": ["frontend"],
         "year": "2023",
-        "thumbnailSrc": "/images/thumbnails/alta-e-baixa-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/alta-e-baixa-thumbnail.webp",
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
@@ -217,7 +217,7 @@
         "subtitle": "Movie Store",
         "tags": ["frontend", "backend"],
         "year": "2023",
-        "thumbnailSrc": "/images/thumbnails/frames-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/frames-thumbnail.webp",
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
@@ -238,7 +238,7 @@
         "subtitle": "Ding dong",
         "tags": ["interaction-design", "generative"],
         "year": "2022",
-        "thumbnailSrc": "/images/thumbnails/malleus-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/malleus-thumbnail.webp",
         "link": "",
         "git": "",
         "tools": ["Unity", "C#", "Python"],
@@ -260,9 +260,9 @@
         "subtitle": "Learning Music Scales",
         "tags": ["interaction-design", "generative"],
         "year": "2022",
-        "thumbnailSrc": "/images/thumbnails/waver-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/waver-thumbnail.webp",
         "link": "",
-        "git": "",        
+        "git": "",
         "tools": ["Unity", "C#", "Python"],
         "team": [
             { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
@@ -282,7 +282,7 @@
         "subtitle": "Interactive Installation",
         "tags": ["interaction-design", "generative"],
         "year": "2022",
-        "thumbnailSrc": "/images/thumbnails/samar-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/samar-thumbnail.webp",
         "link": "",
         "git": "",
         "tools": ["Unity", "C#", "Python"],
@@ -306,7 +306,7 @@
         "subtitle": "(experiments)",
         "tags": ["generative", "animation"],
         "year": "2022",
-        "thumbnailSrc": "/images/thumbnails/visualizers-thumbnail.png",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/visualizers-thumbnail.webp",
         "link": "",
         "git": "",
         "tools": ["Unity", "C#", "Python"],

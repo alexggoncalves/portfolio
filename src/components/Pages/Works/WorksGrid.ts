@@ -1,4 +1,4 @@
-import { Vector2, Color } from "three";
+import { Vector2 } from "three";
 
 import { Layer } from "../../PageRenderer/Layer";
 
@@ -33,7 +33,8 @@ export class WorksGrid extends Layer {
         works: Work[],
         position: Vector2,
         width: number,
-        columns: number,
+        minCardWidth: number,
+        maxCardWidth: number,
         margin: number,
         gap: number,
         goTo: (path: string) => void,
@@ -45,42 +46,27 @@ export class WorksGrid extends Layer {
         this.parent = parent;
         this.works = works;
         this.position = position;
-
-        // Grid layout calculations
-        this.gridSize.x = width;
-        this.cols = columns;
-        this.rows = Math.ceil(this.works.length / this.cols);
+        this.gridSize.x = width;   
         this.margin = margin;
         this.gap = gap;
 
         // Scroll values
         this.isScrollable = true;
-        this.bottomScrollMargin = 6;
+
+        this.cols = this.calculateGridColumns(width,minCardWidth,maxCardWidth,gap);
+        this.rows = Math.ceil(this.works.length / this.cols);
 
         this.createGrid();
     }
 
     createGrid(): void {
-        const gridSize = useAsciiStore.getState().gridSize;
-
         // Image size in the ascii grid dimensions
         const imageWidth =
             (this.gridSize.x - (this.cols - 1) * this.gap) / this.cols;
         const imageHeight = Math.floor(imageWidth / this.imageAspectRatio);
 
-        // Determine initial visible height
-        const initialVisibleHeight = Math.min(gridSize.y, imageHeight * 1.5);
-
-        const topSpace = gridSize.y - initialVisibleHeight - 2;
-
         // Calculate total grid height
-        this.gridSize.y = (imageHeight + this.gap) * this.rows - this.gap;
-        this.maxScroll = Math.max(
-            0,
-            this.gridSize.y - initialVisibleHeight + this.bottomScrollMargin,
-        );
-
-        const startPosition = new Vector2(this.margin, topSpace);
+        this.gridSize.y = (imageHeight + this.gap) * this.rows + this.gap;
 
         const offset = new Vector2(0, 0);
         this.works.forEach((work: Work, index) => {
@@ -92,8 +78,8 @@ export class WorksGrid extends Layer {
             const card = new WorkCard(
                 work,
                 new Vector2( // Position
-                    startPosition.x + offset.x,
-                    startPosition.y + offset.y,
+                    this.position.x + offset.x + this.margin,
+                    this.position.y + offset.y,
                 ),
                 new Vector2(imageWidth, imageHeight), // Size,
                 this.goTo,
@@ -103,50 +89,35 @@ export class WorksGrid extends Layer {
             // Add card to the grid
             this.addElement(card);
         });
-
-        const bgColor = useSceneStore.getState().backgroundColor;
-
-        this.addElement(
-            new FadeGradient(
-                new Color(bgColor),
-                new Vector2(0, 2),
-                new Vector2(gridSize.x, 5),
-                "top",
-            ),
-        );
-        this.addElement(
-            new FadeGradient(
-                new Color(bgColor),
-                new Vector2(0, gridSize.y - 1.5),
-                new Vector2(gridSize.x, 3),
-                "bottom",
-            ),
-        );
     }
 
-    update(
-        uiContext: CanvasRenderingContext2D,
-        backgroundContext: CanvasRenderingContext2D,
-        delta: number,
-        mousePos: Vector2,
-        opacity: number,
-        scrollDelta: number,
-    ): void {
-        // Apply scroll to work cards
-        this.elements.forEach((element: Element) => {
-            if (element instanceof WorkCard) {
-                element.yOffset = this.scrollOffset;
+    calculateGridColumns(
+        gridWidth: number,
+        minCardWidth: number,
+        maxCardWidth: number,
+        gap: number,
+    ): number {
+        let cols = 1;
+
+        for (let testCols = 1; testCols <= 5; testCols++) {
+            const totalGapWidth = gap * (testCols - 1);
+            const cardWidth = (gridWidth - totalGapWidth) / testCols;
+
+            if (cardWidth < minCardWidth) {
+                cols = Math.max(1, testCols - 1);
+                break;
             }
-        });
-        
-        super.update(
-            uiContext,
-            backgroundContext,
-            delta,
-            mousePos,
-            opacity,
-            scrollDelta,
-        );
+
+            if (cardWidth >= minCardWidth && cardWidth <= maxCardWidth) {
+                cols = testCols;
+            }
+
+            if (cardWidth > maxCardWidth) {
+                cols = testCols;
+            }
+        }
+
+        return cols;
     }
 
     destroy(): void {}

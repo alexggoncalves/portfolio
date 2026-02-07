@@ -3,6 +3,7 @@ import useAsciiStore from "../../../stores/asciiStore";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 import { Element } from "../Element";
+import useCursorStore from "../../../stores/cursorStore";
 
 //------------------------------------------
 // Button Class
@@ -12,10 +13,15 @@ export class ASCIIButton extends Element {
     text: string = ""; // Text to display on button
     domButton: HTMLElement; // Html button dom element
     callback: () => void; // Button's function
+    resetCursorOnClick: boolean = true;
 
     // flags
     isMouseOver: boolean = false;
     isMouseDown: boolean = false;
+
+    private clickHandler: () => void;
+    private mouseEnterHandler: () => void;
+    private mouseLeaveHandler: () => void;
 
     constructor(
         text: string,
@@ -27,7 +33,8 @@ export class ASCIIButton extends Element {
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
         parent?: HTMLElement,
-        size?: Vector2
+        size?: Vector2,
+        resetCursorOnClick?: boolean,
     ) {
         super(position, color, backgroundColor, horizontalAlign, verticalAlign);
 
@@ -41,29 +48,29 @@ export class ASCIIButton extends Element {
 
         this.applyAlignment();
 
+        if (resetCursorOnClick != undefined) this.resetCursorOnClick = resetCursorOnClick;
+
         // Create html button
         this.domButton = this.createHTMLLink(
             text,
             this.position,
             this.size,
-            parent
+            parent,
         );
 
+        // Create references for the event handler callbacks
+        this.clickHandler = () => this.onClick();
+        this.mouseEnterHandler = () => this.onMouseEnter();
+        this.mouseLeaveHandler = () => this.onMouseLeave();
+
         // Set mouse event listeners
-        this.domButton.addEventListener("click", () => this.onClick());
-        this.domButton.addEventListener("mouseenter", () =>
-            this.onMouseEnter()
-        );
-        this.domButton.addEventListener("mouseleave", () =>
-            this.onMouseLeave()
-        );
+        this.domButton.addEventListener("click", this.clickHandler);
+        this.domButton.addEventListener("mouseenter", this.mouseEnterHandler);
+        this.domButton.addEventListener("mouseleave", this.mouseLeaveHandler);
     }
 
     createHTML(parent?: HTMLElement): HTMLButtonElement {
         const charSize = useAsciiStore.getState().charSize;
-
-        // const canvasOffset = useAsciiStore.getState().canvasOffset;
-        // const pixelRatio = useAsciiStore.getState().pixelRatio;
 
         // Create invisible html button
         const button = document.createElement("button");
@@ -86,7 +93,7 @@ export class ASCIIButton extends Element {
     drawButtonFrame(
         strokeWeight: number,
         color: Color4,
-        context: CanvasRenderingContext2D
+        context: CanvasRenderingContext2D,
     ): void {
         const charSize = useAsciiStore.getState().charSize;
 
@@ -100,16 +107,15 @@ export class ASCIIButton extends Element {
         ${color.g * 255},
         ${color.b * 255},
         ${color.a * this.opacity})`;
-
         context.lineWidth = strokeWeight * devicePixelRatio;
 
-        // Draw rectangle
+        // Draw frame
         context.strokeRect(x, y, w, h);
     }
 
     draw(
         ui: CanvasRenderingContext2D,
-        background: CanvasRenderingContext2D
+        background: CanvasRenderingContext2D,
     ): void {
         this.drawBlock(this.text, ui, background);
 
@@ -122,23 +128,36 @@ export class ASCIIButton extends Element {
 
     onClick(): void {
         if (this.callback) this.callback();
+
+        if (this.resetCursorOnClick) {
+            const setCursorState = useCursorStore.getState().setCursorState;
+            setCursorState("default");
+        }
     }
 
     onMouseEnter(): void {
+        const setCursorState = useCursorStore.getState().setCursorState;
+
         this.isMouseOver = true;
+        setCursorState("pointer");
     }
 
     onMouseLeave(): void {
+        const setCursorState = useCursorStore.getState().setCursorState;
+
         this.isMouseOver = false;
+        setCursorState("default");
     }
 
     destroyHTML() {
-        this.domButton.removeEventListener("click", () => this.onClick?.());
-        this.domButton.removeEventListener("mouseenter", () =>
-            this.onMouseEnter?.()
+        this.domButton.removeEventListener("click", this.clickHandler);
+        this.domButton.removeEventListener(
+            "mouseenter",
+            this.mouseEnterHandler,
         );
-        this.domButton.removeEventListener("mouseleave", () =>
-            this.onMouseLeave?.()
+        this.domButton.removeEventListener(
+            "mouseleave",
+            this.mouseLeaveHandler,
         );
         this.domButton.remove();
     }

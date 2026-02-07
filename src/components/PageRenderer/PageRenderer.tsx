@@ -8,7 +8,7 @@ import { Page } from "./Page";
 import useScroll from "../../hooks/useScroll";
 import useAsciiRenderTargets from "../../hooks/useAsciiRenderTargets";
 import type { Cursor } from "./Elements/Cursor";
-import useCustomCursor from "../../hooks/useCustomCursor";
+import useCursorStore from "../../stores/cursorStore";
 
 type PageRendererProps = {
     currentPage?: Page | null;
@@ -24,7 +24,7 @@ function PageRenderer({
     cursor,
 }: PageRendererProps) {
     const scrollDelta = useScroll();
-    const { cursorPosition, cursorState, cursorEnabled } = useCustomCursor();
+    const { cursorPosition, cursorState, cursorEnabled } = useCursorStore();
 
     const { backgroundColor } = useSceneStore();
     const { ui, background, clearRenderTargets } = useAsciiRenderTargets();
@@ -42,6 +42,8 @@ function PageRenderer({
 
         // Clear Render Targets
         clearRenderTargets(uiContext, bgContext, backgroundColor);
+        uiTexture.needsUpdate = true;
+        backgroundTexture.needsUpdate = true
 
         // Update and draw current page
         currentPage?.update(

@@ -1,13 +1,14 @@
 import { create } from "zustand";
 import type { To, NavigateOptions } from "react-router";
-import { Color } from "three";
+import Color4 from "three/src/renderers/common/Color4.js";
 
+type Scene = "loading" | "homepage" | "works" | "workDetails" | "contacts" | null
 
 type SceneState = {
     isMobile: boolean;
-    backgroundColor: Color;
-    currentScene: string | null;
-    nextScene: string | null;
+    backgroundColor: Color4;
+    currentScene: string | Scene;
+    nextScene: string | Scene;
     navigate: (to: To, options?: NavigateOptions) => void | null;
 
     setInitialScene: (scene: string) => void;
@@ -18,7 +19,7 @@ type SceneState = {
 
 const useSceneStore = create<SceneState>((set) => ({
     isMobile: window.innerWidth < 600,
-    backgroundColor: new Color("rgba(87, 87, 87, 1)"),
+    backgroundColor: new Color4(0.1,0.1,0.1,1),
     currentScene: null,
     nextScene: null,
     navigate: () => {},

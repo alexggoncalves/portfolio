@@ -3,7 +3,7 @@ import useAsciiStore from "../../../stores/asciiStore";
 
 import { Element } from "../Element";
 
-const charSize = useAsciiStore.getState().charSize;
+
 
 //------------------------------------------
 // Ascii Image Class
@@ -24,8 +24,7 @@ export class CanvasImage extends Element {
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
         super(position, undefined, undefined, horizontalAlign, verticalAlign);
-        this.animated = true;
-        this.interactive = true;
+        this.isScrollable = true;
         this.setSize(width, height);
         this.applyAlignment();
 
@@ -51,6 +50,8 @@ export class CanvasImage extends Element {
     }
 
     private drawImage(background: CanvasRenderingContext2D): void {
+        const charSize = useAsciiStore.getState().charSize;
+       
         background.save();
         background.globalAlpha = this.opacity;
 
@@ -62,7 +63,7 @@ export class CanvasImage extends Element {
             this.image.width,
             this.image.height,
             this.position.x * charSize.x,
-            (this.position.y - this.yOffset) * charSize.y,
+            (this.position.y - this.offset.y) * charSize.y,
             this.size.x * charSize.x,
             this.size.y * charSize.y,
         );
@@ -70,6 +71,8 @@ export class CanvasImage extends Element {
     }
 
     private drawPlaceholder(background: CanvasRenderingContext2D): void {
+        const charSize = useAsciiStore.getState().charSize;
+        
         background.save();
         background.globalAlpha = this.opacity;
         background.fillStyle = "#595959";
@@ -77,7 +80,7 @@ export class CanvasImage extends Element {
         // Draw image to "background" canvas
         background.fillRect(
             this.position.x * charSize.x,
-            (this.position.y - this.yOffset) * charSize.y ,
+            (this.position.y - this.offset.y) * charSize.y ,
             this.size.x * charSize.x,
             this.size.y * charSize.y,
         );

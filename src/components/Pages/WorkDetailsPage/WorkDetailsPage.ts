@@ -9,10 +9,11 @@ import useSceneStore from "../../../stores/sceneStore";
 import { createASCIITitle } from "../../../utils/asciiFonts";
 import { Page } from "../../PageRenderer/Page";
 import { Layer } from "../../PageRenderer/Layer";
-import { ASCIIBlock } from "../../PageRenderer/Element";
+import { ASCIIBlock } from "../../PageRenderer/Elements/ASCIIBlock";
 import { ASCIIButton } from "../../PageRenderer/Elements/ASCIIButton";
 import { FadeGradient } from "../../PageRenderer/Elements/FadeGradient";
-import { WorkLayoutLayer } from "./WorkLayoutLayer";
+import { WorkLayout } from "./WorkLayout";
+import useContentStore from "../../../stores/contentStore";
 
 export class WorkDetailsPage extends Page {
     work: Work | null = null;
@@ -22,46 +23,56 @@ export class WorkDetailsPage extends Page {
     goTo: (path: string) => void;
 
     fixedLayer: Layer = new Layer("fixed", []);
-    placementPosition: Vector2 = new Vector2(6, 4);
+    placementPosition: Vector2 = new Vector2(0, 5);
+    gradientLayer: Layer = new Layer("gradient", []);
 
     constructor(work: Work, goTo: (path: string) => void) {
-        super("work", []);
+        super("work");
         this.work = work;
         this.goTo = goTo;
 
-        // const bgResolution = useAsciiStore.getState().backgroundResolution;
-        // const charSize = useAsciiStore.getState().charSize;
-
         this.asciigridSize = useAsciiStore.getState().gridSize;
+        this.fixedLayer.isScrollable = true;
 
         this.pageContainer = document.createElement("section");
         this.pageContainer.id = "work";
 
+        this.fixedLayer.isScrollable = false
+
         const main = document.querySelector("main");
         main?.appendChild(this.pageContainer);
-
-        
     }
 
     init(_isMobile: boolean): void {
         if (!this.work) return;
 
+        const gridSize = useAsciiStore.getState().gridSize;
+
+        const margin = Math.ceil(gridSize.x * 0.22);
+        const layoutWidth = gridSize.x - margin * 2;
+
         // Create and place scrollable layout layer
-        const layoutLayer = new WorkLayoutLayer(
+        const layoutLayer = new WorkLayout(
             this.work.layout,
-            this.placementPosition.clone(),
+            new Vector2(margin,0),
+            layoutWidth,
             this.goTo,
             this.pageContainer,
             false,
         );
 
         this.layers.push(layoutLayer);
+        this.pageHeight += layoutLayer.layoutSize.y
+
+        this.placeFadeGradients();
+        this.layers.push(this.gradientLayer);
 
         // Create and place fixed elements
-        this.placeFadeGradients();
+
         this.placeBackButton();
         this.placeTitleAndSubtitle(this.work.title, this.work.subtitle);
         this.placeTags(this.work.tags);
+
         
 
         this.layers.push(this.fixedLayer);
@@ -90,12 +101,14 @@ export class WorkDetailsPage extends Page {
                 asciiTitle,
                 this.placementPosition.clone(),
                 new Color(1, 1, 1),
-                new Color4(1, 1, 1, 0.1),
-                "left",
+                new Color4(1, 1, 1, 0),
+                "center",
                 "top",
             ),
         );
-        this.placementPosition.y += titleElement.size.y + 1;
+
+        this.placementPosition.y += titleElement.size.y;
+        this.placementPosition.x = titleElement.position.x + 1;
 
         this.fixedLayer.addElement(
             new ASCIIBlock(
@@ -111,19 +124,22 @@ export class WorkDetailsPage extends Page {
     }
 
     placeTags(tags: string[]) {
-        const tagsLayer = new Layer("collaborators", []);
-        const tagsContainer = document.createElement("div");
+        const { getTagById } = useContentStore.getState();
 
         let offsetX = 0;
         const position = this.placementPosition.clone();
+        position.y = 4;
 
         tags.forEach((tag) => {
-            const tagElement = tagsLayer.addElement(
+            const tagColorHex = getTagById(tag)?.color;
+            const tagColor = new Color(tagColorHex);
+
+            const tagElement = this.fixedLayer.addElement(
                 new ASCIIBlock(
                     " " + tag + " ",
                     new Vector2(position.x + offsetX, position.y),
                     new Color("white"),
-                    new Color4(1, 0, 0, 1),
+                    new Color4(tagColor.r, tagColor.g, tagColor.b, 0.7),
                     "left",
                     "top",
                 ),
@@ -131,10 +147,7 @@ export class WorkDetailsPage extends Page {
             offsetX += tagElement.size.x + 2;
         });
 
-        this.layers.push(tagsLayer);
-        this.pageContainer.append(tagsContainer);
-
-        this.placementPosition.y += 4
+        this.placementPosition.y += 4;
     }
 
     placeFadeGradients() {
@@ -142,9 +155,10 @@ export class WorkDetailsPage extends Page {
 
         this.fixedLayer.addElement(
             new FadeGradient(
-                new Color(bgColor),
-                new Vector2(0, 10),
-                new Vector2(this.asciigridSize.x, 6),
+                new Color4(bgColor),
+                // new Color4("red"),
+                new Vector2(0, 0),
+                new Vector2(this.asciigridSize.x, 16),
                 "top",
             ),
         );

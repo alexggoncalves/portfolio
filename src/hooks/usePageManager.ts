@@ -14,8 +14,14 @@ function usePageManager(location: any, isMobile: boolean, deps: any[]) {
     const navigate = useNavigate();
     const goTo = (p: string) => navigate(p);
 
-    // Change scene when route or sizes change
+    
     useEffect(() => {
+        // Create or switch pages when route or dependencies change
+        updatePage()
+
+    }, [...deps, location, isMobile]);
+
+    function updatePage(){
         // Get path and remove first "/"
         const scene = location.pathname.slice(1);
         const newPage = createPage(scene, isMobile, goTo, works);
@@ -33,7 +39,7 @@ function usePageManager(location: any, isMobile: boolean, deps: any[]) {
         if (nextPage) nextPage.destroy();
 
         setNextPage(newPage);
-    }, [...deps, location, isMobile]);
+    }
     
     // Handle page transitions
     useEffect(() => {

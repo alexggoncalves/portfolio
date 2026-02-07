@@ -1,71 +1,51 @@
-import { Vector2, Color } from "three";
-import Color4 from "three/src/renderers/common/Color4.js";
-
 import { Page } from "../../PageRenderer/Page";
 import { Layer } from "../../PageRenderer/Layer";
-import { ASCIIBlock } from "../../PageRenderer/Element";
-
-const title = 
-`    :::     :::        :::::::::: :::    ::: 
-  :+: :+:   :+:        :+:        :+:    :+: 
- +:+   +:+  +:+        +:+         +:+  +:+  
-+#++:++#++: +#+        +#++:++#     +#++:+   
-+#+     +#+ +#+        +#+         +#+  +#+  
-#+#     #+# #+#        #+#        #+#    #+# 
-###     ### ########## ########## ###    ### 
-
-
-CREATIVE DEVELOPER`;
-
-const titleMobile = 
-`   :::    ::     :::::  ::    ::
-  +: :+   :+     :+      +:  :+
- ++   ++  +:     +:       :++: 
-+#+:++#+: +#     +#++#    #++#  
-+#     #+ +#     +#      #+  +# 
-#+     +# #+     #+     +#    #+
-##     ## ###### ##### ##      ##
-
-
-CREATIVE DEVELOPER`;
-
-const cities =
-`based in : Lisbon
-
-from: Madeira
-`
+import type { Work } from "../../../stores/contentStore";
+import { WorksRow } from "./WorksRow";
+import { Vector2 } from "three";
+import useAsciiStore from "../../../stores/asciiStore";
 
 export class HomePage extends Page {
+    goTo: (path: string) => void;
 
-    constructor(layers?: Layer[]) {
-        super("home", layers);
+    works: Work[] = [];
+    workGrid: WorksRow | null = null;
+
+    pageContainer: HTMLElement;
+
+    constructor(works: Work[], goTo: (path: string) => void) {
+        super("homepage");
+
+        this.works = works;
+        this.goTo = goTo;
+
+        this.pageContainer = document.createElement("section");
+        this.pageContainer.id = "homepage";
+        const main = document.querySelector("main");
+        main?.appendChild(this.pageContainer);
     }
 
     init(isMobile: boolean): void {
-        const mainLayer = new Layer("home",[])
+        const mainLayer = new Layer("home", []);
 
-        mainLayer.addElement(
-            new ASCIIBlock(
-                isMobile ? titleMobile : title,
-                new Vector2(5, 4),
-                new Color("white"),
-                new Color4(0,0,0,0),
-                "left",
-                "top"
-            )
-        )
+        const gridSize = useAsciiStore.getState().gridSize;
 
-        mainLayer.addElement(
-            new ASCIIBlock(
-                cities,
-                new Vector2(5,-4),
-                new Color(1,1,1),
-                new Color4(0.4,0.4,0.6,0.05),
-                "left",
-                "bottom" 
-            )
-        )
+        this.pageHeight = gridSize.y
 
-        this.layers.push(mainLayer);
+        const workRow = new WorksRow(
+            this.works,
+            new Vector2(0, gridSize.y),
+            20,
+            5,
+            1,
+            this.goTo,
+            this.pageContainer,
+            isMobile,
+        );
+        
+        this.pageHeight += 24
+        
+        this.layers.push(workRow);
+
     }
 }

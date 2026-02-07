@@ -16,7 +16,7 @@ const createBrightnessMap = (asciiSequence: string) => {
 };
 
 export const brightnessMap = createBrightnessMap(
-    useAsciiStore.getState().asciiSequence
+    useAsciiStore.getState().asciiSequence,
 );
 
 const charSize = useAsciiStore.getState().charSize;
@@ -27,7 +27,7 @@ const charSize = useAsciiStore.getState().charSize;
 
 export class Element {
     position: Vector2; // Position in relation to ascii grid
-    yOffset: number = 0; // scroll offset
+    offset: Vector2; // scroll offset
 
     size: Vector2 = new Vector2(1, 1); // Size in relation to ascii grid
     horizontalAlign: "left" | "center" | "right" = "left"; // Horizontal alignment
@@ -38,21 +38,24 @@ export class Element {
     backgroundColor: Color4 = new Color4(0, 0, 0, 0);
     opacity: number;
 
-    //Behaviour flags
+    //Flags
     interactive: boolean = false;
     animated: boolean = false;
-    needsUpdate: boolean = false;
+    // needsUpdate: boolean = false;
+    isScrollable: boolean = true;
 
     constructor(
         position: Vector2,
         color?: Color,
         backgroundColor?: Color4,
         horizontalAlign?: "left" | "center" | "right",
-        verticalAlign?: "top" | "middle" | "bottom"
+        verticalAlign?: "top" | "middle" | "bottom",
     ) {
         this.position = position;
+        this.offset = new Vector2(0);
+
         this.opacity = 0;
-        
+
         if (color) this.color = color;
         if (backgroundColor) this.backgroundColor = backgroundColor;
         if (horizontalAlign) this.horizontalAlign = horizontalAlign;
@@ -67,7 +70,7 @@ export class Element {
         if (typeof arg1 === "string") {
             const lines = (arg1.match(/\n/g) || "").length + 1;
             const maxlength = Math.max(
-                ...arg1.split("\n").map((line) => line.length)
+                ...arg1.split("\n").map((line) => line.length),
             );
             this.size.x = maxlength;
             this.size.y = lines;
@@ -107,14 +110,14 @@ export class Element {
         x: number,
         y: number,
         color: Color4,
-        ui: CanvasRenderingContext2D
+        ui: CanvasRenderingContext2D,
     ): void {
         // Set color
         ui.save();
         ui.fillStyle = getColorString(color, this.opacity);
 
         // Clear and draw new character pixel
-        ui.fillRect(x, y, 1, 1);
+        ui.fillRect(x, y + this.offset.y, 1, 1);
 
         ui.restore();
     }
@@ -123,7 +126,7 @@ export class Element {
         text: string,
         ui: CanvasRenderingContext2D,
         background: CanvasRenderingContext2D,
-        positionOffset?: Vector2
+        positionOffset?: Vector2,
     ) {
         let x = this.position.x;
         let y = this.position.y;
@@ -145,7 +148,7 @@ export class Element {
                         charSize.x,
                         charSize.y,
                         this.backgroundColor,
-                        background
+                        background,
                     );
                 }
 
@@ -156,14 +159,14 @@ export class Element {
                         // Draw ui pixel
                         this.drawPixel(
                             x,
-                            y,
+                            y ,
                             new Color4(
                                 this.color.r,
                                 this.color.g,
                                 this.color.b,
-                                brightness
+                                brightness,
                             ),
-                            ui
+                            ui,
                         );
                     }
                 }
@@ -180,7 +183,7 @@ export class Element {
         pointB: Vector2,
         strokeWidth: number,
         color: Color4,
-        context: CanvasRenderingContext2D
+        context: CanvasRenderingContext2D,
     ): void {
         // Set color
         context.strokeStyle = getColorString(color, this.opacity);
@@ -190,7 +193,6 @@ export class Element {
         context.moveTo(pointA.x - strokeWidth / 2, pointA.y);
         context.lineTo(pointB.x - strokeWidth / 2, pointB.y);
         context.stroke();
-
     }
 
     drawBackgroundTexel(
@@ -199,9 +201,10 @@ export class Element {
         w: number,
         h: number,
         color: Color4,
-        context: CanvasRenderingContext2D
+        context: CanvasRenderingContext2D,
     ): void {
         context.save();
+        context.globalAlpha = this.opacity;
         // Set ui color
         context.fillStyle = getColorString(color, this.opacity);
 
@@ -219,7 +222,7 @@ export class Element {
         radius: number | number[],
         strokeOnly: boolean,
         color: Color4,
-        context: CanvasRenderingContext2D
+        context: CanvasRenderingContext2D,
     ): void {
         context.save();
         // Set ui color
@@ -251,7 +254,7 @@ export class Element {
         text: string,
         position: Vector2,
         size: Vector2,
-        parent?: HTMLElement
+        parent?: HTMLElement,
     ): HTMLElement {
         const charSize = useAsciiStore.getState().charSize;
         const canvasOffset = useAsciiStore.getState().canvasOffset;
@@ -281,7 +284,7 @@ export class Element {
 
     draw(
         _ui: CanvasRenderingContext2D,
-        _background: CanvasRenderingContext2D
+        _background: CanvasRenderingContext2D,
     ): void {}
 
     update(_delta?: number, _mousePos?: Vector2, _mouseDown?: boolean): void {}
@@ -289,100 +292,5 @@ export class Element {
     destroy(): void {}
 
     destroyHTML(): void {}
-}
-
-//-----------------------------------------
-// Ascii Block Class
-//-----------------------------------------
-
-export class ASCIIBlock extends Element {
-    text: string; // Ascii formated string
-
-    constructor(
-        text: string,
-        position: Vector2,
-        color: Color,
-        backgroundColor: Color4,
-        horizontalAlign?: "left" | "center" | "right",
-        verticalAlign?: "top" | "middle" | "bottom"
-    ) {
-        super(position, color, backgroundColor, horizontalAlign, verticalAlign);
-
-        this.text = text;
-        this.setSize(this.text);
-        this.applyAlignment();
-    }
-
-    draw(
-        ui: CanvasRenderingContext2D,
-        background: CanvasRenderingContext2D
-    ): void {
-        this.drawBlock(this.text, ui, background);
-    }
-
-    update(): void {}
-
-    fadeIn(): void {}
-
-    fadeOut(): void {}
-}
-
-//-----------------------------------------
-// Ascii Line Class
-//-----------------------------------------
-
-export class ASCIILine extends Element {
-    char: string; // character for the line
-    pointA: Vector2;
-    pointB: Vector2;
-    strokeWidth: number;
-
-    constructor(
-        char: string,
-        pointA: Vector2,
-        pointB: Vector2,
-        strokeWidth: number,
-        color: Color,
-        backgroundColor: Color4,
-        horizontalAlign?: "left" | "center" | "right",
-        verticalAlign?: "top" | "middle" | "bottom"
-    ) {
-        super(pointA, color, backgroundColor, horizontalAlign, verticalAlign);
-
-        this.char = char;
-        this.setSize(this.char);
-        // this.applyAlignment();
-
-        this.strokeWidth = strokeWidth;
-        this.pointA = pointA;
-        this.pointB = pointB;
-    }
-
-    draw(
-        ui: CanvasRenderingContext2D,
-        _background: CanvasRenderingContext2D
-    ): void {
-        const brightness = brightnessMap.get(this.char);
-
-        const color = new Color4(
-            this.color.r,
-            this.color.g,
-            this.color.b,
-            brightness
-        );
-
-        this.drawASCIILine(
-            this.pointA,
-            this.pointB,
-            this.strokeWidth,
-            color,
-            ui
-        );
-    }
-
-    update(): void {}
-
-    fadeIn(): void {}
-
-    fadeOut(): void {}
+    
 }

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 
 
-import { Navigation } from "../components/Pages/Navigation";
 import { Layer } from "../components/PageRenderer/Layer";
 import { useNavigate } from "react-router";
-import { Frame } from "../components/Pages/Frame";
+import { Frame } from "../components/PageRenderer/Elements/Frame";
+import { Navigation } from "../components/PageRenderer/Elements/Navigation";
+
 
 //---------------------------------------------------------------------
 // useFixedElements (Hook): Initialize the fixed layers (Nav + Frame)

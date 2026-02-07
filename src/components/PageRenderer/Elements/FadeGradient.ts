@@ -1,7 +1,8 @@
-import { Color, Vector2 } from "three";
+import { Vector2 } from "three";
 
 import { Element } from "../Element";
 import useAsciiStore from "../../../stores/asciiStore";
+import type Color4 from "three/src/renderers/common/Color4.js";
 
 //------------------------------------------
 // Gradient Strip Class
@@ -12,12 +13,12 @@ export class FadeGradient extends Element {
     direction: "top" | "bottom";
 
     constructor(
-        color: Color,
+        color: Color4,
         position: Vector2,
         size: Vector2,
-        direction: "top" | "bottom"
+        direction: "top" | "bottom",
     ) {
-        super(position, color);
+        super(position, undefined, color);
 
         this.direction = direction;
         this.gradient = null;
@@ -26,7 +27,7 @@ export class FadeGradient extends Element {
 
     draw(
         _ui: CanvasRenderingContext2D,
-        background: CanvasRenderingContext2D
+        background: CanvasRenderingContext2D,
     ): void {
         const charSize = useAsciiStore.getState().charSize;
 
@@ -34,41 +35,38 @@ export class FadeGradient extends Element {
         const y = this.position.y * charSize.y;
         const w = this.size.x * charSize.x;
         const h = this.size.y * charSize.y;
+       
+        const r = this.backgroundColor.r * 255;
+        const g = this.backgroundColor.g * 255;
+        const b = this.backgroundColor.b * 255;
 
-        const r = this.color.r * 255;
-        const g = this.color.g * 255;
-        const b = this.color.b * 255;
-
-        if (!this.gradient) {
+        // if (!this.gradient) {
             if (this.direction === "top") {
                 this.gradient = background.createLinearGradient(x, y, x, y + h);
-                this.gradient.addColorStop(0, `rgba(${r},${g},${b},1)`);
-                this.gradient.addColorStop(0.3, `rgba(${r},${g},${b},0.8`);
-                this.gradient.addColorStop(0.7, `rgba(${r},${g},${b},0.4`);
+                this.gradient.addColorStop(0, `rgba(${r},${g},${b},0.95)`);
+                this.gradient.addColorStop(0.7, `rgba(${r},${g},${b},0.40)`);
                 this.gradient.addColorStop(1, `rgba(${r},${g},${b},0)`);
+                
             } else {
                 this.gradient = background.createLinearGradient(x, y - h, x, y);
                 this.gradient.addColorStop(0, `rgba(${r},${g},${b},0)`);
                 this.gradient.addColorStop(1, `rgba(${r},${g},${b},1)`);
             }
-        }
+        // }
+
+        background.save();
+
         // Draw gradient
         background.fillStyle = this.gradient;
+        // background.globalAlpha = ;
 
         if (this.direction === "top") {
             background.fillRect(x, y, w, h);
         } else {
-            background.fillRect(x, y - h, w, y);
+            background.fillRect(x, y - h, w, h);
         }
 
-        // Draw extended occlusion area
-        background.fillStyle = `rgba(${r},${g},${b},1)`;
-
-        if (this.direction === "top") {
-            background.fillRect(x, y - 10 * charSize.y, w, 10 * charSize.y);
-        } else {
-            background.fillRect(x, y, w, 10 * charSize.y);
-        }
+        background.restore();
     }
 
     update(): void {}

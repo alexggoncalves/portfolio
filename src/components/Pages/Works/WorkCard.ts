@@ -8,22 +8,23 @@ import useAsciiStore from "../../../stores/asciiStore";
 import type { Tag, Work } from "../../../stores/contentStore";
 import useContentStore from "../../../stores/contentStore";
 import TagLabel from "./TagLabel";
+import useCursorStore from "../../../stores/cursorStore";
+import type { Layer } from "../../PageRenderer/Layer";
 
 const { charSize } = useAsciiStore.getState();
 
 export class WorkCard extends Element {
     work: Work;
-
     tagLabels: TagLabel[] = [];
-
+    canvasImage: CanvasImage | undefined;
+    domLink: HTMLElement;
     padding = 10;
-    yOffset = 0;
 
     isMouseOver: boolean = false;
 
-    canvasImage: CanvasImage | undefined;
-    domLink: HTMLElement;
-    onClick: () => void;
+    clickHandler: () => void;
+    mouseLeaveHandler: () => void;
+    mouseEnterHandler: () => void;
 
     constructor(
         work: Work,
@@ -60,11 +61,18 @@ export class WorkCard extends Element {
             parent,
         );
 
+        this.clickHandler = () => {
+            goTo(`/work/${this.work.id}`);
+            const setCursorState = useCursorStore.getState().setCursorState;
+            setCursorState("default");
+        };
+        this.mouseEnterHandler = () => this.onMouseEnter();
+        this.mouseLeaveHandler = () => this.onMouseLeave();
+
         // Set mouse event listeners
-        this.onClick = () => goTo(`/work/${this.work.id}`);
-        this.domLink.addEventListener("click", () => this.onClick());
-        this.domLink.addEventListener("mouseenter", () => this.onMouseEnter());
-        this.domLink.addEventListener("mouseleave", () => this.onMouseLeave());
+        this.domLink.addEventListener("click", this.clickHandler);
+        this.domLink.addEventListener("mouseenter", this.mouseEnterHandler);
+        this.domLink.addEventListener("mouseleave", this.mouseLeaveHandler);
     }
 
     initializeTagLabels(tags: Tag[]) {
@@ -94,7 +102,7 @@ export class WorkCard extends Element {
 
         // Calculate button position
         const domPos = Math.round(
-            (this.position.y - this.yOffset) * charSize.y -
+            (this.position.y - this.offset.y) * charSize.y -
                 canvasOffset.y / devicePixelRatio,
         );
 
@@ -103,7 +111,7 @@ export class WorkCard extends Element {
 
         // Update image
         if (this.canvasImage) {
-            this.canvasImage.yOffset = this.yOffset;
+            this.canvasImage.offset.y = this.offset.y;
             this.canvasImage.opacity = this.opacity;
             this.canvasImage.update(delta);
         }
@@ -111,7 +119,7 @@ export class WorkCard extends Element {
         // Update tag labels
         this.tagLabels.forEach((tagLabel: TagLabel) => {
             tagLabel.opacity = this.opacity;
-            tagLabel.yOffset = this.yOffset;
+            tagLabel.yOffset = this.offset.y;
             tagLabel.update();
         });
     }
@@ -138,7 +146,7 @@ export class WorkCard extends Element {
         this.drawBackgroundRect(
             this.position.x * charSize.x - this.padding / 2,
             this.position.y * charSize.y -
-                this.yOffset * charSize.y -
+                this.offset.y * charSize.y -
                 this.padding / 2,
             this.size.x * charSize.x + this.padding,
             this.size.y * charSize.y + this.padding,
@@ -150,11 +158,17 @@ export class WorkCard extends Element {
     }
 
     onMouseEnter(): void {
+        const setCursorState = useCursorStore.getState().setCursorState;
+        setCursorState("pointer");
+
         this.isMouseOver = true;
         this.openTagLabels();
     }
 
     onMouseLeave(): void {
+        const setCursorState = useCursorStore.getState().setCursorState;
+        setCursorState("default");
+
         this.isMouseOver = false;
         this.closeTagLabels();
     }
@@ -175,13 +189,9 @@ export class WorkCard extends Element {
         this.canvasImage?.destroy();
 
         // Destroy eventListeners
-        this.domLink.removeEventListener("click", () => this.onClick?.());
-        this.domLink.removeEventListener("mouseenter", () =>
-            this.onMouseEnter?.(),
-        );
-        this.domLink.removeEventListener("mouseleave", () =>
-            this.onMouseLeave?.(),
-        );
+        this.domLink.removeEventListener("click", this.clickHandler);
+        this.domLink.removeEventListener("mouseenter", this.mouseEnterHandler);
+        this.domLink.removeEventListener("mouseleave", this.mouseLeaveHandler);
         this.domLink.remove();
     }
 }

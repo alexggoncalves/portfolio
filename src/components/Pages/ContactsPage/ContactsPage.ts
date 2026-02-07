@@ -1,7 +1,7 @@
 import { Page } from "../../PageRenderer/Page";
 import { Layer } from "../../PageRenderer/Layer";
 import { Vector2, Color } from "three";
-import { ASCIIBlock } from "../../PageRenderer/Element";
+import { ASCIIBlock } from "../../PageRenderer/Elements/ASCIIBlock";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 const title = `CONTACTS`;
@@ -9,8 +9,8 @@ const title = `CONTACTS`;
 const titleMobile = `CONTACTS-mobile`;
 
 export class ContactsPage extends Page {
-    constructor(layers?: Layer[]) {
-        super("contacts", layers);
+    constructor() {
+        super("contacts");
     }
 
     init(isMobile: boolean): void {

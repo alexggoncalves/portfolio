@@ -5,7 +5,7 @@ function useScroll(
     scrollSpeed: number = 0.002,
     scrollDecay: number = 0.9,
     touchSpeed: number = 0.2,
-    touchDecay: number = 0.96
+    touchDecay: number = 0.96,
 ) {
     const [scrollDelta, setScrollDelta] = useState(0);
     const isTouch = useRef(false);
@@ -14,6 +14,7 @@ function useScroll(
     const velocityRef = useRef(0);
     const outputRef = useRef(0);
     const lastDeltaSent = useRef(0);
+    const lastDirectionRef = useRef<1 | -1 | 0>(0);
 
     useEffect(() => {
         // WHEEL SCROLL
@@ -22,11 +23,17 @@ function useScroll(
             isTouch.current = false;
 
             const delta = e.deltaY * scrollSpeed;
+            const direction = Math.sign(delta) as 1 | -1 | 0;
 
-            if (Math.sign(velocityRef.current) !== Math.sign(delta)) {
+            if (
+                direction != 0 &&
+                lastDirectionRef.current != 0 &&
+                direction !== lastDirectionRef.current
+            ) {
                 velocityRef.current = 0;
             }
 
+            lastDirectionRef.current = direction;
             velocityRef.current += delta;
         }
 
@@ -47,6 +54,9 @@ function useScroll(
             e.preventDefault();
             const touchY = e.touches[0].clientY;
             const delta = lastTouchY - touchY;
+
+            const direction = Math.sign(delta) as 1 | -1 | 0;
+
             lastTouchY = touchY;
 
             // Ignore small movements
@@ -93,6 +103,7 @@ function useScroll(
 
         if (Math.abs(velocityRef.current) < 0.0005) {
             velocityRef.current = 0;
+            lastDirectionRef.current = 0;
         }
 
         const newOutput = velocityRef.current * delta * 60;

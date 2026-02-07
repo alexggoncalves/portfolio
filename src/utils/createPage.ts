@@ -1,5 +1,5 @@
 import { HomePage } from "../components/Pages/HomePage/HomePage";
-import { WorkPage } from "../components/Pages/WorkPage/WorkPage";
+import { WorkPage } from "../components/Pages/Works/WorksPage";
 import { ContactsPage } from "../components/Pages/ContactsPage/ContactsPage";
 import { WorkDetailsPage } from "../components/Pages/WorkDetailsPage/WorkDetailsPage";
 import type { Work } from "../stores/contentStore";
@@ -12,13 +12,13 @@ function createPage(
     scene: string,
     isMobile: boolean,
     goTo: (path: string) => void,
-    works: Work[]
+    works: Work[],
 ): Page {
     let page;
 
     if (scene == "") {
         // Homepage
-        page = new HomePage();
+        page = new HomePage(works, goTo);
         page.init(isMobile);
     } else if (scene == "contacts") {
         // Contacts page
@@ -38,7 +38,7 @@ function createPage(
                 page = workDetailsPage;
             } else {
                 // NOT FOUND !! (Not implemented)
-                page = new HomePage();
+                page = new HomePage(works, goTo);
                 page.init(isMobile);
             }
         } else {
@@ -48,7 +48,7 @@ function createPage(
         }
     } else {
         // NOT FOUND PAGE!! (Not implemented)
-        page = new HomePage();
+        page = new HomePage(works, goTo);
         page.init(isMobile);
     }
 

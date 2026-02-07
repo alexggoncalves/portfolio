@@ -1,11 +1,8 @@
-import { Color, Vector2 } from "three";
+import { Vector2 } from "three";
 import useAsciiStore from "../../../stores/asciiStore";
-import Color4 from "three/src/renderers/common/Color4.js";
-
-import { Element } from "../Element";
 
 //------------------------------------------
-// Button Class
+// Cursor Class
 //------------------------------------------
 
 export class Cursor {
@@ -19,7 +16,7 @@ export class Cursor {
     }
 
     draw(
-        ui: CanvasRenderingContext2D,
+        _ui: CanvasRenderingContext2D,
         background: CanvasRenderingContext2D,
     ): void {
         const canvasOffset = useAsciiStore.getState().canvasOffset;
