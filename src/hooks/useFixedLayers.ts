@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
 
-import { Layer } from "../components/PageRenderer/Layer";
+import { Layer } from "../components/pages/layout/Layer";
 import { useNavigate } from "react-router";
-import { Frame } from "../components/PageRenderer/Elements/Frame";
-import { Navigation } from "../components/PageRenderer/Elements/Navigation";
+import { Frame } from "../components/elements/Frame";
+import { Navigation } from "../components/elements/Navigation";
 
 
 //---------------------------------------------------------------------

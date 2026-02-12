@@ -1,0 +1,206 @@
+import { Vector2 } from "three";
+import Color4 from "three/src/renderers/common/Color4.js";
+
+import { Element } from "../../elements/Element";
+import { CanvasImage } from "../../elements/CanvasImage";
+import useAsciiStore from "../../../stores/asciiStore";
+
+import type { Tag, Work } from "../../../stores/contentStore";
+import useContentStore from "../../../stores/contentStore";
+import useCursorStore from "../../../stores/cursorStore";
+
+import TagLabel from "./TagLabel";
+import type { NavigationSource } from "../../../stores/sceneStore";
+import useSceneStore from "../../../stores/sceneStore";
+
+const { charSize } = useAsciiStore.getState();
+
+export class WorkCard extends Element {
+    work: Work;
+    tagLabels: TagLabel[] = [];
+    canvasImage: CanvasImage | undefined;
+    domLink: HTMLElement;
+    padding = 10;
+
+    navigationSource: NavigationSource = "home";
+
+    isMouseOver: boolean = false;
+
+    clickHandler: () => void;
+    mouseLeaveHandler: () => void;
+    mouseEnterHandler: () => void;
+
+    constructor(
+        work: Work,
+        position: Vector2,
+        size: Vector2,
+        navigationSource?: NavigationSource,
+        goTo?: (path: string) => void,
+        parent?: HTMLElement,
+    ) {
+        super(position);
+        this.work = work;
+        this.setSize(size.x, size.y);
+        this.animated = true;
+
+        if (navigationSource) this.navigationSource = navigationSource;
+
+        // Get work's tags and initialize label elements
+        const { getTags } = useContentStore.getState();
+        const tagObjects = getTags(this.work.tags);
+        this.initializeTagLabels(tagObjects);
+
+        // Create thumbnail
+        if (work.thumbnailSrc) {
+            this.canvasImage = new CanvasImage(
+                work.thumbnailSrc,
+                this.position,
+                size.x,
+                size.y,
+            );
+        }
+
+        // Create DOM link element
+        this.domLink = this.createHTMLLink(
+            "Go to " + this.work.title,
+            this.position.clone(),
+            this.size,
+            parent,
+        );
+
+        this.clickHandler = () => {
+            useSceneStore.getState().setNavigationSource(this.navigationSource);
+
+            if (goTo) goTo(`/work/${this.work.id}`);
+            const setCursorState = useCursorStore.getState().setCursorState;
+            setCursorState("default");
+        };
+        this.mouseEnterHandler = () => this.onMouseEnter();
+        this.mouseLeaveHandler = () => this.onMouseLeave();
+
+        // Set mouse event listeners
+        this.domLink.addEventListener("click", this.clickHandler);
+        this.domLink.addEventListener("mouseenter", this.mouseEnterHandler);
+        this.domLink.addEventListener("mouseleave", this.mouseLeaveHandler);
+    }
+
+    initializeTagLabels(tags: Tag[]) {
+        const { charSize } = useAsciiStore.getState();
+
+        const gap = 0 * charSize.y;
+        const margin = 1.4 * charSize.y;
+
+        let yPos = this.position.y * charSize.y;
+        tags.forEach((tag: Tag) => {
+            const x = (this.position.x + this.size.x) * charSize.x;
+            const tagLabel = new TagLabel(
+                tag,
+                new Vector2(x - margin, yPos + margin),
+                15 * devicePixelRatio,
+                new Vector2(10 * devicePixelRatio, 2 * devicePixelRatio),
+            );
+            this.tagLabels.push(tagLabel);
+
+            // Increment y offset
+            yPos += tagLabel.getTagHeight() + gap;
+        });
+    }
+
+    update(delta: number, _mousePos?: Vector2, _mouseDown?: boolean): void {
+        const { canvasOffset } = useAsciiStore.getState();
+
+        // Calculate button position
+        const domPos = Math.round(
+            (this.position.y - this.offset.y) * charSize.y -
+                canvasOffset.y / devicePixelRatio,
+        );
+
+        // Update dom button position
+        this.domLink.style.top = `${domPos}px`;
+
+        // Update image
+        if (this.canvasImage) {
+            this.canvasImage.offset.y = this.offset.y;
+            this.canvasImage.opacity = this.opacity;
+            this.canvasImage.update(delta);
+        }
+
+        // Update tag labels
+        this.tagLabels.forEach((tagLabel: TagLabel) => {
+            tagLabel.opacity = this.opacity;
+            tagLabel.yOffset = this.offset.y;
+            tagLabel.update();
+        });
+    }
+
+    draw(
+        asciiCtx: CanvasRenderingContext2D,
+        bgCtx: CanvasRenderingContext2D,
+    ): void {
+        // Draw hover highlight
+        if (this.isMouseOver) {
+            this.drawHoverState(bgCtx);
+        }
+
+        // Draw image
+        this.canvasImage?.draw(asciiCtx, bgCtx);
+
+        // Draw tags
+        this.tagLabels.forEach((tagLabel: TagLabel) => {
+            tagLabel.draw(bgCtx);
+        });
+    }
+
+    drawHoverState(background: CanvasRenderingContext2D): void {
+        this.drawBackgroundRect(
+            this.position.x * charSize.x - this.padding / 2,
+            this.position.y * charSize.y -
+                this.offset.y * charSize.y -
+                this.padding / 2,
+            this.size.x * charSize.x + this.padding,
+            this.size.y * charSize.y + this.padding,
+            16,
+            true,
+            new Color4(1, 1, 1, 0.8),
+            background,
+        );
+    }
+
+    onMouseEnter(): void {
+        const setCursorState = useCursorStore.getState().setCursorState;
+        setCursorState("pointer");
+
+        this.isMouseOver = true;
+        this.openTagLabels();
+    }
+
+    onMouseLeave(): void {
+        const setCursorState = useCursorStore.getState().setCursorState;
+        setCursorState("default");
+
+        this.isMouseOver = false;
+        this.closeTagLabels();
+    }
+
+    openTagLabels() {
+        this.tagLabels.forEach((taglabel: TagLabel) => {
+            taglabel.open();
+        });
+    }
+
+    closeTagLabels() {
+        this.tagLabels.forEach((taglabel: TagLabel) => {
+            taglabel.close();
+        });
+    }
+
+    destroy(): void {
+        this.canvasImage?.destroy();
+
+        // Destroy eventListeners
+        this.domLink.removeEventListener("click", this.clickHandler);
+        this.domLink.removeEventListener("mouseenter", this.mouseEnterHandler);
+        this.domLink.removeEventListener("mouseleave", this.mouseLeaveHandler);
+        this.domLink.remove();
+    }
+}

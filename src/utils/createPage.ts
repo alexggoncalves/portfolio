@@ -1,9 +1,9 @@
-import { HomePage } from "../components/Pages/HomePage/HomePage";
-import { WorkPage } from "../components/Pages/Works/WorksPage";
-import { ContactsPage } from "../components/Pages/ContactsPage/ContactsPage";
-import { WorkDetailsPage } from "../components/Pages/WorkDetailsPage/WorkDetailsPage";
+import { HomePage } from "../components/pages/HomePage";
+import { WorkPage } from "../components/pages/WorksPage";
+import { ContactsPage } from "../components/pages/ContactsPage";
+import { WorkDetailsPage } from "../components/pages/WorkDetailsPage";
 import type { Work } from "../stores/contentStore";
-import { Page } from "../components/PageRenderer/Page";
+import { Page } from "../components/pages/layout/Page";
 
 //------------------------------------------------------------------------
 // Create ASCII page: Initilializes an instance of the page to load
@@ -18,38 +18,30 @@ function createPage(
 
     if (scene == "") {
         // Homepage
-        page = new HomePage(works, goTo);
-        page.init(isMobile);
+        page = new HomePage(works,isMobile,goTo);
     } else if (scene == "contacts") {
         // Contacts page
-        page = new ContactsPage();
-        page.init(isMobile);
+        page = new ContactsPage(isMobile,goTo);
+
     } else if (scene.startsWith("work")) {
-        // Work
-        //[".../work"] and [".../work/:workId]"
+        // Work  (".../work" and ".../work/:workId")
         const parts = scene.split("/");
 
         if (parts[1]) {
             // If there is a workID open work details, else open works page
             const work = works.find((work) => work.id == parts[1]);
             if (work) {
-                const workDetailsPage = new WorkDetailsPage(work, goTo);
-                workDetailsPage.init(isMobile);
-                page = workDetailsPage;
+                page = new WorkDetailsPage(work, goTo, isMobile);                
             } else {
                 // NOT FOUND !! (Not implemented)
-                page = new HomePage(works, goTo);
-                page.init(isMobile);
+                page = new HomePage(works,isMobile,goTo); // TEMP
             }
         } else {
-            const workPage = new WorkPage(works, goTo);
-            workPage.init();
-            page = workPage;
+            page = new WorkPage(works,isMobile,goTo);
         }
     } else {
         // NOT FOUND PAGE!! (Not implemented)
-        page = new HomePage(works, goTo);
-        page.init(isMobile);
+        page = new HomePage(works,isMobile,goTo);
     }
 
     // Initialize opacity for fade transition

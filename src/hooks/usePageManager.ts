@@ -1,30 +1,34 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import type { Page } from "../components/PageRenderer/Page";
+import { Page } from "../components/pages/layout/Page";
 
 import createPage from "../utils/createPage";
 import useContentStore from "../stores/contentStore";
+import useSceneStore from "../stores/sceneStore";
 
 function usePageManager(location: any, isMobile: boolean, deps: any[]) {
-    const [currentPage, setCurrentPage] = useState<Page | null>(null);
-    const [nextPage, setNextPage] = useState<Page | null>(null);
+    const { currentPage, nextPage, setCurrentPage, setNextPage } =
+        useSceneStore();
 
     const { works } = useContentStore();
 
     const navigate = useNavigate();
     const goTo = (p: string) => navigate(p);
 
-    
     useEffect(() => {
         // Create or switch pages when route or dependencies change
-        updatePage()
+        updatePage();
+    }, [...deps, location.pathname, isMobile]);
 
-    }, [...deps, location, isMobile]);
-
-    function updatePage(){
+    function updatePage() {
         // Get path and remove first "/"
         const scene = location.pathname.slice(1);
         const newPage = createPage(scene, isMobile, goTo, works);
+
+        // Restore last scroll 
+        const pageScrolls = useSceneStore.getState().pageScrolls;
+        const storedScroll: number = pageScrolls[newPage.name] || 0;
+        newPage.scrollOffset = storedScroll;
 
         // Set page on first load and return
         if (!currentPage) {
@@ -32,28 +36,30 @@ function usePageManager(location: any, isMobile: boolean, deps: any[]) {
             setCurrentPage(newPage);
             return;
         }
-        // Start current fade
-        currentPage.targetOpacity = 0;
 
-        if (currentPage) currentPage.destroy();
-        if (nextPage) nextPage.destroy();
-
-        setNextPage(newPage);
+        startTransitionTo(newPage);
     }
-    
+
+    function startTransitionTo(page: Page) {
+        if (!currentPage) return;
+
+        currentPage.targetOpacity = 0;
+        page.targetOpacity = 1;
+
+        setNextPage(page);
+    }
+
     // Handle page transitions
     useEffect(() => {
         if (!currentPage || !nextPage) return;
 
         // When transition is complete, destroy the currentPage and replace with the new page
         currentPage.onFadeOutComplete = () => {
-            // currentPage.destroy?.();
+            currentPage.destroy?.();
             setCurrentPage(nextPage);
             setNextPage(null);
         };
     }, [currentPage, nextPage]);
-
-    return { currentPage, nextPage };
 }
 
 export default usePageManager;

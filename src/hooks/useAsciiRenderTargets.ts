@@ -5,19 +5,19 @@ import { useThree } from "@react-three/fiber";
 import {
     createAsciiRenderTarget,
     createBackgroundRenderTarget,
-} from "../utils/renderTargets";
+} from "../utils/createRenderTargets";
 import type Color4 from "three/src/renderers/common/Color4.js";
 
 function useAsciiRenderTargets() {
     const { size } = useThree();
-    const { charSize, pixelRatio, setGridSize, setTextures } = useAsciiStore();
+    const { charSize, setGridSize, setTextures } = useAsciiStore();
 
-    const ui = useRef<{
+    const ascii = useRef<{
         texture: Texture | null;
         context: CanvasRenderingContext2D | null;
     }>({ texture: null, context: null });
 
-    const background = useRef<{
+    const bg = useRef<{
         texture: Texture | null;
         context: CanvasRenderingContext2D | null;
     }>({ texture: null, context: null });
@@ -37,22 +37,18 @@ function useAsciiRenderTargets() {
         );
 
         // Save locally
-        ui.current = {
+        ascii.current = {
             texture: uiRenderTarget.texture,
             context: uiRenderTarget.context,
         };
-        background.current = {
+        bg.current = {
             texture: bgRenderTarget.texture,
             context: bgRenderTarget.context,
         };
 
         setGridSize(new Vector2(gridWidth, gridHeight));
-        setTextures(
-            bgRenderTarget.texture,
-            uiRenderTarget.texture,
-        );
-
-    }, [size.width, size.height, charSize.x, charSize.y, pixelRatio]);
+        setTextures(bgRenderTarget.texture, uiRenderTarget.texture);
+    }, [size.width, size.height, charSize.x, charSize.y]);
 
     const clearRenderTargets = (
         uiContext: CanvasRenderingContext2D,
@@ -64,16 +60,14 @@ function useAsciiRenderTargets() {
 
         // Clear ui and background textures
         uiContext.clearRect(0, 0, uiW, uiH);
-        bgContext.clearRect(0, 0, bgW, bgH);
-        bgContext.fillStyle = `rgb(${bgColor.r * 255},${bgColor.g * 255},${
-            bgColor.b * 255
-        }`;
-
-        // Fill the entire canvas
+        bgContext.fillStyle = `rgb(
+            ${bgColor.r * 255},
+            ${bgColor.g * 255},
+            ${bgColor.b * 255})`;
         bgContext.fillRect(0, 0, bgW, bgH);
     };
 
-    return { ui, background, clearRenderTargets };
+    return { ascii, bg, clearRenderTargets };
 }
 
 export default useAsciiRenderTargets;

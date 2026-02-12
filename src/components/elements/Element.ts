@@ -1,0 +1,287 @@
+import { Color, Vector2 } from "three";
+import useAsciiStore from "../../stores/asciiStore";
+import Color4 from "three/src/renderers/common/Color4.js";
+import getColorString from "../../utils/color";
+
+const createBrightnessMap = (asciiSequence: string) => {
+    const asciiArray = asciiSequence.split("");
+    const map = new Map<string, number>();
+
+    asciiArray.forEach((char, index) => {
+        let mappedBrightness = index / asciiArray.length + 0.002; //  Offset brightness to avoid rounding to wrong value
+
+        map.set(char, mappedBrightness);
+    });
+    return map;
+};
+
+export const brightnessMap = createBrightnessMap(
+    useAsciiStore.getState().asciiSequence,
+);
+
+const charSize = useAsciiStore.getState().charSize;
+
+//-----------------------------------------
+// ELEMENT CLASS
+//-----------------------------------------
+
+export class Element {
+    position: Vector2; // Position in relation to ascii grid
+    offset: Vector2; // scroll offset
+
+    size: Vector2 = new Vector2(1, 1); // Size in relation to ascii grid
+    horizontalAlign: "left" | "center" | "right" = "left"; // Horizontal alignment
+    verticalAlign: "top" | "middle" | "bottom" = "top"; // Vertical alignment
+
+    // Colors
+    color: Color = new Color("white");
+    backgroundColor: Color4 = new Color4(0, 0, 0, 0);
+    opacity: number;
+
+    //Flags
+    interactive: boolean = false;
+    animated: boolean = false;
+    // needsUpdate: boolean = false;
+    isScrollable: boolean = true;
+
+    constructor(
+        position: Vector2,
+        color?: Color,
+        backgroundColor?: Color4,
+        horizontalAlign?: "left" | "center" | "right",
+        verticalAlign?: "top" | "middle" | "bottom",
+    ) {
+        this.position = position;
+        this.offset = new Vector2(0);
+
+        this.opacity = 0;
+
+        if (color) this.color = color;
+        if (backgroundColor) this.backgroundColor = backgroundColor;
+        if (horizontalAlign) this.horizontalAlign = horizontalAlign;
+        if (verticalAlign) this.verticalAlign = verticalAlign;
+    }
+
+    setSize(text: string): void;
+    setSize(x: number, y: number): void;
+
+    // Calculate ascii block size ([x]: max line lenght | [y]: number of lines)
+    setSize(arg1: string | number, arg2?: number): void {
+        if (typeof arg1 === "string") {
+            const lines = (arg1.match(/\n/g) || "").length + 1;
+            const maxlength = Math.max(
+                ...arg1.split("\n").map((line) => line.length),
+            );
+            this.size.x = maxlength;
+            this.size.y = lines;
+        } else {
+            this.size.x = arg1;
+            if (arg2) this.size.y = arg2;
+        }
+    }
+
+    setOpacity(value: number): void {
+        this.opacity = value;
+    }
+
+    // Apply horizontal and vertical alignment
+    applyAlignment() {
+        const gridSize = useAsciiStore.getState().gridSize;
+        const offset = new Vector2(0, 0);
+
+        if (this.horizontalAlign === "right") {
+            offset.x = gridSize.x - this.size.x;
+        } else if (this.horizontalAlign === "center") {
+            offset.x = (gridSize.x - this.size.x) / 2;
+        }
+
+        if (this.verticalAlign === "bottom") {
+            offset.y = gridSize.y - this.size.y;
+        } else if (this.verticalAlign === "middle") {
+            offset.y = (gridSize.y - this.size.y) / 2;
+        }
+
+        this.position.x += offset.x;
+        this.position.y += offset.y;
+    }
+
+    // Paint pixel on ui canvas
+    drawPixel(
+        x: number,
+        y: number,
+        color: Color4,
+        asciiCtx: CanvasRenderingContext2D,
+    ): void {
+        // Set color
+
+        asciiCtx.fillStyle = getColorString(color, this.opacity);
+
+        // Clear and draw new character pixel
+        asciiCtx.fillRect(x, y + this.offset.y, 1, 1);
+    }
+
+    drawBlock(
+        text: string,
+        asciiCtx: CanvasRenderingContext2D,
+        bgCtx: CanvasRenderingContext2D,
+        positionOffset?: Vector2,
+    ) {
+        let x = this.position.x;
+        let y = this.position.y;
+
+        if (positionOffset) {
+            x += positionOffset.x;
+            y += positionOffset.y;
+        }
+
+        for (let i = 0; i < text.length; i++) {
+            const char = text.charAt(i);
+
+            if (char != "\n") {
+                //  Draw background pixel
+                if (this.backgroundColor.a != 0) {
+                    bgCtx.save();
+                    this.drawBackgroundTexel(
+                        x,
+                        y,
+                        charSize.x,
+                        charSize.y,
+                        this.backgroundColor,
+                        bgCtx,
+                    );
+                    bgCtx.restore();
+                }
+
+                if (char != "") {
+                    const brightness = this.getBrightnessFromChar(char);
+
+                    if (char !== undefined) {
+                        asciiCtx.save();
+                        // Draw ui pixel with char brightness as opacity
+                        const color = new Color4(
+                            this.color.r,
+                            this.color.g,
+                            this.color.b,
+                            brightness,
+                        );
+                        this.drawPixel(x, y, color, asciiCtx);
+                        asciiCtx.restore();
+                    }
+                }
+                x++;
+            } else {
+                y++;
+                x = this.position.x;
+            }
+        }
+    }
+
+    drawASCIILine(
+        pointA: Vector2,
+        pointB: Vector2,
+        strokeWidth: number,
+        color: Color4,
+        asciiCtx: CanvasRenderingContext2D,
+    ): void {
+        // Set color
+        asciiCtx.strokeStyle = getColorString(color, this.opacity);
+
+        asciiCtx.lineWidth = strokeWidth;
+        asciiCtx.beginPath();
+        asciiCtx.moveTo(pointA.x - strokeWidth / 2, pointA.y);
+        asciiCtx.lineTo(pointB.x - strokeWidth / 2, pointB.y);
+        asciiCtx.stroke();
+    }
+
+    drawBackgroundTexel(
+        x: number,
+        y: number,
+        w: number,
+        h: number,
+        color: Color4,
+        bgCtx: CanvasRenderingContext2D,
+    ): void {
+        bgCtx.globalAlpha = this.opacity;
+        // Set ui color
+        bgCtx.fillStyle = getColorString(color, this.opacity);
+
+        // Clear and draw new character pixel
+        bgCtx.fillRect(x * w, y * h, w, h);
+    }
+
+    drawBackgroundRect(
+        x: number,
+        y: number,
+        w: number,
+        h: number,
+        radius: number | number[],
+        strokeOnly: boolean,
+        color: Color4,
+        bgCtx: CanvasRenderingContext2D,
+    ): void {
+        bgCtx.save();
+        // Set ui color
+
+        // Clear and draw new character pixel
+        bgCtx.roundRect(x, y, w, h, radius);
+
+        if (strokeOnly) {
+            bgCtx.strokeStyle = getColorString(color, this.opacity);
+            bgCtx.lineWidth = 2 * devicePixelRatio;
+            bgCtx.stroke();
+        } else {
+            bgCtx.fillStyle = getColorString(color, this.opacity);
+            bgCtx.fill();
+        }
+        bgCtx.restore();
+    }
+
+    getBrightnessFromChar(char: string): number {
+        const brightness = brightnessMap.get(char);
+        if (brightness) return brightness;
+        else return 0;
+    }
+
+    createHTMLLink(
+        text: string,
+        position: Vector2,
+        size: Vector2,
+        parent?: HTMLElement,
+    ): HTMLElement {
+        const charSize = useAsciiStore.getState().charSize;
+        const canvasOffset = useAsciiStore.getState().canvasOffset;
+        const pixelRatio = useAsciiStore.getState().pixelRatio;
+
+        // Create invisible html link
+        const link = document.createElement("button");
+        link.classList.add("asciiButton");
+        link.textContent = `Go to ${text}`;
+        link.style.cursor = "none";
+        link.role = "link";
+
+        // Set position and dimensions
+        link.style.left = `${
+            position.x * (charSize.x / pixelRatio) - canvasOffset.x - 1
+        }px`;
+        link.style.top = `${
+            position.y * (charSize.y / pixelRatio) - canvasOffset.y - 1
+        }px`;
+        link.style.width = `${size.x * (charSize.x / pixelRatio)}px`;
+        link.style.height = `${size.y * (charSize.y / pixelRatio)}px`;
+
+        parent?.appendChild(link);
+
+        return link;
+    }
+
+    draw(
+        _uiCtx: CanvasRenderingContext2D,
+        _bgCtx: CanvasRenderingContext2D,
+    ): void {}
+
+    update(_delta?: number, _mousePos?: Vector2, _mouseDown?: boolean): void {}
+
+    destroy(): void {}
+
+    destroyHTML(): void {}
+}

@@ -1,26 +1,17 @@
 import "./styles/css/App.css";
 
-import ErrorElement from "./components/SceneHandler/ErrorElement";
+import ErrorElement from "./components/elements/ErrorElement";
 
 import { Outlet, useRouteError } from "react-router";
 import { useEffect, useState } from "react";
 
 import useSceneStore from "./stores/sceneStore";
-// import useAsciiStore from "./stores/asciiStore";
-// import useWorkStore from "./stores/contentStore";
-import MainContentLoader from "./components/SceneHandler/MainContentLoader";
-import RenderStage from "./components/SceneHandler/RenderStage";
-import CursorTracker from "./components/SceneHandler/CursorTracker";
+import RenderStage from "./components/render/RenderStage";
+import CursorTracker from "./components/interaction/CursorTracker";
+import AssetLoader from "./components/render/AssetLoader";
 
 function App() {
-    const error = useRouteError();
-
-    const [showError, setShowError] = useState(false);
-
     const { setIsMobile } = useSceneStore();
-    // const { canvasSize } = useAsciiStore();
-
-    // const { loadWork } = useWorkStore();
 
     // Detect mobile screen size
     useEffect(() => {
@@ -28,7 +19,9 @@ function App() {
         else setIsMobile(false);
     }, [window.innerWidth, window.innerHeight]);
 
-    //
+    // Error message
+    const error = useRouteError();
+    const [showError, setShowError] = useState(false);
     useEffect(() => {
         if (error) {
             setShowError(true);
@@ -38,19 +31,12 @@ function App() {
         }
     }, [error, location]);
 
-    // Initial Load
-
-    useEffect(() => {
-        // loadWork();
-    }, []);
-
     return (
         <>
-            <MainContentLoader/>
+            <AssetLoader/>
             <RenderStage />
             <CursorTracker/>
 
-            
             <div id="dom-overlay">
                 <header></header>
                 <main></main>

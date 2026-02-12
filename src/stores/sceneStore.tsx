@@ -1,41 +1,53 @@
 import { create } from "zustand";
-import type { To, NavigateOptions } from "react-router";
 import Color4 from "three/src/renderers/common/Color4.js";
+import type { Page } from "../components/pages/layout/Page";
 
-type Scene = "loading" | "homepage" | "works" | "workDetails" | "contacts" | null
+export type NavigationSource = "home" | "work";
 
 type SceneState = {
-    isMobile: boolean;
     backgroundColor: Color4;
-    currentScene: string | Scene;
-    nextScene: string | Scene;
-    navigate: (to: To, options?: NavigateOptions) => void | null;
 
-    setInitialScene: (scene: string) => void;
-    setScene: (scene: string) => void;
-    endTransition: () => void;
+    currentPage: Page | null;
+    nextPage: Page | null;
+    setCurrentPage: (page: Page) => void;
+    setNextPage: (page: Page | null) => void;
+
+    pageHeight: number;
+    pageScrolls: Record<string, number>;
+    setScroll: (pageName: string, scroll: number) => void;
+
+    isMobile: boolean;
     setIsMobile: (isMobile: boolean) => void;
+
+    navigationSource: NavigationSource | null;
+    setNavigationSource: (source: NavigationSource | null) => void;
 };
 
 const useSceneStore = create<SceneState>((set) => ({
     isMobile: window.innerWidth < 600,
-    backgroundColor: new Color4(0.1,0.1,0.1,1),
-    currentScene: null,
-    nextScene: null,
-    navigate: () => {},
+    backgroundColor: new Color4(0.1, 0.1, 0.1, 1),
 
-    setInitialScene: (scene: string) =>
-        set({ currentScene: scene, nextScene: null }),
+    pageHeight: 0,
+    pageScrolls: {},
 
-    setScene: (scene: string) => set({ nextScene: scene }),
+    currentPage: null,
+    nextPage: null,
 
-    endTransition: () =>
+    navigationSource: null,
+
+    setCurrentPage: (page: Page) =>
+        set({ currentPage: page, pageHeight: page.pageHeight }),
+    setNextPage: (page: Page | null) => set({ nextPage: page }),
+
+    setScroll: (pageName: string, scroll: number) => {
         set((state) => ({
-            currentScene: state.nextScene,
-            nextScene: null,
-        })),
+            pageScrolls: { ...state.pageScrolls, [pageName]: scroll },
+        }));
+    },
 
     setIsMobile: (isMobile: boolean) => set({ isMobile: isMobile }),
+    setNavigationSource: (source: NavigationSource | null) =>
+        set({ navigationSource: source }),
 }));
 
 export default useSceneStore;

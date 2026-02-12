@@ -7,7 +7,7 @@ function useScroll(
     touchSpeed: number = 0.2,
     touchDecay: number = 0.96,
 ) {
-    const [scrollDelta, setScrollDelta] = useState(0);
+    const scrollDeltaRef = useRef(0);
     const isTouch = useRef(false);
     const isFingerDown = useRef(false);
 
@@ -64,6 +64,15 @@ function useScroll(
 
             isDragging = true;
 
+            if (
+                direction !== 0 &&
+                lastDirectionRef.current !== 0 &&
+                direction !== lastDirectionRef.current
+            ) {
+                velocityRef.current = 0;
+            }
+
+            lastDirectionRef.current = direction;
             velocityRef.current = delta * touchSpeed;
         }
 
@@ -105,18 +114,11 @@ function useScroll(
             velocityRef.current = 0;
             lastDirectionRef.current = 0;
         }
-
-        const newOutput = velocityRef.current * delta * 60;
-
-        // Only update if meaningful change
-        if (Math.abs(newOutput - lastDeltaSent.current) > 0.0001) {
-            lastDeltaSent.current = newOutput;
-            outputRef.current = newOutput;
-            setScrollDelta(newOutput);
-        }
+        
+        scrollDeltaRef.current = velocityRef.current * delta * 60;
     });
 
-    return scrollDelta;
+    return scrollDeltaRef;
 }
 
 export default useScroll;
