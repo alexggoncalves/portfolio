@@ -20,7 +20,7 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
 
     useEffect(() => {
         setCanvasOffset(left, top);
-    }, [width, height, left, top]);
+    }, [width, height]);
 
     useEffect(() => {
         setPixelRatio(devicePixelRatio);

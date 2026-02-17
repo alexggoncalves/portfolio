@@ -93,7 +93,6 @@ export class WorkDetailsPage extends Page {
                 new Color4(0, 0.4, 0.4, 0),
                 "left",
                 "bottom",
-                this.pageContainer,
             ),
         );
     }
@@ -112,8 +111,8 @@ export class WorkDetailsPage extends Page {
             ),
         );
 
-        this.placementPosition.y += titleElement.size.y;
-        this.placementPosition.x = titleElement.position.x + 1;
+        this.placementPosition.y += titleElement.gridSize.y;
+        this.placementPosition.x = titleElement.gridPosition.x + 1;
 
         this.fixedLayer.addElement(
             new ASCIIBlock(
@@ -149,7 +148,7 @@ export class WorkDetailsPage extends Page {
                     "top",
                 ),
             );
-            offsetX += tagElement.size.x + 2;
+            offsetX += tagElement.gridSize.x + 2;
         });
 
         this.placementPosition.y += 4;

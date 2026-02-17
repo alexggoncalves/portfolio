@@ -74,18 +74,18 @@ export class ASCIITitleFrame extends Element {
         asciiCtx.fillRect(
             this.bounds.left + this.title.length + 1,
             this.bounds.top,
-            this.size.x - this.title.length - 1,
+            this.gridSize.x - this.title.length - 1,
             1
         );
         // Bottom
-        asciiCtx.fillRect(this.bounds.left, this.bounds.bottom, this.size.x, 1);
+        asciiCtx.fillRect(this.bounds.left, this.bounds.bottom, this.gridSize.x, 1);
     }
 
     calculateBounds(): Bounds {
-        const left = this.position.x;
-        const top = this.position.y;
-        const right = this.position.x + this.size.x;
-        const bottom = this.position.y + this.size.y;
+        const left = this.gridPosition.x;
+        const top = this.gridPosition.y;
+        const right = this.gridPosition.x + this.gridSize.x;
+        const bottom = this.gridPosition.y + this.gridSize.y;
 
         return { left, top, right, bottom };
     }

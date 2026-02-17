@@ -9,7 +9,7 @@ function useGridCanvasSize(charSize: Vector2) {
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
 
-            const extra = Math.round(4 / devicePixelRatio);
+            const extra = Math.ceil(6 / devicePixelRatio);
 
             const gridCols = Math.floor(viewportWidth / charSize.x) + extra;
             const gridRows = Math.floor(viewportHeight / charSize.y) + extra;
@@ -17,8 +17,8 @@ function useGridCanvasSize(charSize: Vector2) {
             const canvasWidth = gridCols * charSize.x;
             const canvasHeight = gridRows * charSize.y;
 
-            const left = Math.floor((canvasWidth - viewportWidth) / 2);
-            const top = Math.floor((canvasHeight - viewportHeight) / 2);
+            const left = Math.ceil((canvasWidth - viewportWidth) / 2);
+            const top = Math.ceil((canvasHeight - viewportHeight) / 2);
 
             setSize({
                 width: canvasWidth,

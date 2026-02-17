@@ -1,27 +1,19 @@
 import {
-    // Bloom,
     ChromaticAberration,
     EffectComposer,
     Glitch,
-    // Noise,
     Vignette,
-    // DepthOfField,
-    // SMAA
 } from "@react-three/postprocessing";
-import { Vector2 } from "three";
-
 import { GlitchMode } from "postprocessing";
-
 import { AsciiEffect } from "./AsciiEffect";
 import { LensDistortion } from "./LensDistortion";
+import { Vector2 } from "three";
 
 import useAsciiStore from "../../../stores/asciiStore";
-// import { useThree } from "@react-three/fiber";
 
 function Postprocessing() {
-    const { fontAtlas, charSize, atlasGridSize, backgroundTexture, uiTexture} = useAsciiStore();
-
-    
+    const { fontAtlas, charSize, atlasGridSize, backgroundTexture, uiTexture } =
+        useAsciiStore();
 
     return (
         <>
@@ -35,7 +27,7 @@ function Postprocessing() {
                     uiTexture={uiTexture!}
                 ></AsciiEffect>
 
-                {/* <ChromaticAberration offset={[0.0, 0.0]} /> */}
+                <ChromaticAberration offset={[0.0002, 0.0002]} />
                 <Glitch
                     delay={new Vector2(10, 20)} // min and max glitch delay
                     duration={new Vector2(0.2, 0.4)} // min and max glitch duration
@@ -43,14 +35,14 @@ function Postprocessing() {
                     chromaticAberrationOffset={new Vector2(0, 20)} // min and max chromatic aberration offset
                     mode={GlitchMode.SPORADIC} // glitch mode
                 />
-                <Vignette darkness={2} offset={-0.9} opacity={0.01} />
+                <Vignette darkness={2} offset={-0.9} opacity={0.1} />
 
-                {/* <LensDistortion
-                    distortion={new Vector2(0.03, 0.05)}
+                <LensDistortion
+                    distortion={new Vector2(0.02, 0.05)}
                     principalPoint={new Vector2(0, 0)}
-                    focalLength={new Vector2(0.98, 0.98)}
+                    focalLength={new Vector2(1, 1)}
                     skew={0}
-                /> */}
+                />
 
                 {/* <Noise opacity={0.02} /> */}
             </EffectComposer>

@@ -1,5 +1,5 @@
 import { Text3D } from "@react-three/drei";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import useAsciiStore from "../../stores/asciiStore";
 import { useFrame, useThree } from "@react-three/fiber";
 import getWorldPosition from "../../utils/getWorldPosition";
@@ -17,7 +17,7 @@ function NamePlate({ text }: { text: string }) {
 
     const { gridSize, charSize } = useAsciiStore();
 
-    useFrame((state, delta) => {
+    useFrame((_state, _delta) => {
         if (!wordRef.current || !groupRef.current) return;
 
         const homeScrollOffset = useSceneStore.getState().pageScrolls["home"];

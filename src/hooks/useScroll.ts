@@ -1,5 +1,5 @@
 import { useFrame } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 function useScroll(
     scrollSpeed: number = 0.002,
@@ -7,13 +7,11 @@ function useScroll(
     touchSpeed: number = 0.2,
     touchDecay: number = 0.96,
 ) {
-    const scrollDeltaRef = useRef(0);
+    const scrollDelta = useRef(0);
     const isTouch = useRef(false);
     const isFingerDown = useRef(false);
 
     const velocityRef = useRef(0);
-    const outputRef = useRef(0);
-    const lastDeltaSent = useRef(0);
     const lastDirectionRef = useRef<1 | -1 | 0>(0);
 
     useEffect(() => {
@@ -114,11 +112,11 @@ function useScroll(
             velocityRef.current = 0;
             lastDirectionRef.current = 0;
         }
-        
-        scrollDeltaRef.current = velocityRef.current * delta * 60;
+
+        scrollDelta.current = velocityRef.current * delta * 60;
     });
 
-    return scrollDeltaRef;
+    return scrollDelta;
 }
 
 export default useScroll;

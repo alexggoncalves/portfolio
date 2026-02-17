@@ -4,6 +4,7 @@ import { MathUtils } from "three";
 import { clamp } from "three/src/math/MathUtils.js";
 import useAsciiStore from "../../../stores/asciiStore";
 import useSceneStore from "../../../stores/sceneStore";
+import type { InteractiveElement } from "../../elements/InteractiveElement";
 
 //----------------------------------
 // PAGE CLASS
@@ -12,7 +13,8 @@ import useSceneStore from "../../../stores/sceneStore";
 export class Page {
     name: string = "";
     layers: Layer[] = [];
-    pageContainer: HTMLElement;
+    hoveredElements: InteractiveElement[] = [];
+    hoveredLayer: Layer | null = null;
 
     // Transitions
     opacity: number = 0.0;
@@ -36,34 +38,32 @@ export class Page {
         this.name = name;
         this.goTo = goTo;
         this.isMobile = isMobile;
-
-        this.pageContainer = document.createElement("section");
-        this.pageContainer.id = name;
-        const main = document.querySelector("main");
-        main?.appendChild(this.pageContainer);
     }
 
-    update(
-        asciiCtx: CanvasRenderingContext2D,
-        bgCtx: CanvasRenderingContext2D,
-        delta: number,
-        mousePos: Vector2,
-        scrollDelta: number,
-        // _mouseDown?: boolean
-    ): void {
-        this.setCurrentScroll(scrollDelta);
+    update(delta: number, mousePos: Vector2, scrollDelta: number): void {
+        this.updateScroll(scrollDelta);
         this.updateTransitions(delta);
 
-        // Update and draw all page layers
+        // Reset hovered elements array
+        this.hoveredElements = [];
+
+        // Update all page layers
         this.layers.forEach((layer: Layer) => {
-            layer.update(
-                asciiCtx,
-                bgCtx,
-                delta,
-                mousePos,
-                this.opacity,
-                this.scrollOffset,
-            );
+            // Update layer
+            layer.update(delta, this.scrollOffset);
+
+            // Update hovered elements array
+            layer.interactiveElements.forEach((element: InteractiveElement) => {
+                if (element.contains(mousePos))
+                    this.hoveredElements.push(element);
+            });
+        });
+    }
+
+    draw(asciiCtx: CanvasRenderingContext2D, bgCtx: CanvasRenderingContext2D) {
+        // Draw layer
+        this.layers.forEach((layer: Layer) => {
+            layer.draw(asciiCtx, bgCtx, this.opacity);
         });
     }
 
@@ -95,16 +95,9 @@ export class Page {
             this.onFadeOutComplete = undefined; // prevent multiple calls
             callback();
         }
-
-        // Update global scroll
-        const state = useSceneStore.getState();
-        const rounded = Math.round(this.scrollOffset * 100) / 100;
-        if (state.pageScrolls[this.name] !== rounded) {
-            state.setScroll(this.name, rounded);
-        }
     }
 
-    setCurrentScroll(scrollDelta: number): void {
+    updateScroll(scrollDelta: number): void {
         const gridSize = useAsciiStore.getState().gridSize;
 
         // Get max scroll
@@ -131,6 +124,21 @@ export class Page {
 
         // Clamp the scroll offset between limits
         this.scrollOffset = clamp(this.scrollOffset, 0, max);
+
+        // Update global scroll
+        const state = useSceneStore.getState();
+        const rounded = Math.round(this.scrollOffset * 100) / 100;
+        if (state.pageScrolls[this.name] !== rounded) {
+            state.setScroll(this.name, rounded);
+        }
+    }
+
+    resetHoverStates(){
+        this.layers.forEach(layer => {
+            layer.interactiveElements.forEach(element => {
+                element.isMouseOver = false;
+            });
+        });
     }
 
     resetFade(opacity = 0, target = 1, speed = 5) {
@@ -143,7 +151,5 @@ export class Page {
         this.layers.forEach((layer: Layer) => {
             layer.destroy();
         });
-
-        this.pageContainer.remove();
     }
 }

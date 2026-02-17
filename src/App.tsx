@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 
 import useSceneStore from "./stores/sceneStore";
 import RenderStage from "./components/render/RenderStage";
-import CursorTracker from "./components/interaction/CursorTracker";
 import AssetLoader from "./components/render/AssetLoader";
 
 function App() {
@@ -35,12 +34,6 @@ function App() {
         <>
             <AssetLoader/>
             <RenderStage />
-            <CursorTracker/>
-
-            <div id="dom-overlay">
-                <header></header>
-                <main></main>
-            </div>
 
             {showError ? <ErrorElement /> : <Outlet />}
         </>

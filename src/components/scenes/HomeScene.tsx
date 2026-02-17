@@ -1,8 +1,3 @@
-// import { useEffect, useRef } from "react";
-// import { useFrame } from "@react-three/fiber";
-// import { Mesh } from "three";
-// import { Image } from "@react-three/drei";
-
 import { Text3D } from "@react-three/drei";
 import getWorldPosition from "../../utils/getWorldPosition";
 import getWorldScale, { getObjectSize } from "../../utils/getWorldScale";
@@ -21,11 +16,9 @@ function HomeScene() {
     const baseSize = useRef<Vector3 | null>(null);
 
     const { gridSize, charSize } = useAsciiStore();
-    
 
-    // Called when Text3D finishes generating its geometry
 
-    useFrame((state, delta) => {
+    useFrame((_state, _delta) => {
         if (!wordRef.current || !groupRef.current) return;
 
         const homeScrollOffset = useSceneStore.getState().pageScrolls["home"];
@@ -36,10 +29,6 @@ function HomeScene() {
             const size = getObjectSize(wordRef.current);
             if (size.x === 0 || size.y === 0) return;
             baseSize.current = size;
-
-        //      wordRef.current.geometry.computeBoundingBox();
-        // const box = wordRef.current.geometry.boundingBox;
-        // const offsetX = (box.max.x - box.min.x) / 2;
         }
 
         const worldPos = getWorldPosition(
@@ -64,13 +53,6 @@ function HomeScene() {
             charSize,
         );
 
-        // wordRef.current.geometry.computeBoundingBox();
-        // const box = wordRef.current.geometry.boundingBox;
-        // const offsetX = (box.max.x - box.min.x) / 2;
-
-        // wordRef.current.position.x = -offsetX;
-
-        // setScrollPosition(scrollPosition + delta)
         groupRef.current.position.copy(worldPos);
         groupRef.current.scale.set(worldScale.x, worldScale.y, 1);
     });

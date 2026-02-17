@@ -9,7 +9,8 @@ import useContentStore from "../../stores/contentStore"; // your Zustand store
 import type { Work, Person, Tag } from "../../stores/contentStore";
 // import { useLoader } from "@react-three/fiber";
 // import { ImageLoader } from "three";
-import { useProgress, useTexture } from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
+// import { useProgress } from "@react-three/drei";
 
 const defaultAvatarSrc = "/images/avatars/default_avatar.jpg";
 const defaultProjectThumbnail = "/images/default/default_avatar.jpg";
@@ -20,7 +21,7 @@ const tags = tagsData as Tag[];
 
 // Load thumbnails, 3d models and team pictures
 function AssetLoader() {
-    const { progress, item } = useProgress();
+    // const { progress, item } = useProgress();
 
     // const { setProgress, set}
 
@@ -79,7 +80,7 @@ function AssetLoader() {
                 zIndex: "2",
             }}
         >
-            {progress} : {item}
+            {/* {progress} : {item} */}
         </div>
     );
 }

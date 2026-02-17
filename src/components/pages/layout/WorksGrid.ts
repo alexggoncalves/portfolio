@@ -11,7 +11,6 @@ import { Layer } from "./Layer";
 
 export class WorksGrid extends Layer {
     works: Work[] = [];
-    parent: HTMLElement;
 
     position: Vector2;
     private readonly imageAspectRatio: number = 5 / 3;
@@ -31,12 +30,10 @@ export class WorksGrid extends Layer {
         margin: number,
         gap: number,
         goTo: (path: string) => void,
-        parent: HTMLElement,
         _isMobile: boolean,
     ) {
         super("works_grid", [], goTo);
 
-        this.parent = parent;
         this.works = works;
         this.position = position;
         this.gridSize.x = width;
@@ -83,9 +80,9 @@ export class WorksGrid extends Layer {
                     this.position.y + offset.y,
                 ),
                 new Vector2(imageWidth, imageHeight), // Size,
-                "work",
                 this.goTo,
-                this.parent,
+                "work",
+                
             );
 
             // Add card to the grid

@@ -23,7 +23,7 @@ export class CanvasText extends Element {
         fontSize: number,
         position: Vector2,
         maxWidth: number, // width in ascii cells
-        lineHeight:number,
+        lineHeight: number,
         padding: number,
         color: Color,
         bgColor?: Color4,
@@ -32,19 +32,18 @@ export class CanvasText extends Element {
         this.isScrollable = true;
         this.font = font;
         this.fontSize = fontSize;
-        this.lineHeight = lineHeight
+        this.lineHeight = lineHeight;
         this.padding = padding;
 
         // Calculate width in pixels
         const charSize = useAsciiStore.getState().charSize;
-        this.size.x = (maxWidth - padding * 2) * charSize.x;
+        const width = maxWidth - padding * 2;
 
         // Wrap the text
-        this.lines = this.wrapText(text,this.size.x);
+        this.lines = this.wrapText(text, width * charSize.x);
 
         // Calculate the height of the whole block
-        this.size.y = this.lines.length * this.lineHeight * fontSize;
-        
+        this.setSize(width, this.lines.length * this.lineHeight * fontSize);
     }
 
     private static measureCtx: CanvasRenderingContext2D = (() => {
@@ -66,8 +65,8 @@ export class CanvasText extends Element {
         bgCtx.font = `${this.font} ${this.fontSize}px monospace`;
 
         const position = {
-            x: (this.position.x + this.padding) * charSize.x,
-            y: (this.position.y - this.offset.y) * charSize.y,
+            x: this.pixelPosition.x + this.padding * charSize.x,
+            y: this.pixelPosition.y - this.pixelOffset.y,
         };
 
         let yOffset = 0;
@@ -106,6 +105,6 @@ export class CanvasText extends Element {
 
     getGridSize() {
         const charSize = useAsciiStore.getState().charSize;
-        return this.size.divide(charSize);
+        return this.gridSize.divide(charSize);
     }
 }

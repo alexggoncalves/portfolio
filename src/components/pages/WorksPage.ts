@@ -2,7 +2,6 @@ import { Page } from "./layout/Page";
 import { Vector2 } from "three";
 import type { Work } from "../../stores/contentStore";
 
-// import { createASCIITitle } from "../../../utils/asciiFonts";
 import { WorksGrid } from "./layout/WorksGrid";
 import useAsciiStore from "../../stores/asciiStore";
 import { Layer } from "./layout/Layer";
@@ -42,7 +41,6 @@ export class WorkPage extends Page {
             margin,
             this.gap,
             this.goTo,
-            this.pageContainer,
             false,
         );
 
@@ -67,9 +65,5 @@ export class WorkPage extends Page {
         );
 
         this.layers.push(gradientLayer);
-    }
-
-    destroy(): void {
-        this.pageContainer.remove();
     }
 }

@@ -1,9 +1,3 @@
-// import { useEffect, useRef } from "react";
-// import { useFrame } from "@react-three/fiber";
-// import { Mesh } from "three";
-// import { Image } from "@react-three/drei";
-
-import HomeScene from "./HomeScene";
 import NamePlate from "./NamePlate";
 
 function SceneRenderer() {

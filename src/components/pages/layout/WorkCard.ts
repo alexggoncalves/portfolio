@@ -1,7 +1,6 @@
 import { Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { Element } from "../../elements/Element";
 import { CanvasImage } from "../../elements/CanvasImage";
 import useAsciiStore from "../../../stores/asciiStore";
 
@@ -12,36 +11,34 @@ import useCursorStore from "../../../stores/cursorStore";
 import TagLabel from "./TagLabel";
 import type { NavigationSource } from "../../../stores/sceneStore";
 import useSceneStore from "../../../stores/sceneStore";
+import { InteractiveElement } from "../../elements/InteractiveElement";
 
-const { charSize } = useAsciiStore.getState();
-
-export class WorkCard extends Element {
+export class WorkCard extends InteractiveElement {
     work: Work;
     tagLabels: TagLabel[] = [];
     canvasImage: CanvasImage | undefined;
-    domLink: HTMLElement;
     padding = 10;
 
     navigationSource: NavigationSource = "home";
+    goTo?: (path: string) => void;
 
-    isMouseOver: boolean = false;
+    tagsOpened: boolean = false;
 
-    clickHandler: () => void;
-    mouseLeaveHandler: () => void;
-    mouseEnterHandler: () => void;
+    cornerRadius: number = 40;
 
     constructor(
         work: Work,
         position: Vector2,
         size: Vector2,
-        navigationSource?: NavigationSource,
         goTo?: (path: string) => void,
-        parent?: HTMLElement,
+        navigationSource?: NavigationSource,
     ) {
         super(position);
         this.work = work;
         this.setSize(size.x, size.y);
-        this.animated = true;
+        this.isInteractive = true;
+
+        if (goTo) this.goTo = goTo;
 
         if (navigationSource) this.navigationSource = navigationSource;
 
@@ -54,34 +51,12 @@ export class WorkCard extends Element {
         if (work.thumbnailSrc) {
             this.canvasImage = new CanvasImage(
                 work.thumbnailSrc,
-                this.position,
+                this.gridPosition,
                 size.x,
                 size.y,
+                this.cornerRadius,
             );
         }
-
-        // Create DOM link element
-        this.domLink = this.createHTMLLink(
-            "Go to " + this.work.title,
-            this.position.clone(),
-            this.size,
-            parent,
-        );
-
-        this.clickHandler = () => {
-            useSceneStore.getState().setNavigationSource(this.navigationSource);
-
-            if (goTo) goTo(`/work/${this.work.id}`);
-            const setCursorState = useCursorStore.getState().setCursorState;
-            setCursorState("default");
-        };
-        this.mouseEnterHandler = () => this.onMouseEnter();
-        this.mouseLeaveHandler = () => this.onMouseLeave();
-
-        // Set mouse event listeners
-        this.domLink.addEventListener("click", this.clickHandler);
-        this.domLink.addEventListener("mouseenter", this.mouseEnterHandler);
-        this.domLink.addEventListener("mouseleave", this.mouseLeaveHandler);
     }
 
     initializeTagLabels(tags: Tag[]) {
@@ -90,9 +65,9 @@ export class WorkCard extends Element {
         const gap = 0 * charSize.y;
         const margin = 1.4 * charSize.y;
 
-        let yPos = this.position.y * charSize.y;
+        let yPos = this.pixelPosition.y;
         tags.forEach((tag: Tag) => {
-            const x = (this.position.x + this.size.x) * charSize.x;
+            const x = this.pixelPosition.x + this.pixelSize.x;
             const tagLabel = new TagLabel(
                 tag,
                 new Vector2(x - margin, yPos + margin),
@@ -106,29 +81,25 @@ export class WorkCard extends Element {
         });
     }
 
-    update(delta: number, _mousePos?: Vector2, _mouseDown?: boolean): void {
-        const { canvasOffset } = useAsciiStore.getState();
-
-        // Calculate button position
-        const domPos = Math.round(
-            (this.position.y - this.offset.y) * charSize.y -
-                canvasOffset.y / devicePixelRatio,
-        );
-
-        // Update dom button position
-        this.domLink.style.top = `${domPos}px`;
+    update(): void {
+        if (this.isMouseOver && !this.tagsOpened) {
+            this.openTagLabels();
+            this.tagsOpened = true;
+        } else if (!this.isMouseOver && this.tagsOpened) {
+            this.closeTagLabels();
+            this.tagsOpened = false;
+        }
 
         // Update image
         if (this.canvasImage) {
-            this.canvasImage.offset.y = this.offset.y;
+            this.canvasImage.setYOffset(this.gridOffset.y);
             this.canvasImage.opacity = this.opacity;
-            this.canvasImage.update(delta);
         }
 
         // Update tag labels
         this.tagLabels.forEach((tagLabel: TagLabel) => {
             tagLabel.opacity = this.opacity;
-            tagLabel.yOffset = this.offset.y;
+            tagLabel.yOffset = this.gridOffset.y;
             tagLabel.update();
         });
     }
@@ -141,7 +112,6 @@ export class WorkCard extends Element {
         if (this.isMouseOver) {
             this.drawHoverState(bgCtx);
         }
-
         // Draw image
         this.canvasImage?.draw(asciiCtx, bgCtx);
 
@@ -153,17 +123,25 @@ export class WorkCard extends Element {
 
     drawHoverState(background: CanvasRenderingContext2D): void {
         this.drawBackgroundRect(
-            this.position.x * charSize.x - this.padding / 2,
-            this.position.y * charSize.y -
-                this.offset.y * charSize.y -
-                this.padding / 2,
-            this.size.x * charSize.x + this.padding,
-            this.size.y * charSize.y + this.padding,
-            16,
+            this.pixelPosition.x - this.padding / 2,
+            this.pixelPosition.y - this.pixelOffset.y - this.padding / 2,
+            this.pixelSize.x + this.padding,
+            this.pixelSize.y + this.padding,
+            this.cornerRadius + this.padding / 2,
             true,
             new Color4(1, 1, 1, 0.8),
             background,
         );
+    }
+
+    onClick(): void {
+        useSceneStore.getState().setNavigationSource(this.navigationSource);
+
+        if (this.goTo) {
+            this.goTo(`/work/${this.work.id}`);
+            const setCursorState = useCursorStore.getState().setCursorState;
+            setCursorState("default");
+        }
     }
 
     onMouseEnter(): void {
@@ -196,11 +174,5 @@ export class WorkCard extends Element {
 
     destroy(): void {
         this.canvasImage?.destroy();
-
-        // Destroy eventListeners
-        this.domLink.removeEventListener("click", this.clickHandler);
-        this.domLink.removeEventListener("mouseenter", this.mouseEnterHandler);
-        this.domLink.removeEventListener("mouseleave", this.mouseLeaveHandler);
-        this.domLink.remove();
     }
 }

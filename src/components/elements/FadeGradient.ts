@@ -1,7 +1,6 @@
 import { Vector2 } from "three";
 
 import { Element } from "./Element";
-import useAsciiStore from "../../stores/asciiStore";
 import type Color4 from "three/src/renderers/common/Color4.js";
 
 //------------------------------------------
@@ -29,12 +28,10 @@ export class FadeGradient extends Element {
         _asciiCtx: CanvasRenderingContext2D,
         bgCtx: CanvasRenderingContext2D,
     ): void {
-        const charSize = useAsciiStore.getState().charSize;
-
-        const x = this.position.x * charSize.x;
-        const y = this.position.y * charSize.y;
-        const w = this.size.x * charSize.x;
-        const h = this.size.y * charSize.y;
+        const x = this.pixelPosition.x;
+        const y = this.pixelPosition.y;
+        const w = this.pixelSize.x;
+        const h = this.pixelSize.y;
        
         const r = this.backgroundColor.r * 255;
         const g = this.backgroundColor.g * 255;
@@ -68,6 +65,4 @@ export class FadeGradient extends Element {
 
         bgCtx.restore();
     }
-
-    update(): void {}
 }

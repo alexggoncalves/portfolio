@@ -1,5 +1,5 @@
 import { Vector2 } from "three";
-import useAsciiStore from "../../stores/asciiStore";
+// import useAsciiStore from "../../stores/asciiStore";
 
 //------------------------------------------
 // Cursor Class
@@ -19,11 +19,11 @@ export class Cursor {
         _asciiCtx: CanvasRenderingContext2D,
         bgCtx: CanvasRenderingContext2D,
     ): void {
-        const canvasOffset = useAsciiStore.getState().canvasOffset;
+        // const canvasOffset = useAsciiStore.getState().canvasOffset;
         bgCtx.beginPath();
         bgCtx.ellipse(
-            this.position.x + canvasOffset.x,
-            this.position.y + canvasOffset.y,
+            this.position.x-5,
+            this.position.y-5 ,
             10,
             10,
             0,

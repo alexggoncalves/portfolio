@@ -42,6 +42,7 @@ class TagLabel {
 
     draw(bgCtx: CanvasRenderingContext2D) {
         // const { charSize } = useAsciiStore.getState();
+        bgCtx.save();
 
         // Set text properties
         bgCtx.font = `${this.textSize.y}px ${this.textFont}`;
@@ -88,6 +89,8 @@ class TagLabel {
                 y + this.textSize.y / 2 + this.padding.y,
             );
         }
+
+        bgCtx.restore();
     }
 
     drawCross(bgCtx: CanvasRenderingContext2D, x: number, y: number) {

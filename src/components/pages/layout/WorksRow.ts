@@ -12,7 +12,6 @@ import { CanvasText } from "../../elements/CanvasText";
 
 export class WorksRow extends Layer {
     works: Work[] = [];
-    parent: HTMLElement;
 
     position: Vector2;
     size: Vector2 = new Vector2(0);
@@ -21,7 +20,7 @@ export class WorksRow extends Layer {
     indentWidth: number;
     gap: number;
 
-    title: string = "Featured projects"
+    title: string = "Featured projects";
     titleSize: number = 60;
     titlePadding: number = 2;
 
@@ -34,15 +33,13 @@ export class WorksRow extends Layer {
         indentWidth: number,
         gap: number,
         goTo: (path: string) => void,
-        parent: HTMLElement,
         _isMobile: boolean,
     ) {
         super("works-row", [], goTo);
 
-        this.parent = parent;
         this.works = works;
         this.position = position;
-        this.cardHeight = cardHeight
+        this.cardHeight = cardHeight;
 
         // Row layout calculations
         this.size.y = cardHeight + this.titlePadding * 2 + this.titleSize;
@@ -53,7 +50,6 @@ export class WorksRow extends Layer {
         // Scroll values
         this.isScrollable = true;
 
-        
         this.createRow();
         this.createTitle();
     }
@@ -63,7 +59,10 @@ export class WorksRow extends Layer {
             this.title,
             "",
             this.titleSize,
-            new Vector2(this.position.x + this.indentWidth, this.position.y + this.titlePadding),
+            new Vector2(
+                this.position.x + this.indentWidth,
+                this.position.y + this.titlePadding,
+            ),
             100,
             1,
             this.titlePadding,
@@ -87,12 +86,13 @@ export class WorksRow extends Layer {
                 work,
                 new Vector2( // Position
                     this.position.x + offset + this.indentWidth,
-                    this.position.y + this.titleSize/16 + this.titlePadding * 2,
+                    this.position.y +
+                        this.titleSize / 16 +
+                        this.titlePadding * 2,
                 ),
                 new Vector2(imageWidth, this.cardHeight), // Size,
-                "home",
                 this.goTo,
-                this.parent,
+                "home",
             );
 
             // Add card to the grid

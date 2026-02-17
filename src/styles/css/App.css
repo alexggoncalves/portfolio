@@ -8,29 +8,6 @@
   overflow-y: hidden;
 }
 
-#dom-overlay {
-  position: absolute;
-  opacity: 0;
-  visibility: visible;
-  display: block;
-  height: 100vh;
-  width: 100vw;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-}
-
-.asciiButton {
-  position: absolute;
-  font-size: 5pt;
-  background-color: white;
-  opacity: 1;
-  overflow: hidden;
-  box-sizing: content-box;
-  padding: 0;
-  cursor: none;
-}
-
 p {
   left: "78px";
   top: "50%";

@@ -12,6 +12,7 @@ const createBrightnessMap = (asciiSequence: string) => {
 
         map.set(char, mappedBrightness);
     });
+
     return map;
 };
 
@@ -26,10 +27,15 @@ const charSize = useAsciiStore.getState().charSize;
 //-----------------------------------------
 
 export class Element {
-    position: Vector2; // Position in relation to ascii grid
-    offset: Vector2; // scroll offset
+    gridPosition: Vector2; // Position in grid units
+    gridSize: Vector2 = new Vector2(1); // Size in grid units
 
-    size: Vector2 = new Vector2(1, 1); // Size in relation to ascii grid
+    pixelPosition: Vector2; // Position in pixel units
+    pixelSize: Vector2 = new Vector2(1); // Size in pixel units
+
+    gridOffset: Vector2 = new Vector2(0); // scroll offset in grid units
+    pixelOffset: Vector2 = new Vector2(0);
+
     horizontalAlign: "left" | "center" | "right" = "left"; // Horizontal alignment
     verticalAlign: "top" | "middle" | "bottom" = "top"; // Vertical alignment
 
@@ -39,9 +45,8 @@ export class Element {
     opacity: number;
 
     //Flags
-    interactive: boolean = false;
-    animated: boolean = false;
-    // needsUpdate: boolean = false;
+    isInteractive: boolean = false;
+    isAnimated: boolean = false;
     isScrollable: boolean = true;
 
     constructor(
@@ -51,8 +56,11 @@ export class Element {
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        this.position = position;
-        this.offset = new Vector2(0);
+        this.gridPosition = position;
+        this.pixelPosition = new Vector2(
+            position.x * charSize.x,
+            position.y * charSize.y,
+        );
 
         this.opacity = 0;
 
@@ -67,17 +75,36 @@ export class Element {
 
     // Calculate ascii block size ([x]: max line lenght | [y]: number of lines)
     setSize(arg1: string | number, arg2?: number): void {
+        const charSize = useAsciiStore.getState().charSize;
+
         if (typeof arg1 === "string") {
             const lines = (arg1.match(/\n/g) || "").length + 1;
             const maxlength = Math.max(
                 ...arg1.split("\n").map((line) => line.length),
             );
-            this.size.x = maxlength;
-            this.size.y = lines;
+            this.gridSize.x = maxlength;
+            this.gridSize.y = lines;
+            
         } else {
-            this.size.x = arg1;
-            if (arg2) this.size.y = arg2;
+            this.gridSize.x = arg1;
+            
+            if (arg2) {
+                this.gridSize.y = arg2;
+            }
         }
+
+        this.pixelSize.x = this.gridSize.x * charSize.x;
+        this.pixelSize.y = this.gridSize.y * charSize.y
+    }
+
+    setXOffset(value: number): void {
+        this.gridOffset.x = value;
+        this.pixelOffset.x = value * charSize.x;
+    }
+
+    setYOffset(value: number): void {
+        this.gridOffset.y = value;
+        this.pixelOffset.y = value * charSize.y;
     }
 
     setOpacity(value: number): void {
@@ -87,22 +114,27 @@ export class Element {
     // Apply horizontal and vertical alignment
     applyAlignment() {
         const gridSize = useAsciiStore.getState().gridSize;
+        const charSize = useAsciiStore.getState().charSize;
+
         const offset = new Vector2(0, 0);
 
         if (this.horizontalAlign === "right") {
-            offset.x = gridSize.x - this.size.x;
+            offset.x = gridSize.x - this.gridSize.x;
         } else if (this.horizontalAlign === "center") {
-            offset.x = (gridSize.x - this.size.x) / 2;
+            offset.x = (gridSize.x - this.gridSize.x) / 2;
         }
 
         if (this.verticalAlign === "bottom") {
-            offset.y = gridSize.y - this.size.y;
+            offset.y = gridSize.y - this.gridSize.y;
         } else if (this.verticalAlign === "middle") {
-            offset.y = (gridSize.y - this.size.y) / 2;
+            offset.y = (gridSize.y - this.gridSize.y) / 2;
         }
 
-        this.position.x += offset.x;
-        this.position.y += offset.y;
+        this.gridPosition.x += offset.x;
+        this.gridPosition.y += offset.y;
+
+        this.pixelPosition.x = this.gridPosition.x * charSize.x;
+        this.pixelPosition.y = this.gridPosition.y * charSize.y;
     }
 
     // Paint pixel on ui canvas
@@ -117,7 +149,7 @@ export class Element {
         asciiCtx.fillStyle = getColorString(color, this.opacity);
 
         // Clear and draw new character pixel
-        asciiCtx.fillRect(x, y + this.offset.y, 1, 1);
+        asciiCtx.fillRect(x, y + this.gridOffset.y, 1, 1);
     }
 
     drawBlock(
@@ -126,8 +158,8 @@ export class Element {
         bgCtx: CanvasRenderingContext2D,
         positionOffset?: Vector2,
     ) {
-        let x = this.position.x;
-        let y = this.position.y;
+        let x = this.gridPosition.x;
+        let y = this.gridPosition.y;
 
         if (positionOffset) {
             x += positionOffset.x;
@@ -171,7 +203,7 @@ export class Element {
                 x++;
             } else {
                 y++;
-                x = this.position.x;
+                x = this.gridPosition.x;
             }
         }
     }
@@ -214,16 +246,32 @@ export class Element {
         y: number,
         w: number,
         h: number,
-        radius: number | number[],
+        radius: number,
         strokeOnly: boolean,
         color: Color4,
         bgCtx: CanvasRenderingContext2D,
     ): void {
         bgCtx.save();
-        // Set ui color
 
-        // Clear and draw new character pixel
-        bgCtx.roundRect(x, y, w, h, radius);
+        // Set ui color
+        bgCtx.beginPath();
+
+        if (radius > 0) {
+            bgCtx.globalAlpha = 1;
+            bgCtx.beginPath();
+            bgCtx.moveTo(x + radius, y);
+            bgCtx.lineTo(x + w - radius, y);
+            bgCtx.quadraticCurveTo(x + w, y, x + w, y + radius);
+            bgCtx.lineTo(x + w, y + h - radius);
+            bgCtx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+            bgCtx.lineTo(x + radius, y + h);
+            bgCtx.quadraticCurveTo(x, y + h, x, y + h - radius);
+            bgCtx.lineTo(x, y + radius);
+            bgCtx.quadraticCurveTo(x, y, x + radius, y);
+            bgCtx.closePath();
+        } else {
+            bgCtx.rect(x, y, w, h);
+        }
 
         if (strokeOnly) {
             bgCtx.strokeStyle = getColorString(color, this.opacity);
@@ -242,46 +290,10 @@ export class Element {
         else return 0;
     }
 
-    createHTMLLink(
-        text: string,
-        position: Vector2,
-        size: Vector2,
-        parent?: HTMLElement,
-    ): HTMLElement {
-        const charSize = useAsciiStore.getState().charSize;
-        const canvasOffset = useAsciiStore.getState().canvasOffset;
-        const pixelRatio = useAsciiStore.getState().pixelRatio;
-
-        // Create invisible html link
-        const link = document.createElement("button");
-        link.classList.add("asciiButton");
-        link.textContent = `Go to ${text}`;
-        link.style.cursor = "none";
-        link.role = "link";
-
-        // Set position and dimensions
-        link.style.left = `${
-            position.x * (charSize.x / pixelRatio) - canvasOffset.x - 1
-        }px`;
-        link.style.top = `${
-            position.y * (charSize.y / pixelRatio) - canvasOffset.y - 1
-        }px`;
-        link.style.width = `${size.x * (charSize.x / pixelRatio)}px`;
-        link.style.height = `${size.y * (charSize.y / pixelRatio)}px`;
-
-        parent?.appendChild(link);
-
-        return link;
-    }
-
     draw(
         _uiCtx: CanvasRenderingContext2D,
         _bgCtx: CanvasRenderingContext2D,
     ): void {}
 
-    update(_delta?: number, _mousePos?: Vector2, _mouseDown?: boolean): void {}
-
     destroy(): void {}
-
-    destroyHTML(): void {}
 }

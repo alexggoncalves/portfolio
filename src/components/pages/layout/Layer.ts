@@ -1,51 +1,63 @@
-import { Vector2 } from "three";
 import type { Element } from "../../elements/Element";
+import { InteractiveElement } from "../../elements/InteractiveElement";
 //-------------------------------
 //          LAYER CLASS
 //-------------------------------
 export class Layer {
     name: string;
     elements: Element[] = [];
+    interactiveElements: InteractiveElement[] = [];
 
     // Scroll
     isScrollable: boolean = false;
     isDraggable: boolean = false;
 
     parent?: HTMLElement;
-    goTo?: (path: string) => void ;
+    goTo?: (path: string) => void;
 
-    constructor(name: string, elements: Element[], goTo?: (path: string) => void) {
+    constructor(
+        name: string,
+        elements: Element[],
+        goTo?: (path: string) => void,
+    ) {
         this.name = name;
         this.elements = elements;
-        if(goTo) this.goTo = goTo;
+        if (goTo) this.goTo = goTo;
     }
 
-    update(
-        asciiCtx: CanvasRenderingContext2D,
-        bgCtx: CanvasRenderingContext2D,
-        delta: number,
-        mousePos: Vector2,
-        opacity: number,
-        yOffset: number,
-    ): void {
+    update(_delta: number, yOffset: number): void {
         // Update all elements in the layer
         this.elements.forEach((element: Element) => {
             // Apply scroll offset to elements
-            if (this.isScrollable) element.offset.y = yOffset;
+            if (this.isScrollable && element.isScrollable) {
+                element.setYOffset(yOffset);
+            }
 
-            // Apply drag to elements
-            if (this.isDraggable) element.offset.x = 0 // TEMP
-
-            // Update element
-            if (element.animated) {
-                element.update(delta);
-            } else if (element.interactive) {
-                element.update(delta, mousePos, false);
+            // Apply drag offset to elements
+            if (this.isDraggable) {
+                element.setXOffset(0); // TEMP
             }
         });
 
-        // Draw layer
-        this.draw(asciiCtx, bgCtx, opacity);
+        // Update all interactive elements
+        this.interactiveElements.forEach(
+            (interactiveElement: InteractiveElement) => {
+                // Apply scroll offset to elements
+                if (this.isScrollable && interactiveElement.isScrollable) {
+                    interactiveElement.setYOffset(yOffset);
+                }
+
+                // Apply drag offset to elements
+                if (this.isDraggable) {
+                    interactiveElement.setXOffset(0); // TEMP
+                }
+
+                // Update interactive element
+                interactiveElement.update();
+
+                interactiveElement.isMouseOver = false;
+            },
+        );
     }
 
     draw(
@@ -57,10 +69,18 @@ export class Layer {
             element.setOpacity(opacity);
             element.draw(asciiCtx, bgCtx);
         });
+
+        this.interactiveElements.forEach((element: Element) => {
+            element.setOpacity(opacity);
+            element.draw(asciiCtx, bgCtx);
+        });
     }
 
     addElement(element: Element): Element {
-        this.elements.push(element);
+        if (element instanceof InteractiveElement) {
+            this.interactiveElements.push(element);
+        } else this.elements.push(element);
+
         return element;
     }
 

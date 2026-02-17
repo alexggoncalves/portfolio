@@ -33,7 +33,6 @@ export class HomePage extends Page {
             5,
             1,
             this.goTo,
-            this.pageContainer,
             this.isMobile,
         );
 

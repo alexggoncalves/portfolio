@@ -1,8 +1,3 @@
-// import { useEffect, useRef } from "react";
-// import { useFrame } from "@react-three/fiber";
-// import { Mesh } from "three";
-// import { Image } from "@react-three/drei";
-
 import { Center, Text3D } from "@react-three/drei";
 
 function HomeScene() {

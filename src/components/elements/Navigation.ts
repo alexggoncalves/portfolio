@@ -2,24 +2,20 @@ import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 import { Layer } from "../pages/layout/Layer";
 import { ASCIIButton } from "./ASCIIButton";
-
-
+import type { InteractiveElement } from "./InteractiveElement";
 
 //-------------------------------
 //          FRAME LAYER
 //-------------------------------
 
 export class Navigation extends Layer {
-    nav: HTMLElement;
     goTo: (path: string) => void;
 
+    hoveredElement: InteractiveElement | null = null;
+
     constructor(goTo: (path: string) => void) {
-        super("frame", []);
-        this.goTo = goTo
-        
-        this.nav = document.createElement("nav");
-        const header = document.querySelector("header");
-        header?.appendChild(this.nav);
+        super("navigation", []);
+        this.goTo = goTo;
     }
 
     init(isMobile?: boolean): void {
@@ -32,10 +28,9 @@ export class Navigation extends Layer {
                 new Color4(0, 0.4, 0.4, 0),
                 "right",
                 isMobile ? "bottom" : "top",
-                this.nav,
                 undefined,
-                false
-            )
+                false,
+            ),
         );
 
         this.addElement(
@@ -47,10 +42,9 @@ export class Navigation extends Layer {
                 new Color4(0, 0.4, 0.4, 0),
                 "right",
                 isMobile ? "bottom" : "top",
-                this.nav,
                 undefined,
-                false
-            )
+                false,
+            ),
         );
 
         this.addElement(
@@ -62,14 +56,25 @@ export class Navigation extends Layer {
                 new Color4(0, 0.4, 0.4, 0),
                 "right",
                 isMobile ? "bottom" : "top",
-                this.nav,
                 undefined,
-                false
-            )
+                false,
+            ),
         );
     }
 
-    destroy(): void {
-        this.nav.remove();
+    resetHoverStates() {
+        this.interactiveElements.forEach((element) => {
+            element.isMouseOver = false;
+        });
+    }
+
+    updateMouseState(mousePos: Vector2) {
+        this.hoveredElement = null;
+        this.interactiveElements.forEach((element: InteractiveElement) => {
+            if (element.contains(mousePos)) {
+                this.hoveredElement = element;
+                return;
+            }
+        });
     }
 }
