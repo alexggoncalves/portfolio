@@ -10,7 +10,6 @@ import useSceneStore from "../../stores/sceneStore";
 function NamePlate({ text }: { text: string }) {
     const { camera, size } = useThree();
 
-
     const wordRef = useRef<any>(null);
     const groupRef = useRef<any>(null);
     const baseSize = useRef<Vector3 | null>(null);
@@ -54,19 +53,18 @@ function NamePlate({ text }: { text: string }) {
         // setScrollPosition(scrollPosition + delta)
         groupRef.current.position.copy(worldPos);
         groupRef.current.scale.set(worldScale.x, worldScale.y, 1);
-
     });
 
     return (
         <>
-            <group ref={groupRef} position={[0,0,0]} scale={[1,1,1]}>
+            <group ref={groupRef} position={[0, 0, 0]} scale={[1, 1, 1]}>
                 <Text3D
                     ref={wordRef}
                     scale={[1, 1, 1]}
                     font={"/fonts/IBMPlexMono_Regular.json"}
                 >
                     {text}
-                    <meshBasicMaterial color={"white"}/>
+                    <meshBasicMaterial color={"white"} />
                 </Text3D>
             </group>
         </>

@@ -7,7 +7,6 @@ type ASCIIState = {
     atlasGridSize: Vector2;
     asciiSequence: string;
     fontAtlas: string;
-    pixelRatio: number;
     canvasOffset: Vector2;
 
     gridSize: Vector2;
@@ -21,14 +20,12 @@ type ASCIIState = {
     ) => void;
     setCanvasOffset: (left: number, top: number) => void;
 
-    setPixelRatio: (pixelRatio: number) => void;
 };
 
-const useAsciiStore = create<ASCIIState>((set, get) => ({
+const useAsciiStore = create<ASCIIState>((set, _get) => ({
     texelSize: new Vector2(12, 16),
     charSize: new Vector2(12, 16),
     atlasGridSize: new Vector2(16, 9),
-    pixelRatio: window.devicePixelRatio,
     canvasOffset: new Vector2(0, 0),
 
     backgroundTexture: null,
@@ -45,16 +42,6 @@ const useAsciiStore = create<ASCIIState>((set, get) => ({
         uiTexture: CanvasTexture,
     ) => set({ backgroundTexture, uiTexture }),
 
-    setPixelRatio: (pixelRatio: number) => {
-        const { texelSize } = get();
-        set({
-            pixelRatio: pixelRatio,
-            charSize: new Vector2(
-                texelSize.x * pixelRatio,
-                texelSize.y * pixelRatio,
-            ),
-        });
-    },
 
     setCanvasOffset: (left: number, top: number) =>
         set({ canvasOffset: new Vector2(left, top) }),

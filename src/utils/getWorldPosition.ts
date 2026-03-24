@@ -1,5 +1,5 @@
 import type { Camera } from "@react-three/fiber";
-import { Raycaster, Vector2, Vector3 } from "three";
+import { Vector3 } from "three";
 
 type CoordSystem = "pixel" | "normalized" | "grid";
 

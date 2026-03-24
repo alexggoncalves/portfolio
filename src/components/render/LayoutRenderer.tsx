@@ -10,12 +10,13 @@ import useGridCanvasSize from "../../hooks/useGridCanvasSize";
 import useAsciiStore from "../../stores/asciiStore";
 import type { Navigation } from "../elements/Navigation";
 import { InteractiveElement } from "../elements/InteractiveElement";
-import lensDistortPosition from "../../utils/lensDistortPosition";
 import { useEffect, useRef } from "react";
+import { getDistortedMouse } from "../../utils/getDistortedMouse";
 // import { Layer } from "../pages/layout/Layer";
 
 function LayoutRenderer({ nav }: { nav: Navigation | null }) {
-    const { currentPage, nextPage, backgroundColor } = useSceneStore();
+    const { currentPage, nextPage, backgroundColor, distortion, focalLength } =
+        useSceneStore();
     const { ascii, bg, clearRenderTargets } = useAsciiRenderTargets();
 
     const scrollDelta = useScroll();
@@ -45,7 +46,6 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
 
             if (Math.abs(horizontalDistance) > DRAG_THRESHOLD) {
                 isDragging = true;
-                console.log(horizontalDistance);
             }
         };
 
@@ -94,7 +94,12 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
         clearRenderTargets(asciiTarget.ctx, bgTarget.ctx, backgroundColor);
 
         // Map the mouse position to fit the applied lens distortion
-        const mousePos = lensDistortPosition(mousePosition.current, canvasSize);
+        const mousePos = getDistortedMouse(
+            mousePosition.current,
+            canvasSize,
+            distortion,
+            focalLength,
+        );
 
         // Update and draw current and next page
         updatePages(delta, mousePos);
@@ -104,6 +109,9 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
 
         // Draw pages
         drawPages(asciiTarget.ctx, bgTarget.ctx);
+
+        // bgTarget.ctx.fillStyle = "white";
+        // bgTarget.ctx?.fillRect(mousePos.x-5, mousePos.y-5, 10, 10);
 
         asciiTarget.texture.needsUpdate = true;
         bgTarget.texture.needsUpdate = true;
@@ -144,6 +152,8 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
 
         // Update next page if it exists
         nextPage?.update(delta, mousePos, scrollDelta.current);
+
+        nav?.update(0,0);
 
         // Update navigation hover state
         nav?.updateMouseState(mousePos);

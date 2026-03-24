@@ -10,10 +10,19 @@ import { LensDistortion } from "./LensDistortion";
 import { Vector2 } from "three";
 
 import useAsciiStore from "../../../stores/asciiStore";
+import useSceneStore from "../../../stores/sceneStore";
 
 function Postprocessing() {
-    const { fontAtlas, charSize, atlasGridSize, backgroundTexture, uiTexture } =
-        useAsciiStore();
+    const {
+        fontAtlas,
+        charSize,
+        atlasGridSize,
+        backgroundTexture,
+        uiTexture,
+        gridSize,
+    } = useAsciiStore();
+
+    const { distortion, focalLength } = useSceneStore();
 
     return (
         <>
@@ -25,9 +34,10 @@ function Postprocessing() {
                     atlasGridSize={atlasGridSize}
                     backgroundTexture={backgroundTexture!}
                     uiTexture={uiTexture!}
+                    gridSize={gridSize}
                 ></AsciiEffect>
 
-                <ChromaticAberration offset={[0.0002, 0.0002]} />
+                <ChromaticAberration offset={[0.0, 0.0]} />
                 <Glitch
                     delay={new Vector2(10, 20)} // min and max glitch delay
                     duration={new Vector2(0.2, 0.4)} // min and max glitch duration
@@ -38,9 +48,9 @@ function Postprocessing() {
                 <Vignette darkness={2} offset={-0.9} opacity={0.1} />
 
                 <LensDistortion
-                    distortion={new Vector2(0.02, 0.05)}
+                    distortion={new Vector2(distortion.x, distortion.y)}
                     principalPoint={new Vector2(0, 0)}
-                    focalLength={new Vector2(1, 1)}
+                    focalLength={new Vector2(focalLength.x, focalLength.y)}
                     skew={0}
                 />
 

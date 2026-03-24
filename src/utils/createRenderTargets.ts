@@ -1,14 +1,17 @@
-import { CanvasTexture, NearestFilter, LinearFilter } from "three";
+import { CanvasTexture, NearestFilter} from "three";
 
 // Create context to draw in and use on the the GPU
 export function createAsciiRenderTarget(width: number, height: number) {
+    const dpr = window.devicePixelRatio || 1;
+
     const canvas = document.createElement("canvas");
-    canvas.width = width * devicePixelRatio;
-    canvas.height = height * devicePixelRatio;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
 
     const context = canvas.getContext("2d", { alpha: true })!;
     context.imageSmoothingEnabled = false;
     context.globalAlpha = 1;
+    context.scale(dpr, dpr);
 
     const texture = new CanvasTexture(canvas);
 
@@ -21,20 +24,23 @@ export function createAsciiRenderTarget(width: number, height: number) {
 }
 
 export function createBackgroundRenderTarget(width: number, height: number) {
+    const dpr = window.devicePixelRatio || 1;
+
     const canvas = document.createElement("canvas");
-    canvas.width = width * devicePixelRatio;
-    canvas.height = height * devicePixelRatio;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
 
     const context = canvas.getContext("2d", { alpha: true })!;
-    // context.imageSmoothingEnabled = true;
-    // context.imageSmoothingQuality = "high";
+    // context.imageSmoothingEnabled = false;
+    // context.imageSmoothingQuality = "low";
 
     context.globalAlpha = 1;
+    context.scale(dpr, dpr);
 
     const texture = new CanvasTexture(canvas);
 
-    texture.magFilter = LinearFilter;
-    texture.minFilter = LinearFilter;
+    texture.magFilter = NearestFilter;
+    texture.minFilter = NearestFilter;
     texture.needsUpdate = true;
 
     return { texture, context };

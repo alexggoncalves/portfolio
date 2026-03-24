@@ -1,5 +1,7 @@
+import useCursorStore from "../../../stores/cursorStore";
 import type { Element } from "../../elements/Element";
 import { InteractiveElement } from "../../elements/InteractiveElement";
+import { WorkCard } from "./WorkCard";
 //-------------------------------
 //          LAYER CLASS
 //-------------------------------
@@ -54,8 +56,6 @@ export class Layer {
 
                 // Update interactive element
                 interactiveElement.update();
-
-                interactiveElement.isMouseOver = false;
             },
         );
     }

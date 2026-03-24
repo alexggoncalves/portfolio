@@ -103,42 +103,37 @@ export class Page {
         // Get max scroll
         const max = Math.max(0, this.pageHeight - gridSize.y);
 
+        if (max <= 0) {
+            this.scrollOffset = 0;
+            return;
+        }
+
         const offset = this.scrollOffset;
         const distanceFromBottom = max - offset;
 
         const dampingRange = Math.min(this.scrollDampingRange, max * 0.15);
-        let dampingMultiplier = 0.9;
-        // Apply damping when scrolling near the top
-        if (offset < dampingRange && scrollDelta < 0) {
-            dampingMultiplier *= offset / dampingRange;
-        }
+        let dampingMultiplier = 1.0;
 
-        // Apply damping when scrolling near the bottom
-        if (distanceFromBottom < dampingRange && scrollDelta > 0) {
-            dampingMultiplier *= distanceFromBottom / dampingRange;
+        if (offset < dampingRange && scrollDelta < 0) {
+            dampingMultiplier = offset / dampingRange;
+        } else if (distanceFromBottom < dampingRange && scrollDelta > 0) {
+            dampingMultiplier = distanceFromBottom / dampingRange;
         }
 
         // Apply the scroll delta with damping
-        const speedScale = clamp(Math.sqrt(max / gridSize.y), 1, 2);
-        this.scrollOffset += scrollDelta * dampingMultiplier * speedScale;
+        const speedScale = 1.4;
+        const move = scrollDelta * dampingMultiplier * speedScale;
 
-        // Clamp the scroll offset between limits
-        this.scrollOffset = clamp(this.scrollOffset, 0, max);
-
-        // Update global scroll
-        const state = useSceneStore.getState();
-        const rounded = Math.round(this.scrollOffset * 100) / 100;
-        if (state.pageScrolls[this.name] !== rounded) {
-            state.setScroll(this.name, rounded);
+        // Only apply scroll if it's significant
+        if (Math.abs(move) > 0.01) {
+            this.scrollOffset = clamp(this.scrollOffset + move, 0, max);
         }
-    }
 
-    resetHoverStates(){
-        this.layers.forEach(layer => {
-            layer.interactiveElements.forEach(element => {
-                element.isMouseOver = false;
-            });
-        });
+        // Update store
+        const state = useSceneStore.getState();
+        if (state.pageScrolls[this.name] !== this.scrollOffset) {
+            state.setScroll(this.name, this.scrollOffset);
+        }
     }
 
     resetFade(opacity = 0, target = 1, speed = 5) {
@@ -147,9 +142,19 @@ export class Page {
         this.fadeSpeed = speed;
     }
 
-    destroy(): void {
-        this.layers.forEach((layer: Layer) => {
-            layer.destroy();
+    disableButtons(): void {
+        this.layers.forEach((layer) => {
+            layer.interactiveElements.forEach((element) => {
+                element.active = false;
+            });
+        });
+    }
+
+    resetHoverStates() {
+        this.layers.forEach((layer) => {
+            layer.interactiveElements.forEach((element) => {
+                element.isMouseOver = false;
+            });
         });
     }
 }

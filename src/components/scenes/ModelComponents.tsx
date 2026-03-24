@@ -1,6 +1,7 @@
 import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import { useLoader } from "@react-three/fiber";
 import { MTLLoader } from "three/addons/loaders/MTLLoader.js";
+import { FBXLoader } from "three/addons/loaders/FBXLoader.js";
 import { Mesh } from "three";
 
 import { useFrame } from "@react-three/fiber";
@@ -46,7 +47,6 @@ export const OBJModel = ({
     scale,
     rotation,
 }: OBJModelProps) => {
-    console.log(path);
     const materials = useLoader(MTLLoader, `${path}/materials.mtl`);
     const object = useLoader(OBJLoader, `${path}/model.obj`, (loader) => {
         materials.preload();

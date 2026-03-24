@@ -84,17 +84,16 @@ export class Element {
             );
             this.gridSize.x = maxlength;
             this.gridSize.y = lines;
-            
         } else {
             this.gridSize.x = arg1;
-            
+
             if (arg2) {
                 this.gridSize.y = arg2;
             }
         }
 
         this.pixelSize.x = this.gridSize.x * charSize.x;
-        this.pixelSize.y = this.gridSize.y * charSize.y
+        this.pixelSize.y = this.gridSize.y * charSize.y;
     }
 
     setXOffset(value: number): void {
@@ -121,7 +120,7 @@ export class Element {
         if (this.horizontalAlign === "right") {
             offset.x = gridSize.x - this.gridSize.x;
         } else if (this.horizontalAlign === "center") {
-            offset.x = (gridSize.x - this.gridSize.x) / 2;
+            offset.x = Math.floor((gridSize.x - this.gridSize.x) / 2);
         }
 
         if (this.verticalAlign === "bottom") {
@@ -275,7 +274,7 @@ export class Element {
 
         if (strokeOnly) {
             bgCtx.strokeStyle = getColorString(color, this.opacity);
-            bgCtx.lineWidth = 2 * devicePixelRatio;
+            bgCtx.lineWidth = 2;
             bgCtx.stroke();
         } else {
             bgCtx.fillStyle = getColorString(color, this.opacity);

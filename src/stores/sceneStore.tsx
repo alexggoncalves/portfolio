@@ -6,6 +6,8 @@ export type NavigationSource = "home" | "work";
 
 type SceneState = {
     backgroundColor: Color4;
+    distortion: { x: number; y: number };
+    focalLength: { x: number; y: number };
 
     currentPage: Page | null;
     nextPage: Page | null;
@@ -24,12 +26,13 @@ type SceneState = {
 };
 
 const useSceneStore = create<SceneState>((set) => ({
-    isMobile: window.innerWidth < 600,
     backgroundColor: new Color4(0.1, 0.1, 0.1, 1),
+    distortion: { x: 0.02, y: 0.02 },
+    focalLength: { x: 0.96, y: 0.96 },
 
     pageHeight: 0,
     pageScrolls: {},
-
+    isMobile: window.innerWidth < 600,
     currentPage: null,
     nextPage: null,
 

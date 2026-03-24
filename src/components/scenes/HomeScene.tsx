@@ -6,6 +6,8 @@ import useAsciiStore from "../../stores/asciiStore";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
 import type { Vector3 } from "three";
+import Cat from "./CatSection";
+import CatSection from "./CatSection";
 
 function HomeScene() {
     const { camera, size } = useThree();
@@ -60,7 +62,7 @@ function HomeScene() {
     return (
         <>
             <group ref={groupRef} scale={[1, 1, 1]}>
-                <Text3D
+                {/* <Text3D
                     ref={wordRef}
                     font={"/fonts/IBMPlexMono_Regular.json"}
                     lineHeight={0.6}
@@ -68,8 +70,10 @@ function HomeScene() {
                     CREATIVE{`\n`}
                     DEVELOPER
                     <meshBasicMaterial color={"tomato"}/>
-                </Text3D>
+                </Text3D> */}
             </group>
+
+            <CatSection></CatSection>
         </>
     );
 }

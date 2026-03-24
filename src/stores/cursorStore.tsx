@@ -2,21 +2,25 @@ import { create } from "zustand";
 
 type CursorState = {
     cursorPosition: { x: number; y: number };
-    cursorState: "default" | "pointer";
     cursorEnabled: boolean;
+    hoverCount: number;
+
+    mouseEnter: () => void;
+    mouseLeave: () => void;
 
     setCursorPosition: (pos: { x: number; y: number }) => void;
-    setCursorState: (state: "default" | "pointer") => void;
     setCursorEnabled: (enabled: boolean) => void;
 };
 
 const useCursorStore = create<CursorState>((set) => ({
     cursorPosition: { x: 0, y: 0 },
-    cursorState: "default",
     cursorEnabled: true,
+    hoverCount:0,
+    
+    mouseEnter: () => set((state) => ({ hoverCount: state.hoverCount + 1 })),
+    mouseLeave: () => set((state) => ({ hoverCount: Math.max(0, state.hoverCount - 1) })),
 
     setCursorPosition: (pos) => set({ cursorPosition: pos }),
-    setCursorState: (state) => set({ cursorState: state }),
     setCursorEnabled: (enabled) => set({cursorEnabled: enabled}),
 }));
 

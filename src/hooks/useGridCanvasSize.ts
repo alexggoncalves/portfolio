@@ -9,7 +9,7 @@ function useGridCanvasSize(charSize: Vector2) {
             const viewportWidth = window.innerWidth;
             const viewportHeight = window.innerHeight;
 
-            const extra = Math.ceil(6 / devicePixelRatio);
+            const extra = 0
 
             const gridCols = Math.floor(viewportWidth / charSize.x) + extra;
             const gridRows = Math.floor(viewportHeight / charSize.y) + extra;

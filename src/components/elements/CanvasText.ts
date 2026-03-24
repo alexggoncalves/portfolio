@@ -57,20 +57,23 @@ export class CanvasText extends Element {
         bgCtx: CanvasRenderingContext2D,
     ): void {
         const charSize = useAsciiStore.getState().charSize;
+        
         bgCtx.save();
         bgCtx.globalAlpha = this.opacity;
         bgCtx.fillStyle = "white";
         bgCtx.textBaseline = "top";
         bgCtx.textAlign = "left";
+        
         bgCtx.font = `${this.font} ${this.fontSize}px monospace`;
 
         const position = {
-            x: this.pixelPosition.x + this.padding * charSize.x,
-            y: this.pixelPosition.y - this.pixelOffset.y,
+            x: Math.floor(this.pixelPosition.x + this.padding * charSize.x),
+            y: Math.floor(this.pixelPosition.y - this.pixelOffset.y),
         };
 
         let yOffset = 0;
         this.lines.forEach((line) => {
+            
             bgCtx.fillText(line, position.x, position.y + yOffset);
             yOffset += this.lineHeight * this.fontSize;
         });

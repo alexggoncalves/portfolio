@@ -10,8 +10,8 @@ import { degToRad } from "three/src/math/MathUtils.js";
 
 type CoordSystem = "pixel" | "normalized" | "grid";
 
-function getWorldScale(
-    targetSize: { width: number; height: number },
+export function getWorldScale(
+    targetSize: { width?: number; height?: number },
     objectSize: Vector3,
     distance: number,
     camera: OrthographicCamera | PerspectiveCamera,
@@ -21,9 +21,21 @@ function getWorldScale(
 ) {
     if (!charSize) charSize = { width: 1, height: 1 };
 
-    let worldScale = new Vector2(1);
-    let targetWidth = targetSize.width;
-    let targetHeight = targetSize.height;
+    let worldScale = new Vector3(1);
+
+    let targetWidth;
+    let targetHeight;
+
+    if (targetSize.width && !targetSize.height) {
+        targetWidth = targetSize.width;
+        targetHeight = (targetWidth / objectSize.x) * objectSize.y;
+    } else if (!targetSize.width && targetSize.height) {
+        targetHeight = targetSize.height;
+        targetWidth = (targetHeight / objectSize.y) * objectSize.x;
+    } else {
+        targetWidth = targetSize.width || 1;
+        targetHeight = targetSize.height || 1;
+    }
 
     // Adjust size for grid coord system
     if (coordSystem === "grid") {
@@ -48,7 +60,7 @@ function getWorldScale(
     const scaleX = (targetWidth * unitsPerPixelX) / objectSize.x;
     const scaleY = (targetHeight * unitsPerPixelY) / objectSize.y;
 
-    return new Vector2(scaleX, scaleY);
+    return new Vector3(scaleX, scaleY);
 }
 
 export function getObjectSize(object: Object3D) {

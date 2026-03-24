@@ -7,6 +7,7 @@ import { Element } from "./Element";
 //-----------------------------------------
 export class InteractiveElement extends Element {
     zIndex: number = 0;
+    active: boolean = true;
 
     isMouseOver: boolean = false;
 

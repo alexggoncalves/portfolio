@@ -8,9 +8,12 @@ import { useEffect, useState } from "react";
 import useSceneStore from "./stores/sceneStore";
 import RenderStage from "./components/render/RenderStage";
 import AssetLoader from "./components/render/AssetLoader";
+import usePointer from "./hooks/usePointer";
 
 function App() {
     const { setIsMobile } = useSceneStore();
+
+    usePointer();
 
     // Detect mobile screen size
     useEffect(() => {

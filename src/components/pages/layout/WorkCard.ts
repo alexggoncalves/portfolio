@@ -71,8 +71,8 @@ export class WorkCard extends InteractiveElement {
             const tagLabel = new TagLabel(
                 tag,
                 new Vector2(x - margin, yPos + margin),
-                15 * devicePixelRatio,
-                new Vector2(10 * devicePixelRatio, 2 * devicePixelRatio),
+                15,
+                new Vector2(10, 2),
             );
             this.tagLabels.push(tagLabel);
 
@@ -82,12 +82,17 @@ export class WorkCard extends InteractiveElement {
     }
 
     update(): void {
-        if (this.isMouseOver && !this.tagsOpened) {
+        const mouseEnter = useCursorStore.getState().mouseEnter;
+        const mouseLeave = useCursorStore.getState().mouseLeave;
+
+        if (this.isMouseOver && !this.tagsOpened && this.active) {
             this.openTagLabels();
             this.tagsOpened = true;
+            mouseEnter();
         } else if (!this.isMouseOver && this.tagsOpened) {
             this.closeTagLabels();
             this.tagsOpened = false;
+            mouseLeave();
         }
 
         // Update image
@@ -136,28 +141,12 @@ export class WorkCard extends InteractiveElement {
 
     onClick(): void {
         useSceneStore.getState().setNavigationSource(this.navigationSource);
-
+        
         if (this.goTo) {
             this.goTo(`/work/${this.work.id}`);
-            const setCursorState = useCursorStore.getState().setCursorState;
-            setCursorState("default");
+            const mouseLeave = useCursorStore.getState().mouseLeave;
+            mouseLeave();
         }
-    }
-
-    onMouseEnter(): void {
-        const setCursorState = useCursorStore.getState().setCursorState;
-        setCursorState("pointer");
-
-        this.isMouseOver = true;
-        this.openTagLabels();
-    }
-
-    onMouseLeave(): void {
-        const setCursorState = useCursorStore.getState().setCursorState;
-        setCursorState("default");
-
-        this.isMouseOver = false;
-        this.closeTagLabels();
     }
 
     openTagLabels() {

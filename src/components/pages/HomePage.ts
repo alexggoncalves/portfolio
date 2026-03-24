@@ -4,6 +4,7 @@ import type { Work } from "../../stores/contentStore";
 import { WorksRow } from "./layout/WorksRow";
 import { Vector2 } from "three";
 import useAsciiStore from "../../stores/asciiStore";
+import { CanvasImage } from "../elements/CanvasImage";
 
 export class HomePage extends Page {
     works: Work[] = [];
@@ -16,7 +17,7 @@ export class HomePage extends Page {
     ) {
         super("home", isMobile, goTo);
         this.works = works;
-        this.init()
+        this.init();
     }
 
     init(): void {
@@ -40,6 +41,9 @@ export class HomePage extends Page {
         this.layers.push(workRow);
 
         this.pageHeight += 40;
-        
+    }
+
+    disableButtons(): void {
+        super.disableButtons();
     }
 }

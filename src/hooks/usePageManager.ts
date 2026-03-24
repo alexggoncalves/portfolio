@@ -21,6 +21,7 @@ function usePageManager(location: any, isMobile: boolean, deps: any[]) {
     }, [...deps, location.pathname, isMobile]);
 
     function updatePage() {
+
         // Get path and remove first "/"
         const scene = location.pathname.slice(1);
         const newPage = createPage(scene, isMobile, goTo, works);
@@ -42,6 +43,8 @@ function usePageManager(location: any, isMobile: boolean, deps: any[]) {
 
     function startTransitionTo(page: Page) {
         if (!currentPage) return;
+
+        currentPage.disableButtons();
 
         currentPage.targetOpacity = 0;
         page.targetOpacity = 1;

@@ -55,7 +55,6 @@ export class WorksGrid extends Layer {
     ): void {
         // Calculate columns and rows
         this.cols = this.calculateGridColumns(width, minCardW, maxCardW, gap);
-        console.log(this.cols)
         this.rows = Math.ceil(this.works.length / this.cols);
 
         // Image size in the ascii grid dimensions
@@ -119,5 +118,6 @@ export class WorksGrid extends Layer {
         return cols;
     }
 
-    destroy(): void {}
+    destroy(): void {
+    }
 }

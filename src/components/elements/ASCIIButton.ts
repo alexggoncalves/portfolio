@@ -13,6 +13,8 @@ export class ASCIIButton extends InteractiveElement {
     callback: () => void; // Button's function
     resetCursorOnClick: boolean = true;
 
+    isCursorPointer = false;
+
     constructor(
         text: string,
         callback: () => void,
@@ -51,10 +53,24 @@ export class ASCIIButton extends InteractiveElement {
         ${color.g * 255},
         ${color.b * 255},
         ${color.a * this.opacity})`;
-        context.lineWidth = strokeWeight * devicePixelRatio;
+        context.lineWidth = strokeWeight;
 
         // Draw frame
         context.strokeRect(this.pixelPosition.x, this.pixelPosition.y, this.pixelSize.x, this.pixelSize.y);
+    }
+
+    update(): void {
+        const mouseEnter = useCursorStore.getState().mouseEnter;
+        const mouseLeave = useCursorStore.getState().mouseLeave;
+
+        if(this.isMouseOver && !this.isCursorPointer){
+            mouseEnter();
+            this.isCursorPointer = true;
+        }
+        else if(!this.isMouseOver && this.isCursorPointer){
+            mouseLeave();
+            this.isCursorPointer = false;
+        }
     }
 
     draw(
@@ -72,22 +88,8 @@ export class ASCIIButton extends InteractiveElement {
         if (this.callback) this.callback();
 
         if (this.resetCursorOnClick) {
-            const setCursorState = useCursorStore.getState().setCursorState;
-            setCursorState("default");
+            const mouseLeave = useCursorStore.getState().mouseLeave;
+            mouseLeave();
         }
-    }
-
-    onMouseEnter(): void {
-        const setCursorState = useCursorStore.getState().setCursorState;
-
-        this.isMouseOver = true;
-        setCursorState("pointer");
-    }
-
-    onMouseLeave(): void {
-        const setCursorState = useCursorStore.getState().setCursorState;
-
-        this.isMouseOver = false;
-        setCursorState("default");
     }
 }

@@ -10,8 +10,7 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
 
     const {
         charSize,
-        setCanvasOffset,
-        setPixelRatio
+        setCanvasOffset
     } = useAsciiStore();
 
     const { width, height, left, top } = useGridCanvasSize(
@@ -22,9 +21,6 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
         setCanvasOffset(left, top);
     }, [width, height]);
 
-    useEffect(() => {
-        setPixelRatio(devicePixelRatio);
-    }, [devicePixelRatio]);
 
     // Don’t render the canvas until the browser size is known
     if (width === 0 || height === 0) return null;
@@ -33,7 +29,6 @@ function SceneCanvas({ children }: { children?: React.ReactNode }) {
         <Canvas
             ref={canvasRef}
             shadows
-            dpr={devicePixelRatio}
             camera={{ position: [0, 0, 10], fov: 45, near: 0.01, far: 20 }}
             gl={{
                 antialias: true,

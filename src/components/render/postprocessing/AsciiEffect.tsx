@@ -12,8 +12,8 @@ const fragmentShader = `
     uniform sampler2D uBackgroundTexture;
 
     uniform vec2 uCharSize;
+    uniform vec2 uGridSize;
     uniform vec2 uAtlasGridSize;
-    uniform float uPixelDensity;
 
     float grayscale(vec3 c) {
         return c.x * 0.299 + c.y * 0.587 + c.z * 0.114;
@@ -23,9 +23,7 @@ const fragmentShader = `
         float atlasCount = uAtlasGridSize.x * uAtlasGridSize.y; // number of cells in the ascii atlas
 
         // Calculate UV to sample pixelized colors from input buffer
-        vec2 division = resolution / uCharSize;     // Number of characters that fit on the screen (horizontally and vertically)
-        vec2 d = uCharSize / resolution;            // Size of each character on the screen (in UV coordinates)
-        vec2 pixelizationUv = d * (floor(uv / d) + 0.5);
+        vec2 pixelizationUv = (floor(uv * uGridSize) + 0.5) / uGridSize;
         
         // Sample colors from the pixelized input buffer and from already pixelized UI texture
         vec4 pixelizedColor = texture(inputBuffer, pixelizationUv);
@@ -51,15 +49,15 @@ const fragmentShader = `
         // Get UV corresponding to the right ascii character in the atlas
         vec2 offset = vec2(cIndexX, cIndexY) / uAtlasGridSize;
         vec2 atlasTexel = 1.0 / uAtlasGridSize;
-        vec2 charCellUV = fract(uv * division); 
+        vec2 charCellUV = fract(uv * uGridSize); 
         vec2 atlasUV = offset + charCellUV * atlasTexel;
 
         float ascii = texture(uFontAtlas, atlasUV).r;
 
         // Smooth, subtle contrast adjustment
-        float sharpness = 20.0;  // Much gentler sharpening
+        float sharpness = 10.0;
         ascii = clamp((ascii - 0.5) * sharpness + 0.5, 0.0, 1.0);
-        ascii = pow(ascii, 2.0);  // Softer contrast curve
+        ascii = pow(ascii, 2.0);
 
 
         // Determine base color for this pixel
@@ -82,7 +80,7 @@ type AsciiEffectProps = {
     backgroundTexture: Texture | null;
     charSize?: Vector2;
     atlasGridSize?: Vector2;
-    pixelDensity: number;
+    gridSize: Vector2;
 };
 
 // Effect implementation
@@ -93,7 +91,7 @@ class AsciiEffectImpl extends Effect {
         backgroundTexture,
         charSize,
         atlasGridSize,
-        pixelDensity,
+        gridSize
     }: AsciiEffectProps) {
         super("AsciiEffect", fragmentShader, {
             blendFunction: BlendFunction.NORMAL,
@@ -104,7 +102,7 @@ class AsciiEffectImpl extends Effect {
 
                 ["uCharSize", new Uniform(charSize)],
                 ["uAtlasGridSize", new Uniform(atlasGridSize)],
-                ["uPixelDensity", new Uniform(pixelDensity)],
+                ["uGridSize", new Uniform(gridSize)],
             ]),
         });
     }
@@ -119,18 +117,19 @@ export const AsciiEffect = forwardRef(
             atlasGridSize,
             uiTexture,
             backgroundTexture,
+            gridSize
         }: {
             fontAtlasSrc: string;
             charSize: Vector2;
             atlasGridSize: Vector2;
             uiTexture: CanvasTexture;
             backgroundTexture: CanvasTexture;
+            gridSize: Vector2
         },
         ref
     ) => {
         // Load font atlas
         const fontAtlas = useLoader(TextureLoader, fontAtlasSrc);
-        const pixelDensity = window.devicePixelRatio;
 
         const effect = useMemo(
             () =>
@@ -140,7 +139,7 @@ export const AsciiEffect = forwardRef(
                     backgroundTexture,
                     charSize,
                     atlasGridSize,
-                    pixelDensity,
+                    gridSize,
                 }),
             [
                 fontAtlas,
@@ -150,7 +149,7 @@ export const AsciiEffect = forwardRef(
                 charSize.y,
                 atlasGridSize.x,
                 atlasGridSize.y,
-                pixelDensity,
+                gridSize,
             ]
         );
         return <primitive ref={ref} object={effect} dispose={null} />;
