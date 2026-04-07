@@ -74,7 +74,7 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
         // Draw pages
         drawPages(asciiTarget.ctx, bgTarget.ctx);
 
-        if (frameSkip.current % 2 === 0) {
+        if (frameSkip.current % 1 === 0) {
             // every 2 frames
             asciiTarget.texture.needsUpdate = true;
             bgTarget.texture.needsUpdate = true;

@@ -7,7 +7,7 @@ function SceneRenderer() {
         <>
             {/* Main Lighting */}
             <hemisphereLight intensity={1.5} />
-            <pointLight
+            {/* <pointLight
                 position={[-10, 20, 2]}
                 intensity={3}
                 castShadow
@@ -19,7 +19,7 @@ function SceneRenderer() {
                 intensity={3}
                 castShadow
                 shadow-mapSize={[128,128]}
-            />
+            /> */}
 
             {/* My big animated name that also serves as the small header logo */}
             <NamePlate text={"ALEX"}/>

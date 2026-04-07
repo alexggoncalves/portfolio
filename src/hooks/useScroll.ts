@@ -2,7 +2,7 @@ import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 
 const scrollSpeed = 0.005;
-const touchSpeed = 0.06;
+const touchSpeed = 0.03;
 
 function useScroll() {
     const scrollDelta = useRef(0);
@@ -29,7 +29,7 @@ function useScroll() {
             }
 
             lastDirectionRef.current = direction;
-            velocityRef.current = delta;
+            velocityRef.current += delta;
         }
 
         // TOUCH SCROLL
@@ -61,16 +61,12 @@ function useScroll() {
 
             isDragging = true;
 
-            if (
-                direction !== 0 &&
-                lastDirectionRef.current !== 0 &&
-                direction !== lastDirectionRef.current
-            ) {
-                velocityRef.current = 0;
+            if (direction !== lastDirectionRef.current) {
+                velocityRef.current *= 0.3;
             }
 
             lastDirectionRef.current = direction;
-            velocityRef.current = delta * touchSpeed;
+            velocityRef.current += delta * touchSpeed;
         }
 
         function handleTouchEnd() {
@@ -100,12 +96,20 @@ function useScroll() {
 
     useFrame((_state, _delta) => {
         // Multiplier for the decay
-        const decay = isTouch.current ? (isFingerDown.current ? 0.86 : 0.96) : 0.9;
+        const decay = isTouch.current
+            ? isFingerDown.current
+                ? 0.7
+                : 0.96
+            : 0.9;
 
-        velocityRef.current *= decay;
+        const isActive = isTouch.current ? isFingerDown.current : false;
+
+        // if (!isActive) {
+            velocityRef.current *= decay;
+        // }
 
         // Ignore small movements
-        if (Math.abs(velocityRef.current) < 0.1) {
+        if (Math.abs(velocityRef.current) < 0.001) {
             velocityRef.current = 0;
         }
 

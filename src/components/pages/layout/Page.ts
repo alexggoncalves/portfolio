@@ -118,13 +118,9 @@ export class Page {
             return;
         }
 
-        // Apply the scroll delta with damping
-        const speedScale = 2;
-        const move = scrollDelta * speedScale;
-
         // Only apply scroll if it's significant
-        if (Math.abs(move) > 0.01) {
-            this.scrollOffset = clamp(this.scrollOffset + move, 0, max);
+        if (Math.abs(scrollDelta) > 0.01) {
+            this.scrollOffset = clamp(this.scrollOffset + scrollDelta, 0, max);
         }
 
         // Update store

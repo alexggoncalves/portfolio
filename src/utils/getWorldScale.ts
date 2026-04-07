@@ -9,6 +9,9 @@ import { degToRad } from "three/src/math/MathUtils.js";
 
 type CoordSystem = "pixel" | "normalized" | "grid";
 
+const scale = new Vector3();
+const result = new Vector3();
+
 export function getWorldScale(
     targetSize: { width?: number; height?: number },
     objectSize: Vector3,
@@ -19,8 +22,6 @@ export function getWorldScale(
     charSize?: { width: number; height: number },
 ) {
     if (!charSize) charSize = { width: 1, height: 1 };
-
-    let worldScale = new Vector3(1);
 
     let targetWidth;
     let targetHeight;
@@ -44,7 +45,7 @@ export function getWorldScale(
 
     if (camera instanceof OrthographicCamera) {
         console.warn("Orthographic camera not supported for object scaling");
-        return worldScale;
+        return scale.set(1, 1, 1);
     }
 
     // Calculate frustum size at object's distance
@@ -56,10 +57,10 @@ export function getWorldScale(
     const unitsPerPixelX = worldWidth / canvasSize.width;
     const unitsPerPixelY = worldHeight / canvasSize.height;
 
-    const scaleX = (targetWidth * unitsPerPixelX) / objectSize.x;
-    const scaleY = (targetHeight * unitsPerPixelY) / objectSize.y;
+    result.x = (targetWidth * unitsPerPixelX) / objectSize.x;
+    result.y = (targetHeight * unitsPerPixelY) / objectSize.y;
 
-    return new Vector3(scaleX, scaleY);
+    return result;
 }
 
 export function getObjectSize(object: Object3D) {
