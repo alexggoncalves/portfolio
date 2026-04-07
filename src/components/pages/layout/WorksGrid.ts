@@ -1,6 +1,6 @@
 import { Vector2 } from "three";
 
-import type { Work } from "../../../stores/contentStore";
+import type { Work } from "../../../stores/assetStore";
 import { WorkCard } from "./WorkCard";
 
 import { Layer } from "./Layer";
@@ -79,6 +79,8 @@ export class WorksGrid extends Layer {
                     this.position.y + offset.y,
                 ),
                 new Vector2(imageWidth, imageHeight), // Size,
+                10,
+                40,
                 this.goTo,
                 "work",
                 

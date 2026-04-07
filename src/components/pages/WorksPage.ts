@@ -1,6 +1,6 @@
 import { Page } from "./layout/Page";
 import { Vector2 } from "three";
-import type { Work } from "../../stores/contentStore";
+import type { Work } from "../../stores/assetStore";
 
 import { WorksGrid } from "./layout/WorksGrid";
 import useAsciiStore from "../../stores/asciiStore";

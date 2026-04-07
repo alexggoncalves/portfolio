@@ -24,6 +24,6 @@ export const LensDistortion = forwardRef(
                 }),
             [distortion, principalPoint, focalLength, skew]
         );
-        return <primitive ref={ref} object={effect} dispose={null} />;
+        return <primitive ref={ref} object={effect}/>;
     }
 );

@@ -25,8 +25,8 @@ export class InteractiveElement extends Element {
 
     contains(pos: Vector2): boolean {
         return (
-            pos.x < this.pixelPosition.x + this.pixelSize.x &&
-            pos.x > this.pixelPosition.x &&
+            pos.x < this.pixelPosition.x + this.pixelSize.x - this.pixelOffset.x &&
+            pos.x > this.pixelPosition.x - this.pixelOffset.x &&
             pos.y <
                 this.pixelPosition.y + this.pixelSize.y - this.pixelOffset.y &&
             pos.y > this.pixelPosition.y - this.pixelOffset.y

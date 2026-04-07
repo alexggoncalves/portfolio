@@ -1,10 +1,14 @@
-import { Color, Vector2 } from "three";
+import { Color, MathUtils, Vector2 } from "three";
 
 import { Layer } from "./Layer";
 
-import type { Work } from "../../../stores/contentStore";
+import type { Work } from "../../../stores/assetStore";
 import { WorkCard } from "./WorkCard";
 import { CanvasText } from "../../elements/CanvasText";
+import { FadeGradient } from "../../elements/FadeGradient";
+import useSceneStore from "../../../stores/sceneStore";
+import useAsciiStore from "../../../stores/asciiStore";
+import usePointerStore from "../../../stores/pointerStore";
 
 //-------------------------------
 //          WORKS GRID LAYER
@@ -15,16 +19,27 @@ export class WorksRow extends Layer {
 
     position: Vector2;
     size: Vector2 = new Vector2(0);
+    horizontalOffset: number = 0;
 
+    cards: WorkCard[] = [];
     cardHeight: number;
+    cardPadding: number = 10;
+    cardCornerRadius: number = 40;
     indentWidth: number;
     gap: number;
 
-    title: string = "Featured projects";
+    title: string = "MY PROJECTS";
     titleSize: number = 60;
-    titlePadding: number = 2;
+    titlePadding: number = 0;
 
     private readonly imageAspectRatio: number = 5 / 3;
+
+    isMouseDown: boolean = false;
+    mousePosition: Vector2 = new Vector2(-1);
+    dragStartX: number = 0;
+    dragLastX: number = 0;
+    velocity: number = 0;
+    decay: number = 0.95;
 
     constructor(
         works: Work[],
@@ -49,16 +64,121 @@ export class WorksRow extends Layer {
 
         // Scroll values
         this.isScrollable = true;
+        this.isDraggable = true;
 
-        this.createRow();
-        this.createTitle();
+        this.placeRow();
+        this.placeTitle();
+        this.placeGradient();
     }
 
-    createTitle(): void {
+    update(_delta: number, yOffset: number): void {
+        const { charSize } = useAsciiStore.getState();
+        const { setIsDraggingHorizontally } = usePointerStore.getState();
+
+        const maxOffset = Math.max(
+            0,
+            this.size.x - useAsciiStore.getState().gridSize.x,
+        );
+
+        if (this.isMouseDown && this.mousePosition.x >= 0) {
+            const deltaX = this.mousePosition.x - this.dragLastX;
+
+            this.horizontalOffset -= deltaX / charSize.x;
+            this.dragLastX = this.mousePosition.x;
+            this.velocity = -deltaX / charSize.x;
+
+            this.horizontalOffset = MathUtils.clamp(
+                this.horizontalOffset,
+                0,
+                maxOffset,
+            );
+            setIsDraggingHorizontally(true);
+        } else {
+            // Apply decay to velocity when not dragging
+            if (Math.abs(this.velocity) > 0.01) {
+                this.horizontalOffset += this.velocity;
+
+                if (
+                    this.horizontalOffset < 0 ||
+                    this.horizontalOffset > maxOffset
+                ) {
+                    // bounce back if we hit the edge
+                    this.horizontalOffset = MathUtils.clamp(
+                        this.horizontalOffset,
+                        0,
+                        maxOffset,
+                    );
+                    this.velocity = 0;
+                }
+
+                this.velocity *= this.decay;
+            } else {
+                this.velocity = 0;
+            }
+            setIsDraggingHorizontally(false);
+        }
+
+        for (const card of this.cards) {
+            card.setXOffset(this.horizontalOffset);
+            card.setYOffset(yOffset);
+        }
+        super.update(_delta, yOffset);
+    }
+
+    updateDragState(isMouseDown: boolean, mousePosition: Vector2): void {
+        if (this.contains(mousePosition) && isMouseDown) {
+            if (!this.isMouseDown) {
+                this.dragStartX = this.horizontalOffset;
+                this.dragLastX = mousePosition.x;
+            }
+            this.isMouseDown = true;
+            this.mousePosition = mousePosition.clone();
+        } else {
+            this.isMouseDown = false;
+            this.mousePosition = new Vector2(-1);
+        }
+    }
+
+    placeGradient(): void {
+        const bgColor = useSceneStore.getState().backgroundColor;
+        const gridSize = useAsciiStore.getState().gridSize;
+
+        const gradientExtension = 2;
+        const yPosition =
+            this.position.y +
+            this.titleSize / 16 +
+            this.titlePadding * 2 -
+            gradientExtension / 2;
+
+        const leftGradient = new FadeGradient(
+            bgColor,
+            // new Color4("white"),
+            new Vector2(0, yPosition),
+            new Vector2(this.indentWidth, this.cardHeight + gradientExtension),
+            "left",
+        );
+
+        const rightGradient = new FadeGradient(
+            bgColor,
+            // new Color4("white"),
+            new Vector2(gridSize.x - this.indentWidth, yPosition),
+            new Vector2(this.indentWidth, this.cardHeight + gradientExtension),
+            "right",
+        );
+
+        leftGradient.isScrollable = true;
+        rightGradient.isScrollable = true;
+
+        this.addElement(leftGradient);
+        this.addElement(rightGradient);
+    }
+
+    placeTitle(): void {
         const title = new CanvasText(
             this.title,
-            "",
-            this.titleSize,
+            "Space Grotesk",
+            34,
+            600,
             new Vector2(
                 this.position.x + this.indentWidth,
                 this.position.y + this.titlePadding,
@@ -69,9 +189,20 @@ export class WorksRow extends Layer {
             new Color("white"),
         );
         this.addElement(title);
+
+        title.name = "works-row-title";
     }
 
-    createRow(): void {
+    contains(point: Vector2): boolean {
+        if (!this.cards[0]) return false;
+
+        const top = this.cards[0].pixelPosition.y - this.cards[0].pixelOffset.y;
+        const bottom = top + this.cards[0].pixelSize.y;
+
+        return point.y > top && point.y < bottom;
+    }
+
+    placeRow(): void {
         const imageWidth = Math.floor(this.cardHeight * this.imageAspectRatio);
 
         this.size.x =
@@ -91,10 +222,13 @@ export class WorksRow extends Layer {
                         this.titlePadding * 2,
                 ),
                 new Vector2(imageWidth, this.cardHeight), // Size,
+                this.cardPadding,
+                this.cardCornerRadius,
                 this.goTo,
                 "home",
             );
 
+            this.cards.push(card);
             // Add card to the grid
             this.addElement(card);
         });

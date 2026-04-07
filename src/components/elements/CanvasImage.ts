@@ -23,7 +23,7 @@ export class CanvasImage extends Element {
     ) {
         super(position, undefined, undefined, horizontalAlign, verticalAlign);
         this.isScrollable = true;
-        this.setSize(width, height);
+        this.setSize(width, height, "grid");
         this.applyAlignment();
 
         this.radius = radius;
@@ -67,7 +67,7 @@ export class CanvasImage extends Element {
             0,
             this.image.width,
             this.image.height,
-            this.pixelPosition.x,
+            this.pixelPosition.x - this.pixelOffset.x,
             this.pixelPosition.y - this.pixelOffset.y,
             this.pixelSize.x,
             this.pixelSize.y,
@@ -80,7 +80,7 @@ export class CanvasImage extends Element {
 
         // Draw image to "background" canvas
         bgCtx.fillRect(
-            this.pixelPosition.x,
+            this.pixelPosition.x - this.pixelOffset.x,
             this.pixelPosition.y - this.pixelOffset.y,
             this.pixelSize.x,
             this.pixelSize.y,
@@ -88,7 +88,7 @@ export class CanvasImage extends Element {
     }
 
     private createClippingMask(bgCtx: CanvasRenderingContext2D) {
-        const x = this.pixelPosition.x;
+        const x = this.pixelPosition.x - this.pixelOffset.x;
         const y = this.pixelPosition.y - this.pixelOffset.y;
         const width = this.pixelSize.x;
         const height = this.pixelSize.y;
@@ -110,5 +110,15 @@ export class CanvasImage extends Element {
         bgCtx.lineTo(x, y + this.radius);
         bgCtx.quadraticCurveTo(x, y, x + this.radius, y);
         bgCtx.closePath();
+    }
+
+    destroy(): void {
+        // Remove references to image
+        this.image.onload = null;
+        this.image.src = "";
+        this.image = null as any;
+
+        // Clear other references from parent class
+        super.destroy();
     }
 }

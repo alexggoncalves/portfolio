@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { Page } from "../components/pages/layout/Page";
 
 import createPage from "../utils/createPage";
-import useContentStore from "../stores/contentStore";
+import useContentStore from "../stores/assetStore";
 import useSceneStore from "../stores/sceneStore";
 
 function usePageManager(location: any, isMobile: boolean, deps: any[]) {

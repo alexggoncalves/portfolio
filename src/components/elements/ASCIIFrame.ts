@@ -51,7 +51,7 @@ export class ASCIITitleFrame extends Element {
     ) {
         super(position, color, backgroundColor);
 
-        this.setSize(size.x, size.y);
+        this.setSize(size.x, size.y, "grid");
         this.bounds = this.calculateBounds();
         this.title = title;
         this.char = char

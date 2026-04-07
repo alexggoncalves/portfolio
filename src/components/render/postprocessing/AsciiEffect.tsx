@@ -152,6 +152,6 @@ export const AsciiEffect = forwardRef(
                 gridSize,
             ]
         );
-        return <primitive ref={ref} object={effect} dispose={null} />;
+        return <primitive ref={ref} object={effect} />;
     }
 );

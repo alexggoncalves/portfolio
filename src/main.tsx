@@ -8,10 +8,9 @@ import App from "./App.tsx";
 import ErrorElement from "./components/elements/ErrorElement.tsx";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { StrictMode } from "react";
+// import { StrictMode } from "react";
 
 const queryClient = new QueryClient();
-
 
 const router = createBrowserRouter([
     {
@@ -59,9 +58,7 @@ const router = createBrowserRouter([
 const root = document.getElementById("root");
 
 ReactDOM.createRoot(root!).render(
-    <StrictMode>
-        <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-        </QueryClientProvider>
-    </StrictMode>
+    <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+    </QueryClientProvider>,
 );

@@ -10,9 +10,8 @@ import useGridCanvasSize from "../../hooks/useGridCanvasSize";
 import useAsciiStore from "../../stores/asciiStore";
 import type { Navigation } from "../elements/Navigation";
 import { InteractiveElement } from "../elements/InteractiveElement";
-import { useEffect, useRef } from "react";
-import { getDistortedMouse } from "../../utils/getDistortedMouse";
-// import { Layer } from "../pages/layout/Layer";
+import { getDistortedPosition } from "../../utils/getDistortedPosition";
+import { useRef } from "react";
 
 function LayoutRenderer({ nav }: { nav: Navigation | null }) {
     const { currentPage, nextPage, backgroundColor, distortion, focalLength } =
@@ -20,59 +19,20 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
     const { ascii, bg, clearRenderTargets } = useAsciiRenderTargets();
 
     const scrollDelta = useScroll();
-    const { mousePosition } = usePointer();
+    const { pointerPosition, clickTarget, isMouseDown } = usePointer();
+
+    const distortedPointerPosition = useRef<Vector2>(new Vector2(0));
 
     // Set canvas size
     const charSize = useAsciiStore.getState().charSize;
     const canvasSize = useGridCanvasSize(charSize);
 
-    const DRAG_THRESHOLD = 5;
-    let mouseDownPos: Vector2 | null = null;
-    let isDragging = false;
-
-    const clickTarget = useRef<InteractiveElement | null>(null);
-    // const dragTarget = useRef<Layer | null>(null);
-
-    useEffect(() => {
-        const handleMouseDown = (e: MouseEvent) => {
-            mouseDownPos = new Vector2(e.clientX, e.clientY);
-            isDragging = false;
-        };
-
-        const handleMouseMove = (e: MouseEvent) => {
-            if (!mouseDownPos) return;
-
-            const horizontalDistance = e.clientX - mouseDownPos.x;
-
-            if (Math.abs(horizontalDistance) > DRAG_THRESHOLD) {
-                isDragging = true;
-            }
-        };
-
-        const handleMouseUp = () => {
-            if (!mouseDownPos) return;
-
-            if (!isDragging) {
-                if (clickTarget.current) clickTarget.current.onClick();
-            }
-
-            mouseDownPos = null;
-            isDragging = false;
-        };
-
-        window.addEventListener("mousedown", handleMouseDown);
-        window.addEventListener("mouseup", handleMouseUp);
-        window.addEventListener("mousemove", handleMouseMove);
-
-        return () => {
-            window.removeEventListener("mousedown", handleMouseDown);
-            window.removeEventListener("mouseup", handleMouseUp);
-            window.removeEventListener("mousemove", handleMouseMove);
-        };
-    }, []);
+    const frameSkip = useRef(0);
 
     // Update and render pages (->layers->elements)
     useFrame((_state, delta) => {
+        frameSkip.current++;
+
         const asciiTarget = {
             ctx: ascii.current?.context,
             texture: ascii.current?.texture,
@@ -93,16 +53,20 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
         // Clear Render Targets
         clearRenderTargets(asciiTarget.ctx, bgTarget.ctx, backgroundColor);
 
-        // Map the mouse position to fit the applied lens distortion
-        const mousePos = getDistortedMouse(
-            mousePosition.current,
+        // Map the mouse or touch position to fit the applied lens distortion
+        distortedPointerPosition.current = getDistortedPosition(
+            pointerPosition.current,
             canvasSize,
             distortion,
             focalLength,
         );
 
         // Update and draw current and next page
-        updatePages(delta, mousePos);
+        updatePages(
+            delta,
+            distortedPointerPosition.current,
+            isMouseDown.current,
+        );
 
         // Update mouse targets
         updateMouseTargets();
@@ -110,11 +74,11 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
         // Draw pages
         drawPages(asciiTarget.ctx, bgTarget.ctx);
 
-        // bgTarget.ctx.fillStyle = "white";
-        // bgTarget.ctx?.fillRect(mousePos.x-5, mousePos.y-5, 10, 10);
-
-        asciiTarget.texture.needsUpdate = true;
-        bgTarget.texture.needsUpdate = true;
+        if (frameSkip.current % 2 === 0) {
+            // every 2 frames
+            asciiTarget.texture.needsUpdate = true;
+            bgTarget.texture.needsUpdate = true;
+        }
     });
 
     const updateMouseTargets = () => {
@@ -142,20 +106,24 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
         }
     };
 
-    const updatePages = (delta: number, mousePos: Vector2) => {
+    const updatePages = (
+        delta: number,
+        mousePos: Vector2,
+        isMouseDown: boolean,
+    ) => {
         // Update current page
         currentPage?.update(
             delta,
             mousePos,
             !nextPage ? scrollDelta.current : 0,
+            isMouseDown,
         );
 
         // Update next page if it exists
-        nextPage?.update(delta, mousePos, scrollDelta.current);
+        nextPage?.update(delta, mousePos, scrollDelta.current, isMouseDown);
 
-        nav?.update(0,0);
-
-        // Update navigation hover state
+        // Update navigation
+        nav?.update(0, 0);
         nav?.updateMouseState(mousePos);
     };
 

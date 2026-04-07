@@ -3,16 +3,16 @@ import { useEffect, useRef } from "react";
 import useAsciiStore from "../../stores/asciiStore";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import getWorldPosition from "../../utils/getWorldPosition";
-import { Color, MathUtils, Mesh, MeshStandardMaterial, Vector3 } from "three";
-import getWorldScale, { getObjectSize } from "../../utils/getWorldScale";
+import { MathUtils, Mesh, MeshStandardMaterial, Vector3 } from "three";
+import { getObjectSize } from "../../utils/getWorldScale";
 import useSceneStore from "../../stores/sceneStore";
 import { FBXLoader } from "three/examples/jsm/Addons.js";
-import useCursorStore from "../../stores/cursorStore";
+import useCursorStore from "../../stores/pointerStore";
 
 function CatSection() {
     const { camera, size } = useThree();
     const { gridSize } = useAsciiStore();
-    const {mouseEnter, mouseLeave} = useCursorStore()
+    const { mouseEnter, mouseLeave } = useCursorStore();
     const sectionRef = useRef<any>(null);
 
     const pageCoords = {
@@ -29,6 +29,7 @@ function CatSection() {
     const catTexture = useTexture("/models/cat/baked_cat.png");
     const catModel = useLoader(FBXLoader, `/models/cat/cat.fbx`);
     const baseSize = useRef<Vector3 | null>(null);
+    // const baseY = useRef<number | null>(null);
 
     // ANIMATION
     const isMouseOver = useRef(false);
@@ -80,8 +81,8 @@ function CatSection() {
         sectionRef.current.position.copy(worldPos);
 
         // Add vertical bobbing when hovered
-        const offsetY = Math.sin(elapsed * 6) * 0.006;
-        catRef.current.position.y += offsetY * animationProgress.current;
+        const offsetY = Math.sin(elapsed * 6) * 0.1;
+        catRef.current.position.y = offsetY * animationProgress.current;
     };
 
     const updateRotation = (delta: number) => {
@@ -140,7 +141,7 @@ function CatSection() {
                     catModel.children[0].morphTargetInfluences[0] = 0;
             }
         }
-        sectionRef.current.children[0].lookAt(camera.position);
+        // sectionRef.current.children[0].lookAt(camera.position);
         updateRotation(delta);
         updatePosition(elapsed);
         updateStars();
@@ -169,10 +170,11 @@ function CatSection() {
                               .multiplyScalar(0.8),
                     0.1 * animationProgress.current,
                 );
-            } else { // Scale stars back to original size when not hovering cat
+            } else {
+                // Scale stars back to original size when not hovering cat
                 star.scale.lerp(
                     starBaseScales.current[index],
-                    0.1 * (1 - animationProgress.current)
+                    0.1 * (1 - animationProgress.current),
                 );
             }
         });
@@ -181,7 +183,7 @@ function CatSection() {
     const onMouseEnter = () => {
         isMouseOver.current = true;
         mouseEnter();
-        
+
         // Set shape key influence to 1 (retracted legs)
         if (catModel.children[0] instanceof Mesh) {
             if (catModel.children[0].morphTargetInfluences)

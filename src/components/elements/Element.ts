@@ -2,6 +2,7 @@ import { Color, Vector2 } from "three";
 import useAsciiStore from "../../stores/asciiStore";
 import Color4 from "three/src/renderers/common/Color4.js";
 import getColorString from "../../utils/color";
+import drawRoundRect from "../../utils/drawRoundRect";
 
 const createBrightnessMap = (asciiSequence: string) => {
     const asciiArray = asciiSequence.split("");
@@ -48,6 +49,9 @@ export class Element {
     isInteractive: boolean = false;
     isAnimated: boolean = false;
     isScrollable: boolean = true;
+    isInsidePageBoundaries: boolean = true;
+
+    name: string = "";
 
     constructor(
         position: Vector2,
@@ -70,11 +74,32 @@ export class Element {
         if (verticalAlign) this.verticalAlign = verticalAlign;
     }
 
+    checkBoundaries(pageY: number, pageHeight: number, pageWidth: number) {
+        this.isInsidePageBoundaries = true;
+        return;
+
+        const left = this.pixelPosition.x - this.pixelOffset.x;
+        const right =
+            this.pixelPosition.x + this.pixelSize.x - this.pixelOffset.x;
+        const top = this.pixelPosition.y - this.pixelOffset.y;
+        const bottom =
+            this.pixelPosition.y + this.pixelSize.y - this.pixelOffset.y;
+
+        const horizontallyVisible = right > 0 && left < pageWidth;
+        const verticallyVisible = bottom > pageY && top < pageY + pageHeight;
+
+        this.isInsidePageBoundaries = horizontallyVisible && verticallyVisible;
+    }
+
     setSize(text: string): void;
-    setSize(x: number, y: number): void;
+    setSize(x: number, y: number, unit: "pixel" | "grid"): void;
 
     // Calculate ascii block size ([x]: max line lenght | [y]: number of lines)
-    setSize(arg1: string | number, arg2?: number): void {
+    setSize(
+        arg1: string | number,
+        arg2?: number,
+        arg3?: "pixel" | "grid",
+    ): void {
         const charSize = useAsciiStore.getState().charSize;
 
         if (typeof arg1 === "string") {
@@ -84,16 +109,28 @@ export class Element {
             );
             this.gridSize.x = maxlength;
             this.gridSize.y = lines;
-        } else {
-            this.gridSize.x = arg1;
 
-            if (arg2) {
-                this.gridSize.y = arg2;
+            this.pixelSize.x = this.gridSize.x * charSize.x;
+            this.pixelSize.y = this.gridSize.y * charSize.y;
+        } else {
+            if (arg3 === "grid") {
+                this.gridSize.x = arg1;
+
+                if (arg2) {
+                    this.gridSize.y = arg2;
+                }
+                this.pixelSize.x = this.gridSize.x * charSize.x;
+                this.pixelSize.y = this.gridSize.y * charSize.y;
+            } else if (arg3 === "pixel") {
+                this.pixelSize.x = arg1;
+
+                if (arg2) {
+                    this.pixelSize.y = arg2;
+                }
+                this.gridSize.x = this.pixelSize.x / charSize.x;
+                this.gridSize.y = this.pixelSize.y / charSize.y;
             }
         }
-
-        this.pixelSize.x = this.gridSize.x * charSize.x;
-        this.pixelSize.y = this.gridSize.y * charSize.y;
     }
 
     setXOffset(value: number): void {
@@ -254,20 +291,10 @@ export class Element {
 
         // Set ui color
         bgCtx.beginPath();
+        bgCtx.globalAlpha = 1;
 
         if (radius > 0) {
-            bgCtx.globalAlpha = 1;
-            bgCtx.beginPath();
-            bgCtx.moveTo(x + radius, y);
-            bgCtx.lineTo(x + w - radius, y);
-            bgCtx.quadraticCurveTo(x + w, y, x + w, y + radius);
-            bgCtx.lineTo(x + w, y + h - radius);
-            bgCtx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
-            bgCtx.lineTo(x + radius, y + h);
-            bgCtx.quadraticCurveTo(x, y + h, x, y + h - radius);
-            bgCtx.lineTo(x, y + radius);
-            bgCtx.quadraticCurveTo(x, y, x + radius, y);
-            bgCtx.closePath();
+            drawRoundRect(bgCtx, x, y, w, h, radius);
         } else {
             bgCtx.rect(x, y, w, h);
         }
@@ -294,5 +321,13 @@ export class Element {
         _bgCtx: CanvasRenderingContext2D,
     ): void {}
 
-    destroy(): void {}
+    destroy(): void {
+        // Just remove references
+        this.pixelPosition = null as any;
+        this.pixelSize = null as any;
+        this.gridPosition = null as any;
+        this.gridSize = null as any;
+        this.gridOffset = null as any;
+        this.pixelOffset = null as any;
+    }
 }

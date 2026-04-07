@@ -1,6 +1,22 @@
 [
     {
-        "id": "filters",
-        "src": ""
+        "id": "github",
+        "src": "https://cloud.alexgg.com/icons/github.svg"
+    },
+    {
+        "id": "link",
+        "src": "https://cloud.alexgg.com/icons/link.svg"
+    },
+    {
+        "id": "blender",
+        "src": "https://cloud.alexgg.com/icons/blender.svg"
+    },
+    {
+        "id": "react",
+        "src": "https://cloud.alexgg.com/icons/react.svg"
+    },
+    {
+        "id": "unity",
+        "src": "https://cloud.alexgg.com/icons/unity.svg"
     }
 ]

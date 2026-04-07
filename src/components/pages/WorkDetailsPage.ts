@@ -1,7 +1,7 @@
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import type { Work } from "../../stores/contentStore";
+import type { Work } from "../../stores/assetStore";
 
 import useAsciiStore from "../../stores/asciiStore";
 import useSceneStore from "../../stores/sceneStore";
@@ -13,7 +13,7 @@ import { ASCIIBlock } from "../elements/ASCIIBlock";
 import { ASCIIButton } from "../elements/ASCIIButton";
 import { FadeGradient } from "../elements/FadeGradient";
 import { WorkLayout } from "./layout/WorkLayout";
-import useContentStore from "../../stores/contentStore";
+import useContentStore from "../../stores/assetStore";
 
 export class WorkDetailsPage extends Page {
     work: Work | null = null;
@@ -110,11 +110,12 @@ export class WorkDetailsPage extends Page {
                 "top",
             ),
         );
+        titleElement.isScrollable = false;
 
         this.placementPosition.y += titleElement.gridSize.y;
         this.placementPosition.x = titleElement.gridPosition.x + 1;
 
-        this.fixedLayer.addElement(
+        const subtitleElement = this.fixedLayer.addElement(
             new ASCIIBlock(
                 subtitle,
                 this.placementPosition.clone(),
@@ -124,6 +125,8 @@ export class WorkDetailsPage extends Page {
                 "top",
             ),
         );
+        subtitleElement.isScrollable = false;
+
         this.placementPosition.y += 2;
     }
 
@@ -148,6 +151,7 @@ export class WorkDetailsPage extends Page {
                     "top",
                 ),
             );
+            tagElement.isScrollable = false;
             offsetX += tagElement.gridSize.x + 2;
         });
 

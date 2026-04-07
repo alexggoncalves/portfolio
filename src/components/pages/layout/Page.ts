@@ -5,6 +5,7 @@ import { clamp } from "three/src/math/MathUtils.js";
 import useAsciiStore from "../../../stores/asciiStore";
 import useSceneStore from "../../../stores/sceneStore";
 import type { InteractiveElement } from "../../elements/InteractiveElement";
+import { WorksRow } from "./WorksRow";
 
 //----------------------------------
 // PAGE CLASS
@@ -40,7 +41,12 @@ export class Page {
         this.isMobile = isMobile;
     }
 
-    update(delta: number, mousePos: Vector2, scrollDelta: number): void {
+    update(
+        delta: number,
+        mousePos: Vector2,
+        scrollDelta: number,
+        isMouseDown: boolean,
+    ): void {
         this.updateScroll(scrollDelta);
         this.updateTransitions(delta);
 
@@ -49,8 +55,12 @@ export class Page {
 
         // Update all page layers
         this.layers.forEach((layer: Layer) => {
-            // Update layer
             layer.update(delta, this.scrollOffset);
+
+            // Update worksRow dragging state
+            if (layer instanceof WorksRow) {
+                layer.updateDragState(isMouseDown, mousePos);
+            }
 
             // Update hovered elements array
             layer.interactiveElements.forEach((element: InteractiveElement) => {
@@ -108,21 +118,9 @@ export class Page {
             return;
         }
 
-        const offset = this.scrollOffset;
-        const distanceFromBottom = max - offset;
-
-        const dampingRange = Math.min(this.scrollDampingRange, max * 0.15);
-        let dampingMultiplier = 1.0;
-
-        if (offset < dampingRange && scrollDelta < 0) {
-            dampingMultiplier = offset / dampingRange;
-        } else if (distanceFromBottom < dampingRange && scrollDelta > 0) {
-            dampingMultiplier = distanceFromBottom / dampingRange;
-        }
-
         // Apply the scroll delta with damping
-        const speedScale = 1.4;
-        const move = scrollDelta * dampingMultiplier * speedScale;
+        const speedScale = 2;
+        const move = scrollDelta * speedScale;
 
         // Only apply scroll if it's significant
         if (Math.abs(move) > 0.01) {
@@ -156,5 +154,19 @@ export class Page {
                 element.isMouseOver = false;
             });
         });
+    }
+
+    destroy(): void {
+        // Destroy all layers
+        this.layers.forEach((layer) => layer.destroy());
+
+        // Clear arrays to release references
+        this.layers = [];
+        this.hoveredElements = [];
+        this.hoveredLayer = null;
+
+        // Remove callbacks
+        this.onFadeOutComplete = undefined;
+        this.goTo = () => {};
     }
 }

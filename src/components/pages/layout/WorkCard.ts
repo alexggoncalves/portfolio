@@ -4,9 +4,9 @@ import Color4 from "three/src/renderers/common/Color4.js";
 import { CanvasImage } from "../../elements/CanvasImage";
 import useAsciiStore from "../../../stores/asciiStore";
 
-import type { Tag, Work } from "../../../stores/contentStore";
-import useContentStore from "../../../stores/contentStore";
-import useCursorStore from "../../../stores/cursorStore";
+import type { Tag, Work } from "../../../stores/assetStore";
+import useContentStore from "../../../stores/assetStore";
+import useCursorStore from "../../../stores/pointerStore";
 
 import TagLabel from "./TagLabel";
 import type { NavigationSource } from "../../../stores/sceneStore";
@@ -17,27 +17,31 @@ export class WorkCard extends InteractiveElement {
     work: Work;
     tagLabels: TagLabel[] = [];
     canvasImage: CanvasImage | undefined;
-    padding = 10;
+    padding: number = 10;
+    cornerRadius: number = 40;
+    tagGap: number = 3;
 
     navigationSource: NavigationSource = "home";
     goTo?: (path: string) => void;
 
     tagsOpened: boolean = false;
 
-    cornerRadius: number = 40;
-
     constructor(
         work: Work,
         position: Vector2,
         size: Vector2,
+        padding?: number,
+        cornerRadius?: number,
         goTo?: (path: string) => void,
         navigationSource?: NavigationSource,
     ) {
         super(position);
         this.work = work;
-        this.setSize(size.x, size.y);
+        this.setSize(size.x, size.y, "grid");
         this.isInteractive = true;
-
+        
+        if(padding) this.padding = padding;
+        if(cornerRadius) this.cornerRadius = cornerRadius
         if (goTo) this.goTo = goTo;
 
         if (navigationSource) this.navigationSource = navigationSource;
@@ -61,23 +65,21 @@ export class WorkCard extends InteractiveElement {
 
     initializeTagLabels(tags: Tag[]) {
         const { charSize } = useAsciiStore.getState();
+        const margin = new Vector2(0 * charSize.x,2.4 * charSize.x) 
 
-        const gap = 0 * charSize.y;
-        const margin = 1.4 * charSize.y;
-
-        let yPos = this.pixelPosition.y;
+        let yPos = this.pixelPosition.y
         tags.forEach((tag: Tag) => {
             const x = this.pixelPosition.x + this.pixelSize.x;
             const tagLabel = new TagLabel(
                 tag,
-                new Vector2(x - margin, yPos + margin),
+                new Vector2(x - margin.x, yPos + margin.y),
                 15,
-                new Vector2(10, 2),
+                new Vector2(10, 3),
             );
             this.tagLabels.push(tagLabel);
 
             // Increment y offset
-            yPos += tagLabel.getTagHeight() + gap;
+            yPos += tagLabel.getTagHeight() + this.tagGap;
         });
     }
 
@@ -98,13 +100,15 @@ export class WorkCard extends InteractiveElement {
         // Update image
         if (this.canvasImage) {
             this.canvasImage.setYOffset(this.gridOffset.y);
+            this.canvasImage.setXOffset(this.gridOffset.x);
             this.canvasImage.opacity = this.opacity;
         }
 
         // Update tag labels
         this.tagLabels.forEach((tagLabel: TagLabel) => {
             tagLabel.opacity = this.opacity;
-            tagLabel.yOffset = this.gridOffset.y;
+            tagLabel.yOffset = this.pixelOffset.y;
+            tagLabel.xOffset = this.pixelOffset.x;
             tagLabel.update();
         });
     }
@@ -128,7 +132,7 @@ export class WorkCard extends InteractiveElement {
 
     drawHoverState(background: CanvasRenderingContext2D): void {
         this.drawBackgroundRect(
-            this.pixelPosition.x - this.padding / 2,
+            this.pixelPosition.x - this.pixelOffset.x - this.padding / 2,
             this.pixelPosition.y - this.pixelOffset.y - this.padding / 2,
             this.pixelSize.x + this.padding,
             this.pixelSize.y + this.padding,

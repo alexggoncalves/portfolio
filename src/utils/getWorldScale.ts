@@ -3,7 +3,6 @@ import {
     Object3D,
     OrthographicCamera,
     PerspectiveCamera,
-    Vector2,
     Vector3,
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";

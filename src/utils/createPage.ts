@@ -2,7 +2,7 @@ import { HomePage } from "../components/pages/HomePage";
 import { WorkPage } from "../components/pages/WorksPage";
 import { ContactsPage } from "../components/pages/ContactsPage";
 import { WorkDetailsPage } from "../components/pages/WorkDetailsPage";
-import type { Work } from "../stores/contentStore";
+import type { Work } from "../stores/assetStore";
 import { Page } from "../components/pages/layout/Page";
 
 //------------------------------------------------------------------------

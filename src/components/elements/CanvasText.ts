@@ -14,6 +14,7 @@ export class CanvasText extends Element {
     lineHeight: number;
     font: string;
     fontSize: number;
+    fontWeight: number
 
     padding: number;
 
@@ -21,8 +22,9 @@ export class CanvasText extends Element {
         text: string,
         font: string,
         fontSize: number,
+        fontWeight: number,
         position: Vector2,
-        maxWidth: number, // width in ascii cells
+        maxWidth: number, // in ascii cells
         lineHeight: number,
         padding: number,
         color: Color,
@@ -32,6 +34,7 @@ export class CanvasText extends Element {
         this.isScrollable = true;
         this.font = font;
         this.fontSize = fontSize;
+        this.fontWeight = fontWeight
         this.lineHeight = lineHeight;
         this.padding = padding;
 
@@ -43,7 +46,7 @@ export class CanvasText extends Element {
         this.lines = this.wrapText(text, width * charSize.x);
 
         // Calculate the height of the whole block
-        this.setSize(width, this.lines.length * this.lineHeight * fontSize);
+        this.setSize(width, this.lines.length * this.lineHeight * fontSize, "grid");
     }
 
     private static measureCtx: CanvasRenderingContext2D = (() => {
@@ -64,11 +67,11 @@ export class CanvasText extends Element {
         bgCtx.textBaseline = "top";
         bgCtx.textAlign = "left";
         
-        bgCtx.font = `${this.font} ${this.fontSize}px monospace`;
+        bgCtx.font = `${this.fontWeight} ${this.fontSize}px ${this.font}`;
 
         const position = {
-            x: Math.floor(this.pixelPosition.x + this.padding * charSize.x),
-            y: Math.floor(this.pixelPosition.y - this.pixelOffset.y),
+            x: this.pixelPosition.x + this.padding * charSize.x,
+            y: this.pixelPosition.y - this.pixelOffset.y,
         };
 
         let yOffset = 0;
@@ -83,7 +86,7 @@ export class CanvasText extends Element {
 
     wrapText(text: string, maxWidth: number) {
         const ctx = CanvasText.measureCtx;
-        ctx.font = `${this.font} ${this.fontSize}px monospace`;
+        ctx.font = `${this.fontSize}px ${this.font}`;
 
         const words = text.split(" ");
         const lines: string[] = [];

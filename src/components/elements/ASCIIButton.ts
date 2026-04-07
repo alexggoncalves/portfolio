@@ -1,7 +1,7 @@
 import { Color, Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import useCursorStore from "../../stores/cursorStore";
+import useCursorStore from "../../stores/pointerStore";
 import { InteractiveElement } from "./InteractiveElement";
 
 //------------------------------------------
@@ -35,7 +35,7 @@ export class ASCIIButton extends InteractiveElement {
 
         if (!size) {
             this.setSize(this.text);
-        } else this.setSize(size.x, size.y);
+        } else this.setSize(size.x, size.y, "grid");
 
         this.applyAlignment();
 

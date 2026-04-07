@@ -1,10 +1,10 @@
 import { Page } from "./layout/Page";
 import { Layer } from "./layout/Layer";
-import type { Work } from "../../stores/contentStore";
+import type { Work } from "../../stores/assetStore";
 import { WorksRow } from "./layout/WorksRow";
 import { Vector2 } from "three";
 import useAsciiStore from "../../stores/asciiStore";
-import { CanvasImage } from "../elements/CanvasImage";
+// import { CanvasImage } from "../elements/CanvasImage";
 
 export class HomePage extends Page {
     works: Work[] = [];
@@ -29,7 +29,7 @@ export class HomePage extends Page {
 
         const workRow = new WorksRow(
             this.works,
-            new Vector2(0, gridSize.y + 2),
+            new Vector2(0, gridSize.y + 6),
             20,
             5,
             1,

@@ -1,4 +1,3 @@
-import { Text3D } from "@react-three/drei";
 import getWorldPosition from "../../utils/getWorldPosition";
 import getWorldScale, { getObjectSize } from "../../utils/getWorldScale";
 import useSceneStore from "../../stores/sceneStore";
@@ -6,7 +5,6 @@ import useAsciiStore from "../../stores/asciiStore";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
 import type { Vector3 } from "three";
-import Cat from "./CatSection";
 import CatSection from "./CatSection";
 
 function HomeScene() {

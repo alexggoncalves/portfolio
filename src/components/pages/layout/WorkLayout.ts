@@ -1,7 +1,7 @@
 import { Color, Vector2 } from "three";
 
 import { Layer } from "./Layer";
-import type { LayoutBlock } from "../../../stores/contentStore";
+import type { LayoutBlock } from "../../../stores/assetStore";
 import type { Element } from "../../elements/Element";
 import { CanvasImage } from "../../elements/CanvasImage";
 import { CanvasText } from "../../elements/CanvasText";
@@ -23,17 +23,17 @@ export class WorkLayout extends Layer {
 
     private imageGap: number = 1;
     private textGap: number = 3;
-    private headingGap: number = 2;
+    private headingGap: number = 1;
 
-    private headingSize: number = 40;
-    private headingFont: string = "";
+    private headingSize: number = 30;
+    private headingFont: string = "Space Grotesk";
     private headingLineHeight: number = 1.1;
-    private headingPadding: number = 1;
+    private headingPadding: number = 0;
 
-    private textSize: number = 18;
-    private textFont: string = "";
+    private textSize: number = 16;
+    private textFont: string = "Open Sans";
     private textLineHeight: number = 1.1;
-    private textPadding: number = 5;
+    private textPadding: number = 0;
 
     private bottomMargin: number = 6;
 
@@ -82,17 +82,20 @@ export class WorkLayout extends Layer {
         });
         
         this.layoutSize.y += this.bottomMargin
+
+        
     }
 
     placeHeading(text: string): void {
         if (!text) return;
 
-        this.placementPosition.y += this.headingGap
+        this.placementPosition.y += this.headingGap * 2
 
         const textBlock = new CanvasText(
             text,
             this.headingFont,
             this.headingSize,
+            600,
             this.placementPosition.clone(),
             this.layoutSize.x,
             this.headingLineHeight,
@@ -113,6 +116,7 @@ export class WorkLayout extends Layer {
                 text,
                 this.textFont,
                 this.textSize,
+                400,
                 this.placementPosition.clone(),
                 this.layoutSize.x,
                 this.textLineHeight,

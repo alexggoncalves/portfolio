@@ -3,7 +3,7 @@ import { Vector2 } from "three";
 // Transforms the mouse position to match
 // the LensDistortion shader output.
 
-export function getDistortedMouse(
+export function getDistortedPosition(
     mouse: { x: number; y: number },
     canvasSize: { width: number; height: number; left: number; top: number },
     distortion: { x: number; y: number } = { x: 0.02, y: 0.05 },

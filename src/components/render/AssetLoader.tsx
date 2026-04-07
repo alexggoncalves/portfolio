@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 
-import worksData from "../../data/works.json";
-import peopleData from "../../data/people.json";
-import tagsData from "../../data/tags.json";
+import WORKS from "../../data/works.json";
+import PEOPLE from "../../data/people.json";
+import TAGS from "../../data/tags.json";
+import ICONS from "../../data/icons.json";
 
-import useContentStore from "../../stores/contentStore"; // your Zustand store
+import useContentStore from "../../stores/assetStore"; // your Zustand store
 
-import type { Work, Person, Tag } from "../../stores/contentStore";
+import type { Work, Person, Tag, Icon } from "../../stores/assetStore";
 // import { useLoader } from "@react-three/fiber";
 // import { ImageLoader } from "three";
 import { useTexture } from "@react-three/drei";
@@ -15,9 +16,10 @@ import { useTexture } from "@react-three/drei";
 const defaultAvatarSrc = "/images/avatars/default_avatar.jpg";
 const defaultProjectThumbnail = "/images/default/default_avatar.jpg";
 
-const works = worksData as Work[];
-const people = peopleData as Person[];
-const tags = tagsData as Tag[];
+const works = WORKS as Work[];
+const people = PEOPLE as Person[];
+const tags = TAGS as Tag[];
+const icons = ICONS as Icon[];
 
 // Load thumbnails, 3d models and team pictures
 function AssetLoader() {
@@ -26,44 +28,29 @@ function AssetLoader() {
     // const { setProgress, set}
 
     useEffect(() => {
-        async function preloadGlobalAssets() {
-            // Get all work thumbnail sources
-            const workThumbnails = worksData.map((work) => work.thumbnailSrc);
-            // Get all team avatars sources
-            const teamAvatars = people.map((person) => person.avatarSrc);
+        function preloadGlobalAssets() {
+            // Gather all asset sources to preload
+            const thumbnailSources = works.map((work) => work.thumbnailSrc);
+            const avatarSources = people.map((person) => person.avatarSrc);
+            const iconSources = icons.map((icon) => icon.src);
 
             // Array of all images to load
             const imagesToLoad = [
                 defaultAvatarSrc,
                 defaultProjectThumbnail,
-                ...workThumbnails,
-                ...teamAvatars,
+                ...thumbnailSources,
+                ...avatarSources,
+                ...iconSources,
             ] as string[]
 
             // Preload all primary assets
-            await Promise.all(
-                imagesToLoad.map(async (assetSrc) => {
-                    try {
-                        if (!assetSrc) {
-                            console.warn("Asset missing src");
-                            return;
-                        }
-
-                        return await new Promise<void>((resolve) => {
-                                useTexture.preload(assetSrc);
-                                resolve();
-                        });
-
-                    } catch (err) {
-                        console.log(`failed to load: ${assetSrc}`, err);
-                    }
-                }),
-            );
+            imagesToLoad.forEach((src) => useTexture.preload(src));
 
             useContentStore.setState({
                 works,
                 people,
                 tags,
+                icons,
                 loaded: true,
             });
         }
