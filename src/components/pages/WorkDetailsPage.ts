@@ -12,8 +12,9 @@ import { Layer } from "./layout/Layer";
 import { ASCIIBlock } from "../elements/ASCIIBlock";
 import { ASCIIButton } from "../elements/ASCIIButton";
 import { FadeGradient } from "../elements/FadeGradient";
-import { WorkLayout } from "./layout/WorkLayout";
+import { WorkMediaLayout  } from "./layout/WorkMediaLayout";
 import useContentStore from "../../stores/assetStore";
+import { CanvasText } from "../elements/CanvasText";
 
 export class WorkDetailsPage extends Page {
     work: Work | null = null;
@@ -22,8 +23,10 @@ export class WorkDetailsPage extends Page {
     asciigridSize: Vector2;
 
     fixedLayer: Layer = new Layer("fixed", []);
-    placementPosition: Vector2 = new Vector2(0, 5);
+    placementPosition: Vector2 = new Vector2(3, 5);
     gradientLayer: Layer = new Layer("gradient", []);
+
+    bgColor: Color;
 
     constructor(work: Work, goTo: (path: string) => void, isMobile: boolean) {
         super(work.id, isMobile, goTo);
@@ -41,6 +44,8 @@ export class WorkDetailsPage extends Page {
         const main = document.querySelector("main");
         main?.appendChild(this.pageContainer);
 
+        this.bgColor = useSceneStore.getState().backgroundColor;
+
         this.init();
     }
 
@@ -53,26 +58,26 @@ export class WorkDetailsPage extends Page {
         const layoutWidth = gridSize.x - margin * 2;
 
         // Create and place scrollable layout layer
-        const layoutLayer = new WorkLayout(
-            this.work.layout,
-            new Vector2(margin, 0),
+        const mediaLayer = new WorkMediaLayout(
+            this.work.media,
+            new Vector2(margin, 14),
             layoutWidth,
             this.goTo,
             this.pageContainer,
             false,
         );
 
-        this.layers.push(layoutLayer);
-        this.pageHeight += layoutLayer.layoutSize.y;
+        this.layers.push(mediaLayer);
+        this.pageHeight += mediaLayer.layoutSize.y;
 
         this.placeFadeGradients();
         this.layers.push(this.gradientLayer);
 
         // Create and place fixed elements
-
         this.placeBackButton();
         this.placeTitleAndSubtitle(this.work.title, this.work.subtitle);
         this.placeTags(this.work.tags);
+        this.placeDescription();
 
         this.layers.push(this.fixedLayer);
     }
@@ -85,14 +90,15 @@ export class WorkDetailsPage extends Page {
             new ASCIIButton(
                 "<< Go back to works",
                 () => {
-                    const backDestination = navigationSource === "work" ? "/work" : "/"
+                    const backDestination =
+                        navigationSource === "work" ? "/work" : "/";
                     this.goTo(backDestination);
                 },
-                new Vector2(6, -4),
+                new Vector2(4, 10),
                 new Color("white"),
                 new Color4(0, 0.4, 0.4, 0),
                 "left",
-                "bottom",
+                "top",
             ),
         );
     }
@@ -106,13 +112,13 @@ export class WorkDetailsPage extends Page {
                 this.placementPosition.clone(),
                 new Color(1, 1, 1),
                 new Color4(1, 1, 1, 0),
-                "center",
-                "top",
+                "left",
+                "bottom",
             ),
         );
         titleElement.isScrollable = false;
 
-        this.placementPosition.y += titleElement.gridSize.y;
+        this.placementPosition.y -= 1;
         this.placementPosition.x = titleElement.gridPosition.x + 1;
 
         const subtitleElement = this.fixedLayer.addElement(
@@ -122,12 +128,12 @@ export class WorkDetailsPage extends Page {
                 new Color("white"),
                 new Color4(0, 0.4, 0.4, 0),
                 "left",
-                "top",
+                "bottom",
             ),
         );
         subtitleElement.isScrollable = false;
 
-        this.placementPosition.y += 2;
+        this.placementPosition.y += titleElement.gridSize.y + 1;
     }
 
     placeTags(tags: string[]) {
@@ -135,8 +141,6 @@ export class WorkDetailsPage extends Page {
 
         let offsetX = 0;
         const position = this.placementPosition.clone();
-        position.y = 4;
-
         tags.forEach((tag) => {
             const tagColorHex = getTagById(tag)?.color;
             const tagColor = new Color(tagColorHex);
@@ -148,7 +152,7 @@ export class WorkDetailsPage extends Page {
                     new Color("white"),
                     new Color4(tagColor.r, tagColor.g, tagColor.b, 0.7),
                     "left",
-                    "top",
+                    "bottom",
                 ),
             );
             tagElement.isScrollable = false;
@@ -158,16 +162,46 @@ export class WorkDetailsPage extends Page {
         this.placementPosition.y += 4;
     }
 
-    placeFadeGradients() {
-        const bgColor = useSceneStore.getState().backgroundColor;
+    placeDescription() {
+        const textSize: number = 16;
+        const textFont: string = "Open Sans";
+        const textLineHeight: number = 1.1;
+        const textPadding: number = 0;
 
+        this.placementPosition.y += 5;
+
+        this.work?.description.paragraphs.forEach((paragraph) => {
+            const textBlock = new CanvasText(
+                paragraph,
+                textFont,
+                textSize,
+                400,
+                this.placementPosition.clone(),
+                50,
+                textLineHeight,
+                textPadding,
+                new Color("white"),
+                "left",
+                "bottom",
+            );
+
+            this.fixedLayer.addElement(textBlock);
+            const textHeight = textBlock.getGridSize().y
+
+            this.placementPosition.y += textHeight + 1;
+
+            
+        });
+    }
+
+    placeFadeGradients() {
         this.fixedLayer.addElement(
             new FadeGradient(
-                new Color4(bgColor),
+                new Color4(this.bgColor),
                 // new Color4("red"),
-                new Vector2(0, 0),
+                new Vector2(0, this.asciigridSize.y),
                 new Vector2(this.asciigridSize.x, 16),
-                "top",
+                "bottom",
             ),
         );
     }

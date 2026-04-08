@@ -15,6 +15,9 @@ export class ASCIIButton extends InteractiveElement {
 
     isCursorPointer = false;
 
+    mouseEnter: () => void;
+    mouseLeave: () => void;
+
     constructor(
         text: string,
         callback: () => void,
@@ -39,36 +42,40 @@ export class ASCIIButton extends InteractiveElement {
 
         this.applyAlignment();
 
-        if (resetCursorOnClick != undefined) this.resetCursorOnClick = resetCursorOnClick;
+        if (resetCursorOnClick != undefined)
+            this.resetCursorOnClick = resetCursorOnClick;
 
+        this.mouseEnter = useCursorStore.getState().mouseEnter;
+        this.mouseLeave = useCursorStore.getState().mouseLeave;
     }
 
     drawButtonFrame(
         strokeWeight: number,
-        color: Color4,
         context: CanvasRenderingContext2D,
     ): void {
         // Set color and stroke
-        context.strokeStyle = `rgba(${color.r * 255},
-        ${color.g * 255},
-        ${color.b * 255},
-        ${color.a * this.opacity})`;
+        context.strokeStyle = `rgba(${this.color.r * 255},
+        ${this.color.g * 255},
+        ${this.color.b * 255},
+        ${this.opacity})`;
         context.lineWidth = strokeWeight;
 
         // Draw frame
-        context.strokeRect(this.pixelPosition.x, this.pixelPosition.y, this.pixelSize.x, this.pixelSize.y);
+        context.strokeRect(
+            this.pixelPosition.x,
+            this.pixelPosition.y,
+            this.pixelSize.x,
+            this.pixelSize.y,
+        );
     }
 
     update(): void {
-        const mouseEnter = useCursorStore.getState().mouseEnter;
-        const mouseLeave = useCursorStore.getState().mouseLeave;
 
-        if(this.isMouseOver && !this.isCursorPointer){
-            mouseEnter();
+        if (this.isMouseOver && !this.isCursorPointer) {
+            this.mouseEnter();
             this.isCursorPointer = true;
-        }
-        else if(!this.isMouseOver && this.isCursorPointer){
-            mouseLeave();
+        } else if (!this.isMouseOver && this.isCursorPointer) {
+            this.mouseLeave();
             this.isCursorPointer = false;
         }
     }
@@ -80,7 +87,7 @@ export class ASCIIButton extends InteractiveElement {
         this.drawBlock(this.text, ui, background);
 
         if (this.isMouseOver) {
-            this.drawButtonFrame(2, new Color4(...this.color, 1), background);
+            this.drawButtonFrame(2, background);
         }
     }
 
@@ -88,8 +95,7 @@ export class ASCIIButton extends InteractiveElement {
         if (this.callback) this.callback();
 
         if (this.resetCursorOnClick) {
-            const mouseLeave = useCursorStore.getState().mouseLeave;
-            mouseLeave();
+            this.mouseLeave();
         }
     }
 }

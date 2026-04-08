@@ -1,10 +1,10 @@
 import {
     ChromaticAberration,
     EffectComposer,
-    Glitch,
-    Vignette,
+    // Glitch,
+    // Vignette,
 } from "@react-three/postprocessing";
-import { GlitchMode } from "postprocessing";
+// import { GlitchMode } from "postprocessing";
 import { AsciiEffect } from "./AsciiEffect";
 import { LensDistortion } from "./LensDistortion";
 import { Vector2 } from "three";
@@ -37,10 +37,10 @@ function Postprocessing() {
         [focalLength.x, focalLength.y],
     );
 
-    const glitchDelay = useMemo(() => new Vector2(10, 20), []);
-    const glitchDuration = useMemo(() => new Vector2(0.2, 0.4), []);
-    const glitchStrength = useMemo(() => new Vector2(0.02, 0.03), []);
-    const glitchOffset = useMemo(() => new Vector2(0, 20), []);
+    // const glitchDelay = useMemo(() => new Vector2(10, 20), []);
+    // const glitchDuration = useMemo(() => new Vector2(0.2, 0.4), []);
+    // const glitchStrength = useMemo(() => new Vector2(0.02, 0.03), []);
+    // const glitchOffset = useMemo(() => new Vector2(0, 20), []);
 
     return (
         <>
@@ -55,14 +55,14 @@ function Postprocessing() {
                 ></AsciiEffect>
 
                 <ChromaticAberration offset={[0.0, 0.0]} />
-                <Glitch
+                {/* <Glitch
                     delay={glitchDelay} // min and max glitch delay
                     duration={glitchDuration} // min and max glitch duration
                     strength={glitchStrength} // min and max glitch strength
                     chromaticAberrationOffset={glitchOffset} // min and max chromatic aberration offset
                     mode={GlitchMode.SPORADIC} // glitch mode
-                />
-                <Vignette darkness={2} offset={-0.9} opacity={0.1} />
+                /> */}
+                {/* <Vignette darkness={2} offset={-0.9} opacity={0.1} /> */}
 
                 <LensDistortion
                     distortion={distortionVec}

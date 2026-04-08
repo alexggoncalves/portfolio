@@ -161,6 +161,7 @@ export class Element {
         }
 
         if (this.verticalAlign === "bottom") {
+            this.gridPosition.y *= -1
             offset.y = gridSize.y - this.gridSize.y;
         } else if (this.verticalAlign === "middle") {
             offset.y = (gridSize.y - this.gridSize.y) / 2;

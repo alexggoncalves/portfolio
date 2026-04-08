@@ -1,24 +1,42 @@
 import { Text3D } from "@react-three/drei";
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import useAsciiStore from "../../stores/asciiStore";
 import { useFrame, useThree } from "@react-three/fiber";
 import getWorldPosition from "../../utils/getWorldPosition";
 import { Vector3 } from "three";
 import getWorldScale, { getObjectSize } from "../../utils/getWorldScale";
-import useSceneStore from "../../stores/sceneStore";
+// import useSceneStore from "../../stores/sceneStore";
 
 function NamePlate({ text }: { text: string }) {
     const { camera, size } = useThree();
 
-    const homeScrollOffset = useSceneStore(
-        (state) => state.pageScrolls["home"],
-    );
+    // const homeScrollOffset = useSceneStore(
+    //     (state) => state.pageScrolls["home"],
+    // );
 
     const wordRef = useRef<any>(null);
     const groupRef = useRef<any>(null);
     const baseSize = useRef<Vector3 | null>(null);
 
     const { gridSize, charSize } = useAsciiStore();
+
+    const logoState = useMemo(() => {
+        return {
+            position: { x: 6, y: 8 },
+            scale: { width: 28, height: 4, depth: 1 },
+        };
+    }, []);
+
+    // const fullScreenState = useMemo(() => {
+    //     return {
+    //         position: { x: -2, y: gridSize.y - homeScrollOffset },
+    //         scale: {
+    //             width: gridSize.x,
+    //             height: gridSize.y - homeScrollOffset,
+    //             depth: 1,
+    //         },
+    //     };
+    // }, [homeScrollOffset, gridSize.y, gridSize.x]);
 
     useEffect(() => {
         if (!baseSize.current && wordRef.current) {
@@ -28,9 +46,10 @@ function NamePlate({ text }: { text: string }) {
 
     useFrame((_state, _delta) => {
         if (!wordRef.current || !groupRef.current || !baseSize.current) return;
+        // if (!fullScreenPosition) return;
 
         const worldPos = getWorldPosition(
-            { x: -2, y: gridSize.y - homeScrollOffset },
+            logoState.position,
             5,
             camera,
             size,
@@ -39,10 +58,7 @@ function NamePlate({ text }: { text: string }) {
         );
 
         const worldScale = getWorldScale(
-            {
-                width: gridSize.x,
-                height: gridSize.y - homeScrollOffset,
-            },
+            logoState.scale,
             baseSize.current,
             5,
             camera,
@@ -53,7 +69,11 @@ function NamePlate({ text }: { text: string }) {
 
         // setScrollPosition(scrollPosition + delta)
         groupRef.current.position.copy(worldPos);
-        groupRef.current.scale.set(worldScale.x, worldScale.y, 1);
+        groupRef.current.scale.set(
+            worldScale.x,
+            worldScale.y,
+            logoState.scale.depth,
+        );
     });
 
     return (

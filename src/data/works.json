@@ -6,6 +6,13 @@
         "tags": ["game-dev", "3d", "generative"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/endless-purrs-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "In Endless Purrs, you step into the boots of a forest wizard who's lost his most treasured companions, his cats. Guided by meows, you journey through an ever-changing forest in search of them.",
+                "The game's environment is generated using an optimized implementation of the Wave Function Collapse algorithm, ensuring that every playthrough is a unique experience."
+            ]
+        },
         "link": "",
         "git": "https://github.com/alexggoncalves/endless-purrs",
         "tools": ["Unity", "Blender", "C#"],
@@ -14,22 +21,11 @@
             { "id": "margarida-mendonca", "roles": ["Coder", "Designer"] },
             { "id": "maria-carrilho", "roles": ["Sound Designer"] }
         ],
-        "layout": [
+        "media": [
             {
                 "type": "video",
-                "src": "/images/endless-purrs/endless-purrs-video.mp4",
+                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-video.mp4",
                 "alt": "Endless Purrs - Video"
-            },
-            {
-                "type": "heading",
-                "text": "Title"
-            },
-            {
-                "type": "text",
-                "paragraphs": [
-                    "In Endless Purrs, you step into the boots of a forest wizard who's lost his most treasured companions, his cats. Guided by meows, you journey through an ever-changing forest in search of them.",
-                    "The game's environment is generated using an optimized implementation of the Wave Function Collapse algorithm, ensuring that every playthrough is a unique experience."
-                ]
             },
             {
                 "type": "image",
@@ -71,7 +67,7 @@
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#", "Substance Painter"],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"
@@ -85,6 +81,13 @@
         "tags": ["game-dev", "3d", "vr", "interaction-design"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/pipe-quest-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "x",
+                "y"
+            ]
+        },
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
@@ -94,7 +97,7 @@
             { "id": "goncalo-barroso", "roles": ["Designer"] },
             { "id": "joao-santos", "roles": ["Coder"] }
         ],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"
@@ -108,10 +111,17 @@
         "tags": ["3d"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/mirage-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "x",
+                "y"
+            ]
+        },
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"
@@ -125,10 +135,17 @@
         "tags": ["frontend", "backend"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/feels-lab-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "x",
+                "y"
+            ]
+        },
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"
@@ -142,10 +159,17 @@
         "tags": ["frontend", "backend", "generative"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/endless-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "x",
+                "y"
+            ]
+        },
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"
@@ -159,10 +183,17 @@
         "tags": ["frontend"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/muse-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "x",
+                "y"
+            ]
+        },
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"
@@ -176,6 +207,13 @@
         "tags": ["frontend", "backend"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/radicals-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "x",
+                "y"
+            ]
+        },
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
@@ -183,7 +221,7 @@
             { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
             { "id": "beatriz-ferreira", "roles": ["Coder", "Designer"] }
         ],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"
@@ -197,6 +235,13 @@
         "tags": ["frontend"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/alta-e-baixa-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "x",
+                "y"
+            ]
+        },
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
@@ -204,7 +249,7 @@
             { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
             { "id": "ana-gil", "roles": ["Designer"] }
         ],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"
@@ -218,6 +263,13 @@
         "tags": ["frontend", "backend"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/frames-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "x",
+                "y"
+            ]
+        },
         "link": "",
         "git": "",
         "tools": ["Unity", "Blender", "C#"],
@@ -225,7 +277,7 @@
             { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
             { "id": "joao-cristovao", "roles": ["Coder", "Designer"] }
         ],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"
@@ -239,6 +291,13 @@
         "tags": ["interaction-design", "generative"],
         "year": "2022",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/malleus-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "x",
+                "y"
+            ]
+        },
         "link": "",
         "git": "",
         "tools": ["Unity", "C#", "Python"],
@@ -247,7 +306,7 @@
             { "id": "joao-cristovao", "roles": ["Coder", "Designer"] },
             { "id": "luis-costa", "roles": ["Sound Designer", "Designer"] }
         ],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"
@@ -261,6 +320,13 @@
         "tags": ["interaction-design", "generative"],
         "year": "2022",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/waver-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "x",
+                "y"
+            ]
+        },
         "link": "",
         "git": "",
         "tools": ["Unity", "C#", "Python"],
@@ -269,7 +335,7 @@
             { "id": "margarida-mendonca", "roles": ["Coder", "Designer"] },
             { "id": "ema-lopes", "roles": ["Coder", "Designer"] }
         ],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"
@@ -283,6 +349,13 @@
         "tags": ["interaction-design", "generative"],
         "year": "2022",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/samar-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "x",
+                "y"
+            ]
+        },
         "link": "",
         "git": "",
         "tools": ["Unity", "C#", "Python"],
@@ -293,7 +366,7 @@
             { "id": "jolanta-pavliukovic", "roles": ["Designer"] },
             { "id": "pedro-mendes", "roles": ["Designer", "3D"] }
         ],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"
@@ -307,6 +380,13 @@
         "tags": ["generative", "animation"],
         "year": "2022",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/visualizers-thumbnail.webp",
+        "description": {
+            "type": "text",
+            "paragraphs": [
+                "x",
+                "y"
+            ]
+        },
         "link": "",
         "git": "",
         "tools": ["Unity", "C#", "Python"],
@@ -314,7 +394,7 @@
             { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
             { "id": "joao-cristovao", "roles": ["Coder", "Designer"] }
         ],
-        "layout": [
+        "media": [
             {
                 "type": "heading",
                 "text": "Title"

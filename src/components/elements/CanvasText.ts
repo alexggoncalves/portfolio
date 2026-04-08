@@ -2,7 +2,6 @@ import { Color, Vector2 } from "three";
 import useAsciiStore from "../../stores/asciiStore";
 
 import { Element } from "./Element";
-import type Color4 from "three/src/renderers/common/Color4.js";
 
 //------------------------------------------
 // Text Class
@@ -14,7 +13,7 @@ export class CanvasText extends Element {
     lineHeight: number;
     font: string;
     fontSize: number;
-    fontWeight: number
+    fontWeight: number;
 
     padding: number;
 
@@ -28,15 +27,18 @@ export class CanvasText extends Element {
         lineHeight: number,
         padding: number,
         color: Color,
-        bgColor?: Color4,
+        horizontalAlign?: "left" | "center" | "right",
+        verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        super(position, color, bgColor);
+        super(position, color, undefined, horizontalAlign, verticalAlign);
         this.isScrollable = true;
         this.font = font;
         this.fontSize = fontSize;
-        this.fontWeight = fontWeight
+        this.fontWeight = fontWeight;
         this.lineHeight = lineHeight;
         this.padding = padding;
+
+        this.applyAlignment();
 
         // Calculate width in pixels
         const charSize = useAsciiStore.getState().charSize;
@@ -46,7 +48,13 @@ export class CanvasText extends Element {
         this.lines = this.wrapText(text, width * charSize.x);
 
         // Calculate the height of the whole block
-        this.setSize(width, this.lines.length * this.lineHeight * fontSize, "grid");
+        this.setSize(
+            width,
+            this.lines.length * this.lineHeight * fontSize,
+            "grid",
+        );
+
+        
     }
 
     private static measureCtx: CanvasRenderingContext2D = (() => {
@@ -60,23 +68,22 @@ export class CanvasText extends Element {
         bgCtx: CanvasRenderingContext2D,
     ): void {
         const charSize = useAsciiStore.getState().charSize;
-        
+
         bgCtx.save();
         bgCtx.globalAlpha = this.opacity;
         bgCtx.fillStyle = "white";
         bgCtx.textBaseline = "top";
         bgCtx.textAlign = "left";
-        
+
         bgCtx.font = `${this.fontWeight} ${this.fontSize}px ${this.font}`;
 
         const position = {
-            x: this.pixelPosition.x + this.padding * charSize.x,
-            y: this.pixelPosition.y - this.pixelOffset.y,
+            x: Math.floor(this.pixelPosition.x + this.padding * charSize.x),
+            y: Math.floor(this.pixelPosition.y - this.pixelOffset.y),
         };
 
         let yOffset = 0;
         this.lines.forEach((line) => {
-            
             bgCtx.fillText(line, position.x, position.y + yOffset);
             yOffset += this.lineHeight * this.fontSize;
         });

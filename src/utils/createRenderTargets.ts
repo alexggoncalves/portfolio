@@ -31,7 +31,7 @@ export function createBackgroundRenderTarget(width: number, height: number) {
     canvas.height = height * dpr;
 
     const context = canvas.getContext("2d", { alpha: true })!;
-    // context.imageSmoothingEnabled = false;
+    context.imageSmoothingEnabled = true;
     // context.imageSmoothingQuality = "low";
 
     context.globalAlpha = 1;

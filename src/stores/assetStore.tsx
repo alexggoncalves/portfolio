@@ -28,7 +28,7 @@ export type VideoBlock = {
     alt?: string;
 };
 
-export type LayoutBlock =
+export type MediaBlock =
     | HeadingBlock
     | TextBlock
     | ImageBlock
@@ -65,11 +65,12 @@ export type Work = {
     tags: string[];
     year: string;
     thumbnailSrc: string;
+    description: TextBlock;
     link?: string;
     git?: string;
     tools: string[];
     team?: TeamMember[];
-    layout: LayoutBlock[];
+    media: MediaBlock[];
 
     thumbnail: CanvasImageSource | void;
     images: CanvasImageSource[];

@@ -7,7 +7,6 @@ import { Element } from "./Element";
 
 export class CanvasImage extends Element {
     image: HTMLImageElement; // Image to draw
-    imageSize: Vector2 = new Vector2(0, 0);
 
     loaded = false;
     radius: number;
