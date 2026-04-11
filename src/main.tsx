@@ -5,7 +5,7 @@ import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 
 import App from "./App.tsx";
-import ErrorElement from "./components/elements/ErrorElement.tsx";
+import ErrorElement from "./components/elements/ui/ErrorElement.tsx";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { StrictMode } from "react";

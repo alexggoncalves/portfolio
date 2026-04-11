@@ -3,7 +3,7 @@ import { Vector2 } from "three";
 import type { Work } from "../../../stores/assetStore";
 import { WorkCard } from "./WorkCard";
 
-import { Layer } from "./Layer";
+import { Layer } from "../../elements/core/Layer";
 
 //-------------------------------
 //          WORKS GRID LAYER
@@ -121,5 +121,6 @@ export class WorksGrid extends Layer {
     }
 
     destroy(): void {
+        super.destroy();
     }
 }

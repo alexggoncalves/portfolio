@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Vector2 } from "three";
 import useCursorStore from "../stores/pointerStore";
-import type { InteractiveElement } from "../components/elements/InteractiveElement";
+import type { InteractiveElement } from "../components/elements/core/InteractiveElement";
 
 function usePointer() {
     const pointerPosition = useRef<Vector2>(new Vector2(0));
@@ -21,7 +21,7 @@ function usePointer() {
     useEffect(() => {
         if (isDraggingHorizontally) {
             document.body.style.cursor = "w-resize";
-        } else if (hoverCount > 0) {
+        } else if (hoverCount > 0 && clickTarget.current?.hasPointerOnHover) {
             document.body.style.cursor = "pointer";
         } else {
             document.body.style.cursor = "default";

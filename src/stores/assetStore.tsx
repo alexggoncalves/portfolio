@@ -80,7 +80,7 @@ export type Work = {
 export type Icon = {
     id: string;
     src: string;
-    image: CanvasImageSource | void;
+    aspect: number;
 };
 
 //---------------------------------------------------------------------

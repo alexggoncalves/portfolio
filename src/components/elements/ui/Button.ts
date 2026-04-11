@@ -1,52 +1,50 @@
 import { Color, Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import useCursorStore from "../../stores/pointerStore";
-import { InteractiveElement } from "./InteractiveElement";
+import { InteractiveElement } from "../core/InteractiveElement";
 
 //------------------------------------------
 // Button Class
 //------------------------------------------
 
-export class ASCIIButton extends InteractiveElement {
-    text: string = ""; // Text to display on button
+export class Button extends InteractiveElement {
+    icon: HTMLImageElement;
     callback: () => void; // Button's function
-    resetCursorOnClick: boolean = true;
 
-    isCursorPointer = false;
-
-    mouseEnter: () => void;
-    mouseLeave: () => void;
+    name: string = "play";
 
     constructor(
-        text: string,
+        iconSrc: string,
         callback: () => void,
         position: Vector2,
-        color: Color,
-        backgroundColor: Color4,
+        w: number,
+        h: number,
+        color?: Color,
+        backgroundColor?: Color4,
 
+        resetCursorOnClick?: boolean,
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
-        size?: Vector2,
-        resetCursorOnClick?: boolean,
     ) {
         super(position, color, backgroundColor, horizontalAlign, verticalAlign);
+        this.setPosition(position.x, position.y, "pixel");
+        this.setSize(w, h, "pixel");
 
-        this.text = text;
         this.isInteractive = true;
+        this.hasPointerOnHover = true;
         this.callback = callback;
 
-        if (!size) {
-            this.setSize(this.text);
-        } else this.setSize(size.x, size.y, "grid");
+        this.icon = new Image();
+        this.icon.crossOrigin = "anonymous";
+        this.icon.src = iconSrc;
+        this.icon.onload = () => {
+            // this.loaded = true;
+        };
 
         this.applyAlignment();
 
         if (resetCursorOnClick != undefined)
             this.resetCursorOnClick = resetCursorOnClick;
-
-        this.mouseEnter = useCursorStore.getState().mouseEnter;
-        this.mouseLeave = useCursorStore.getState().mouseLeave;
     }
 
     drawButtonFrame(
@@ -63,28 +61,29 @@ export class ASCIIButton extends InteractiveElement {
         // Draw frame
         context.strokeRect(
             this.pixelPosition.x,
-            this.pixelPosition.y,
+            this.pixelPosition.y - this.pixelOffset.y,
             this.pixelSize.x,
             this.pixelSize.y,
         );
     }
 
-    update(): void {
-
-        if (this.isMouseOver && !this.isCursorPointer) {
-            this.mouseEnter();
-            this.isCursorPointer = true;
-        } else if (!this.isMouseOver && this.isCursorPointer) {
-            this.mouseLeave();
-            this.isCursorPointer = false;
-        }
-    }
+    // update(): void {
+    //     super.update();
+    // }
 
     draw(
-        ui: CanvasRenderingContext2D,
+        _ui: CanvasRenderingContext2D,
         background: CanvasRenderingContext2D,
     ): void {
-        this.drawBlock(this.text, ui, background);
+        if (this.icon) {
+            background.drawImage(
+                this.icon,
+                this.pixelPosition.x,
+                this.pixelPosition.y - this.pixelOffset.y,
+                this.pixelSize.x,
+                this.pixelSize.y,
+            );
+        }
 
         if (this.isMouseOver) {
             this.drawButtonFrame(2, background);
@@ -92,10 +91,18 @@ export class ASCIIButton extends InteractiveElement {
     }
 
     onClick(): void {
+        super.onClick();
         if (this.callback) this.callback();
+    }
 
-        if (this.resetCursorOnClick) {
-            this.mouseLeave();
+    destroy(): void {
+        if (this.icon) {
+            this.icon.onload = null;
+            this.icon.src = "";
         }
+        this.icon = null as any;
+        this.callback = undefined as any;
+
+        super.destroy()
     }
 }

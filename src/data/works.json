@@ -15,7 +15,7 @@
         },
         "link": "",
         "git": "https://github.com/alexggoncalves/endless-purrs",
-        "tools": ["Unity", "Blender", "C#"],
+        "tools": ["unity", "blender", "c-sharp"],
         "team": [
             { "id": "alexandre-goncalves", "roles": ["Designer", "Coder"] },
             { "id": "margarida-mendonca", "roles": ["Coder", "Designer"] },
@@ -33,17 +33,14 @@
                 "alt": "Endless Purrs - Game Screenshot 1"
             },
             {
-                "type": "image-pair",
-                "images": [
-                    {
-                        "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-2.png",
+                "type": "image",
+                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-2.png",
                         "alt": "Endless Purrs - Game Screenshot 2"
-                    },
-                    {
-                        "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-3.png",
+            },
+            {
+                "type": "image",
+                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-3.png",
                         "alt": "Endless Purrs - Game Screenshot 3"
-                    }
-                ]
             },
             {
                 "type": "image",

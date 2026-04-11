@@ -1,11 +1,11 @@
 import type { Color, Vector2 } from "three";
 import type Color4 from "three/src/renderers/common/Color4.js";
-import { Element } from "./Element";
+import { Element } from "../core/Element";
 
 //-----------------------------------------
 // Ascii Block Class
 //-----------------------------------------
-export class ASCIIBlock extends Element {
+export class AsciiBlock extends Element {
     text: string; // Ascii formated string
 
     constructor(

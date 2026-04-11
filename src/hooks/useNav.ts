@@ -1,7 +1,7 @@
 import { useEffect, useRef} from "react";
 
 import { useNavigate } from "react-router";
-import { Navigation } from "../components/elements/Navigation";
+import { Navigation } from "../components/elements/ui/Navigation";
 
 //---------------------------------------------------------------------
 // useNav (Hook): Initialize the navigation layer

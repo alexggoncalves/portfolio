@@ -8,8 +8,8 @@ import useAsciiRenderTargets from "../../hooks/useAsciiRenderTargets";
 import usePointer from "../../hooks/usePointer";
 import useGridCanvasSize from "../../hooks/useGridCanvasSize";
 import useAsciiStore from "../../stores/asciiStore";
-import type { Navigation } from "../elements/Navigation";
-import { InteractiveElement } from "../elements/InteractiveElement";
+import type { Navigation } from "../elements/ui/Navigation";
+import { InteractiveElement } from "../elements/core/InteractiveElement";
 import { getDistortedPosition } from "../../utils/getDistortedPosition";
 import { useRef } from "react";
 
@@ -89,6 +89,7 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
 
         // Get topmost hovered element
         let topHoveredElement: InteractiveElement | null = null;
+
         if (nav?.hoveredElement) {
             topHoveredElement = nav?.hoveredElement;
         } else if (nextPage && nextPage.hoveredElements?.length > 0) {

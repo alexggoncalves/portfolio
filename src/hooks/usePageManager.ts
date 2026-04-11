@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
-import { Page } from "../components/pages/layout/Page";
+import { Page } from "../components/elements/core/Page";
 
 import createPage from "../utils/createPage";
 import useContentStore from "../stores/assetStore";

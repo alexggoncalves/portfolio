@@ -1,13 +1,13 @@
 import { Color, Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { Element } from "./Element";
+import { Element } from "../core/Element";
 
 //-----------------------------------------
 // Ascii Text Class
 //-----------------------------------------
 
-export class ASCIIText extends Element {
+export class AsciiText extends Element {
     text: string; // Ascii formated string
 
     constructor(

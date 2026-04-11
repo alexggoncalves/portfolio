@@ -1,7 +1,7 @@
 import { Color, Vector2 } from "three";
-import useAsciiStore from "../../stores/asciiStore";
+import useAsciiStore from "../../../stores/asciiStore";
 
-import { Element } from "./Element";
+import { Element } from "../core/Element";
 
 //------------------------------------------
 // Text Class
@@ -69,8 +69,6 @@ export class CanvasText extends Element {
     ): void {
         const charSize = useAsciiStore.getState().charSize;
 
-        bgCtx.save();
-        bgCtx.globalAlpha = this.opacity;
         bgCtx.fillStyle = "white";
         bgCtx.textBaseline = "top";
         bgCtx.textAlign = "left";
@@ -88,7 +86,6 @@ export class CanvasText extends Element {
             yOffset += this.lineHeight * this.fontSize;
         });
 
-        bgCtx.restore();
     }
 
     wrapText(text: string, maxWidth: number) {

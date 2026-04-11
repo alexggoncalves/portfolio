@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import Color4 from "three/src/renderers/common/Color4.js";
-import type { Page } from "../components/pages/layout/Page";
+import type { Page } from "../components/elements/core/Page";
 
 export type NavigationSource = "home" | "work";
 

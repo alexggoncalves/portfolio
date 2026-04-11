@@ -1,8 +1,8 @@
 import { Color, Vector2 } from "three";
-import useAsciiStore from "../../stores/asciiStore";
+import useAsciiStore from "../../../stores/asciiStore";
 import Color4 from "three/src/renderers/common/Color4.js";
-import getColorString from "../../utils/color";
-import drawRoundRect from "../../utils/drawRoundRect";
+import getColorString from "../../../utils/color";
+import drawRoundRect from "../../../utils/drawRoundRect";
 
 const createBrightnessMap = (asciiSequence: string) => {
     const asciiArray = asciiSequence.split("");
@@ -42,7 +42,7 @@ export class Element {
 
     // Colors
     color: Color = new Color("white");
-    backgroundColor: Color4 = new Color4(0, 0, 0, 0);
+    backgroundColor: Color4 = new Color4(0);
     opacity: number;
 
     //Flags
@@ -75,8 +75,8 @@ export class Element {
     }
 
     checkBoundaries(pageY: number, pageHeight: number, pageWidth: number) {
-        this.isInsidePageBoundaries = true;
-        return;
+        // this.isInsidePageBoundaries = true;
+        // return;
 
         const left = this.pixelPosition.x - this.pixelOffset.x;
         const right =
@@ -133,6 +133,22 @@ export class Element {
         }
     }
 
+    setPosition(x: number, y: number, unit: "pixel" | "grid" = "grid"): void {
+        const charSize = useAsciiStore.getState().charSize;
+
+        if (unit === "pixel") {
+            this.pixelPosition.x = x;
+            this.pixelPosition.y = y;
+            this.gridPosition.x = Math.round(x / charSize.x);
+            this.gridPosition.y = Math.round(y / charSize.y);
+        } else if (unit === "grid") {
+            this.gridPosition.x = x;
+            this.gridPosition.y = y;
+            this.pixelPosition.x = x * charSize.x;
+            this.pixelPosition.y = y * charSize.y;
+        }
+    }
+
     setXOffset(value: number): void {
         this.gridOffset.x = value;
         this.pixelOffset.x = value * charSize.x;
@@ -161,7 +177,7 @@ export class Element {
         }
 
         if (this.verticalAlign === "bottom") {
-            this.gridPosition.y *= -1
+            this.gridPosition.y *= -1;
             offset.y = gridSize.y - this.gridSize.y;
         } else if (this.verticalAlign === "middle") {
             offset.y = (gridSize.y - this.gridSize.y) / 2;
@@ -178,12 +194,14 @@ export class Element {
     drawPixel(
         x: number,
         y: number,
-        color: Color4,
+        r: number,
+        g: number,
+        b: number,
+        brightnessValue: number,
         asciiCtx: CanvasRenderingContext2D,
     ): void {
         // Set color
-
-        asciiCtx.fillStyle = getColorString(color, this.opacity);
+        asciiCtx.fillStyle = `rgba(${r * 255 * this.opacity},${g * 255 * this.opacity},${b * 255 * this.opacity},${brightnessValue})`;
 
         // Clear and draw new character pixel
         asciiCtx.fillRect(x, y + this.gridOffset.y, 1, 1);
@@ -202,14 +220,12 @@ export class Element {
             x += positionOffset.x;
             y += positionOffset.y;
         }
-
         for (let i = 0; i < text.length; i++) {
             const char = text.charAt(i);
 
             if (char != "\n") {
                 //  Draw background pixel
                 if (this.backgroundColor.a != 0) {
-                    bgCtx.save();
                     this.drawBackgroundTexel(
                         x,
                         y,
@@ -218,23 +234,22 @@ export class Element {
                         this.backgroundColor,
                         bgCtx,
                     );
-                    bgCtx.restore();
                 }
 
                 if (char != "") {
-                    const brightness = this.getBrightnessFromChar(char);
+                    const brightnessValue = this.getBrightnessFromChar(char);
 
                     if (char !== undefined) {
-                        asciiCtx.save();
                         // Draw ui pixel with char brightness as opacity
-                        const color = new Color4(
+                        this.drawPixel(
+                            x,
+                            y,
                             this.color.r,
                             this.color.g,
                             this.color.b,
-                            brightness,
+                            brightnessValue,
+                            asciiCtx,
                         );
-                        this.drawPixel(x, y, color, asciiCtx);
-                        asciiCtx.restore();
                     }
                 }
                 x++;
@@ -246,19 +261,25 @@ export class Element {
     }
 
     drawASCIILine(
-        pointA: Vector2,
-        pointB: Vector2,
+        xA: number,
+        yA: number,
+        xB: number,
+        yB: number,
         strokeWidth: number,
-        color: Color4,
+        r: number,
+        g: number,
+        b: number,
+        brightnessValue: number,
+
         asciiCtx: CanvasRenderingContext2D,
     ): void {
         // Set color
-        asciiCtx.strokeStyle = getColorString(color, this.opacity);
+        asciiCtx.strokeStyle = `rgba(${r * 255 * this.opacity},${g * 255 * this.opacity},${b * 255 * this.opacity},${brightnessValue * this.opacity})`;
 
         asciiCtx.lineWidth = strokeWidth;
         asciiCtx.beginPath();
-        asciiCtx.moveTo(pointA.x - strokeWidth / 2, pointA.y);
-        asciiCtx.lineTo(pointB.x - strokeWidth / 2, pointB.y);
+        asciiCtx.moveTo(xA - strokeWidth / 2, yA);
+        asciiCtx.lineTo(xB - strokeWidth / 2, yB);
         asciiCtx.stroke();
     }
 
@@ -270,7 +291,6 @@ export class Element {
         color: Color4,
         bgCtx: CanvasRenderingContext2D,
     ): void {
-        bgCtx.globalAlpha = this.opacity;
         // Set ui color
         bgCtx.fillStyle = getColorString(color, this.opacity);
 
@@ -288,11 +308,8 @@ export class Element {
         color: Color4,
         bgCtx: CanvasRenderingContext2D,
     ): void {
-        bgCtx.save();
-
         // Set ui color
         bgCtx.beginPath();
-        bgCtx.globalAlpha = 1;
 
         if (radius > 0) {
             drawRoundRect(bgCtx, x, y, w, h, radius);
@@ -301,14 +318,14 @@ export class Element {
         }
 
         if (strokeOnly) {
-            bgCtx.strokeStyle = getColorString(color, this.opacity);
+            bgCtx.strokeStyle = "white";
             bgCtx.lineWidth = 2;
             bgCtx.stroke();
         } else {
             bgCtx.fillStyle = getColorString(color, this.opacity);
             bgCtx.fill();
         }
-        bgCtx.restore();
+        bgCtx.closePath()
     }
 
     getBrightnessFromChar(char: string): number {
@@ -322,13 +339,5 @@ export class Element {
         _bgCtx: CanvasRenderingContext2D,
     ): void {}
 
-    destroy(): void {
-        // Just remove references
-        this.pixelPosition = null as any;
-        this.pixelSize = null as any;
-        this.gridPosition = null as any;
-        this.gridSize = null as any;
-        this.gridOffset = null as any;
-        this.pixelOffset = null as any;
-    }
+    destroy(): void {}
 }

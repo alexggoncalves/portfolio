@@ -9,14 +9,22 @@
     },
     {
         "id": "blender",
-        "src": "https://cloud.alexgg.com/icons/blender.svg"
+        "src": "https://cloud.alexgg.com/icons/blender.svg",
+        "aspect": 3.3
     },
     {
         "id": "react",
-        "src": "https://cloud.alexgg.com/icons/react.svg"
+        "src": "https://cloud.alexgg.com/icons/react.svg",
+        "aspect": 2.7
     },
     {
         "id": "unity",
-        "src": "https://cloud.alexgg.com/icons/unity.svg"
+        "src": "https://cloud.alexgg.com/icons/unity.svg",
+        "aspect": 2.38
+    },
+    {
+        "id": "play",
+        "src": "/images/play.svg",
+        "aspect": 2.38
     }
 ]

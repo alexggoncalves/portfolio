@@ -1,12 +1,12 @@
 import type { Color, Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
-import { brightnessMap, Element } from "./Element";
+import { brightnessMap, Element } from "../core/Element";
 
 //-----------------------------------------
 // Ascii Line Class
 //-----------------------------------------
 
-export class ASCIILine extends Element {
+export class AsciiLine extends Element {
     char: string; // character for the line
     pointA: Vector2;
     pointB: Vector2;
@@ -37,20 +37,18 @@ export class ASCIILine extends Element {
         asciiCtx: CanvasRenderingContext2D,
         _bgCtx: CanvasRenderingContext2D,
     ): void {
-        const brightness = brightnessMap.get(this.char);
+        const brightness = brightnessMap.get(this.char) || 0;
 
-        const color = new Color4(
+        this.drawASCIILine(
+            this.pointA.x,
+            this.pointA.y,
+            this.pointB.x,
+            this.pointB.y,
+            this.strokeWidth,
             this.color.r,
             this.color.g,
             this.color.b,
             brightness,
-        );
-
-        this.drawASCIILine(
-            this.pointA,
-            this.pointB,
-            this.strokeWidth,
-            color,
             asciiCtx,
         );
     }

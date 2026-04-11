@@ -1,11 +1,11 @@
 import { Color, MathUtils, Vector2 } from "three";
 
-import { Layer } from "./Layer";
+import { Layer } from "../../elements/core/Layer";
 
 import type { Work } from "../../../stores/assetStore";
-import { WorkCard } from "./WorkCard";
-import { CanvasText } from "../../elements/CanvasText";
-import { FadeGradient } from "../../elements/FadeGradient";
+import { WorkCard } from "../projects/WorkCard";
+import { CanvasText } from "../../elements/canvas/CanvasText";
+import { FadeGradient } from "../../elements/canvas/FadeGradient";
 import useSceneStore from "../../../stores/sceneStore";
 import useAsciiStore from "../../../stores/asciiStore";
 import usePointerStore from "../../../stores/pointerStore";
@@ -232,5 +232,12 @@ export class WorksRow extends Layer {
             // Add card to the grid
             this.addElement(card);
         });
+    }
+
+    destroy(): void {
+        this.cards.forEach((c) => c.destroy?.());
+        this.cards = [];
+        
+        super.destroy();
     }
 }

@@ -4,8 +4,8 @@ import { MathUtils } from "three";
 import { clamp } from "three/src/math/MathUtils.js";
 import useAsciiStore from "../../../stores/asciiStore";
 import useSceneStore from "../../../stores/sceneStore";
-import type { InteractiveElement } from "../../elements/InteractiveElement";
-import { WorksRow } from "./WorksRow";
+import type { InteractiveElement } from "./InteractiveElement";
+import { WorksRow } from "../../pages/homepage/WorksRow";
 
 //----------------------------------
 // PAGE CLASS
@@ -68,13 +68,24 @@ export class Page {
                     this.hoveredElements.push(element);
             });
         });
+
+        if (this.hoveredElements.length > 0) {
+            this.hoveredElements.sort((a, b) => b.zIndex - a.zIndex);
+        }
     }
 
     draw(asciiCtx: CanvasRenderingContext2D, bgCtx: CanvasRenderingContext2D) {
         // Draw layer
+        asciiCtx.save();
+        bgCtx.save();
+        bgCtx.globalAlpha = this.opacity;
+        asciiCtx.globalAlpha = this.opacity;
         this.layers.forEach((layer: Layer) => {
             layer.draw(asciiCtx, bgCtx, this.opacity);
         });
+
+        asciiCtx.restore();
+        bgCtx.restore();
     }
 
     protected setPageHeight(height: number) {
@@ -163,6 +174,7 @@ export class Page {
 
         // Remove callbacks
         this.onFadeOutComplete = undefined;
-        this.goTo = () => {};
+
+        this.goTo = undefined as any;
     }
 }

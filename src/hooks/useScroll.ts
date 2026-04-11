@@ -102,7 +102,7 @@ function useScroll() {
                 : 0.96
             : 0.9;
 
-        const isActive = isTouch.current ? isFingerDown.current : false;
+        // const isActive = isTouch.current ? isFingerDown.current : false;
 
         // if (!isActive) {
             velocityRef.current *= decay;

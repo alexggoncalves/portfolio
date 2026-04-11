@@ -1,4 +1,5 @@
 // import HomeScene from "./HomeScene";
+import HomeScene from "./HomeScene";
 import NamePlate from "./NamePlate";
 
 function SceneRenderer() {
@@ -24,7 +25,7 @@ function SceneRenderer() {
             {/* My big animated name that also serves as the small header logo */}
             <NamePlate text={"ALEX"}/>
 
-            {/* <HomeScene></HomeScene> */}
+            <HomeScene></HomeScene>
 
         </>
     );

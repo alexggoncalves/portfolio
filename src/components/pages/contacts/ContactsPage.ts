@@ -1,7 +1,7 @@
-import { Page } from "./layout/Page";
-import { Layer } from "./layout/Layer";
+import { Page } from "../../elements/core/Page";
+import { Layer } from "../../elements/core/Layer";
 import { Vector2, Color } from "three";
-import { ASCIIBlock } from "../elements/ASCIIBlock";
+import { AsciiBlock } from "../../elements/ascii/AsciiBlock";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 const title = `CONTACTS`;
@@ -19,7 +19,7 @@ export class ContactsPage extends Page {
         const mainLayer = new Layer("contacts", []);
 
         mainLayer.addElement(
-            new ASCIIBlock(
+            new AsciiBlock(
                 this.isMobile ? titleMobile : title,
                 new Vector2(5, 4),
                 new Color("white"),
@@ -30,5 +30,9 @@ export class ContactsPage extends Page {
         );
 
         this.layers.push(mainLayer);
+    }
+
+    destroy(): void {
+        super.destroy();
     }
 }

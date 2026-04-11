@@ -1,9 +1,9 @@
-import { HomePage } from "../components/pages/HomePage";
-import { WorkPage } from "../components/pages/WorksPage";
-import { ContactsPage } from "../components/pages/ContactsPage";
-import { WorkDetailsPage } from "../components/pages/WorkDetailsPage";
+import { HomePage } from "../components/pages/homepage/HomePage";
+import { WorkPage } from "../components/pages/projects/WorksPage";
+import { ContactsPage } from "../components/pages/contacts/ContactsPage";
+import { WorkDetailsPage } from "../components/pages/projects/WorkDetailsPage";
 import type { Work } from "../stores/assetStore";
-import { Page } from "../components/pages/layout/Page";
+import { Page } from "../components/elements/core/Page";
 
 //------------------------------------------------------------------------
 // Create ASCII page: Initilializes an instance of the page to load

@@ -1,8 +1,6 @@
-import { Vector2 } from "three";
+import { Color, Vector2 } from "three";
 import type { Tag } from "../../../stores/assetStore";
 // import useAsciiStore from "../../../stores/asciiStore";
-import getColorString from "../../../utils/color";
-import Color4 from "three/src/renderers/common/Color4.js";
 import drawRoundRect from "../../../utils/drawRoundRect";
 
 class TagLabel {
@@ -11,7 +9,7 @@ class TagLabel {
     xOffset: number = 0;
 
     size: Vector2 | null = null;
-    tag: Tag;
+    tagName: string;
     textSize: Vector2 = new Vector2(0);
     textFont: string = "IBM Plex Mono";
     textWeight: number = 300;
@@ -19,7 +17,12 @@ class TagLabel {
     opacity: number = 1;
     padding: Vector2;
 
+    textColor: string = `rgba(255,255,255,1)`;
+    tagColor: string;
+    textStyle: string;
+
     isOpen = false;
+    
 
     constructor(
         tag: Tag,
@@ -27,10 +30,13 @@ class TagLabel {
         textHeight: number,
         padding: Vector2,
     ) {
-        this.tag = tag;
+        this.tagName = tag.name.toUpperCase();
         this.position = position;
         this.textSize.y = textHeight;
         this.padding = padding;
+        const color = new Color(tag.color);
+        this.tagColor = `rgba(${color.r * 255},${color.g * 255},${color.b * 255},0.7)`;
+        this.textStyle = `${this.textWeight} ${this.textSize.y}px ${this.textFont}`
     }
 
     getTagHeight() {
@@ -41,10 +47,8 @@ class TagLabel {
 
     draw(bgCtx: CanvasRenderingContext2D) {
         // const { charSize } = useAsciiStore.getState();
-        bgCtx.save();
-
         // Set text properties
-        bgCtx.font = `${this.textWeight} ${this.textSize.y}px ${this.textFont}`;
+        bgCtx.font = this.textStyle;
         bgCtx.textRendering = "optimizeLegibility";
         bgCtx.textAlign = "center";
         bgCtx.textBaseline = "middle";
@@ -55,7 +59,8 @@ class TagLabel {
             this.size = this.calculateTagSize(bgCtx);
         }
 
-        const x = this.position.x - this.xOffset - this.size.x + this.textSize.y / 2;
+        const x =
+            this.position.x - this.xOffset - this.size.x + this.textSize.y / 2;
         const y = this.position.y - this.yOffset - this.textSize.y / 2;
 
         // Draw cross
@@ -67,30 +72,19 @@ class TagLabel {
 
         // Draw background and text
         if (this.isOpen) {
-            bgCtx.fillStyle = getColorString(
-                new Color4(this.tag.color),
-                this.opacity * 0.8,
-            );
+            bgCtx.fillStyle = this.tagColor;
             // Draw container
-            drawRoundRect(
-                bgCtx,
-                x,
-                y,
-                this.size.x,
-                this.size.y,
-                10,
-            );
+            drawRoundRect(bgCtx, x, y, this.size.x, this.size.y, 10);
+            bgCtx.fill()
 
             // Draw text
-            bgCtx.fillStyle = getColorString(new Color4("white"), this.opacity);
+            bgCtx.fillStyle = this.textColor;
             bgCtx.fillText(
-                this.tag.name.toUpperCase(),
+                this.tagName,
                 x + this.textSize.x / 2 + this.padding.x,
                 y + this.textSize.y / 2 + this.padding.y,
             );
         }
-
-        bgCtx.restore();
     }
 
     drawCross(bgCtx: CanvasRenderingContext2D, x: number, y: number) {
@@ -99,19 +93,13 @@ class TagLabel {
         const radius = this.size.y * Math.cos(Math.PI / 3) - 4.4;
 
         bgCtx.beginPath();
-        bgCtx.lineWidth = devicePixelRatio * 3;
+        bgCtx.lineWidth = 3;
         bgCtx.lineCap = "round";
 
         if (this.isOpen) {
-            bgCtx.strokeStyle = `${getColorString(
-                new Color4("white"),
-                this.opacity,
-            )}`;
+            bgCtx.strokeStyle = this.textColor;
         } else {
-            bgCtx.strokeStyle = `${getColorString(
-                new Color4(this.tag.color),
-                this.opacity * 0.9,
-            )}`;
+            bgCtx.strokeStyle = this.tagColor;
         }
         bgCtx.moveTo(x - radius, y - radius);
         bgCtx.lineTo(x + radius, y + radius);
@@ -124,7 +112,7 @@ class TagLabel {
     }
 
     calculateTagSize(ctx: CanvasRenderingContext2D): Vector2 {
-        this.textSize.x = ctx.measureText(this.tag.name.toUpperCase()).width;
+        this.textSize.x = ctx.measureText(this.tagName).width;
         const width = this.textSize.x + this.padding.x * 2 + this.textSize.y;
         return new Vector2(width, this.getTagHeight());
     }

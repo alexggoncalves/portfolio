@@ -1,12 +1,12 @@
-import { Page } from "./layout/Page";
+import { Page } from "../../elements/core/Page";
 import { Vector2 } from "three";
-import type { Work } from "../../stores/assetStore";
+import type { Work } from "../../../stores/assetStore";
 
-import { WorksGrid } from "./layout/WorksGrid";
-import useAsciiStore from "../../stores/asciiStore";
-import { Layer } from "./layout/Layer";
-import { FadeGradient } from "../elements/FadeGradient";
-import useSceneStore from "../../stores/sceneStore";
+import { WorksGrid } from "./WorksGrid";
+import useAsciiStore from "../../../stores/asciiStore";
+import { Layer } from "../../elements/core/Layer";
+import { FadeGradient } from "../../elements/canvas/FadeGradient";
+import useSceneStore from "../../../stores/sceneStore";
 
 export class WorkPage extends Page {
     works: Work[] = [];
@@ -65,5 +65,9 @@ export class WorkPage extends Page {
         );
 
         this.layers.push(gradientLayer);
+    }
+
+    destroy(): void {
+        super.destroy();
     }
 }

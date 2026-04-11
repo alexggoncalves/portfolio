@@ -1,6 +1,6 @@
 import "./styles/css/App.css";
 
-import ErrorElement from "./components/elements/ErrorElement";
+import ErrorElement from "./components/elements/ui/ErrorElement";
 
 import { Outlet, useLocation, useRouteError } from "react-router";
 import { useEffect, useState } from "react";

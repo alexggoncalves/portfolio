@@ -1,5 +1,5 @@
-import type { Element } from "../../elements/Element";
-import { InteractiveElement } from "../../elements/InteractiveElement";
+import type { Element } from "./Element";
+import { InteractiveElement } from "./InteractiveElement";
 //-------------------------------
 //          LAYER CLASS
 //-------------------------------
@@ -12,7 +12,6 @@ export class Layer {
     isScrollable: boolean = false;
     isDraggable: boolean = false;
 
-    parent?: HTMLElement;
     goTo?: (path: string) => void;
 
     constructor(
@@ -95,5 +94,7 @@ export class Layer {
         // Destroy interactive elements
         this.interactiveElements.forEach((e) => e.destroy());
         this.interactiveElements = [];
+
+        this.goTo = undefined;
     }
 }

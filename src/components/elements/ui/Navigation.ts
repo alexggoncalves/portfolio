@@ -1,14 +1,17 @@
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
-import { Layer } from "../pages/layout/Layer";
-import { ASCIIButton } from "./ASCIIButton";
-import type { InteractiveElement } from "./InteractiveElement";
+import { Layer } from "../core/Layer";
+import { AsciiButton } from "../ascii/AsciiButton";
+import type { InteractiveElement } from "../core/InteractiveElement";
 
 //-------------------------------
 //          FRAME LAYER
 //-------------------------------
 
 export class Navigation extends Layer {
+    color: Color = new Color("white");
+    backgroundColor: Color4 = new Color4(0, 0.4, 0.4, 0);
+
     goTo: (path: string) => void;
 
     hoveredElement: InteractiveElement | null = null;
@@ -20,12 +23,12 @@ export class Navigation extends Layer {
 
     init(isMobile?: boolean): void {
         this.addElement(
-            new ASCIIButton(
+            new AsciiButton(
                 "home",
                 () => this.goTo("/"),
                 isMobile ? new Vector2(-4, -8) : new Vector2(-4, 3),
-                new Color("white"),
-                new Color4(0, 0.4, 0.4, 0),
+                this.color,
+                this.backgroundColor,
                 "right",
                 isMobile ? "bottom" : "top",
                 undefined,
@@ -34,12 +37,12 @@ export class Navigation extends Layer {
         );
 
         this.addElement(
-            new ASCIIButton(
+            new AsciiButton(
                 "work",
                 () => this.goTo("/work"),
                 isMobile ? new Vector2(-4, -6) : new Vector2(-4, 5),
-                new Color("white"),
-                new Color4(0, 0.4, 0.4, 0),
+                this.color,
+                this.backgroundColor,
                 "right",
                 isMobile ? "bottom" : "top",
                 undefined,
@@ -48,12 +51,12 @@ export class Navigation extends Layer {
         );
 
         this.addElement(
-            new ASCIIButton(
+            new AsciiButton(
                 "contacts",
                 () => this.goTo("/contacts"),
                 isMobile ? new Vector2(-4, -4) : new Vector2(-4, 7),
-                new Color("white"),
-                new Color4(0, 0.4, 0.4, 0),
+                this.color,
+                this.backgroundColor,
                 "right",
                 isMobile ? "bottom" : "top",
                 undefined,

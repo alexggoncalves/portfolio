@@ -1,7 +1,7 @@
 import { Color, Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { Element } from "./Element";
+import { Element } from "../core/Element";
 
 type Bounds = {
     left: number;
@@ -14,7 +14,7 @@ type Bounds = {
 // Ascii Frame Class
 //------------------------------------------
 
-export class ASCIIScreenFrame extends Element {
+export class AsciiScreenFrame extends Element {
     constructor(color: Color, backgroundColor: Color4) {
         super(new Vector2(0, 0), color, backgroundColor);
     }
@@ -36,7 +36,7 @@ export class ASCIIScreenFrame extends Element {
     update(): void {}
 }
 
-export class ASCIITitleFrame extends Element {
+export class AsciiTileFrame extends Element {
     char: string;
     title: string;
     bounds: Bounds;
