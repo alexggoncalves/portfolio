@@ -2,10 +2,10 @@ import { OBJLoader } from "three/addons/loaders/OBJLoader.js";
 import { useLoader } from "@react-three/fiber";
 import { MTLLoader } from "three/addons/loaders/MTLLoader.js";
 
-import { Mesh } from "three";
+import { Group, Mesh } from "three";
 
 import { useFrame } from "@react-three/fiber";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 type RotatingModelProps = {
     children: React.ReactNode;
@@ -20,7 +20,7 @@ export const RotatingModel = ({
     ySpeed = 0,
     position = [0, 0, 0],
 }: RotatingModelProps) => {
-    const ref = useRef<Mesh>(null!);
+    const ref = useRef<Group>(null!);
 
     useFrame((_state, delta) => {
         ref.current.rotation.x += delta * xSpeed; // rotate on X
@@ -53,14 +53,15 @@ export const OBJModel = ({
         loader.setMaterials(materials);
     });
 
-    object.traverse((child) => {
-        console.log(child);
-        if ((child as Mesh).isMesh) {
-            const mesh = child as Mesh;
-            mesh.castShadow = true;
-            mesh.receiveShadow = true;
-        }
-    });
+    useEffect(() => {
+        object.traverse((child) => {
+            if ((child as Mesh).isMesh) {
+                const mesh = child as Mesh;
+                mesh.castShadow = true;
+                mesh.receiveShadow = true;
+            }
+        });
+    }, [object]);
 
     return (
         <primitive

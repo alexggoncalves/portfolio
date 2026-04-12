@@ -22,47 +22,50 @@ export class Navigation extends Layer {
     }
 
     init(isMobile?: boolean): void {
-        this.addElement(
-            new AsciiButton(
-                "home",
-                () => this.goTo("/"),
-                isMobile ? new Vector2(-4, -8) : new Vector2(-4, 3),
-                this.color,
-                this.backgroundColor,
-                "right",
-                isMobile ? "bottom" : "top",
-                undefined,
-                false,
-            ),
-        );
+        let xOffset = -5;
 
-        this.addElement(
-            new AsciiButton(
-                "work",
-                () => this.goTo("/work"),
-                isMobile ? new Vector2(-4, -6) : new Vector2(-4, 5),
-                this.color,
-                this.backgroundColor,
-                "right",
-                isMobile ? "bottom" : "top",
-                undefined,
-                false,
-            ),
-        );
+        
 
-        this.addElement(
-            new AsciiButton(
-                "contacts",
-                () => this.goTo("/contacts"),
-                isMobile ? new Vector2(-4, -4) : new Vector2(-4, 7),
-                this.color,
-                this.backgroundColor,
-                "right",
-                isMobile ? "bottom" : "top",
-                undefined,
-                false,
-            ),
+        const contactsButton = new AsciiButton(
+            "contacts",
+            () => this.goTo("/contacts"),
+            isMobile ? new Vector2(xOffset, -4) : new Vector2(xOffset, 3),
+            this.color,
+            this.backgroundColor,
+            "right",
+            isMobile ? "bottom" : "top",
+            undefined,
+            false,
         );
+        this.addElement(contactsButton);
+
+        xOffset -= contactsButton.gridSize.x + 3;
+        const projectsButton = new AsciiButton(
+            "projects",
+            () => this.goTo("/projects"),
+            isMobile ? new Vector2(-4, -6) : new Vector2(xOffset, 3),
+            this.color,
+            this.backgroundColor,
+            "right",
+            isMobile ? "bottom" : "top",
+            undefined,
+            false,
+        );
+        this.addElement(projectsButton);
+        xOffset -= projectsButton.gridSize.x + 3;
+
+        const homeButton = new AsciiButton(
+            "home",
+            () => this.goTo("/"),
+            isMobile ? new Vector2(-4, -8) : new Vector2(xOffset, 3),
+            this.color,
+            this.backgroundColor,
+            "right",
+            isMobile ? "bottom" : "top",
+            undefined,
+            false,
+        );
+        this.addElement(homeButton);
     }
 
     resetHoverStates() {

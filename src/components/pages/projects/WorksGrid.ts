@@ -82,7 +82,7 @@ export class WorksGrid extends Layer {
                 10,
                 40,
                 this.goTo,
-                "work",
+                "projects",
                 
             );
 

@@ -1,8 +1,8 @@
 import { Color, Vector2 } from "three";
-import useAsciiStore from "../../../stores/asciiStore";
 import Color4 from "three/src/renderers/common/Color4.js";
 import getColorString from "../../../utils/color";
 import drawRoundRect from "../../../utils/drawRoundRect";
+import { RenderConfig } from "../../render/RenderConfig";
 
 const createBrightnessMap = (asciiSequence: string) => {
     const asciiArray = asciiSequence.split("");
@@ -17,21 +17,17 @@ const createBrightnessMap = (asciiSequence: string) => {
     return map;
 };
 
-export const brightnessMap = createBrightnessMap(
-    useAsciiStore.getState().asciiSequence,
-);
-
-const charSize = useAsciiStore.getState().charSize;
+export const brightnessMap = createBrightnessMap(RenderConfig.asciiSequence);
 
 //-----------------------------------------
 // ELEMENT CLASS
 //-----------------------------------------
 
 export class Element {
+    //
     gridPosition: Vector2; // Position in grid units
-    gridSize: Vector2 = new Vector2(1); // Size in grid units
-
     pixelPosition: Vector2; // Position in pixel units
+    gridSize: Vector2 = new Vector2(1); // Size in grid units
     pixelSize: Vector2 = new Vector2(1); // Size in pixel units
 
     gridOffset: Vector2 = new Vector2(0); // scroll offset in grid units
@@ -53,6 +49,8 @@ export class Element {
 
     name: string = "";
 
+    private _offset = new Vector2();
+
     constructor(
         position: Vector2,
         color?: Color,
@@ -62,8 +60,8 @@ export class Element {
     ) {
         this.gridPosition = position;
         this.pixelPosition = new Vector2(
-            position.x * charSize.x,
-            position.y * charSize.y,
+            position.x * RenderConfig.charSize.x,
+            position.y * RenderConfig.charSize.y,
         );
 
         this.opacity = 0;
@@ -100,8 +98,6 @@ export class Element {
         arg2?: number,
         arg3?: "pixel" | "grid",
     ): void {
-        const charSize = useAsciiStore.getState().charSize;
-
         if (typeof arg1 === "string") {
             const lines = (arg1.match(/\n/g) || "").length + 1;
             const maxlength = Math.max(
@@ -110,8 +106,8 @@ export class Element {
             this.gridSize.x = maxlength;
             this.gridSize.y = lines;
 
-            this.pixelSize.x = this.gridSize.x * charSize.x;
-            this.pixelSize.y = this.gridSize.y * charSize.y;
+            this.pixelSize.x = this.gridSize.x * RenderConfig.charSize.x;
+            this.pixelSize.y = this.gridSize.y * RenderConfig.charSize.y;
         } else {
             if (arg3 === "grid") {
                 this.gridSize.x = arg1;
@@ -119,44 +115,42 @@ export class Element {
                 if (arg2) {
                     this.gridSize.y = arg2;
                 }
-                this.pixelSize.x = this.gridSize.x * charSize.x;
-                this.pixelSize.y = this.gridSize.y * charSize.y;
+                this.pixelSize.x = this.gridSize.x * RenderConfig.charSize.x;
+                this.pixelSize.y = this.gridSize.y * RenderConfig.charSize.y;
             } else if (arg3 === "pixel") {
                 this.pixelSize.x = arg1;
 
                 if (arg2) {
                     this.pixelSize.y = arg2;
                 }
-                this.gridSize.x = this.pixelSize.x / charSize.x;
-                this.gridSize.y = this.pixelSize.y / charSize.y;
+                this.gridSize.x = this.pixelSize.x / RenderConfig.charSize.x;
+                this.gridSize.y = this.pixelSize.y / RenderConfig.charSize.y;
             }
         }
     }
 
     setPosition(x: number, y: number, unit: "pixel" | "grid" = "grid"): void {
-        const charSize = useAsciiStore.getState().charSize;
-
         if (unit === "pixel") {
             this.pixelPosition.x = x;
             this.pixelPosition.y = y;
-            this.gridPosition.x = Math.round(x / charSize.x);
-            this.gridPosition.y = Math.round(y / charSize.y);
+            this.gridPosition.x = Math.round(x / RenderConfig.charSize.x);
+            this.gridPosition.y = Math.round(y / RenderConfig.charSize.y);
         } else if (unit === "grid") {
             this.gridPosition.x = x;
             this.gridPosition.y = y;
-            this.pixelPosition.x = x * charSize.x;
-            this.pixelPosition.y = y * charSize.y;
+            this.pixelPosition.x = x * RenderConfig.charSize.x;
+            this.pixelPosition.y = y * RenderConfig.charSize.y;
         }
     }
 
     setXOffset(value: number): void {
         this.gridOffset.x = value;
-        this.pixelOffset.x = value * charSize.x;
+        this.pixelOffset.x = value * RenderConfig.charSize.x;
     }
 
     setYOffset(value: number): void {
         this.gridOffset.y = value;
-        this.pixelOffset.y = value * charSize.y;
+        this.pixelOffset.y = value * RenderConfig.charSize.y;
     }
 
     setOpacity(value: number): void {
@@ -165,29 +159,28 @@ export class Element {
 
     // Apply horizontal and vertical alignment
     applyAlignment() {
-        const gridSize = useAsciiStore.getState().gridSize;
-        const charSize = useAsciiStore.getState().charSize;
 
-        const offset = new Vector2(0, 0);
+        const offset = this._offset;
+        offset.set(0, 0);
 
         if (this.horizontalAlign === "right") {
-            offset.x = gridSize.x - this.gridSize.x;
+            offset.x = RenderConfig.gridSize.x - this.gridSize.x;
         } else if (this.horizontalAlign === "center") {
-            offset.x = Math.floor((gridSize.x - this.gridSize.x) / 2);
+            offset.x = Math.floor((RenderConfig.gridSize.x - this.gridSize.x) / 2);
         }
 
         if (this.verticalAlign === "bottom") {
             this.gridPosition.y *= -1;
-            offset.y = gridSize.y - this.gridSize.y;
+            offset.y = RenderConfig.gridSize.y - this.gridSize.y;
         } else if (this.verticalAlign === "middle") {
-            offset.y = (gridSize.y - this.gridSize.y) / 2;
+            offset.y = (RenderConfig.gridSize.y - this.gridSize.y) / 2;
         }
 
         this.gridPosition.x += offset.x;
         this.gridPosition.y += offset.y;
 
-        this.pixelPosition.x = this.gridPosition.x * charSize.x;
-        this.pixelPosition.y = this.gridPosition.y * charSize.y;
+        this.pixelPosition.x = this.gridPosition.x * RenderConfig.charSize.x;
+        this.pixelPosition.y = this.gridPosition.y * RenderConfig.charSize.y;
     }
 
     // Paint pixel on ui canvas
@@ -229,8 +222,8 @@ export class Element {
                     this.drawBackgroundTexel(
                         x,
                         y,
-                        charSize.x,
-                        charSize.y,
+                        RenderConfig.charSize.x,
+                        RenderConfig.charSize.y,
                         this.backgroundColor,
                         bgCtx,
                     );
@@ -325,7 +318,7 @@ export class Element {
             bgCtx.fillStyle = getColorString(color, this.opacity);
             bgCtx.fill();
         }
-        bgCtx.closePath()
+        bgCtx.closePath();
     }
 
     getBrightnessFromChar(char: string): number {

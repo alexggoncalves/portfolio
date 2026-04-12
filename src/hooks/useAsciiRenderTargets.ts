@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Vector2, type Texture } from "three";
-import useAsciiStore from "../stores/asciiStore";
+import { type Texture } from "three";
 import { useThree } from "@react-three/fiber";
 import {
     createAsciiRenderTarget,
@@ -8,9 +7,11 @@ import {
 } from "../utils/createRenderTargets";
 import type Color4 from "three/src/renderers/common/Color4.js";
 
+import { RenderConfig } from "../components/render/RenderConfig";
+import { AppState } from "../components/render/AppState";
+
 function useAsciiRenderTargets() {
     const { size } = useThree();
-    const { charSize, setGridSize, setTextures } = useAsciiStore();
 
     const ascii = useRef<{
         texture: Texture | null;
@@ -24,8 +25,8 @@ function useAsciiRenderTargets() {
 
     useEffect(() => {
         // Calculate ascii grid size
-        const gridWidth = size.width / charSize.x;
-        const gridHeight = size.height / charSize.y;
+        const gridWidth = size.width / RenderConfig.charSize.x;
+        const gridHeight = size.height / RenderConfig.charSize.y;
 
         // Create a render target to draw ASCII on the GPU
         const uiRenderTarget = createAsciiRenderTarget(gridWidth, gridHeight);
@@ -45,10 +46,11 @@ function useAsciiRenderTargets() {
             texture: bgRenderTarget.texture,
             context: bgRenderTarget.context,
         };
+        
+        AppState.setBackground(bgRenderTarget.texture);
+        AppState.setUI(uiRenderTarget.texture);
 
-        setGridSize(new Vector2(gridWidth, gridHeight));
-        setTextures(bgRenderTarget.texture, uiRenderTarget.texture);
-    }, [size.width, size.height, charSize.x, charSize.y]);
+    }, [size.width, size.height]);
 
     const clearRenderTargets = (
         uiContext: CanvasRenderingContext2D,

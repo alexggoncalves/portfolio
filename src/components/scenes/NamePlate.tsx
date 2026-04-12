@@ -1,10 +1,10 @@
 import { Text3D } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
-import useAsciiStore from "../../stores/asciiStore";
 import { useFrame, useThree } from "@react-three/fiber";
 import getWorldPosition from "../../utils/getWorldPosition";
 import { Vector3 } from "three";
 import getWorldScale, { getObjectSize } from "../../utils/getWorldScale";
+import { RenderConfig } from "../render/RenderConfig";
 // import useSceneStore from "../../stores/sceneStore";
 
 function NamePlate({ text }: { text: string }) {
@@ -17,8 +17,6 @@ function NamePlate({ text }: { text: string }) {
     const wordRef = useRef<any>(null);
     const groupRef = useRef<any>(null);
     const baseSize = useRef<Vector3 | null>(null);
-
-    const { gridSize, charSize } = useAsciiStore();
 
     const logoState = useMemo(() => {
         return {
@@ -54,7 +52,7 @@ function NamePlate({ text }: { text: string }) {
             camera,
             size,
             "grid",
-            gridSize,
+            RenderConfig.gridSize,
         );
 
         const worldScale = getWorldScale(
@@ -64,7 +62,7 @@ function NamePlate({ text }: { text: string }) {
             camera,
             size,
             "grid",
-            charSize,
+            RenderConfig.charSize,
         );
 
         // setScrollPosition(scrollPosition + delta)

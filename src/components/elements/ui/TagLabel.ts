@@ -1,6 +1,5 @@
 import { Color, Vector2 } from "three";
 import type { Tag } from "../../../stores/assetStore";
-// import useAsciiStore from "../../../stores/asciiStore";
 import drawRoundRect from "../../../utils/drawRoundRect";
 
 class TagLabel {

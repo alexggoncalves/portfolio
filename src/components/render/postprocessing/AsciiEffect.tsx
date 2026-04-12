@@ -1,8 +1,9 @@
-import { CanvasTexture, Texture, Uniform, Vector2 } from "three";
-import { useMemo, forwardRef } from "react";
+import { Texture, Uniform, Vector2 } from "three";
+import { useMemo, forwardRef, useRef } from "react";
 import { BlendFunction, Effect } from "postprocessing";
 import { TextureLoader } from "three";
-import { useLoader } from "@react-three/fiber";
+import { useFrame, useLoader } from "@react-three/fiber";
+import { AppState } from "../AppState";
 
 // import { useControls } from "leva";
 
@@ -91,7 +92,7 @@ class AsciiEffectImpl extends Effect {
         backgroundTexture,
         charSize,
         atlasGridSize,
-        gridSize
+        gridSize,
     }: AsciiEffectProps) {
         super("AsciiEffect", fragmentShader, {
             blendFunction: BlendFunction.NORMAL,
@@ -115,43 +116,46 @@ export const AsciiEffect = forwardRef(
             fontAtlasSrc,
             charSize,
             atlasGridSize,
-            uiTexture,
-            backgroundTexture,
-            gridSize
+            gridSize,
         }: {
             fontAtlasSrc: string;
             charSize: Vector2;
             atlasGridSize: Vector2;
-            uiTexture: CanvasTexture;
-            backgroundTexture: CanvasTexture;
-            gridSize: Vector2
+            gridSize: Vector2;
         },
-        ref
+        ref,
     ) => {
+        const effectRef = useRef<AsciiEffectImpl | null>(null);
+
         // Load font atlas
         const fontAtlas = useLoader(TextureLoader, fontAtlasSrc);
 
-        const effect = useMemo(
-            () =>
-                new AsciiEffectImpl({
-                    fontAtlas,
-                    uiTexture,
-                    backgroundTexture,
-                    charSize,
-                    atlasGridSize,
-                    gridSize,
-                }),
-            [
+        const effect = useMemo(() => {
+            const e = new AsciiEffectImpl({
                 fontAtlas,
-                uiTexture,
-                backgroundTexture,
-                charSize.x,
-                charSize.y,
-                atlasGridSize.x,
-                atlasGridSize.y,
+                uiTexture: null,
+                backgroundTexture: null,
+                charSize,
+                atlasGridSize,
                 gridSize,
-            ]
-        );
+            });
+
+            effectRef.current = e;
+            return e;
+        }, [fontAtlas]);
+
+        useFrame(() => {
+            const effect = effectRef.current;
+            if (!effect) return;
+
+            const uniforms = effect.uniforms;
+
+            const ui = uniforms.get("uUITexture");
+            const bg = uniforms.get("uBackgroundTexture");
+
+            if (ui) ui.value = AppState.uiTexture;
+            if (bg) bg.value = AppState.backgroundTexture;
+        });
         return <primitive ref={ref} object={effect} />;
-    }
+    },
 );

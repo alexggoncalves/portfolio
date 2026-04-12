@@ -6,9 +6,8 @@ import type { Work } from "../../../stores/assetStore";
 import { WorkCard } from "../projects/WorkCard";
 import { CanvasText } from "../../elements/canvas/CanvasText";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
-import useSceneStore from "../../../stores/sceneStore";
-import useAsciiStore from "../../../stores/asciiStore";
 import usePointerStore from "../../../stores/pointerStore";
+import { RenderConfig } from "../../render/RenderConfig";
 
 //-------------------------------
 //          WORKS GRID LAYER
@@ -41,6 +40,8 @@ export class WorksRow extends Layer {
     velocity: number = 0;
     decay: number = 0.95;
 
+    setIsDraggingHorizontally: (isDragging: boolean)=>void;
+
     constructor(
         works: Work[],
         position: Vector2,
@@ -55,6 +56,8 @@ export class WorksRow extends Layer {
         this.works = works;
         this.position = position;
         this.cardHeight = cardHeight;
+
+        this.setIsDraggingHorizontally = usePointerStore.getState().setIsDraggingHorizontally;
 
         // Row layout calculations
         this.size.y = cardHeight + this.titlePadding * 2 + this.titleSize;
@@ -72,27 +75,22 @@ export class WorksRow extends Layer {
     }
 
     update(_delta: number, yOffset: number): void {
-        const { charSize } = useAsciiStore.getState();
-        const { setIsDraggingHorizontally } = usePointerStore.getState();
 
-        const maxOffset = Math.max(
-            0,
-            this.size.x - useAsciiStore.getState().gridSize.x,
-        );
+        const maxOffset = Math.max(0, this.size.x - RenderConfig.gridSize.x);
 
         if (this.isMouseDown && this.mousePosition.x >= 0) {
             const deltaX = this.mousePosition.x - this.dragLastX;
 
-            this.horizontalOffset -= deltaX / charSize.x;
+            this.horizontalOffset -= deltaX / RenderConfig.charSize.x;
             this.dragLastX = this.mousePosition.x;
-            this.velocity = -deltaX / charSize.x;
+            this.velocity = -deltaX / RenderConfig.charSize.x;
 
             this.horizontalOffset = MathUtils.clamp(
                 this.horizontalOffset,
                 0,
                 maxOffset,
             );
-            setIsDraggingHorizontally(true);
+            this.setIsDraggingHorizontally(true);
         } else {
             // Apply decay to velocity when not dragging
             if (Math.abs(this.velocity) > 0.01) {
@@ -115,7 +113,7 @@ export class WorksRow extends Layer {
             } else {
                 this.velocity = 0;
             }
-            setIsDraggingHorizontally(false);
+            this.setIsDraggingHorizontally(false);
         }
 
         for (const card of this.cards) {
@@ -140,9 +138,6 @@ export class WorksRow extends Layer {
     }
 
     placeGradient(): void {
-        const bgColor = useSceneStore.getState().backgroundColor;
-        const gridSize = useAsciiStore.getState().gridSize;
-
         const gradientExtension = 2;
         const yPosition =
             this.position.y +
@@ -151,7 +146,7 @@ export class WorksRow extends Layer {
             gradientExtension / 2;
 
         const leftGradient = new FadeGradient(
-            bgColor,
+            RenderConfig.bgColor,
             // new Color4("white"),
             new Vector2(0, yPosition),
             new Vector2(this.indentWidth, this.cardHeight + gradientExtension),
@@ -159,9 +154,9 @@ export class WorksRow extends Layer {
         );
 
         const rightGradient = new FadeGradient(
-            bgColor,
+            RenderConfig.bgColor,
             // new Color4("white"),
-            new Vector2(gridSize.x - this.indentWidth, yPosition),
+            new Vector2(RenderConfig.gridSize.x - this.indentWidth, yPosition),
             new Vector2(this.indentWidth, this.cardHeight + gradientExtension),
             "right",
         );
@@ -237,7 +232,7 @@ export class WorksRow extends Layer {
     destroy(): void {
         this.cards.forEach((c) => c.destroy?.());
         this.cards = [];
-        
+
         super.destroy();
     }
 }

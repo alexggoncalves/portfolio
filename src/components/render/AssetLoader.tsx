@@ -28,6 +28,8 @@ function AssetLoader() {
     // const { setProgress, set}
 
     useEffect(() => {
+        if (useContentStore.getState().loaded) return;
+
         function preloadGlobalAssets() {
             // Gather all asset sources to preload
             const thumbnailSources = works.map((work) => work.thumbnailSrc);

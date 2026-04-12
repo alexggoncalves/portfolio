@@ -1,7 +1,6 @@
 import { useLocation } from "react-router";
 
 import useSceneStore from "../../stores/sceneStore";
-import useAsciiStore from "../../stores/asciiStore";
 
 import SceneCanvas from "./SceneCanvas";
 import LayoutRenderer from "./LayoutRenderer";
@@ -11,6 +10,7 @@ import SceneRenderer from "../scenes/SceneRenderer";
 
 import usePageManager from "../../hooks/usePageManager";
 import useNav from "../../hooks/useNav";
+import { RenderConfig } from "./RenderConfig";
 
 //---------------------------------------------------------------------
 // RenderStage: Handle page layout and 3d Scene + transitions
@@ -18,19 +18,16 @@ import useNav from "../../hooks/useNav";
 function RenderStage() {
     const location = useLocation();
     const { isMobile } = useSceneStore();
-    const { gridSize } = useAsciiStore();
-
-    // Initialize frame and navigations layers
-    const nav = useNav([gridSize.x, gridSize.y, isMobile]);
 
     // Initialize the page manager state
-    usePageManager(location, isMobile, [gridSize.x, gridSize.y]);
-
+    usePageManager(location, isMobile, []);
+   
+    // Initialize frame and navigations layers
+    const nav = useNav([RenderConfig.gridSize.x, RenderConfig.gridSize.y, isMobile]);
     return (
         <>
             <SceneCanvas>
                 <SceneRenderer />
-
                 <LayoutRenderer nav={nav} />
 
                 <Postprocessing />

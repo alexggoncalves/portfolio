@@ -1,27 +1,23 @@
 import { Center, Image, useTexture } from "@react-three/drei";
 import { useEffect, useRef } from "react";
-import useAsciiStore from "../../stores/asciiStore";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import getWorldPosition from "../../utils/getWorldPosition";
 import { MathUtils, Mesh, MeshStandardMaterial, Vector3 } from "three";
 import { getObjectSize } from "../../utils/getWorldScale";
-import useSceneStore from "../../stores/sceneStore";
 import { FBXLoader } from "three/examples/jsm/Addons.js";
 import useCursorStore from "../../stores/pointerStore";
+import { RenderConfig } from "../render/RenderConfig";
+import { AppState } from "../render/AppState";
 
 function CatSection() {
     const { camera, size } = useThree();
-    const { gridSize } = useAsciiStore();
     const { mouseEnter, mouseLeave } = useCursorStore();
-    const homeScrollOffset = useSceneStore((state) =>
-        Math.round(state.pageScrolls["home"]),
-    );
 
     const sectionRef = useRef<any>(null);
 
     const pageCoords = {
-        x: gridSize.x / 2,
-        y: gridSize.y * 1.85,
+        x: RenderConfig.gridSize.x / 2,
+        y: RenderConfig.gridSize.y * 1.85,
     };
 
     // STARS
@@ -113,6 +109,9 @@ function CatSection() {
     });
 
     const updatePosition = (elapsed: number) => {
+        let homeScrollOffset = Math.round(AppState.pageScrolls["home"])
+        if(!homeScrollOffset) homeScrollOffset = 0;
+
         // Get world position for the page coords
         const sectionWorldPos = getWorldPosition(
             { x: pageCoords.x, y: pageCoords.y - homeScrollOffset },
@@ -120,7 +119,7 @@ function CatSection() {
             camera,
             size,
             "grid",
-            gridSize,
+            RenderConfig.gridSize,
         );
 
         // Base Cat position

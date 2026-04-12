@@ -7,25 +7,24 @@ import useScroll from "../../hooks/useScroll";
 import useAsciiRenderTargets from "../../hooks/useAsciiRenderTargets";
 import usePointer from "../../hooks/usePointer";
 import useGridCanvasSize from "../../hooks/useGridCanvasSize";
-import useAsciiStore from "../../stores/asciiStore";
 import type { Navigation } from "../elements/ui/Navigation";
 import { InteractiveElement } from "../elements/core/InteractiveElement";
 import { getDistortedPosition } from "../../utils/getDistortedPosition";
 import { useRef } from "react";
+import { RenderConfig } from "./RenderConfig";
 
 function LayoutRenderer({ nav }: { nav: Navigation | null }) {
-    const { currentPage, nextPage, backgroundColor, distortion, focalLength } =
-        useSceneStore();
-    const { ascii, bg, clearRenderTargets } = useAsciiRenderTargets();
+    const { currentPage, nextPage } = useSceneStore();
 
-    const scrollDelta = useScroll();
+    const { ascii, bg, clearRenderTargets } = useAsciiRenderTargets();
     const { pointerPosition, clickTarget, isMouseDown } = usePointer();
 
-    const distortedPointerPosition = useRef<Vector2>(new Vector2(0));
-
     // Set canvas size
-    const charSize = useAsciiStore.getState().charSize;
-    const canvasSize = useGridCanvasSize(charSize);
+    const canvasSize = useGridCanvasSize();
+
+    const scrollDelta = useScroll();
+
+    const distortedPointerPosition = useRef<Vector2>(new Vector2(0));
 
     const frameSkip = useRef(0);
 
@@ -51,14 +50,15 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
             return;
 
         // Clear Render Targets
-        clearRenderTargets(asciiTarget.ctx, bgTarget.ctx, backgroundColor);
+        clearRenderTargets(asciiTarget.ctx, bgTarget.ctx, RenderConfig.bgColor);
 
         // Map the mouse or touch position to fit the applied lens distortion
-        distortedPointerPosition.current = getDistortedPosition(
+        getDistortedPosition(
             pointerPosition.current,
             canvasSize,
-            distortion,
-            focalLength,
+            RenderConfig.distortion,
+            RenderConfig.focalLength,
+            distortedPointerPosition.current,
         );
 
         // Update and draw current and next page

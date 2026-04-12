@@ -3,10 +3,9 @@ import { Vector2 } from "three";
 import type { Work } from "../../../stores/assetStore";
 
 import { WorksGrid } from "./WorksGrid";
-import useAsciiStore from "../../../stores/asciiStore";
 import { Layer } from "../../elements/core/Layer";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
-import useSceneStore from "../../../stores/sceneStore";
+import { RenderConfig } from "../../render/RenderConfig";
 
 export class WorkPage extends Page {
     works: Work[] = [];
@@ -25,7 +24,7 @@ export class WorkPage extends Page {
     }
 
     init(): void {
-        const gridSize = useAsciiStore.getState().gridSize;
+        const gridSize = RenderConfig.gridSize;
         const margin = Math.ceil(gridSize.x * this.marginRatio);
 
         // filters
@@ -52,14 +51,12 @@ export class WorkPage extends Page {
 
     createGradient(): void {
         const gradientLayer = new Layer("workspage-gradient", []);
-        const bgColor = useSceneStore.getState().backgroundColor;
-        const gridSize = useAsciiStore.getState().gridSize;
 
         gradientLayer.addElement(
             new FadeGradient(
-                bgColor,
+                RenderConfig.bgColor,
                 new Vector2(0, 0),
-                new Vector2(gridSize.x, 14),
+                new Vector2(RenderConfig.gridSize.x, 14),
                 "top",
             ),
         );

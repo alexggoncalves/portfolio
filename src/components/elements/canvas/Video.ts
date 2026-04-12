@@ -88,7 +88,7 @@ export class CanvasVideo extends InteractiveElement {
             );
             playButton.zIndex = 20;
             playButton.isScrollable = true;
-            this.layer.interactiveElements.push(playButton);
+            this.layer.addElement(playButton);
         }
     }
 
@@ -138,20 +138,7 @@ export class CanvasVideo extends InteractiveElement {
         );
     }
 
-    destroy(): void {
-        // Remove references to image
-        this.video.pause();
-        this.video.onload = null;
-        this.video.src = "";
-        this.video.removeEventListener(
-            "loadedmetadata",
-            this.onVideoLoadedMetadata,
-        );
-        this.video = null as any;
-
-        super.destroy();
-        
-    }
+    
 
     onClick(): void {
         if (this.video.paused) {
@@ -159,5 +146,28 @@ export class CanvasVideo extends InteractiveElement {
         } else if (!this.video.paused) {
             this.video.pause();
         }
+    }
+
+    destroy(): void {
+        // stop video
+        if (this.video) {
+            this.video.pause();
+            this.video.removeAttribute("src");
+            this.video.load(); // IMPORTANT: releases decoder
+            this.video.removeEventListener(
+                "loadedmetadata",
+                this.onVideoLoadedMetadata,
+            );
+            this.video = undefined as any;
+        }
+
+        // reset state
+        this.isPlaying = false;
+        this.loaded = false;
+
+        this.layer.destroy();
+        this.layer = undefined as any
+
+        super.destroy();
     }
 }

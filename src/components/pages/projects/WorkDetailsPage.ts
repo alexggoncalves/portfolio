@@ -8,8 +8,6 @@ import type {
     Work,
 } from "../../../stores/assetStore";
 
-import useAsciiStore from "../../../stores/asciiStore";
-import useSceneStore from "../../../stores/sceneStore";
 
 import { createASCIITitle } from "../../../utils/asciiFonts";
 import { Page } from "../../elements/core/Page";
@@ -22,6 +20,8 @@ import useContentStore from "../../../stores/assetStore";
 import { CanvasText } from "../../elements/canvas/CanvasText";
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
 import useAssetStore from "../../../stores/assetStore";
+import { RenderConfig } from "../../render/RenderConfig";
+import { AppState } from "../../render/AppState";
 
 export class WorkDetailsPage extends Page {
     work: Work | null = null;
@@ -49,13 +49,13 @@ export class WorkDetailsPage extends Page {
         this.work = work;
         this.goTo = goTo;
 
-        this.asciigridSize = useAsciiStore.getState().gridSize;
+        this.asciigridSize = RenderConfig.gridSize;
         this.fixedLayer.isScrollable = true;
         this.placementPosition.set(4, this.asciigridSize.y - 2);
 
         this.fixedLayer.isScrollable = false;
 
-        this.bgColor = useSceneStore.getState().backgroundColor;
+        this.bgColor = RenderConfig.bgColor;
 
         this.init();
     }
@@ -134,7 +134,7 @@ export class WorkDetailsPage extends Page {
     }
 
     placeMediaLayout(media: MediaBlock[]): void {
-        const gridSize = useAsciiStore.getState().gridSize;
+        const gridSize = RenderConfig.gridSize;
 
         const margin = Math.ceil(gridSize.x * 0.26);
         const layoutWidth = gridSize.x - margin * 2;
@@ -154,15 +154,14 @@ export class WorkDetailsPage extends Page {
     }
 
     placeBackButton() {
-        const navigationSource =
-            useSceneStore.getState().navigationSource || "work";
+        const navigationSource = AppState.navigationSource;
 
         this.fixedLayer.addElement(
             new AsciiButton(
-                "<< Go back to works",
+                "<< Go back",
                 () => {
                     const backDestination =
-                        navigationSource === "work" ? "/work" : "/";
+                        navigationSource === "home" ? "/" : "/projects";
                     this.goTo(backDestination);
                 },
                 new Vector2(4, 10),

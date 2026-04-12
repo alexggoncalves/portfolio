@@ -5,10 +5,11 @@ import { Page } from "../components/elements/core/Page";
 import createPage from "../utils/createPage";
 import useContentStore from "../stores/assetStore";
 import useSceneStore from "../stores/sceneStore";
+import { AppState } from "../components/render/AppState";
 
-function usePageManager(location: any, isMobile: boolean, deps: any[]) {
+function usePageManager(location: any, isMobile: boolean, deps: []) {
     const { currentPage, nextPage, setCurrentPage, setNextPage } =
-        useSceneStore();
+        useSceneStore.getState();
 
     const { works } = useContentStore();
 
@@ -18,23 +19,46 @@ function usePageManager(location: any, isMobile: boolean, deps: any[]) {
     useEffect(() => {
         // Create or switch pages when route or dependencies change
         updatePage();
-    }, [...deps, location.pathname, isMobile]);
+    }, [ works, isMobile, location.pathname ]);
+
+    useEffect(() => {
+        const onResize = () => {
+            currentPage?.onResize();
+        };
+
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
+
+    // function switchPage() {
+    //     const scene = location.pathname.slice(1);
+
+    //     const newPage = createPage(scene, isMobile, goTo, works);
+
+    //     // Restore last scroll
+    //     const pageScrolls = AppState.pageScrolls;
+    //     const storedScroll: number = pageScrolls[newPage.name] || 0;
+
+    //     newPage.scrollOffset = storedScroll;
+    // }
 
     function updatePage() {
-
         // Get path and remove first "/"
         const scene = location.pathname.slice(1);
+
         const newPage = createPage(scene, isMobile, goTo, works);
 
-        // Restore last scroll 
-        const pageScrolls = useSceneStore.getState().pageScrolls;
+        // Restore last scroll
+        const pageScrolls = AppState.pageScrolls;
         const storedScroll: number = pageScrolls[newPage.name] || 0;
+
         newPage.scrollOffset = storedScroll;
 
         // Set page on first load and return
         if (!currentPage) {
             newPage.fadeSpeed = 3; // Slow down first fade in
             setCurrentPage(newPage);
+            AppState.pageHeight = newPage.pageHeight;
             return;
         }
 
@@ -60,6 +84,7 @@ function usePageManager(location: any, isMobile: boolean, deps: any[]) {
         currentPage.onFadeOutComplete = () => {
             currentPage.destroy?.();
             setCurrentPage(nextPage);
+            AppState.pageHeight = currentPage.pageHeight;
             setNextPage(null);
         };
     }, [currentPage, nextPage]);

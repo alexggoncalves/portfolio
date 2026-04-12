@@ -2,10 +2,10 @@ import { Layer } from "./Layer";
 import { Vector2 } from "three";
 import { MathUtils } from "three";
 import { clamp } from "three/src/math/MathUtils.js";
-import useAsciiStore from "../../../stores/asciiStore";
-import useSceneStore from "../../../stores/sceneStore";
 import type { InteractiveElement } from "./InteractiveElement";
 import { WorksRow } from "../../pages/homepage/WorksRow";
+import { RenderConfig } from "../../render/RenderConfig";
+import { AppState } from "../../render/AppState";
 
 //----------------------------------
 // PAGE CLASS
@@ -119,10 +119,8 @@ export class Page {
     }
 
     updateScroll(scrollDelta: number): void {
-        const gridSize = useAsciiStore.getState().gridSize;
-
         // Get max scroll
-        const max = Math.max(0, this.pageHeight - gridSize.y);
+        const max = Math.max(0, this.pageHeight - RenderConfig.gridSize.y);
 
         if (max <= 0) {
             this.scrollOffset = 0;
@@ -134,10 +132,9 @@ export class Page {
             this.scrollOffset = clamp(this.scrollOffset + scrollDelta, 0, max);
         }
 
-        // Update store
-        const state = useSceneStore.getState();
-        if (state.pageScrolls[this.name] !== this.scrollOffset) {
-            state.setScroll(this.name, this.scrollOffset);
+        // Update pageScrolls
+        if (AppState.pageScrolls[this.name] !== this.scrollOffset) {
+            AppState.recordScroll(this.name, this.scrollOffset);
         }
     }
 
@@ -163,13 +160,21 @@ export class Page {
         });
     }
 
+    onResize() {
+        console.log("resize");
+    }
+
     destroy(): void {
         // Destroy all layers
         this.layers.forEach((layer) => layer.destroy());
-
-        // Clear arrays to release references
         this.layers = [];
-        this.hoveredElements = [];
+        
+        // Clear arrays to release references
+
+        this.hoveredElements = null as any;
+        this.hoveredLayer = null;
+
+        this.hoveredElements = null as any;
         this.hoveredLayer = null;
 
         // Remove callbacks

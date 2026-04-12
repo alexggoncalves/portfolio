@@ -23,8 +23,8 @@ function createPage(
         // Contacts page
         page = new ContactsPage(isMobile,goTo);
 
-    } else if (scene.startsWith("work")) {
-        // Work  (".../work" and ".../work/:workId")
+    } else if (scene.startsWith("projects")) {
+        // Projects  (".../projects" and ".../projects/:workId")
         const parts = scene.split("/");
 
         if (parts[1]) {
@@ -37,6 +37,7 @@ function createPage(
                 page = new HomePage(works,isMobile,goTo); // TEMP
             }
         } else {
+            
             page = new WorkPage(works,isMobile,goTo);
         }
     } else {

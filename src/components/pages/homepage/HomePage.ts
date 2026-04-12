@@ -3,10 +3,8 @@ import { Layer } from "../../elements/core/Layer";
 import type { Work } from "../../../stores/assetStore";
 import { WorksRow } from "./WorksRow";
 import { Vector2 } from "three";
-import useAsciiStore from "../../../stores/asciiStore";
-import useSceneStore from "../../../stores/sceneStore";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
-// import { CanvasImage } from "../elements/CanvasImage";
+import { RenderConfig } from "../../render/RenderConfig";
 
 export class HomePage extends Page {
     works: Work[] = [];
@@ -22,15 +20,14 @@ export class HomePage extends Page {
     }
 
     init(): void {
-        const gridSize = useAsciiStore.getState().gridSize;
-
         const mainLayer = new Layer("home", []);
         this.layers.push(mainLayer);
-        this.pageHeight = gridSize.y;
+
+        this.pageHeight = RenderConfig.gridSize.y;
 
         const workRow = new WorksRow(
             this.works,
-            new Vector2(0, gridSize.y + 6),
+            new Vector2(0, RenderConfig.gridSize.y + 6),
             20,
             5,
             1,
@@ -48,14 +45,12 @@ export class HomePage extends Page {
 
     createGradient(): void {
         const gradientLayer = new Layer("gradient", []);
-        const bgColor = useSceneStore.getState().backgroundColor;
-        const gridSize = useAsciiStore.getState().gridSize;
 
         gradientLayer.addElement(
             new FadeGradient(
-                bgColor,
+                RenderConfig.bgColor,
                 new Vector2(0, 0),
-                new Vector2(gridSize.x, 14),
+                new Vector2(RenderConfig.gridSize.x, 14),
                 "top",
             ),
         );

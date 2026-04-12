@@ -78,7 +78,7 @@ export class MediaLayout extends Layer {
 
 
     placeVideo(src: string,): void {
-
+return 
         const width = (this.layoutSize.x * 12);
         const height = width / (16 / 9);
 

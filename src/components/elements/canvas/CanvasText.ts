@@ -1,7 +1,7 @@
 import { Color, Vector2 } from "three";
-import useAsciiStore from "../../../stores/asciiStore";
 
 import { Element } from "../core/Element";
+import { RenderConfig } from "../../render/RenderConfig";
 
 //------------------------------------------
 // Text Class
@@ -41,20 +41,18 @@ export class CanvasText extends Element {
         this.applyAlignment();
 
         // Calculate width in pixels
-        const charSize = useAsciiStore.getState().charSize;
-        const width = maxWidth - padding * 2;
+        const charWidth = RenderConfig.charSize.x;
+        const textGridWidth = maxWidth - padding * 2;
 
         // Wrap the text
-        this.lines = this.wrapText(text, width * charSize.x);
+        this.lines = this.wrapText(text, textGridWidth * charWidth);
 
         // Calculate the height of the whole block
         this.setSize(
-            width,
+            textGridWidth,
             this.lines.length * this.lineHeight * fontSize,
             "grid",
         );
-
-        
     }
 
     private static measureCtx: CanvasRenderingContext2D = (() => {
@@ -67,8 +65,6 @@ export class CanvasText extends Element {
         _asciiCtx: CanvasRenderingContext2D,
         bgCtx: CanvasRenderingContext2D,
     ): void {
-        const charSize = useAsciiStore.getState().charSize;
-
         bgCtx.fillStyle = "white";
         bgCtx.textBaseline = "top";
         bgCtx.textAlign = "left";
@@ -76,7 +72,7 @@ export class CanvasText extends Element {
         bgCtx.font = `${this.fontWeight} ${this.fontSize}px ${this.font}`;
 
         const position = {
-            x: Math.floor(this.pixelPosition.x + this.padding * charSize.x),
+            x: Math.floor(this.pixelPosition.x + this.padding * RenderConfig.charSize.x),
             y: Math.floor(this.pixelPosition.y - this.pixelOffset.y),
         };
 
@@ -114,7 +110,6 @@ export class CanvasText extends Element {
     }
 
     getGridSize() {
-        const charSize = useAsciiStore.getState().charSize;
-        return this.gridSize.divide(charSize);
+        return this.gridSize.divide(RenderConfig.charSize);
     }
 }

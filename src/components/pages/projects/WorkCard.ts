@@ -2,16 +2,14 @@ import { Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
-import useAsciiStore from "../../../stores/asciiStore";
 
 import type { Tag, Work } from "../../../stores/assetStore";
 import useContentStore from "../../../stores/assetStore";
-import useCursorStore from "../../../stores/pointerStore";
 
 import TagLabel from "../../elements/ui/TagLabel";
-import type { NavigationSource } from "../../../stores/sceneStore";
-import useSceneStore from "../../../stores/sceneStore";
+import type { NavigationSource } from "../../render/AppState";
 import { InteractiveElement } from "../../elements/core/InteractiveElement";
+import { RenderConfig } from "../../render/RenderConfig";
 
 export class WorkCard extends InteractiveElement {
     work: Work;
@@ -65,12 +63,12 @@ export class WorkCard extends InteractiveElement {
     }
 
     initializeTagLabels(tags: Tag[]) {
-        const { charSize } = useAsciiStore.getState();
-        const margin = new Vector2(0 * charSize.x, 2.4 * charSize.x);
+        const margin = new Vector2(0 * RenderConfig.charSize.x, 2.4 * RenderConfig.charSize.x);
 
         let yPos = this.pixelPosition.y;
         tags.forEach((tag: Tag) => {
             const x = this.pixelPosition.x + this.pixelSize.x;
+
             const tagLabel = new TagLabel(
                 tag,
                 new Vector2(x - margin.x, yPos + margin.y),
@@ -85,18 +83,7 @@ export class WorkCard extends InteractiveElement {
     }
 
     update(): void {
-        const mouseEnter = useCursorStore.getState().mouseEnter;
-        const mouseLeave = useCursorStore.getState().mouseLeave;
-
-        if (this.isMouseOver && !this.tagsOpened && this.active) {
-            this.openTagLabels();
-            this.tagsOpened = true;
-            mouseEnter();
-        } else if (!this.isMouseOver && this.tagsOpened) {
-            this.closeTagLabels();
-            this.tagsOpened = false;
-            mouseLeave();
-        }
+        super.update();
 
         // Update image
         if (this.canvasImage) {
@@ -144,12 +131,9 @@ export class WorkCard extends InteractiveElement {
     }
 
     onClick(): void {
-        useSceneStore.getState().setNavigationSource(this.navigationSource);
-
+        super.onClick();
         if (this.goTo) {
-            this.goTo(`/work/${this.work.id}`);
-            const mouseLeave = useCursorStore.getState().mouseLeave;
-            mouseLeave();
+            this.goTo(`/projects/${this.work.id}`);
         }
     }
 
@@ -166,7 +150,6 @@ export class WorkCard extends InteractiveElement {
     }
 
     destroy(): void {
-       
         this.canvasImage?.destroy();
         this.canvasImage = undefined;
         this.tagLabels = [];
