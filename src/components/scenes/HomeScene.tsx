@@ -5,7 +5,7 @@ import { useRef } from "react";
 import type { Vector3 } from "three";
 import CatSection from "./CatSection";
 import { RenderConfig } from "../render/RenderConfig";
-import { AppState } from "../render/AppState";
+import { AppState } from "../app/AppState";
 
 function HomeScene() {
     const { camera, size } = useThree();

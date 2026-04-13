@@ -1,26 +1,29 @@
-import { Color, MathUtils, Vector2 } from "three";
+import { Color, MathUtils } from "three";
 
 import { Layer } from "../../elements/core/Layer";
 
-import type { Work } from "../../../stores/assetStore";
-import { WorkCard } from "../projects/WorkCard";
+import { ProjectCard } from "../projects/ProjectCard";
 import { CanvasText } from "../../elements/canvas/CanvasText";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
 import usePointerStore from "../../../stores/pointerStore";
 import { RenderConfig } from "../../render/RenderConfig";
+import type { Project } from "../../app/contentAssets";
 
 //-------------------------------
 //          WORKS GRID LAYER
 //-------------------------------
 
-export class WorksRow extends Layer {
-    works: Work[] = [];
+export class ProjectsRow extends Layer {
+    projects: Project[] = [];
 
-    position: Vector2;
-    size: Vector2 = new Vector2(0);
+    x: number;
+    y: number;
+    w: number = 0;
+    h: number;
+
     horizontalOffset: number = 0;
 
-    cards: WorkCard[] = [];
+    cards: ProjectCard[] = [];
     cardHeight: number;
     cardPadding: number = 10;
     cardCornerRadius: number = 40;
@@ -33,18 +36,21 @@ export class WorksRow extends Layer {
 
     private readonly imageAspectRatio: number = 5 / 3;
 
-    isMouseDown: boolean = false;
-    mousePosition: Vector2 = new Vector2(-1);
+    // Draggin state
+    mouseX: number = -1;
+    mouseY: number = -1;
     dragStartX: number = 0;
     dragLastX: number = 0;
     velocity: number = 0;
     decay: number = 0.95;
+    isMouseDown: boolean = false;
 
-    setIsDraggingHorizontally: (isDragging: boolean)=>void;
+    setIsDraggingHorizontally: (isDragging: boolean) => void;
 
     constructor(
-        works: Work[],
-        position: Vector2,
+        projects: Project[],
+        x: number,
+        y: number,
         cardHeight: number,
         indentWidth: number,
         gap: number,
@@ -53,14 +59,17 @@ export class WorksRow extends Layer {
     ) {
         super("works-row", [], goTo);
 
-        this.works = works;
-        this.position = position;
+        this.projects = projects;
+        this.x = x;
+        this.y = y;
+
         this.cardHeight = cardHeight;
 
-        this.setIsDraggingHorizontally = usePointerStore.getState().setIsDraggingHorizontally;
+        this.setIsDraggingHorizontally =
+            usePointerStore.getState().setIsDraggingHorizontally;
 
         // Row layout calculations
-        this.size.y = cardHeight + this.titlePadding * 2 + this.titleSize;
+        this.h = cardHeight + this.titlePadding * 2 + this.titleSize / 16;
 
         this.indentWidth = indentWidth;
         this.gap = gap;
@@ -75,14 +84,14 @@ export class WorksRow extends Layer {
     }
 
     update(_delta: number, yOffset: number): void {
+        const maxOffset = Math.max(0, this.w - RenderConfig.gridSize.x);
 
-        const maxOffset = Math.max(0, this.size.x - RenderConfig.gridSize.x);
-
-        if (this.isMouseDown && this.mousePosition.x >= 0) {
-            const deltaX = this.mousePosition.x - this.dragLastX;
+        if (this.isMouseDown && this.mouseX >= 0) {
+            const deltaX = this.mouseX - this.dragLastX;
 
             this.horizontalOffset -= deltaX / RenderConfig.charSize.x;
-            this.dragLastX = this.mousePosition.x;
+
+            this.dragLastX = this.mouseX;
             this.velocity = -deltaX / RenderConfig.charSize.x;
 
             this.horizontalOffset = MathUtils.clamp(
@@ -123,41 +132,49 @@ export class WorksRow extends Layer {
         super.update(_delta, yOffset);
     }
 
-    updateDragState(isMouseDown: boolean, mousePosition: Vector2): void {
-        if (this.contains(mousePosition) && isMouseDown) {
+    updateDragState(
+        mouseX: number,
+        mouseY: number,
+        isMouseDown: boolean,
+    ): void {
+        if (this.contains(mouseX, mouseY) && isMouseDown) {
             if (!this.isMouseDown) {
                 this.dragStartX = this.horizontalOffset;
-                this.dragLastX = mousePosition.x;
+                this.dragLastX = mouseX;
             }
             this.isMouseDown = true;
-            this.mousePosition = mousePosition.clone();
+            this.mouseX = mouseX;
+            this.mouseY = mouseY;
         } else {
             this.isMouseDown = false;
-            this.mousePosition = new Vector2(-1);
+            this.mouseX = -1;
+            this.mouseY = -1;
         }
     }
 
     placeGradient(): void {
         const gradientExtension = 2;
         const yPosition =
-            this.position.y +
+            this.y +
             this.titleSize / 16 +
             this.titlePadding * 2 -
             gradientExtension / 2;
 
         const leftGradient = new FadeGradient(
             RenderConfig.bgColor,
-            // new Color4("white"),
-            new Vector2(0, yPosition),
-            new Vector2(this.indentWidth, this.cardHeight + gradientExtension),
+            0,
+            yPosition,
+            this.indentWidth,
+            this.cardHeight + gradientExtension,
             "left",
         );
 
         const rightGradient = new FadeGradient(
             RenderConfig.bgColor,
-            // new Color4("white"),
-            new Vector2(RenderConfig.gridSize.x - this.indentWidth, yPosition),
-            new Vector2(this.indentWidth, this.cardHeight + gradientExtension),
+            RenderConfig.gridSize.x - this.indentWidth,
+            yPosition,
+            this.indentWidth,
+            this.cardHeight + gradientExtension,
             "right",
         );
 
@@ -170,14 +187,12 @@ export class WorksRow extends Layer {
 
     placeTitle(): void {
         const title = new CanvasText(
+            this.x + this.indentWidth,
+            this.y + this.titlePadding,
             this.title,
             "Space Grotesk",
             34,
             600,
-            new Vector2(
-                this.position.x + this.indentWidth,
-                this.position.y + this.titlePadding,
-            ),
             100,
             1,
             this.titlePadding,
@@ -188,35 +203,37 @@ export class WorksRow extends Layer {
         title.name = "works-row-title";
     }
 
-    contains(point: Vector2): boolean {
+    contains(_x: number, y: number): boolean {
         if (!this.cards[0]) return false;
 
-        const top = this.cards[0].pixelPosition.y - this.cards[0].pixelOffset.y;
-        const bottom = top + this.cards[0].pixelSize.y;
+        const top = this.cards[0].y - this.cards[0].offsetY;
+        const bottom = top + this.cards[0].h;
 
-        return point.y > top && point.y < bottom;
+        return y > top && y < bottom;
     }
 
     placeRow(): void {
         const imageWidth = Math.floor(this.cardHeight * this.imageAspectRatio);
 
-        this.size.x =
-            (imageWidth + this.gap) * this.works.length + this.indentWidth * 2;
+        this.w =
+            (imageWidth + this.gap) * this.projects.length +
+            this.indentWidth * 2;
 
-        this.works.forEach((work: Work, index) => {
+        const startX = this.x + this.indentWidth;
+        const y = this.y + this.titleSize / 16 + this.titlePadding * 2;
+
+        this.projects.forEach((project: Project, index) => {
             //Offset
-            const offset = (imageWidth + this.gap) * index;
+            const x = startX + index * (imageWidth + this.gap);
+
 
             // Create work card
-            const card = new WorkCard(
-                work,
-                new Vector2( // Position
-                    this.position.x + offset + this.indentWidth,
-                    this.position.y +
-                        this.titleSize / 16 +
-                        this.titlePadding * 2,
-                ),
-                new Vector2(imageWidth, this.cardHeight), // Size,
+            const card = new ProjectCard(
+                project,
+                x,
+                y,
+                imageWidth,
+                this.cardHeight,
                 this.cardPadding,
                 this.cardCornerRadius,
                 this.goTo,
@@ -232,6 +249,7 @@ export class WorksRow extends Layer {
     destroy(): void {
         this.cards.forEach((c) => c.destroy?.());
         this.cards = [];
+        this.projects = [];
 
         super.destroy();
     }

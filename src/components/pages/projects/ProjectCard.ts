@@ -1,20 +1,18 @@
-import { Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
 
-import type { Tag, Work } from "../../../stores/assetStore";
-import useContentStore from "../../../stores/assetStore";
-
 import TagLabel from "../../elements/ui/TagLabel";
-import type { NavigationSource } from "../../render/AppState";
+import type { NavigationSource } from "../../app/AppState";
 import { InteractiveElement } from "../../elements/core/InteractiveElement";
 import { RenderConfig } from "../../render/RenderConfig";
+import { getTagsById, type Project, type Tag } from "../../app/contentAssets";
 
-export class WorkCard extends InteractiveElement {
-    work: Work;
-    tagLabels: TagLabel[] = [];
+export class ProjectCard extends InteractiveElement {
+    project: Project;
+    
     canvasImage: CanvasImage | undefined;
+
     padding: number = 10;
     cornerRadius: number = 40;
     tagGap: number = 3;
@@ -24,19 +22,23 @@ export class WorkCard extends InteractiveElement {
     goTo?: (path: string) => void;
 
     tagsOpened: boolean = false;
+    tags: TagLabel[] = [];
 
     constructor(
-        work: Work,
-        position: Vector2,
-        size: Vector2,
+        project: Project,
+        x: number,
+        y: number,
+        w: number,
+        h: number,
         padding?: number,
         cornerRadius?: number,
         goTo?: (path: string) => void,
         navigationSource?: NavigationSource,
     ) {
-        super(position);
-        this.work = work;
-        this.setSize(size.x, size.y, "grid");
+        super(x, y, "grid");
+        this.setSize(w, h, "grid");
+
+        this.project = project;
         this.isInteractive = true;
 
         if (padding) this.padding = padding;
@@ -46,36 +48,40 @@ export class WorkCard extends InteractiveElement {
         if (navigationSource) this.navigationSource = navigationSource;
 
         // Get work's tags and initialize label elements
-        const { getTags } = useContentStore.getState();
-        const tagObjects = getTags(this.work.tags);
+        const tagObjects = getTagsById(this.project.tags);
         this.initializeTagLabels(tagObjects);
 
         // Create thumbnail
-        if (work.thumbnailSrc) {
+        if (project.thumbnailSrc) {
             this.canvasImage = new CanvasImage(
-                work.thumbnailSrc,
-                this.gridPosition,
-                size.x,
-                size.y,
+                project.thumbnailSrc,
+                this.x,
+                this.y,
+                this.w,
+                this.h,
                 this.cornerRadius,
+                "pixel",
             );
         }
     }
 
     initializeTagLabels(tags: Tag[]) {
-        const margin = new Vector2(0 * RenderConfig.charSize.x, 2.4 * RenderConfig.charSize.x);
+        const hMargin = 0 * RenderConfig.charSize.x;
+        const vMargin = 2.4 * RenderConfig.charSize.x;
 
-        let yPos = this.pixelPosition.y;
+        let yPos = this.y;
         tags.forEach((tag: Tag) => {
-            const x = this.pixelPosition.x + this.pixelSize.x;
+            const x = this.x + this.w;
 
             const tagLabel = new TagLabel(
                 tag,
-                new Vector2(x - margin.x, yPos + margin.y),
-                15,
-                new Vector2(10, 3),
+                x - hMargin,
+                yPos + vMargin,
+                14,
+                4,
+                18,
             );
-            this.tagLabels.push(tagLabel);
+            this.tags.push(tagLabel);
 
             // Increment y offset
             yPos += tagLabel.getTagHeight() + this.tagGap;
@@ -85,18 +91,26 @@ export class WorkCard extends InteractiveElement {
     update(): void {
         super.update();
 
+        if(this.isMouseOver && !this.tagsOpened){
+            this.openTags();
+            this.tagsOpened = true
+        } else if(!this.isMouseOver && this.tagsOpened){
+            this.closeTags();
+            this.tagsOpened = false;
+        }
+
         // Update image
         if (this.canvasImage) {
-            this.canvasImage.setYOffset(this.gridOffset.y);
-            this.canvasImage.setXOffset(this.gridOffset.x);
+            this.canvasImage.setXOffset(this.gridOffsetX,"grid");
+            this.canvasImage.setYOffset(this.gridOffsetY,"grid");
             this.canvasImage.opacity = this.opacity;
         }
 
         // Update tag labels
-        this.tagLabels.forEach((tagLabel: TagLabel) => {
-            tagLabel.opacity = this.opacity;
-            tagLabel.yOffset = this.pixelOffset.y;
-            tagLabel.xOffset = this.pixelOffset.x;
+        this.tags.forEach((tag) => {
+            tag.xOffset = this.offsetX;
+            tag.yOffset = this.offsetY;
+            tag.opacity = this.opacity;
         });
     }
 
@@ -107,22 +121,23 @@ export class WorkCard extends InteractiveElement {
         // Draw hover highlight
         if (this.isMouseOver) {
             this.drawHoverState(bgCtx);
+
         }
         // Draw image
         this.canvasImage?.draw(asciiCtx, bgCtx);
 
         // Draw tags
-        this.tagLabels.forEach((tagLabel: TagLabel) => {
-            tagLabel.draw(bgCtx);
+        this.tags.forEach((tag) => {
+            tag.draw(bgCtx);
         });
     }
 
     drawHoverState(background: CanvasRenderingContext2D): void {
         this.drawBackgroundRect(
-            this.pixelPosition.x - this.pixelOffset.x - this.padding / 2,
-            this.pixelPosition.y - this.pixelOffset.y - this.padding / 2,
-            this.pixelSize.x + this.padding,
-            this.pixelSize.y + this.padding,
+            this.x - this.offsetX - this.padding / 2,
+            this.y - this.offsetY - this.padding / 2,
+            this.w + this.padding,
+            this.h + this.padding,
             this.cornerRadius + this.padding / 2,
             true,
             this.highlightColor,
@@ -133,27 +148,27 @@ export class WorkCard extends InteractiveElement {
     onClick(): void {
         super.onClick();
         if (this.goTo) {
-            this.goTo(`/projects/${this.work.id}`);
+            this.goTo(`/projects/${this.project.id}`);
         }
     }
 
-    openTagLabels() {
-        this.tagLabels.forEach((taglabel: TagLabel) => {
-            taglabel.open();
+    openTags() {
+        this.tags.forEach((tag: TagLabel) => {
+            tag.open();
         });
     }
 
-    closeTagLabels() {
-        this.tagLabels.forEach((taglabel: TagLabel) => {
-            taglabel.close();
+    closeTags() {
+        this.tags.forEach((tag: TagLabel) => {
+            tag.close();
         });
     }
 
     destroy(): void {
         this.canvasImage?.destroy();
         this.canvasImage = undefined;
-        this.tagLabels = [];
-        this.goTo = undefined
+        this.tags = undefined as any;
+        this.goTo = undefined;
 
         super.destroy();
     }

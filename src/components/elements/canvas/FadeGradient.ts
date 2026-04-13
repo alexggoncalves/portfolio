@@ -1,6 +1,4 @@
-import { Vector2 } from "three";
-
-import { Element } from "../core/Element";
+import { Element, type Unit } from "../core/Element";
 import type Color4 from "three/src/renderers/common/Color4.js";
 
 //------------------------------------------
@@ -13,16 +11,18 @@ export class FadeGradient extends Element {
 
     constructor(
         color: Color4,
-        position: Vector2,
-        size: Vector2,
+        x: number,
+        y: number,
+        w: number,
+        h: number,
         direction: "top" | "bottom" | "left" | "right",
-        sizeUnit: "grid" | "pixel" = "grid",
+        unit: Unit = "grid",
     ) {
-        super(position, undefined, color);
+        super(x,y,unit, undefined, color);
+        this.setSize(w, h, unit);
 
         this.direction = direction;
         this.gradient = null;
-        this.setSize(size.x, size.y, sizeUnit);
         this.isScrollable = false;
     }
 
@@ -30,10 +30,10 @@ export class FadeGradient extends Element {
         _asciiCtx: CanvasRenderingContext2D,
         bgCtx: CanvasRenderingContext2D,
     ): void {
-        const x = this.pixelPosition.x;
-        const y = this.pixelPosition.y;
-        const w = this.pixelSize.x;
-        const h = this.pixelSize.y;
+        const x = this.x;
+        const y = this.y;
+        const w = this.w;
+        const h = this.h;
 
         const r = this.backgroundColor.r * 255;
         const g = this.backgroundColor.g * 255;
@@ -70,7 +70,11 @@ export class FadeGradient extends Element {
         } else if (this.direction === "bottom") {
             bgCtx.fillRect(x, y - h, w, h);
         } else if (this.direction === "left" || "right") {
-            bgCtx.fillRect(x, this.pixelPosition.y - this.pixelOffset.y, w, h);
+            bgCtx.fillRect(x, this.y - this.offsetY, w, h);
         }
+    }
+
+    destroy(): void {
+        this.gradient = undefined as any;
     }
 }

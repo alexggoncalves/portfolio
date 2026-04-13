@@ -7,7 +7,7 @@ import { getObjectSize } from "../../utils/getWorldScale";
 import { FBXLoader } from "three/examples/jsm/Addons.js";
 import useCursorStore from "../../stores/pointerStore";
 import { RenderConfig } from "../render/RenderConfig";
-import { AppState } from "../render/AppState";
+import { AppState } from "../app/AppState";
 
 function CatSection() {
     const { camera, size } = useThree();

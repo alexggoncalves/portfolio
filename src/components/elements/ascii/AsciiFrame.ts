@@ -16,7 +16,7 @@ type Bounds = {
 
 export class AsciiScreenFrame extends Element {
     constructor(color: Color, backgroundColor: Color4) {
-        super(new Vector2(0, 0), color, backgroundColor);
+        super(0, 0, "grid", color, backgroundColor);
     }
 
     draw(
@@ -44,17 +44,19 @@ export class AsciiTileFrame extends Element {
     constructor(
         char: string,
         title: string,
-        position: Vector2,
-        size: Vector2,
+        x: number,
+        y: number,
+        w: number,
+        h: number,
         color: Color,
-        backgroundColor: Color4
+        backgroundColor: Color4,
     ) {
-        super(position, color, backgroundColor);
+        super(x, y, "grid", color, backgroundColor);
+        this.setSize(w, h, "grid");
 
-        this.setSize(size.x, size.y, "grid");
         this.bounds = this.calculateBounds();
         this.title = title;
-        this.char = char
+        this.char = char;
     }
 
     draw(
@@ -66,7 +68,7 @@ export class AsciiTileFrame extends Element {
 
         const charBrightness = this.getBrightnessFromChar(this.char);
 
-        asciiCtx.fillStyle = `rgba(${this.color.r * 255* this.opacity},${this.color.g * 255* this.opacity}, ${
+        asciiCtx.fillStyle = `rgba(${this.color.r * 255 * this.opacity},${this.color.g * 255 * this.opacity}, ${
             this.color.b * 255 * this.opacity
         },${this.opacity * charBrightness})`;
 
@@ -74,18 +76,18 @@ export class AsciiTileFrame extends Element {
         asciiCtx.fillRect(
             this.bounds.left + this.title.length + 1,
             this.bounds.top,
-            this.gridSize.x - this.title.length - 1,
-            1
+            this.gridX - this.title.length - 1,
+            1,
         );
         // Bottom
-        asciiCtx.fillRect(this.bounds.left, this.bounds.bottom, this.gridSize.x, 1);
+        asciiCtx.fillRect(this.bounds.left, this.bounds.bottom, this.gridX, 1);
     }
 
     calculateBounds(): Bounds {
-        const left = this.gridPosition.x;
-        const top = this.gridPosition.y;
-        const right = this.gridPosition.x + this.gridSize.x;
-        const bottom = this.gridPosition.y + this.gridSize.y;
+        const left = this.gridX;
+        const top = this.gridY;
+        const right = this.gridX + this.gridW;
+        const bottom = this.gridY + this.gridH;
 
         return { left, top, right, bottom };
     }

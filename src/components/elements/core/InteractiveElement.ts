@@ -1,6 +1,6 @@
 import { Color, Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
-import { Element } from "./Element";
+import { Element, type Unit } from "./Element";
 import usePointerStore from "../../../stores/pointerStore";
 
 //-----------------------------------------
@@ -21,29 +21,32 @@ export class InteractiveElement extends Element {
     mouseLeave: () => void;
 
     constructor(
-        position: Vector2,
+        x:number,
+        y:number,
+        unit: Unit = "pixel",
         color?: Color,
         backgroundColor?: Color4,
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        super(position, color, backgroundColor, horizontalAlign, verticalAlign);
-
+        super(x, y, unit, color, backgroundColor, horizontalAlign, verticalAlign);
+        this.setSize(1,1,"pixel")
         this.isInteractive = true;
 
         this.mouseEnter = usePointerStore.getState().mouseEnter;
         this.mouseLeave = usePointerStore.getState().mouseLeave;
     }
 
-    contains(pos: Vector2): boolean {
-        const minX = this.pixelPosition.x - this.pixelOffset.x;
-        const maxX = minX + this.pixelSize.x;
+    contains(x: number,y: number): boolean {
+        const minX = this.x - this.offsetX;
+        const maxX = minX + this.w;
 
-        const minY = this.pixelPosition.y - this.pixelOffset.y;
-        const maxY = minY + this.pixelSize.y;
+        const minY = this.y - this.offsetY;
+        const maxY = minY + this.h;
 
-        return pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY;
+        return x >= minX && x <= maxX && y >= minY && y <= maxY;
     }
+
     onClick() {
         if (this.resetCursorOnClick) {
             this.mouseLeave();

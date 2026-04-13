@@ -1,24 +1,27 @@
 import { Page } from "../../elements/core/Page";
-import { Vector2 } from "three";
-import type { Work } from "../../../stores/assetStore";
 
-import { WorksGrid } from "./WorksGrid";
+import { ProjectsGrid } from "./ProjectsGrid";
 import { Layer } from "../../elements/core/Layer";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
 import { RenderConfig } from "../../render/RenderConfig";
+import type { Project } from "../../app/contentAssets";
 
-export class WorkPage extends Page {
-    works: Work[] = [];
-    worksGrid: WorksGrid | null = null;
+export class ProjectPage extends Page {
+    projects: Project[] = [];
+    worksGrid: ProjectsGrid | null = null;
 
     private gap: number = 1.2;
     private minCardWidth: number = 18;
     private maxCardWidth: number = 25;
     private marginRatio: number = 0.03;
 
-    constructor(works: Work[], isMobile: boolean, goTo: (path: string) => void) {
-        super("works", isMobile, goTo);
-        this.works = works;
+    constructor(
+        projects: Project[],
+        isMobile: boolean,
+        goTo: (path: string) => void,
+    ) {
+        super("projects", isMobile, goTo);
+        this.projects = projects;
 
         this.init();
     }
@@ -31,9 +34,11 @@ export class WorkPage extends Page {
 
         // Place grid of works
         const gridWidth = gridSize.x - margin * 2;
-        this.worksGrid = new WorksGrid(
-            this.works,
-            new Vector2(0, 16), // position
+
+        this.worksGrid = new ProjectsGrid(
+            this.projects,
+            0,
+            16,
             gridWidth,
             this.minCardWidth,
             this.maxCardWidth,
@@ -55,8 +60,10 @@ export class WorkPage extends Page {
         gradientLayer.addElement(
             new FadeGradient(
                 RenderConfig.bgColor,
-                new Vector2(0, 0),
-                new Vector2(RenderConfig.gridSize.x, 14),
+                0,
+                0,
+                RenderConfig.gridSize.x,
+                14,
                 "top",
             ),
         );
@@ -65,6 +72,9 @@ export class WorkPage extends Page {
     }
 
     destroy(): void {
+        this.worksGrid?.destroy();
+        this.projects = null as any;
+
         super.destroy();
     }
 }

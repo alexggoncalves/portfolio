@@ -1,11 +1,10 @@
 import { Layer } from "./Layer";
-import { Vector2 } from "three";
 import { MathUtils } from "three";
 import { clamp } from "three/src/math/MathUtils.js";
 import type { InteractiveElement } from "./InteractiveElement";
-import { WorksRow } from "../../pages/homepage/WorksRow";
+import { ProjectsRow } from "../../pages/homepage/ProjectsRow";
 import { RenderConfig } from "../../render/RenderConfig";
-import { AppState } from "../../render/AppState";
+import { AppState } from "../../app/AppState";
 
 //----------------------------------
 // PAGE CLASS
@@ -43,7 +42,8 @@ export class Page {
 
     update(
         delta: number,
-        mousePos: Vector2,
+        mouseX: number,
+        mouseY: number,
         scrollDelta: number,
         isMouseDown: boolean,
     ): void {
@@ -58,13 +58,13 @@ export class Page {
             layer.update(delta, this.scrollOffset);
 
             // Update worksRow dragging state
-            if (layer instanceof WorksRow) {
-                layer.updateDragState(isMouseDown, mousePos);
+            if (layer instanceof ProjectsRow) {
+                layer.updateDragState(mouseX, mouseY, isMouseDown);
             }
 
             // Update hovered elements array
             layer.interactiveElements.forEach((element: InteractiveElement) => {
-                if (element.contains(mousePos))
+                if (element.contains(mouseX, mouseY))
                     this.hoveredElements.push(element);
             });
         });
@@ -78,8 +78,10 @@ export class Page {
         // Draw layer
         asciiCtx.save();
         bgCtx.save();
+        
         bgCtx.globalAlpha = this.opacity;
         asciiCtx.globalAlpha = this.opacity;
+
         this.layers.forEach((layer: Layer) => {
             layer.draw(asciiCtx, bgCtx, this.opacity);
         });
@@ -168,7 +170,7 @@ export class Page {
         // Destroy all layers
         this.layers.forEach((layer) => layer.destroy());
         this.layers = [];
-        
+
         // Clear arrays to release references
 
         this.hoveredElements = null as any;

@@ -1,21 +1,20 @@
 import { Page } from "../../elements/core/Page";
 import { Layer } from "../../elements/core/Layer";
-import type { Work } from "../../../stores/assetStore";
-import { WorksRow } from "./WorksRow";
-import { Vector2 } from "three";
+import { ProjectsRow } from "./ProjectsRow";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
 import { RenderConfig } from "../../render/RenderConfig";
+import type { Project } from "../../app/contentAssets";
 
 export class HomePage extends Page {
-    works: Work[] = [];
+    projects: Project[] = [];
 
     constructor(
-        works: Work[],
+        projects: Project[],
         isMobile: boolean,
         goTo: (path: string) => void,
     ) {
         super("home", isMobile, goTo);
-        this.works = works;
+        this.projects = projects;
         this.init();
     }
 
@@ -25,9 +24,10 @@ export class HomePage extends Page {
 
         this.pageHeight = RenderConfig.gridSize.y;
 
-        const workRow = new WorksRow(
-            this.works,
-            new Vector2(0, RenderConfig.gridSize.y + 6),
+        const workRow = new ProjectsRow(
+            this.projects,
+            0,
+            RenderConfig.gridSize.y -12,
             20,
             5,
             1,
@@ -35,7 +35,7 @@ export class HomePage extends Page {
             this.isMobile,
         );
 
-        this.pageHeight += workRow.size.y;
+        this.pageHeight += workRow.h;
         this.layers.push(workRow);
 
         this.pageHeight += 40;
@@ -49,8 +49,10 @@ export class HomePage extends Page {
         gradientLayer.addElement(
             new FadeGradient(
                 RenderConfig.bgColor,
-                new Vector2(0, 0),
-                new Vector2(RenderConfig.gridSize.x, 14),
+                0,
+                0,
+                RenderConfig.gridSize.x,
+                14,
                 "top",
             ),
         );

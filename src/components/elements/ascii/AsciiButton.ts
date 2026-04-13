@@ -2,6 +2,7 @@ import { Color, Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 import { InteractiveElement } from "../core/InteractiveElement";
+import type { Unit } from "../core/Element";
 
 //------------------------------------------
 // Button Class
@@ -15,7 +16,8 @@ export class AsciiButton extends InteractiveElement {
     constructor(
         text: string,
         callback: () => void,
-        position: Vector2,
+        x: number,
+        y: number,
         color: Color,
         backgroundColor: Color4,
 
@@ -24,7 +26,7 @@ export class AsciiButton extends InteractiveElement {
         size?: Vector2,
         resetCursorOnClick?: boolean,
     ) {
-        super(position, color, backgroundColor, horizontalAlign, verticalAlign);
+        super(x,y,"grid", color, backgroundColor, horizontalAlign, verticalAlign);
 
         this.text = text;
         this.isInteractive = true;
@@ -53,10 +55,10 @@ export class AsciiButton extends InteractiveElement {
 
         // Draw frame
         context.strokeRect(
-            this.pixelPosition.x,
-            this.pixelPosition.y,
-            this.pixelSize.x,
-            this.pixelSize.y,
+            this.x,
+            this.y,
+            this.w,
+            this.h,
         );
     }
 

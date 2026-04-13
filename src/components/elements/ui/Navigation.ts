@@ -22,14 +22,14 @@ export class Navigation extends Layer {
     }
 
     init(isMobile?: boolean): void {
-        let xOffset = -5;
-
-        
+        let x = -5;
+        let y = 3;
 
         const contactsButton = new AsciiButton(
             "contacts",
             () => this.goTo("/contacts"),
-            isMobile ? new Vector2(xOffset, -4) : new Vector2(xOffset, 3),
+            x,
+            y,
             this.color,
             this.backgroundColor,
             "right",
@@ -39,11 +39,13 @@ export class Navigation extends Layer {
         );
         this.addElement(contactsButton);
 
-        xOffset -= contactsButton.gridSize.x + 3;
+        x -= contactsButton.gridW + 3;
+
         const projectsButton = new AsciiButton(
             "projects",
             () => this.goTo("/projects"),
-            isMobile ? new Vector2(-4, -6) : new Vector2(xOffset, 3),
+            x,
+            y,
             this.color,
             this.backgroundColor,
             "right",
@@ -52,12 +54,13 @@ export class Navigation extends Layer {
             false,
         );
         this.addElement(projectsButton);
-        xOffset -= projectsButton.gridSize.x + 3;
 
+        x -= projectsButton.gridW + 3;
         const homeButton = new AsciiButton(
             "home",
             () => this.goTo("/"),
-            isMobile ? new Vector2(-4, -8) : new Vector2(xOffset, 3),
+            x,
+            y,
             this.color,
             this.backgroundColor,
             "right",
@@ -74,10 +77,10 @@ export class Navigation extends Layer {
         });
     }
 
-    updateMouseState(mousePos: Vector2) {
+    updateMouseState(mouseX: number, mouseY: number): void {
         this.hoveredElement = null;
         this.interactiveElements.forEach((element: InteractiveElement) => {
-            if (element.contains(mousePos)) {
+            if (element.contains(mouseX, mouseY)) {
                 this.hoveredElement = element;
                 return;
             }

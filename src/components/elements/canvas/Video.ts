@@ -2,15 +2,16 @@ import { Vector2 } from "three";
 import { InteractiveElement } from "../core/InteractiveElement";
 import type { Layer } from "../core/Layer";
 import { Button } from "../ui/Button";
-import useAssetStore from "../../../stores/assetStore";
-
+import { getIconById } from "../../app/contentAssets";
+import { videos } from "../../app/assetRecords";
 //------------------------------------------
 // Ascii Image Class
 //------------------------------------------
 
-export class CanvasVideo extends InteractiveElement {
+export class VideoPlayer extends InteractiveElement {
     layer: Layer;
-    video: HTMLVideoElement; // Video to draw
+    video: HTMLVideoElement | null = null; // Video to draw
+    src: string;
     imageSize: Vector2 = new Vector2(0, 0);
 
     controlsHeight: number = 25; // controls size in pixels
@@ -23,20 +24,24 @@ export class CanvasVideo extends InteractiveElement {
     constructor(
         layer: Layer,
         src: string,
-        position: Vector2,
-        width: number, // width in ascii cells
-        height: number, // height in ascii cells
+        x: number,
+        y: number,
+        w: number,
+        h: number,
         radius: number = 0,
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        super(position, undefined, undefined, horizontalAlign, verticalAlign);
+        super(x, y,"grid",undefined, undefined, horizontalAlign, verticalAlign);
+
         this.layer = layer;
         this.isScrollable = true;
-        this.setSize(width, height, "pixel");
+        this.radius = radius;
+        this.src = src;
+
+        this.setSize(w, h, "pixel");
         this.applyAlignment();
 
-        this.radius = radius;
         this.zIndex = 2;
         this.hasPointerOnHover = false;
         layer.addElement(this);
@@ -44,20 +49,20 @@ export class CanvasVideo extends InteractiveElement {
         // Create controls
         this.createVideoControls();
 
-        // Create video element
-        this.video = document.createElement("video");
-        this.video.crossOrigin = "anonymous";
-        this.video.src = src;
-        this.video.loop = true;
-        this.video.muted = true;
-        this.video.playsInline = true;
-        this.video.addEventListener(
-            "loadedmetadata",
-            this.onVideoLoadedMetadata,
-        );
+        this.resolveVideo();
+    }
+
+    private resolveVideo() {
+        const record = videos.get(this.src);
+
+        if (record) {
+            this.video = record.element;
+            this.loaded = record.loaded;
+        }
     }
 
     private play() {
+        if (!this.loaded || !this.video) return;
         if (!this.isPlaying) {
             this.video.play();
             this.isPlaying = true;
@@ -68,20 +73,20 @@ export class CanvasVideo extends InteractiveElement {
     }
 
     private createVideoControls() {
-        const getIconById = useAssetStore.getState().getIconById;
         const playIcon = getIconById("play");
+        
+        const x = this.x + this.controlsHeight/2;
+        const y = this.y + this.h - this.controlsHeight - 1;
 
-        const placementPosition = new Vector2(
-            this.pixelPosition.x,
-            this.pixelPosition.y + this.pixelSize.y - this.controlsHeight,
-        );
         if (playIcon) {
             const playButton = new Button(
                 playIcon.src,
                 () => this.play(),
-                placementPosition.clone(),
+                x,
+                y,
                 this.controlsHeight,
                 this.controlsHeight,
+                "pixel",
                 undefined,
                 undefined,
                 false,
@@ -92,16 +97,18 @@ export class CanvasVideo extends InteractiveElement {
         }
     }
 
-    private onVideoLoadedMetadata = () => {
-        this.loaded = true;
-        // this.video.play();
-    };
-
     draw(
         _asciiCtx: CanvasRenderingContext2D,
         bgCtx: CanvasRenderingContext2D,
     ): void {
-        if (!this.video) return;
+        if (!this.loaded) {
+            const record = videos.get(this.src);
+
+            if (record?.loaded) {
+                this.video = record.element;
+                this.loaded = true;
+            }
+        }
 
         bgCtx.save();
 
@@ -116,13 +123,14 @@ export class CanvasVideo extends InteractiveElement {
     }
 
     private drawVideo(bgCtx: CanvasRenderingContext2D): void {
+        if (!this.loaded || !this.video) return;
         // Draw video to background canvas
         bgCtx.drawImage(
             this.video,
-            this.pixelPosition.x - this.pixelOffset.x,
-            this.pixelPosition.y - this.pixelOffset.y,
-            this.pixelSize.x,
-            this.pixelSize.y,
+            this.x - this.offsetX,
+            this.y - this.offsetY,
+            this.w,
+            this.h,
         );
     }
 
@@ -131,16 +139,15 @@ export class CanvasVideo extends InteractiveElement {
 
         // Draw image to "background" canvas
         bgCtx.fillRect(
-            this.pixelPosition.x - this.pixelOffset.x,
-            this.pixelPosition.y - this.pixelOffset.y,
-            this.pixelSize.x,
-            this.pixelSize.y,
+            this.x - this.offsetX,
+            this.y - this.offsetY,
+            this.w,
+            this.h,
         );
     }
 
-    
-
     onClick(): void {
+        if (!this.loaded || !this.video) return;
         if (this.video.paused) {
             this.video.play();
         } else if (!this.video.paused) {
@@ -151,14 +158,7 @@ export class CanvasVideo extends InteractiveElement {
     destroy(): void {
         // stop video
         if (this.video) {
-            this.video.pause();
-            this.video.removeAttribute("src");
-            this.video.load(); // IMPORTANT: releases decoder
-            this.video.removeEventListener(
-                "loadedmetadata",
-                this.onVideoLoadedMetadata,
-            );
-            this.video = undefined as any;
+            this.video = null;
         }
 
         // reset state
@@ -166,7 +166,7 @@ export class CanvasVideo extends InteractiveElement {
         this.loaded = false;
 
         this.layer.destroy();
-        this.layer = undefined as any
+        this.layer = undefined as any;
 
         super.destroy();
     }

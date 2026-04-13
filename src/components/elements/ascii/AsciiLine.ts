@@ -1,4 +1,4 @@
-import type { Color, Vector2 } from "three";
+import type { Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 import { brightnessMap, Element } from "../core/Element";
 
@@ -7,30 +7,48 @@ import { brightnessMap, Element } from "../core/Element";
 //-----------------------------------------
 
 export class AsciiLine extends Element {
+    // Point A
+    xA: number;
+    yA: number;
+
+    // Point B
+    xB: number;
+    yB: number;
+
     char: string; // character for the line
-    pointA: Vector2;
-    pointB: Vector2;
     strokeWidth: number;
 
     constructor(
         char: string,
-        pointA: Vector2,
-        pointB: Vector2,
+        xA: number,
+        yA: number,
+        xB: number,
+        yB: number,
         strokeWidth: number,
         color: Color,
         backgroundColor: Color4,
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        super(pointA, color, backgroundColor, horizontalAlign, verticalAlign);
+        super(
+            xA,
+            yA,
+            "grid",
+            color,
+            backgroundColor,
+            horizontalAlign,
+            verticalAlign,
+        );
 
         this.char = char;
         this.setSize(this.char);
         // this.applyAlignment();
 
         this.strokeWidth = strokeWidth;
-        this.pointA = pointA;
-        this.pointB = pointB;
+        this.xA = xA;
+        this.yA = yA;
+        this.xB = xB;
+        this.yB = yB;
     }
 
     draw(
@@ -40,10 +58,10 @@ export class AsciiLine extends Element {
         const brightness = brightnessMap.get(this.char) || 0;
 
         this.drawASCIILine(
-            this.pointA.x,
-            this.pointA.y,
-            this.pointB.x,
-            this.pointB.y,
+            this.xA,
+            this.yA,
+            this.xB,
+            this.yB,
             this.strokeWidth,
             this.color.r,
             this.color.g,

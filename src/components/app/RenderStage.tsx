@@ -2,15 +2,15 @@ import { useLocation } from "react-router";
 
 import useSceneStore from "../../stores/sceneStore";
 
-import SceneCanvas from "./SceneCanvas";
-import LayoutRenderer from "./LayoutRenderer";
-import Postprocessing from "./postprocessing/Postprocessing";
+import SceneCanvas from "../render/SceneCanvas";
+import LayoutRenderer from "../render/LayoutRenderer";
+import Postprocessing from "../render/postprocessing/Postprocessing";
 
 import SceneRenderer from "../scenes/SceneRenderer";
 
 import usePageManager from "../../hooks/usePageManager";
 import useNav from "../../hooks/useNav";
-import { RenderConfig } from "./RenderConfig";
+// import AssetLoader from "./AssetLoader";
 
 //---------------------------------------------------------------------
 // RenderStage: Handle page layout and 3d Scene + transitions
@@ -20,13 +20,14 @@ function RenderStage() {
     const { isMobile } = useSceneStore();
 
     // Initialize the page manager state
-    usePageManager(location, isMobile, []);
+    usePageManager(location, isMobile);
    
     // Initialize frame and navigations layers
-    const nav = useNav([RenderConfig.gridSize.x, RenderConfig.gridSize.y, isMobile]);
+    const nav = useNav();
     return (
         <>
             <SceneCanvas>
+                {/* <AssetLoader /> */}
                 <SceneRenderer />
                 <LayoutRenderer nav={nav} />
 

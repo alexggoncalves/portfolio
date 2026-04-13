@@ -1,14 +1,19 @@
-import { Color, Vector2 } from "three";
+import { Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 import { InteractiveElement } from "../core/InteractiveElement";
+import type { Unit } from "../core/Element";
+import { images } from "../../app/assetRecords";
 
 //------------------------------------------
 // Button Class
 //------------------------------------------
 
 export class Button extends InteractiveElement {
-    icon: HTMLImageElement;
+    icon: HTMLImageElement | null = null;
+    iconSrc: string;
+    loaded: boolean = false;
+
     callback: () => void; // Button's function
 
     name: string = "play";
@@ -16,9 +21,11 @@ export class Button extends InteractiveElement {
     constructor(
         iconSrc: string,
         callback: () => void,
-        position: Vector2,
+        x: number,
+        y: number,
         w: number,
         h: number,
+        unit: Unit,
         color?: Color,
         backgroundColor?: Color4,
 
@@ -26,25 +33,38 @@ export class Button extends InteractiveElement {
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        super(position, color, backgroundColor, horizontalAlign, verticalAlign);
-        this.setPosition(position.x, position.y, "pixel");
-        this.setSize(w, h, "pixel");
+        super(
+            x,
+            y,
+            unit,
+            color,
+            backgroundColor,
+            horizontalAlign,
+            verticalAlign,
+        );
+        this.setSize(w, h, unit);
+        this.applyAlignment();
+        this.iconSrc = iconSrc;
 
         this.isInteractive = true;
         this.hasPointerOnHover = true;
         this.callback = callback;
 
-        this.icon = new Image();
-        this.icon.crossOrigin = "anonymous";
-        this.icon.src = iconSrc;
-        this.icon.onload = () => {
-            // this.loaded = true;
-        };
-
-        this.applyAlignment();
+        this.resolveImage();
 
         if (resetCursorOnClick != undefined)
             this.resetCursorOnClick = resetCursorOnClick;
+    }
+
+    private resolveImage() {
+        const record = images.get(this.iconSrc);
+
+        if (record) {
+            this.icon = record.element;
+            this.loaded = record.loaded;
+            return;
+        }
+        this.loaded = false;
     }
 
     drawButtonFrame(
@@ -59,12 +79,7 @@ export class Button extends InteractiveElement {
         context.lineWidth = strokeWeight;
 
         // Draw frame
-        context.strokeRect(
-            this.pixelPosition.x,
-            this.pixelPosition.y - this.pixelOffset.y,
-            this.pixelSize.x,
-            this.pixelSize.y,
-        );
+        context.strokeRect(this.x, this.y - this.offsetY, this.w, this.h);
     }
 
     // update(): void {
@@ -75,13 +90,20 @@ export class Button extends InteractiveElement {
         _ui: CanvasRenderingContext2D,
         background: CanvasRenderingContext2D,
     ): void {
-        if (this.icon) {
+        const record = images.get(this.iconSrc);
+
+        if (record?.loaded && !this.loaded) {
+            this.icon = record.element;
+            this.loaded = true;
+        }
+
+        if (this.loaded && this.icon) {
             background.drawImage(
                 this.icon,
-                this.pixelPosition.x,
-                this.pixelPosition.y - this.pixelOffset.y,
-                this.pixelSize.x,
-                this.pixelSize.y,
+                this.x,
+                this.y - this.offsetY,
+                this.w,
+                this.h,
             );
         }
 
@@ -96,13 +118,8 @@ export class Button extends InteractiveElement {
     }
 
     destroy(): void {
-        if (this.icon) {
-            this.icon.onload = null;
-            this.icon.src = "";
-        }
-        this.icon = null as any;
-        this.callback = undefined as any;
+        this.icon = null;
 
-        super.destroy()
+        super.destroy();
     }
 }

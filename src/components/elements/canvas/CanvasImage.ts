@@ -1,13 +1,14 @@
-import { Vector2 } from "three";
-import { Element } from "../core/Element";
+import { Element, type Unit } from "../core/Element";
+import { images } from "../../app/assetRecords";
 
 //------------------------------------------
 // Ascii Image Class
 //------------------------------------------
 
 export class CanvasImage extends Element {
-    image: HTMLImageElement; // Image to draw
+    image: HTMLImageElement | null = null; // Image to draw
 
+    src: string;
     loaded = false;
     radius: number;
 
@@ -15,59 +16,61 @@ export class CanvasImage extends Element {
 
     constructor(
         src: string,
-        position: Vector2,
-        width: number, // width in ascii cells
-        height: number, // height in ascii cells
+        x: number,
+        y:number,
+        w: number, // width in ascii cells
+        h: number, // height in ascii cells
         radius: number = 0,
+        unit: Unit = "grid",
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        super(position, undefined, undefined, horizontalAlign, verticalAlign);
+        super(x,y, unit, undefined, undefined, horizontalAlign, verticalAlign);
         this.isScrollable = true;
-        this.setSize(width, height, "grid");
-        this.applyAlignment();
+        this.setSize(w, h, unit);
 
         this.radius = radius;
 
-        this.image = new Image();
-        this.image.crossOrigin = "anonymous";
-        this.image.src = src;
-        this.image.onload = () => {
-            this.loaded = true;
-        };
+        this.src = src;
+        this.resolveImage();
+    }
+
+    private resolveImage() {
+        const record = images.get(this.src);
+
+        if (record) {
+            this.image = record.element;
+            this.loaded = record.loaded;
+            return;
+        }
+        this.loaded = false;
     }
 
     draw(
         _asciiCtx: CanvasRenderingContext2D,
         bgCtx: CanvasRenderingContext2D,
     ): void {
-        if (!this.image) return;
+
+        
 
         bgCtx.save();
-        bgCtx.translate(-this.pixelOffset.x, -this.pixelOffset.y);
+        bgCtx.translate(- this.offsetX, - this.offsetY);
 
         if (this.radius > 0) {
             bgCtx.clip(this.getClipPath());
         }
 
-        if (!this.loaded) {
-            this.drawPlaceholder(bgCtx);
-        } else {
-            this.drawImage(bgCtx);
-        }
+        if (this.loaded && this.image) {
+            bgCtx.drawImage(
+                this.image,
+                this.x,
+                this.y,
+                this.w,
+                this.h,
+            );
+        } else this.drawPlaceholder(bgCtx);
 
         bgCtx.restore();
-    }
-
-    private drawImage(bgCtx: CanvasRenderingContext2D): void {
-        // Draw image to "background" canvas
-        bgCtx.drawImage(
-            this.image,
-            this.pixelPosition.x,
-            this.pixelPosition.y,
-            this.pixelSize.x,
-            this.pixelSize.y,
-        );
     }
 
     private drawPlaceholder(bgCtx: CanvasRenderingContext2D): void {
@@ -75,20 +78,20 @@ export class CanvasImage extends Element {
 
         // Draw image to "background" canvas
         bgCtx.fillRect(
-            this.pixelPosition.x,
-            this.pixelPosition.y,
-            this.pixelSize.x,
-            this.pixelSize.y,
+            this.x,
+            this.y,
+            this.w,
+            this.h,
         );
     }
 
     private getClipPath() {
         if (this.clipPath) return this.clipPath;
 
-        const x = this.pixelPosition.x;
-        const y = this.pixelPosition.y;
-        const width = this.pixelSize.x;
-        const height = this.pixelSize.y;
+        const x = this.x;
+        const y = this.y;
+        const width = this.w;
+        const height = this.h;
 
         const path = new Path2D();
         path.moveTo(x + this.radius, y);
@@ -112,9 +115,7 @@ export class CanvasImage extends Element {
 
     destroy(): void {
         // Remove references to image
-        this.image.onload = null;
-        this.image.src = "";
-        this.image = null as any;
+        this.image = null;
         this.clipPath = undefined;
 
         super.destroy();

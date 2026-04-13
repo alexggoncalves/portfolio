@@ -21,7 +21,8 @@ export class ContactsPage extends Page {
         mainLayer.addElement(
             new AsciiBlock(
                 this.isMobile ? titleMobile : title,
-                new Vector2(5, 4),
+                5,
+                4,
                 new Color("white"),
                 new Color4(0, 0.4, 0.4, 0),
                 "left",

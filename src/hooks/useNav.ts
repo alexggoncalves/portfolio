@@ -2,12 +2,15 @@ import { useEffect, useRef} from "react";
 
 import { useNavigate } from "react-router";
 import { Navigation } from "../components/elements/ui/Navigation";
+import useSceneStore from "../stores/sceneStore";
 
 //---------------------------------------------------------------------
 // useNav (Hook): Initialize the navigation layer
 //---------------------------------------------------------------------
-function useNav(deps: any[]) {
+function useNav() {
     const navRef = useRef<Navigation | null>(null);
+
+    const { isReady } = useSceneStore();
 
     const navigate = useNavigate();
     const goTo = (p: string) => navigate(p);
@@ -26,7 +29,7 @@ function useNav(deps: any[]) {
             navRef.current?.destroy();
             navRef.current = null;
         };
-    }, deps);
+    }, [isReady]);
 
     if (!navRef.current) return null;
     return navRef.current;

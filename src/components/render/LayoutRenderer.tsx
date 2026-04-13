@@ -64,7 +64,8 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
         // Update and draw current and next page
         updatePages(
             delta,
-            distortedPointerPosition.current,
+            distortedPointerPosition.current.x,
+            distortedPointerPosition.current.y,
             isMouseDown.current,
         );
 
@@ -109,23 +110,31 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
 
     const updatePages = (
         delta: number,
-        mousePos: Vector2,
+        mouseX: number,
+        mouseY: number,
         isMouseDown: boolean,
     ) => {
         // Update current page
         currentPage?.update(
             delta,
-            mousePos,
+            mouseX,
+            mouseY,
             !nextPage ? scrollDelta.current : 0,
             isMouseDown,
         );
 
         // Update next page if it exists
-        nextPage?.update(delta, mousePos, scrollDelta.current, isMouseDown);
+        nextPage?.update(
+            delta,
+            mouseX,
+            mouseY,
+            scrollDelta.current,
+            isMouseDown,
+        );
 
         // Update navigation
         nav?.update(0, 0);
-        nav?.updateMouseState(mousePos);
+        nav?.updateMouseState(mouseX,mouseY);
     };
 
     const drawPages = (

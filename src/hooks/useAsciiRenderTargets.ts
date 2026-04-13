@@ -8,7 +8,7 @@ import {
 import type Color4 from "three/src/renderers/common/Color4.js";
 
 import { RenderConfig } from "../components/render/RenderConfig";
-import { AppState } from "../components/render/AppState";
+import { AppState } from "../components/app/AppState";
 
 function useAsciiRenderTargets() {
     const { size } = useThree();

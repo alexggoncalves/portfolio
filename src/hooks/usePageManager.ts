@@ -3,15 +3,13 @@ import { useNavigate } from "react-router";
 import { Page } from "../components/elements/core/Page";
 
 import createPage from "../utils/createPage";
-import useContentStore from "../stores/assetStore";
+// import useContentStore from "../stores/assetStore";
 import useSceneStore from "../stores/sceneStore";
-import { AppState } from "../components/render/AppState";
+import { AppState } from "../components/app/AppState";
 
-function usePageManager(location: any, isMobile: boolean, deps: []) {
+function usePageManager(location: any, isMobile: boolean) {
     const { currentPage, nextPage, setCurrentPage, setNextPage } =
         useSceneStore.getState();
-
-    const { works } = useContentStore();
 
     const navigate = useNavigate();
     const goTo = (p: string) => navigate(p);
@@ -19,34 +17,22 @@ function usePageManager(location: any, isMobile: boolean, deps: []) {
     useEffect(() => {
         // Create or switch pages when route or dependencies change
         updatePage();
-    }, [ works, isMobile, location.pathname ]);
+    }, [ isMobile, location.pathname ]);
 
-    useEffect(() => {
-        const onResize = () => {
-            currentPage?.onResize();
-        };
+    // useEffect(() => {
+    //     const onResize = () => {
+    //         currentPage?.onResize();
+    //     };
 
-        window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
-    }, []);
-
-    // function switchPage() {
-    //     const scene = location.pathname.slice(1);
-
-    //     const newPage = createPage(scene, isMobile, goTo, works);
-
-    //     // Restore last scroll
-    //     const pageScrolls = AppState.pageScrolls;
-    //     const storedScroll: number = pageScrolls[newPage.name] || 0;
-
-    //     newPage.scrollOffset = storedScroll;
-    // }
+    //     window.addEventListener("resize", onResize);
+    //     return () => window.removeEventListener("resize", onResize);
+    // }, []);
 
     function updatePage() {
         // Get path and remove first "/"
         const scene = location.pathname.slice(1);
 
-        const newPage = createPage(scene, isMobile, goTo, works);
+        const newPage = createPage(scene, isMobile, goTo);
 
         // Restore last scroll
         const pageScrolls = AppState.pageScrolls;

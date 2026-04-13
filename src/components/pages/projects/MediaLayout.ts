@@ -1,10 +1,7 @@
-import { Vector2 } from "three";
-
 import { Layer } from "../../elements/core/Layer";
-import type { MediaBlock } from "../../../stores/assetStore";
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
-// import { CanvasText } from "../../elements/CanvasText";
-import { CanvasVideo } from "../../elements/canvas/Video";
+import { VideoPlayer } from "../../elements/canvas/Video";
+import type { MediaBlock } from "../../app/contentAssets";
 
 //-------------------------------
 //          MEDIA LAYOUT LAYER
@@ -14,26 +11,33 @@ export class MediaLayout extends Layer {
     goTo: (path: string) => void;
     media: MediaBlock[];
 
-    layoutSize: Vector2 = new Vector2(0);
+    x: number;
+    y: number;
+    w: number = 0;
+    h: number = 0;
 
-    placementPosition: Vector2;
+    placementY: number = 0;
 
     private imageGap: number = 2;
 
     constructor(
         media: MediaBlock[],
-        position: Vector2,
+        x: number,
+        y: number,
         width: number,
         goTo: (path: string) => void,
         isMobile: boolean,
     ) {
         super("layout", [], goTo);
 
-        this.layoutSize.set(width,position.y)
+        this.x = x;
+        this.y = y;
+        this.w = width;
+        this.h = y;
 
         this.media = media;
         this.goTo = goTo;
-        this.placementPosition = position;
+        this.placementY = y;
 
         this.isScrollable = true;
 
@@ -52,51 +56,47 @@ export class MediaLayout extends Layer {
                     break;
             }
         });
-        
+
         // this.layoutSize.y += this.bottomMargin
     }
 
     placeImage(src: string, aspectRatio: number): void {
         if (!src) return;
 
-        const width = this.layoutSize.x;
-        const height = this.layoutSize.x / aspectRatio;
+        const width = this.w;
+        const height = this.w / aspectRatio;
 
         // Place thumbnail on canvas
         const block = new CanvasImage(
             src,
-            this.placementPosition.clone(),
+            this.x,
+            this.placementY,
             width,
             height,
         );
 
         this.elements.push(block);
 
-        this.placementPosition.y += block.gridSize.y + this.imageGap;
-        this.layoutSize.y += block.gridSize.y + this.imageGap;
+        this.placementY += block.gridH + this.imageGap;
+        this.h += block.gridH + this.imageGap;
     }
 
-
-    placeVideo(src: string,): void {
-return 
-        const width = (this.layoutSize.x * 12);
+    placeVideo(src: string): void {
+        const width = this.w * 12;
         const height = width / (16 / 9);
 
-        const position = this.placementPosition.clone();
-
-        const block = new CanvasVideo(
+        const block = new VideoPlayer(
             this,
             src,
-            position,
+            this.x,
+            this.placementY,
             width,
             height,
         );
 
-        this.placementPosition.y += block.gridSize.y + this.imageGap;
-        this.layoutSize.y += block.gridSize.y + this.imageGap;
+        this.placementY += block.gridH + this.imageGap;
+        this.h += block.gridH + this.imageGap;
     }
 
-    destroy(): void {
-        
-    }
+    destroy(): void {}
 }

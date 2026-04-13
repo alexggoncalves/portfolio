@@ -1,18 +1,19 @@
 import { Vector2 } from "three";
 
-import type { Work } from "../../../stores/assetStore";
-import { WorkCard } from "./WorkCard";
+import { ProjectCard } from "./ProjectCard";
 
 import { Layer } from "../../elements/core/Layer";
+import { type Project } from "../../app/contentAssets";
 
 //-------------------------------
 //          WORKS GRID LAYER
 //-------------------------------
 
-export class WorksGrid extends Layer {
-    works: Work[] = [];
+export class ProjectsGrid extends Layer {
+    projects: Project[] = [];
 
-    position: Vector2;
+    x: number;
+    y: number;
     private readonly imageAspectRatio: number = 5 / 3;
 
     gridSize: Vector2 = new Vector2(0);
@@ -22,8 +23,9 @@ export class WorksGrid extends Layer {
     gap: number;
 
     constructor(
-        works: Work[],
-        position: Vector2,
+        projects: Project[],
+        x: number,
+        y: number,
         width: number,
         minCardWidth: number,
         maxCardWidth: number,
@@ -34,8 +36,9 @@ export class WorksGrid extends Layer {
     ) {
         super("works_grid", [], goTo);
 
-        this.works = works;
-        this.position = position;
+        this.projects = projects;
+        this.x = x;
+        this.y = y;
         this.gridSize.x = width;
         this.margin = margin;
         this.gap = gap;
@@ -55,7 +58,7 @@ export class WorksGrid extends Layer {
     ): void {
         // Calculate columns and rows
         this.cols = this.calculateGridColumns(width, minCardW, maxCardW, gap);
-        this.rows = Math.ceil(this.works.length / this.cols);
+        this.rows = Math.ceil(this.projects.length / this.cols);
 
         // Image size in the ascii grid dimensions
         const availableWidth = this.gridSize.x - (this.cols - 1) * this.gap;
@@ -65,25 +68,24 @@ export class WorksGrid extends Layer {
         // Calculate total grid height
         this.gridSize.y = (imageHeight + this.gap) * this.rows + this.gap;
 
-        const offset = new Vector2(0, 0);
-        this.works.forEach((work: Work, index) => {
-            // Offset within the grid
-            offset.x = (imageWidth + this.gap) * (index % this.cols);
-            offset.y = (imageHeight + this.gap) * Math.floor(index / this.cols);
+        this.projects.forEach((project: Project, index) => {
+            const col = index % this.cols;
+            const row = Math.floor(index / this.cols);
+
+            const x = this.x + this.margin + col * (imageWidth + this.gap);
+            const y = this.y + row * (imageHeight + this.gap);
 
             // Create work card
-            const card = new WorkCard(
-                work,
-                new Vector2( // Position
-                    this.position.x + offset.x + this.margin,
-                    this.position.y + offset.y,
-                ),
-                new Vector2(imageWidth, imageHeight), // Size,
+            const card = new ProjectCard(
+                project,
+                x,
+                y,
+                imageWidth,
+                imageHeight,
                 10,
                 40,
                 this.goTo,
                 "projects",
-                
             );
 
             // Add card to the grid
@@ -122,5 +124,6 @@ export class WorksGrid extends Layer {
 
     destroy(): void {
         super.destroy();
+        this.projects = [];
     }
 }

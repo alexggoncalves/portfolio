@@ -1,4 +1,4 @@
-import { Color, Vector2 } from "three";
+import { Color } from "three";
 
 import { Element } from "../core/Element";
 import { RenderConfig } from "../../render/RenderConfig";
@@ -18,11 +18,12 @@ export class CanvasText extends Element {
     padding: number;
 
     constructor(
+        x: number,
+        y: number,
         text: string,
         font: string,
         fontSize: number,
         fontWeight: number,
-        position: Vector2,
         maxWidth: number, // in ascii cells
         lineHeight: number,
         padding: number,
@@ -30,7 +31,7 @@ export class CanvasText extends Element {
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        super(position, color, undefined, horizontalAlign, verticalAlign);
+        super(x, y, "grid", color, undefined, horizontalAlign, verticalAlign);
         this.isScrollable = true;
         this.font = font;
         this.fontSize = fontSize;
@@ -72,8 +73,8 @@ export class CanvasText extends Element {
         bgCtx.font = `${this.fontWeight} ${this.fontSize}px ${this.font}`;
 
         const position = {
-            x: Math.floor(this.pixelPosition.x + this.padding * RenderConfig.charSize.x),
-            y: Math.floor(this.pixelPosition.y - this.pixelOffset.y),
+            x: Math.floor(this.x + this.padding * RenderConfig.charSize.x),
+            y: Math.floor(this.y - this.offsetY),
         };
 
         let yOffset = 0;
@@ -81,7 +82,6 @@ export class CanvasText extends Element {
             bgCtx.fillText(line, position.x, position.y + yOffset);
             yOffset += this.lineHeight * this.fontSize;
         });
-
     }
 
     wrapText(text: string, maxWidth: number) {
@@ -109,7 +109,10 @@ export class CanvasText extends Element {
         return lines;
     }
 
-    getGridSize() {
-        return this.gridSize.divide(RenderConfig.charSize);
+    getGridSize(): { w: number; h: number } {
+        return {
+            w: this.gridW / RenderConfig.charSize.x,
+            h: this.gridH / RenderConfig.charSize.y,
+        };
     }
 }

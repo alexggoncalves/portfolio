@@ -23,15 +23,26 @@ export const brightnessMap = createBrightnessMap(RenderConfig.asciiSequence);
 // ELEMENT CLASS
 //-----------------------------------------
 
-export class Element {
-    //
-    gridPosition: Vector2; // Position in grid units
-    pixelPosition: Vector2; // Position in pixel units
-    gridSize: Vector2 = new Vector2(1); // Size in grid units
-    pixelSize: Vector2 = new Vector2(1); // Size in pixel units
+export type Unit = "pixel" | "grid";
 
-    gridOffset: Vector2 = new Vector2(0); // scroll offset in grid units
-    pixelOffset: Vector2 = new Vector2(0);
+export class Element {
+    // Position (grid + pixel)
+    x: number = 0;
+    y: number = 0;
+    gridX: number = 0;
+    gridY: number = 0;
+
+    // Size
+    w: number = 1;
+    h: number = 1;
+    gridW: number = 1;
+    gridH: number = 1;
+
+    // Offset
+    offsetX: number = 0;
+    offsetY: number = 0;
+    gridOffsetX: number = 0;
+    gridOffsetY: number = 0;
 
     horizontalAlign: "left" | "center" | "right" = "left"; // Horizontal alignment
     verticalAlign: "top" | "middle" | "bottom" = "top"; // Vertical alignment
@@ -52,18 +63,15 @@ export class Element {
     private _offset = new Vector2();
 
     constructor(
-        position: Vector2,
+        x: number,
+        y: number,
+        unit: Unit = "grid",
         color?: Color,
         backgroundColor?: Color4,
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        this.gridPosition = position;
-        this.pixelPosition = new Vector2(
-            position.x * RenderConfig.charSize.x,
-            position.y * RenderConfig.charSize.y,
-        );
-
+        this.setPosition(x, y, unit);
         this.opacity = 0;
 
         if (color) this.color = color;
@@ -73,15 +81,13 @@ export class Element {
     }
 
     checkBoundaries(pageY: number, pageHeight: number, pageWidth: number) {
-        // this.isInsidePageBoundaries = true;
-        // return;
+        this.isInsidePageBoundaries = true;
+        return;
 
-        const left = this.pixelPosition.x - this.pixelOffset.x;
-        const right =
-            this.pixelPosition.x + this.pixelSize.x - this.pixelOffset.x;
-        const top = this.pixelPosition.y - this.pixelOffset.y;
-        const bottom =
-            this.pixelPosition.y + this.pixelSize.y - this.pixelOffset.y;
+        const left = this.x - this.offsetX;
+        const right = this.x + this.w - this.offsetX;
+        const top = this.y - this.offsetY;
+        const bottom = this.y + this.h - this.offsetY;
 
         const horizontallyVisible = right > 0 && left < pageWidth;
         const verticallyVisible = bottom > pageY && top < pageY + pageHeight;
@@ -90,67 +96,73 @@ export class Element {
     }
 
     setSize(text: string): void;
-    setSize(x: number, y: number, unit: "pixel" | "grid"): void;
+    setSize(x: number, y: number, unit: Unit): void;
 
     // Calculate ascii block size ([x]: max line lenght | [y]: number of lines)
-    setSize(
-        arg1: string | number,
-        arg2?: number,
-        arg3?: "pixel" | "grid",
-    ): void {
+    setSize(arg1: string | number, arg2?: number, arg3?: Unit): void {
         if (typeof arg1 === "string") {
             const lines = (arg1.match(/\n/g) || "").length + 1;
             const maxlength = Math.max(
                 ...arg1.split("\n").map((line) => line.length),
             );
-            this.gridSize.x = maxlength;
-            this.gridSize.y = lines;
+            this.gridW = maxlength;
+            this.gridH = lines;
 
-            this.pixelSize.x = this.gridSize.x * RenderConfig.charSize.x;
-            this.pixelSize.y = this.gridSize.y * RenderConfig.charSize.y;
+            this.w = this.gridW * RenderConfig.charSize.x;
+            this.h = this.gridH * RenderConfig.charSize.y;
         } else {
             if (arg3 === "grid") {
-                this.gridSize.x = arg1;
+                this.gridW = arg1;
 
                 if (arg2) {
-                    this.gridSize.y = arg2;
+                    this.gridH = arg2;
                 }
-                this.pixelSize.x = this.gridSize.x * RenderConfig.charSize.x;
-                this.pixelSize.y = this.gridSize.y * RenderConfig.charSize.y;
+                this.w = this.gridW * RenderConfig.charSize.x;
+                this.h = this.gridH * RenderConfig.charSize.y;
             } else if (arg3 === "pixel") {
-                this.pixelSize.x = arg1;
+                this.w = arg1;
 
                 if (arg2) {
-                    this.pixelSize.y = arg2;
+                    this.h = arg2;
                 }
-                this.gridSize.x = this.pixelSize.x / RenderConfig.charSize.x;
-                this.gridSize.y = this.pixelSize.y / RenderConfig.charSize.y;
+                this.gridW = this.w / RenderConfig.charSize.x;
+                this.gridH = this.h / RenderConfig.charSize.y;
             }
         }
     }
 
-    setPosition(x: number, y: number, unit: "pixel" | "grid" = "grid"): void {
+    setPosition(x: number, y: number, unit: Unit = "grid"): void {
         if (unit === "pixel") {
-            this.pixelPosition.x = x;
-            this.pixelPosition.y = y;
-            this.gridPosition.x = Math.round(x / RenderConfig.charSize.x);
-            this.gridPosition.y = Math.round(y / RenderConfig.charSize.y);
+            this.x = x;
+            this.y = y;
+            this.gridX = Math.round(x / RenderConfig.charSize.x);
+            this.gridY = Math.round(y / RenderConfig.charSize.y);
         } else if (unit === "grid") {
-            this.gridPosition.x = x;
-            this.gridPosition.y = y;
-            this.pixelPosition.x = x * RenderConfig.charSize.x;
-            this.pixelPosition.y = y * RenderConfig.charSize.y;
+            this.gridX = x;
+            this.gridY = y;
+            this.x = x * RenderConfig.charSize.x;
+            this.y = y * RenderConfig.charSize.y;
         }
     }
 
-    setXOffset(value: number): void {
-        this.gridOffset.x = value;
-        this.pixelOffset.x = value * RenderConfig.charSize.x;
+    setXOffset(value: number, unit: Unit = "grid"): void {
+        if (unit === "pixel") {
+            this.gridOffsetX = value / RenderConfig.charSize.x;
+            this.offsetX = value;
+        } else if (unit === "grid") {
+            this.gridOffsetX = value;
+            this.offsetX = value * RenderConfig.charSize.x;
+        }
     }
 
-    setYOffset(value: number): void {
-        this.gridOffset.y = value;
-        this.pixelOffset.y = value * RenderConfig.charSize.y;
+    setYOffset(value: number, unit: Unit = "grid"): void {
+        if (unit === "pixel") {
+            this.gridOffsetY = value / RenderConfig.charSize.y;
+            this.offsetY = value;
+        } else if (unit === "grid") {
+            this.gridOffsetY = value;
+            this.offsetY = value * RenderConfig.charSize.y;
+        }
     }
 
     setOpacity(value: number): void {
@@ -159,28 +171,27 @@ export class Element {
 
     // Apply horizontal and vertical alignment
     applyAlignment() {
-
         const offset = this._offset;
         offset.set(0, 0);
 
         if (this.horizontalAlign === "right") {
-            offset.x = RenderConfig.gridSize.x - this.gridSize.x;
+            offset.x = RenderConfig.gridSize.x - this.gridW;
         } else if (this.horizontalAlign === "center") {
-            offset.x = Math.floor((RenderConfig.gridSize.x - this.gridSize.x) / 2);
+            offset.x = Math.floor((RenderConfig.gridSize.x - this.gridW) / 2);
         }
 
         if (this.verticalAlign === "bottom") {
-            this.gridPosition.y *= -1;
-            offset.y = RenderConfig.gridSize.y - this.gridSize.y;
+            this.gridY *= -1;
+            offset.y = RenderConfig.gridSize.y - this.gridH;
         } else if (this.verticalAlign === "middle") {
-            offset.y = (RenderConfig.gridSize.y - this.gridSize.y) / 2;
+            offset.y = (RenderConfig.gridSize.y - this.gridH) / 2;
         }
 
-        this.gridPosition.x += offset.x;
-        this.gridPosition.y += offset.y;
+        this.gridX += offset.x;
+        this.gridY += offset.y;
 
-        this.pixelPosition.x = this.gridPosition.x * RenderConfig.charSize.x;
-        this.pixelPosition.y = this.gridPosition.y * RenderConfig.charSize.y;
+        this.x = this.gridX * RenderConfig.charSize.x;
+        this.y = this.gridY * RenderConfig.charSize.y;
     }
 
     // Paint pixel on ui canvas
@@ -197,7 +208,7 @@ export class Element {
         asciiCtx.fillStyle = `rgba(${r * 255 * this.opacity},${g * 255 * this.opacity},${b * 255 * this.opacity},${brightnessValue})`;
 
         // Clear and draw new character pixel
-        asciiCtx.fillRect(x, y + this.gridOffset.y, 1, 1);
+        asciiCtx.fillRect(x, y + this.gridOffsetY, 1, 1);
     }
 
     drawBlock(
@@ -206,8 +217,8 @@ export class Element {
         bgCtx: CanvasRenderingContext2D,
         positionOffset?: Vector2,
     ) {
-        let x = this.gridPosition.x;
-        let y = this.gridPosition.y;
+        let x = this.gridX;
+        let y = this.gridY;
 
         if (positionOffset) {
             x += positionOffset.x;
@@ -248,7 +259,7 @@ export class Element {
                 x++;
             } else {
                 y++;
-                x = this.gridPosition.x;
+                x = this.gridX;
             }
         }
     }
