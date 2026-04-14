@@ -82,6 +82,7 @@ export class ProjectsGrid extends Layer {
                 y,
                 imageWidth,
                 imageHeight,
+                this,
                 10,
                 40,
                 this.goTo,

@@ -71,19 +71,17 @@ export class Navigation extends Layer {
         this.addElement(homeButton);
     }
 
-    resetHoverStates() {
-        this.interactiveElements.forEach((element) => {
-            element.isMouseOver = false;
-        });
-    }
-
-    updateMouseState(mouseX: number, mouseY: number): void {
+    updateNavMouseState(mouseX: number, mouseY: number): void {
         this.hoveredElement = null;
-        this.interactiveElements.forEach((element: InteractiveElement) => {
+
+        for (const element of this.interactiveElements) {
+            element.isMouseOver = false;
+
             if (element.contains(mouseX, mouseY)) {
                 this.hoveredElement = element;
-                return;
+                element.isMouseOver = true;
+                break;
             }
-        });
+        }
     }
 }

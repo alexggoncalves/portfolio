@@ -86,6 +86,13 @@ export class Layer {
         return element;
     }
 
+    removeElement(element: Element): void {
+        this.elements = this.elements.filter((e) => e !== element);
+        this.interactiveElements = this.interactiveElements.filter(
+            (e) => e !== element,
+        );
+    }
+
     destroy(): void {
         // Destroy normal elements
         this.elements.forEach((e) => e.destroy());

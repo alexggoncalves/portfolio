@@ -2,6 +2,7 @@ import { Layer } from "../../elements/core/Layer";
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
 import { VideoPlayer } from "../../elements/canvas/Video";
 import type { MediaBlock } from "../../app/contentAssets";
+import { RenderConfig } from "../../render/RenderConfig";
 
 //-------------------------------
 //          MEDIA LAYOUT LAYER
@@ -63,7 +64,6 @@ export class MediaLayout extends Layer {
     placeImage(src: string, aspectRatio: number): void {
         if (!src) return;
 
-        const width = this.w;
         const height = this.w / aspectRatio;
 
         // Place thumbnail on canvas
@@ -71,8 +71,11 @@ export class MediaLayout extends Layer {
             src,
             this.x,
             this.placementY,
-            width,
+            this.w,
             height,
+            0,
+            "grid",
+            "right"
         );
 
         this.elements.push(block);

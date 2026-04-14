@@ -1,7 +1,6 @@
-import { Color, Vector2 } from "three";
+import { Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 import { Element, type Unit } from "./Element";
-import usePointerStore from "../../../stores/pointerStore";
 
 //-----------------------------------------
 // ELEMENT CLASS
@@ -11,14 +10,8 @@ export class InteractiveElement extends Element {
     active: boolean = true;
 
     isMouseOver: boolean = false;
-    resetCursorOnClick: boolean = true;
 
     hasPointerOnHover: boolean = true;
-
-    isCursorPointer = false;
-
-    mouseEnter: () => void;
-    mouseLeave: () => void;
 
     constructor(
         x:number,
@@ -32,9 +25,6 @@ export class InteractiveElement extends Element {
         super(x, y, unit, color, backgroundColor, horizontalAlign, verticalAlign);
         this.setSize(1,1,"pixel")
         this.isInteractive = true;
-
-        this.mouseEnter = usePointerStore.getState().mouseEnter;
-        this.mouseLeave = usePointerStore.getState().mouseLeave;
     }
 
     contains(x: number,y: number): boolean {
@@ -48,32 +38,14 @@ export class InteractiveElement extends Element {
     }
 
     onClick() {
-        if (this.resetCursorOnClick) {
-            this.mouseLeave();
-        }
     }
 
     update() {
-        // if (this.hasPointerOnHover) {
-        if (this.isMouseOver && !this.isCursorPointer) {
-            this.mouseEnter();
-            this.isCursorPointer = true;
-        } else if (!this.isMouseOver && this.isCursorPointer) {
-            this.mouseLeave();
-            this.isCursorPointer = false;
-        }
     }
 
     destroy(): void {
         this.isMouseOver = false;
-        this.isCursorPointer = false;
         this.active = false;
-
-        // force cursor reset if this element was still active
-        this.mouseLeave?.();
-
-        this.mouseEnter = undefined as any;
-        this.mouseLeave = undefined as any;
 
         super.destroy?.();
     }

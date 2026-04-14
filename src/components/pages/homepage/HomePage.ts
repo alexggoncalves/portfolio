@@ -4,6 +4,8 @@ import { ProjectsRow } from "./ProjectsRow";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
 import { RenderConfig } from "../../render/RenderConfig";
 import type { Project } from "../../app/contentAssets";
+import { CanvasText } from "../../elements/canvas/CanvasText";
+import { Color } from "three";
 
 export class HomePage extends Page {
     projects: Project[] = [];
@@ -24,25 +26,52 @@ export class HomePage extends Page {
 
         this.pageHeight = RenderConfig.gridSize.y;
 
+        this.placeWorksRow();
+
+        this.createGradient();
+    }
+
+    placeWorksRow(): void {
+        const y = RenderConfig.gridSize.y - 12;
+        const indent = 5;
+        const cardHeight = 20;
+        const gap = 1;
+        const titleSize = 3
+        const titlePadding = 1;
+
         const workRow = new ProjectsRow(
             this.projects,
             0,
-            RenderConfig.gridSize.y -12,
-            20,
-            5,
-            1,
+            y + titleSize + titlePadding,
+            cardHeight,
+            indent,
+            gap,
             this.goTo,
             this.isMobile,
         );
+
+        const title = new CanvasText(
+            indent,
+            y,
+            "MY PROJECTS",
+            "Space Grotesk",
+            34,
+            600,
+            100,
+            1,
+            0,
+            new Color("white"),
+        );
+
+        workRow.addElement(title);
 
         this.pageHeight += workRow.h;
         this.layers.push(workRow);
 
         this.pageHeight += 40;
 
-        this.createGradient();
+        title.name = "works-row-title";
     }
-
     createGradient(): void {
         const gradientLayer = new Layer("gradient", []);
 

@@ -51,9 +51,6 @@ export class Button extends InteractiveElement {
         this.callback = callback;
 
         this.resolveImage();
-
-        if (resetCursorOnClick != undefined)
-            this.resetCursorOnClick = resetCursorOnClick;
     }
 
     private resolveImage() {

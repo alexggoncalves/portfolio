@@ -7,10 +7,13 @@ import type { NavigationSource } from "../../app/AppState";
 import { InteractiveElement } from "../../elements/core/InteractiveElement";
 import { RenderConfig } from "../../render/RenderConfig";
 import { getTagsById, type Project, type Tag } from "../../app/contentAssets";
+import type { Layer } from "../../elements/core/Layer";
+import type { Unit } from "../../elements/core/Element";
 
 export class ProjectCard extends InteractiveElement {
     project: Project;
-    
+    layer: Layer;
+
     canvasImage: CanvasImage | undefined;
 
     padding: number = 10;
@@ -30,6 +33,7 @@ export class ProjectCard extends InteractiveElement {
         y: number,
         w: number,
         h: number,
+        layer: Layer,
         padding?: number,
         cornerRadius?: number,
         goTo?: (path: string) => void,
@@ -39,6 +43,7 @@ export class ProjectCard extends InteractiveElement {
         this.setSize(w, h, "grid");
 
         this.project = project;
+        this.layer = layer;
         this.isInteractive = true;
 
         if (padding) this.padding = padding;
@@ -77,11 +82,14 @@ export class ProjectCard extends InteractiveElement {
                 tag,
                 x - hMargin,
                 yPos + vMargin,
+                "pixel",
                 14,
                 4,
                 18,
+                "right"
             );
             this.tags.push(tagLabel);
+            this.layer.addElement(tagLabel);
 
             // Increment y offset
             yPos += tagLabel.getTagHeight() + this.tagGap;
@@ -91,26 +99,27 @@ export class ProjectCard extends InteractiveElement {
     update(): void {
         super.update();
 
-        if(this.isMouseOver && !this.tagsOpened){
+        if (this.isMouseOver && !this.tagsOpened) {
             this.openTags();
-            this.tagsOpened = true
-        } else if(!this.isMouseOver && this.tagsOpened){
+            this.tagsOpened = true;
+        } else if (!this.isMouseOver && this.tagsOpened) {
             this.closeTags();
             this.tagsOpened = false;
         }
 
         // Update image
         if (this.canvasImage) {
-            this.canvasImage.setXOffset(this.gridOffsetX,"grid");
-            this.canvasImage.setYOffset(this.gridOffsetY,"grid");
+            this.canvasImage.setXOffset(this.gridOffsetX, "grid");
+            this.canvasImage.setYOffset(this.gridOffsetY, "grid");
             this.canvasImage.opacity = this.opacity;
         }
 
-        // Update tag labels
+        this.setTagsXOffset();
+    }
+
+    setTagsXOffset() {
         this.tags.forEach((tag) => {
-            tag.xOffset = this.offsetX;
-            tag.yOffset = this.offsetY;
-            tag.opacity = this.opacity;
+            tag.setXOffset(this.offsetX, "pixel");
         });
     }
 
@@ -121,15 +130,9 @@ export class ProjectCard extends InteractiveElement {
         // Draw hover highlight
         if (this.isMouseOver) {
             this.drawHoverState(bgCtx);
-
         }
         // Draw image
         this.canvasImage?.draw(asciiCtx, bgCtx);
-
-        // Draw tags
-        this.tags.forEach((tag) => {
-            tag.draw(bgCtx);
-        });
     }
 
     drawHoverState(background: CanvasRenderingContext2D): void {
@@ -165,9 +168,17 @@ export class ProjectCard extends InteractiveElement {
     }
 
     destroy(): void {
+        if (!this.tags) return;
+
         this.canvasImage?.destroy();
         this.canvasImage = undefined;
-        this.tags = undefined as any;
+
+        this.tags.forEach((tag) => {
+            this.layer.removeElement(tag);
+            tag.destroy();
+        });
+
+        this.tags = [];
         this.goTo = undefined;
 
         super.destroy();

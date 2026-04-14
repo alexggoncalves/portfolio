@@ -15,12 +15,13 @@ import { AppState } from "../../app/AppState";
 import {
     getIconById,
     getPersonById,
-    getTagById,
+    getTagsById,
     type MediaBlock,
     type Project,
     type TeamMember,
     type TextBlock,
 } from "../../app/contentAssets";
+import TagLabel from "../../elements/ui/TagLabel";
 
 export class ProjectDetailsPage extends Page {
     project: Project | null = null;
@@ -41,6 +42,9 @@ export class ProjectDetailsPage extends Page {
     textColor: Color = new Color("white");
 
     toolIconsHeight = 3;
+
+    tags: TagLabel[] = [];
+    tagsInitialized: boolean = false;
 
     constructor(
         project: Project,
@@ -92,7 +96,7 @@ export class ProjectDetailsPage extends Page {
     placeTeam(team?: TeamMember[]) {
         if (!team) return;
 
-        let x = this.placementX;
+        let x = this.placementX + 1;
         let y = this.placementY - 3;
 
         team.forEach((teamMember) => {
@@ -117,12 +121,17 @@ export class ProjectDetailsPage extends Page {
         y -= 2;
         x = this.placementX;
 
-        const title = new AsciiBlock(
-            "TEAM",
+        const title = new CanvasText(
             x,
             y,
+            "TEAM",
+            this.textFont,
+            this.textSize + 1,
+            400, // Weight
+            50, // Max width
+            this.textLineHeight,
+            this.textPadding,
             this.textColor,
-            new Color4(0, 0, 0, 0),
             "left",
             "top",
         );
@@ -163,17 +172,22 @@ export class ProjectDetailsPage extends Page {
         y -= 1; // space for the title
         x = this.placementX; // back to the left
 
-        const title = new AsciiBlock(
-            "BUILT WITH:",
+        const title = new CanvasText(
             x,
             y,
+            "BUILT WITH:",
+            this.textFont,
+            this.textSize + 1,
+            400, // Weight
+            50, // Max width
+            this.textLineHeight,
+            this.textPadding,
             this.textColor,
-            new Color4(0, 0, 0, 0),
             "left",
             "top",
         );
 
-        y -= title.gridH + 4; // Space under next element
+        y -= 5; // Space under next element
 
         // Place element if
         if (placedIcons > 0) {
@@ -190,11 +204,11 @@ export class ProjectDetailsPage extends Page {
 
         const paragraphs = description.paragraphs;
 
-        for (let i = paragraphs.length - 1; i >= 0; i--) {
+        for (let i = paragraphs.length-1; i >= 0; i--) {
             const textBlock = new CanvasText(
                 x,
                 y,
-                paragraphs[0],
+                paragraphs[i],
                 this.textFont,
                 this.textSize,
                 400, // Weight
@@ -212,7 +226,6 @@ export class ProjectDetailsPage extends Page {
 
             y -= Math.ceil(textHeight);
         }
-        description.paragraphs.forEach((paragraph) => {});
 
         this.placementY = y;
     }
@@ -248,44 +261,44 @@ export class ProjectDetailsPage extends Page {
         );
         this.titleElement.isScrollable = false;
 
-        
         this.placementY = y;
     }
 
     placeTags(tags: string[]) {
-        let x = this.placementX;
-        let y = this.placementY-1;
+        let x = this.placementX * RenderConfig.charSize.x;
+        let y = (this.placementY - 1) * RenderConfig.charSize.y;
 
-        tags.forEach((tag) => {
-            const tagColorHex = getTagById(tag)?.color;
-            const tagColor = new Color(tagColorHex);
+        const tagObjects = getTagsById(tags);
 
-            const tagElement = this.fixedLayer.addElement(
-                new AsciiBlock(
-                    " " + tag.toUpperCase() + " ",
-                    x,
-                    y,
-                    this.textColor,
-                    new Color4(tagColor.r, tagColor.g, tagColor.b, 0.7),
-                    "left",
-                    "top",
-                ),
+        tagObjects.forEach((tag) => {
+            const tagLabel = new TagLabel(
+                tag,
+                x,
+                y,
+                "pixel",
+                14,
+                4,
+                18,
+                "left",
             );
-            tagElement.isScrollable = false;
-            x += tagElement.gridW + 2;
+            tagLabel.isToggleable = false;
+
+            this.fixedLayer.addElement(tagLabel);
+            this.tags.push(tagLabel);
         });
     }
 
     placeMediaLayout(media: MediaBlock[]): void {
         const gridSize = RenderConfig.gridSize;
 
-        const margin = Math.ceil(gridSize.x * 0.26);
-        const layoutWidth = gridSize.x - margin * 2;
+        const margin = Math.ceil(gridSize.x * 0.05);
+
+        const layoutWidth = gridSize.x/2;
 
         // Create and place scrollable layout layer
         const mediaLayer = new MediaLayout(
             media,
-            72,
+            gridSize.x - layoutWidth - margin,
             14,
             layoutWidth,
             this.goTo,
@@ -342,6 +355,28 @@ export class ProjectDetailsPage extends Page {
                 "top",
             ),
         );
+    }
+
+    update(
+        delta: number,
+        mouseX: number,
+        mouseY: number,
+        scrollDelta: number,
+        isMouseDown: boolean,
+    ): void {
+        super.update(delta, mouseX, mouseY, scrollDelta, isMouseDown);
+
+        // Update tag positions after size is set
+        if (!this.tags) return;
+        if (this.tags[0].initialized && !this.tagsInitialized) {
+            let offset = 0;
+            this.tags.forEach((tag) => {
+                tag.setPosition(tag.x + offset, tag.y, "pixel");
+                offset += tag.w + 10;
+            });
+
+            this.tagsInitialized = true;
+        }
     }
 
     destroy(): void {

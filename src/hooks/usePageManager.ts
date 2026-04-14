@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate } from "react-router";
 import { Page } from "../components/elements/core/Page";
 
@@ -9,28 +9,36 @@ import { AppState } from "../components/app/AppState";
 
 function usePageManager(location: any, isMobile: boolean) {
     const { currentPage, nextPage, setCurrentPage, setNextPage } =
-        useSceneStore.getState();
+        useSceneStore();
 
     const navigate = useNavigate();
-    const goTo = (p: string) => navigate(p);
+
+    const goTo = useCallback(
+        (p: string) => {
+            navigate(p);
+        },
+        [navigate],
+    );
 
     useEffect(() => {
         // Create or switch pages when route or dependencies change
         updatePage();
-    }, [ isMobile, location.pathname ]);
+    }, [isMobile, location.pathname]);
 
-    // useEffect(() => {
-    //     const onResize = () => {
-    //         currentPage?.onResize();
-    //     };
+    useEffect(() => {
+        const onResize = () => {
+            currentPage?.onResize();
+        };
 
-    //     window.addEventListener("resize", onResize);
-    //     return () => window.removeEventListener("resize", onResize);
-    // }, []);
+        window.addEventListener("resize", onResize);
+        return () => window.removeEventListener("resize", onResize);
+    }, []);
 
     function updatePage() {
         // Get path and remove first "/"
         const scene = location.pathname.slice(1);
+
+        // if (currentPage?.name === scene) return;
 
         const newPage = createPage(scene, isMobile, goTo);
 

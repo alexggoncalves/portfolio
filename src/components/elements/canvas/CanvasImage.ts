@@ -17,7 +17,7 @@ export class CanvasImage extends Element {
     constructor(
         src: string,
         x: number,
-        y:number,
+        y: number,
         w: number, // width in ascii cells
         h: number, // height in ascii cells
         radius: number = 0,
@@ -25,7 +25,7 @@ export class CanvasImage extends Element {
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        super(x,y, unit, undefined, undefined, horizontalAlign, verticalAlign);
+        super(x, y, unit, undefined, undefined, horizontalAlign, verticalAlign);
         this.isScrollable = true;
         this.setSize(w, h, unit);
 
@@ -50,24 +50,22 @@ export class CanvasImage extends Element {
         _asciiCtx: CanvasRenderingContext2D,
         bgCtx: CanvasRenderingContext2D,
     ): void {
+        const record = images.get(this.src);
 
-        
+        if (record?.loaded && !this.loaded) {
+            this.image = record.element;
+            this.loaded = true;
+        }
 
         bgCtx.save();
-        bgCtx.translate(- this.offsetX, - this.offsetY);
+        bgCtx.translate(-this.offsetX, -this.offsetY);
 
         if (this.radius > 0) {
             bgCtx.clip(this.getClipPath());
         }
 
         if (this.loaded && this.image) {
-            bgCtx.drawImage(
-                this.image,
-                this.x,
-                this.y,
-                this.w,
-                this.h,
-            );
+            bgCtx.drawImage(this.image, this.x, this.y, this.w, this.h);
         } else this.drawPlaceholder(bgCtx);
 
         bgCtx.restore();
@@ -77,12 +75,7 @@ export class CanvasImage extends Element {
         bgCtx.fillStyle = "#595959";
 
         // Draw image to "background" canvas
-        bgCtx.fillRect(
-            this.x,
-            this.y,
-            this.w,
-            this.h,
-        );
+        bgCtx.fillRect(this.x, this.y, this.w, this.h);
     }
 
     private getClipPath() {

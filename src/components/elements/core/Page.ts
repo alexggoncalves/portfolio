@@ -5,6 +5,7 @@ import type { InteractiveElement } from "./InteractiveElement";
 import { ProjectsRow } from "../../pages/homepage/ProjectsRow";
 import { RenderConfig } from "../../render/RenderConfig";
 import { AppState } from "../../app/AppState";
+import { DraggableLayer } from "./DraggableLayer";
 
 //----------------------------------
 // PAGE CLASS
@@ -13,7 +14,8 @@ import { AppState } from "../../app/AppState";
 export class Page {
     name: string = "";
     layers: Layer[] = [];
-    hoveredElements: InteractiveElement[] = [];
+
+    currentHoveredElement: InteractiveElement | null = null;
     hoveredLayer: Layer | null = null;
 
     // Transitions
@@ -47,30 +49,51 @@ export class Page {
         scrollDelta: number,
         isMouseDown: boolean,
     ): void {
-        this.updateScroll(scrollDelta);
         this.updateTransitions(delta);
-
-        // Reset hovered elements array
-        this.hoveredElements = [];
+        this.updateScroll(scrollDelta);
+        this.updateInteractiveElements(mouseX, mouseY, isMouseDown);
 
         // Update all page layers
         this.layers.forEach((layer: Layer) => {
             layer.update(delta, this.scrollOffset);
+        });
+    }
 
+    updateInteractiveElements(
+        mouseX: number,
+        mouseY: number,
+        isMouseDown: boolean,
+    ) {
+        let top: InteractiveElement | null = null;
+
+        for (const layer of this.layers) {
             // Update worksRow dragging state
-            if (layer instanceof ProjectsRow) {
+            if (layer instanceof DraggableLayer) {
                 layer.updateDragState(mouseX, mouseY, isMouseDown);
             }
 
-            // Update hovered elements array
-            layer.interactiveElements.forEach((element: InteractiveElement) => {
-                if (element.contains(mouseX, mouseY))
-                    this.hoveredElements.push(element);
-            });
-        });
+            for (const element of layer.interactiveElements) {
+                // if (!element.active) continue;
 
-        if (this.hoveredElements.length > 0) {
-            this.hoveredElements.sort((a, b) => b.zIndex - a.zIndex);
+                if (element.contains(mouseX, mouseY)) {
+                    if (!top || element.zIndex > top.zIndex) {
+                        top = element;
+                    }
+                }
+            }
+        }
+
+        // reset only once, and only set one active hover
+        for (const layer of this.layers) {
+            for (const element of layer.interactiveElements) {
+                element.isMouseOver = false;
+            }
+        }
+
+        if (top && this.targetOpacity !=0) {
+            this.currentHoveredElement = top;
+        } else {
+            this.currentHoveredElement = null;
         }
     }
 
@@ -78,7 +101,7 @@ export class Page {
         // Draw layer
         asciiCtx.save();
         bgCtx.save();
-        
+
         bgCtx.globalAlpha = this.opacity;
         asciiCtx.globalAlpha = this.opacity;
 
@@ -154,14 +177,6 @@ export class Page {
         });
     }
 
-    resetHoverStates() {
-        this.layers.forEach((layer) => {
-            layer.interactiveElements.forEach((element) => {
-                element.isMouseOver = false;
-            });
-        });
-    }
-
     onResize() {
         console.log("resize");
     }
@@ -172,11 +187,7 @@ export class Page {
         this.layers = [];
 
         // Clear arrays to release references
-
-        this.hoveredElements = null as any;
-        this.hoveredLayer = null;
-
-        this.hoveredElements = null as any;
+        this.currentHoveredElement = null;
         this.hoveredLayer = null;
 
         // Remove callbacks

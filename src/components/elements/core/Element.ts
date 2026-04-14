@@ -33,10 +33,10 @@ export class Element {
     gridY: number = 0;
 
     // Size
-    w: number = 1;
-    h: number = 1;
-    gridW: number = 1;
-    gridH: number = 1;
+    w: number = 0;
+    h: number = 0;
+    gridW: number = 0;
+    gridH: number = 0;
 
     // Offset
     offsetX: number = 0;

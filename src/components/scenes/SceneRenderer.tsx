@@ -1,9 +1,12 @@
 // import HomeScene from "./HomeScene";
+import useSceneStore from "../../stores/sceneStore";
 import HomeScene from "./HomeScene";
 import NamePlate from "./NamePlate";
 
 function SceneRenderer() {
+    const {isReady} = useSceneStore();
 
+    if(isReady)
     return (
         <>
             {/* Main Lighting */}

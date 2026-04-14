@@ -17,7 +17,7 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
     const { currentPage, nextPage } = useSceneStore();
 
     const { ascii, bg, clearRenderTargets } = useAsciiRenderTargets();
-    const { pointerPosition, clickTarget, isMouseDown } = usePointer();
+    const { pointerPosition, setClickTarget, isMouseDown, updateCursor } = usePointer();
 
     // Set canvas size
     const canvasSize = useGridCanvasSize();
@@ -71,6 +71,7 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
 
         // Update mouse targets
         updateMouseTargets();
+        updateCursor();
 
         // Draw pages
         drawPages(asciiTarget.ctx, bgTarget.ctx);
@@ -83,28 +84,23 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
     });
 
     const updateMouseTargets = () => {
-        // Reset page elements hover state
-        currentPage?.resetHoverStates();
-        nextPage?.resetHoverStates();
-        nav?.resetHoverStates();
-
         // Get topmost hovered element
         let topHoveredElement: InteractiveElement | null = null;
 
         if (nav?.hoveredElement) {
             topHoveredElement = nav?.hoveredElement;
-        } else if (nextPage && nextPage.hoveredElements?.length > 0) {
-            topHoveredElement = nextPage.hoveredElements?.[0];
-        } else if (currentPage && currentPage.hoveredElements?.length > 0) {
-            topHoveredElement = currentPage.hoveredElements?.[0];
+        } else if (nextPage && nextPage.currentHoveredElement) {
+            topHoveredElement = nextPage.currentHoveredElement;
+        } else if (currentPage && currentPage.currentHoveredElement) {
+            topHoveredElement = currentPage.currentHoveredElement;
         }
 
         // Apply hover to topmost element
         if (topHoveredElement) {
-            topHoveredElement.isMouseOver = true;
-            clickTarget.current = topHoveredElement;
+            topHoveredElement.isMouseOver = true
+            setClickTarget(topHoveredElement);
         } else {
-            clickTarget.current = null;
+            setClickTarget(null);
         }
     };
 
@@ -133,8 +129,8 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
         );
 
         // Update navigation
-        nav?.update(0, 0);
-        nav?.updateMouseState(mouseX,mouseY);
+        // nav?.update(0, 0);
+        nav?.updateNavMouseState(mouseX,mouseY);
     };
 
     const drawPages = (
