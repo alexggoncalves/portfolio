@@ -19,13 +19,11 @@ export class DraggableLayer extends Layer {
     // Dragging state
     mouseX: number = -1;
     mouseY: number = -1;
-    dragStart: number = 0;
-    dragLast: number = 0;
+    dragStartX: number = 0;
+    dragLastX: number = 0;
     velocity: number = 0;
     decay: number = 0.95;
     isMouseDown: boolean = false;
-
-    direction: "vertical" | "horizontal" = "horizontal";
 
     constructor(
         name: string,
@@ -76,11 +74,7 @@ export class DraggableLayer extends Layer {
             if (this.contains(mouseX, mouseY)) {
                 this.isMouseDown = true;
 
-                if (this.direction == "horizontal") {
-                    this.dragLast = mouseX;
-                } else {
-                    this.dragLast = mouseY;
-                }
+                this.dragLastX = mouseX;
             }
         }
 
@@ -106,31 +100,30 @@ export class DraggableLayer extends Layer {
 
     updateDrag() {
         const maxOffset = Math.max(0, this.w - RenderConfig.gridSize.x);
-        
-        // TO FIX
-        // if (this.isMouseDown) {
-        //     const delta = this.mouseX - this.dragLastX;
 
-        //     this.xOffset -= deltaX / RenderConfig.charSize.x;
+        if (this.isMouseDown) {
+            const deltaX = this.mouseX - this.dragLastX;
 
-        //     this.velocity = -deltaX / RenderConfig.charSize.x;
-        //     this.dragLastX = this.mouseX;
+            this.xOffset -= deltaX / RenderConfig.charSize.x;
 
-        //     this.xOffset = MathUtils.clamp(this.xOffset, 0, maxOffset);
-        // } else {
-        //     if (Math.abs(this.velocity) > 0.01) {
-        //         this.xOffset += this.velocity;
+            this.velocity = -deltaX / RenderConfig.charSize.x;
+            this.dragLastX = this.mouseX;
 
-        //         if (this.xOffset < 0 || this.xOffset > maxOffset) {
-        //             this.xOffset = MathUtils.clamp(this.xOffset, 0, maxOffset);
-        //             this.velocity = 0;
-        //         }
+            this.xOffset = MathUtils.clamp(this.xOffset, 0, maxOffset);
+        } else {
+            if (Math.abs(this.velocity) > 0.01) {
+                this.xOffset += this.velocity;
 
-        //         this.velocity *= this.decay;
-        //     } else {
-        //         this.velocity = 0;
-        //     }
-        // }
+                if (this.xOffset < 0 || this.xOffset > maxOffset) {
+                    this.xOffset = MathUtils.clamp(this.xOffset, 0, maxOffset);
+                    this.velocity = 0;
+                }
+
+                this.velocity *= this.decay;
+            } else {
+                this.velocity = 0;
+            }
+        }
     }
 
     contains(_x: number, y: number): boolean {

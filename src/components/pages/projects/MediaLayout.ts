@@ -2,7 +2,6 @@ import { Layer } from "../../elements/core/Layer";
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
 import { VideoPlayer } from "../../elements/canvas/Video";
 import type { MediaBlock } from "../../app/contentAssets";
-import { RenderConfig } from "../../render/RenderConfig";
 
 //-------------------------------
 //          MEDIA LAYOUT LAYER
@@ -75,7 +74,6 @@ export class MediaLayout extends Layer {
             height,
             0,
             "grid",
-            "right"
         );
 
         this.elements.push(block);

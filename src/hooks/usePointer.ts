@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { Vector2 } from "three";
-import useCursorStore from "../stores/pointerStore";
 import type { InteractiveElement } from "../components/elements/core/InteractiveElement";
 
 function usePointer() {
@@ -14,7 +13,7 @@ function usePointer() {
 
     const clickTarget = useRef<InteractiveElement | null>(null);
 
-    const { isDraggingHorizontally } = useCursorStore();
+    // const { isDraggingHorizontally } = useCursorStore();
 
     const lastCursor = useRef<string>("default");
 
@@ -25,7 +24,7 @@ function usePointer() {
     const updateCursor = () => {
         let next = "default";
 
-        if (isDraggingHorizontally) next = "w-resize";
+        if (false) next = "w-resize";
         else if (clickTarget.current?.hasPointerOnHover) next = "pointer";
 
         if (lastCursor.current !== next) {

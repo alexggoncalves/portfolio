@@ -32,6 +32,9 @@ export class Element {
     gridX: number = 0;
     gridY: number = 0;
 
+    originalGridX: number = 0;
+    originalGridY: number = 0;
+
     // Size
     w: number = 0;
     h: number = 0;
@@ -114,7 +117,7 @@ export class Element {
             if (arg3 === "grid") {
                 this.gridW = arg1;
 
-                if (arg2) {
+                if (arg2 !== undefined) {
                     this.gridH = arg2;
                 }
                 this.w = this.gridW * RenderConfig.charSize.x;
@@ -122,13 +125,14 @@ export class Element {
             } else if (arg3 === "pixel") {
                 this.w = arg1;
 
-                if (arg2) {
+                if (arg2 !== undefined) {
                     this.h = arg2;
                 }
                 this.gridW = this.w / RenderConfig.charSize.x;
                 this.gridH = this.h / RenderConfig.charSize.y;
             }
         }
+
     }
 
     setPosition(x: number, y: number, unit: Unit = "grid"): void {
@@ -137,11 +141,15 @@ export class Element {
             this.y = y;
             this.gridX = Math.round(x / RenderConfig.charSize.x);
             this.gridY = Math.round(y / RenderConfig.charSize.y);
+            this.originalGridX = this.gridX;
+            this.originalGridY = this.gridY;
         } else if (unit === "grid") {
             this.gridX = x;
             this.gridY = y;
             this.x = x * RenderConfig.charSize.x;
             this.y = y * RenderConfig.charSize.y;
+            this.originalGridX = x;
+            this.originalGridY = y;
         }
     }
 
@@ -174,21 +182,26 @@ export class Element {
         const offset = this._offset;
         offset.set(0, 0);
 
+        if (this.horizontalAlign === "center") {
+            offset.x =
+                Math.floor(RenderConfig.gridSize.x / 2) -
+                Math.floor(this.gridW / 2);
+        }
         if (this.horizontalAlign === "right") {
             offset.x = RenderConfig.gridSize.x - this.gridW;
-        } else if (this.horizontalAlign === "center") {
-            offset.x = Math.floor((RenderConfig.gridSize.x - this.gridW) / 2);
         }
 
+        if (this.verticalAlign === "middle") {
+            offset.y =
+                Math.floor(RenderConfig.gridSize.y / 2) - 
+                Math.floor(this.gridH/2);
+        }
         if (this.verticalAlign === "bottom") {
-            this.gridY *= -1;
             offset.y = RenderConfig.gridSize.y - this.gridH;
-        } else if (this.verticalAlign === "middle") {
-            offset.y = (RenderConfig.gridSize.y - this.gridH) / 2;
         }
 
-        this.gridX += offset.x;
-        this.gridY += offset.y;
+        this.gridX = this.originalGridX + offset.x;
+        this.gridY = this.originalGridY + offset.y;
 
         this.x = this.gridX * RenderConfig.charSize.x;
         this.y = this.gridY * RenderConfig.charSize.y;

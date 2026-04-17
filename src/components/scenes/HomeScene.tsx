@@ -57,7 +57,7 @@ function HomeScene() {
 
     return (
         <>
-            <group ref={groupRef} scale={[1, 1, 1]}>
+            <group ref={groupRef}>
                 {/* <Text3D
                     ref={wordRef}
                     font={"/fonts/IBMPlexMono_Regular.json"}

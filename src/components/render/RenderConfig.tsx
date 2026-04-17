@@ -4,6 +4,7 @@ import Color4 from "three/src/renderers/common/Color4.js";
 export class RenderConfig {
     static charSize = new Vector2(12, 16);
     static gridSize = new Vector2();
+    static canvasSize = new Vector2();
     static bgColor = new Color4(0.1, 0.1, 0.1, 1)
     static distortion = new Vector2(0.02, 0.02);
     static focalLength = new Vector2(0.96, 0.96);
@@ -18,6 +19,7 @@ export class RenderConfig {
 
     static setGridSize(w: number, h: number){
         this.gridSize.set(w,h);
+        this.canvasSize.set(w * this.charSize.x, h * this.charSize.y)
     }
 }
 

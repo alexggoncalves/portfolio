@@ -18,7 +18,7 @@ const useSceneStore = create<SceneState>((set) => ({
     currentPage: null,
     nextPage: null,
 
-    navigationSource: null,
+    // navigationSource: null,
 
     setCurrentPage: (page: Page) => set({ currentPage: page }),
     setNextPage: (page: Page | null) => set({ nextPage: page }),

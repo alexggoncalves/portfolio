@@ -3,13 +3,15 @@ import { useNavigate } from "react-router";
 import { Page } from "../components/elements/core/Page";
 
 import createPage from "../utils/createPage";
-// import useContentStore from "../stores/assetStore";
 import useSceneStore from "../stores/sceneStore";
 import { AppState } from "../components/app/AppState";
+import useGridCanvasSize from "./useGridCanvasSize";
 
 function usePageManager(location: any, isMobile: boolean) {
-    const { currentPage, nextPage, setCurrentPage, setNextPage } =
-        useSceneStore();
+    const { setCurrentPage, setNextPage } = useSceneStore();
+
+    const currentPage = useSceneStore((s) => s.currentPage);
+    const nextPage = useSceneStore((s) => s.nextPage);
 
     const navigate = useNavigate();
 
@@ -25,39 +27,23 @@ function usePageManager(location: any, isMobile: boolean) {
         updatePage();
     }, [isMobile, location.pathname]);
 
-    useEffect(() => {
-        const onResize = () => {
-            currentPage?.onResize();
-        };
-
-        window.addEventListener("resize", onResize);
-        return () => window.removeEventListener("resize", onResize);
-    }, []);
-
-    function updatePage() {
-        // Get path and remove first "/"
+    const updatePage = useCallback(() => {
         const scene = location.pathname.slice(1);
-
-        // if (currentPage?.name === scene) return;
 
         const newPage = createPage(scene, isMobile, goTo);
 
-        // Restore last scroll
-        const pageScrolls = AppState.pageScrolls;
-        const storedScroll: number = pageScrolls[newPage.name] || 0;
-
+        const storedScroll = AppState.pageScrolls[newPage.name] || 0;
         newPage.scrollOffset = storedScroll;
 
-        // Set page on first load and return
         if (!currentPage) {
-            newPage.fadeSpeed = 3; // Slow down first fade in
+            newPage.fadeSpeed = 3;
             setCurrentPage(newPage);
             AppState.pageHeight = newPage.pageHeight;
             return;
         }
 
         startTransitionTo(newPage);
-    }
+    }, [location.pathname, isMobile, goTo, currentPage, setCurrentPage]);
 
     function startTransitionTo(page: Page) {
         if (!currentPage) return;
@@ -74,14 +60,15 @@ function usePageManager(location: any, isMobile: boolean) {
     useEffect(() => {
         if (!currentPage || !nextPage) return;
 
-        // When transition is complete, destroy the currentPage and replace with the new page
+        const next = nextPage;
+
         currentPage.onFadeOutComplete = () => {
             currentPage.destroy?.();
-            setCurrentPage(nextPage);
-            AppState.pageHeight = currentPage.pageHeight;
+            setCurrentPage(next);
+            AppState.pageHeight = next.pageHeight;
             setNextPage(null);
         };
-    }, [currentPage, nextPage]);
+    }, [currentPage, nextPage, setCurrentPage, setNextPage]);
 }
 
 export default usePageManager;

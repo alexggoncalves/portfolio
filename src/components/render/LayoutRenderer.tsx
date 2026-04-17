@@ -10,28 +10,29 @@ import useGridCanvasSize from "../../hooks/useGridCanvasSize";
 import type { Navigation } from "../elements/ui/Navigation";
 import { InteractiveElement } from "../elements/core/InteractiveElement";
 import { getDistortedPosition } from "../../utils/getDistortedPosition";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { RenderConfig } from "./RenderConfig";
 
 function LayoutRenderer({ nav }: { nav: Navigation | null }) {
     const { currentPage, nextPage } = useSceneStore();
+    const canvasSize = useGridCanvasSize();
 
     const { ascii, bg, clearRenderTargets } = useAsciiRenderTargets();
-    const { pointerPosition, setClickTarget, isMouseDown, updateCursor } = usePointer();
-
-    // Set canvas size
-    const canvasSize = useGridCanvasSize();
+    const { pointerPosition, setClickTarget, isMouseDown, updateCursor } =
+        usePointer();
 
     const scrollDelta = useScroll();
 
     const distortedPointerPosition = useRef<Vector2>(new Vector2(0));
 
-    const frameSkip = useRef(0);
+    useEffect(() => {
+        nav?.onResize();
+        currentPage?.onResize();
+        nextPage?.onResize();
+    }, [canvasSize.width, canvasSize.height]);
 
     // Update and render pages (->layers->elements)
     useFrame((_state, delta) => {
-        frameSkip.current++;
-
         const asciiTarget = {
             ctx: ascii.current?.context,
             texture: ascii.current?.texture,
@@ -76,11 +77,8 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
         // Draw pages
         drawPages(asciiTarget.ctx, bgTarget.ctx);
 
-        if (frameSkip.current % 1 === 0) {
-            // every 2 frames
-            asciiTarget.texture.needsUpdate = true;
-            bgTarget.texture.needsUpdate = true;
-        }
+        asciiTarget.texture.needsUpdate = true;
+        bgTarget.texture.needsUpdate = true;
     });
 
     const updateMouseTargets = () => {
@@ -97,7 +95,7 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
 
         // Apply hover to topmost element
         if (topHoveredElement) {
-            topHoveredElement.isMouseOver = true
+            topHoveredElement.isMouseOver = true;
             setClickTarget(topHoveredElement);
         } else {
             setClickTarget(null);
@@ -130,7 +128,15 @@ function LayoutRenderer({ nav }: { nav: Navigation | null }) {
 
         // Update navigation
         // nav?.update(0, 0);
-        nav?.updateNavMouseState(mouseX,mouseY);
+        nav?.updateNavMouseState(mouseX, mouseY);
+        if (nextPage) {
+            nav?.updateScrollBar(nextPage?.scrollOffset, nextPage?.pageHeight);
+        } else if (currentPage) {
+            nav?.updateScrollBar(
+                currentPage?.scrollOffset,
+                currentPage?.pageHeight,
+            );
+        }
     };
 
     const drawPages = (

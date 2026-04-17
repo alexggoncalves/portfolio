@@ -66,6 +66,9 @@ export class VideoPlayer extends InteractiveElement {
         if (!this.isPlaying) {
             this.video.play();
             this.isPlaying = true;
+            this.video.muted = false;
+            this.video.volume = 1
+            
         } else {
             this.video.pause();
             this.isPlaying = false;
@@ -86,10 +89,7 @@ export class VideoPlayer extends InteractiveElement {
                 y,
                 this.controlsHeight,
                 this.controlsHeight,
-                "pixel",
-                undefined,
-                undefined,
-                false,
+                "pixel"
             );
             playButton.zIndex = 20;
             playButton.isScrollable = true;

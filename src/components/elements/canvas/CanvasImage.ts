@@ -28,6 +28,7 @@ export class CanvasImage extends Element {
         super(x, y, unit, undefined, undefined, horizontalAlign, verticalAlign);
         this.isScrollable = true;
         this.setSize(w, h, unit);
+        // this.applyAlignment();
 
         this.radius = radius;
 

@@ -11,7 +11,6 @@ import { MediaLayout } from "./MediaLayout";
 import { CanvasText } from "../../elements/canvas/CanvasText";
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
 import { RenderConfig } from "../../render/RenderConfig";
-import { AppState } from "../../app/AppState";
 import {
     getIconById,
     getPersonById,
@@ -337,7 +336,7 @@ export class ProjectDetailsPage extends Page {
     }
 
     placeBackButton() {
-        const navigationSource = AppState.navigationSource;
+        const navigationSource = "home"
 
         this.fixedLayer.addElement(
             new AsciiButton(

@@ -2,7 +2,6 @@ import { Color, Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 import { InteractiveElement } from "../core/InteractiveElement";
-import type { Unit } from "../core/Element";
 
 //------------------------------------------
 // Button Class
@@ -24,7 +23,6 @@ export class AsciiButton extends InteractiveElement {
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
         size?: Vector2,
-        resetCursorOnClick?: boolean,
     ) {
         super(x,y,"grid", color, backgroundColor, horizontalAlign, verticalAlign);
 
@@ -36,10 +34,8 @@ export class AsciiButton extends InteractiveElement {
             this.setSize(this.text);
         } else this.setSize(size.x, size.y, "grid");
 
+        // Apply alignment after size is set
         this.applyAlignment();
-
-        if (resetCursorOnClick != undefined)
-            this.resetCursorOnClick = resetCursorOnClick;
     }
 
     drawButtonFrame(

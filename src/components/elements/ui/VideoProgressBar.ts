@@ -3,10 +3,10 @@ import { Slider } from "./Slider";
 import Color4 from "three/src/renderers/common/Color4.js";
 
 //-------------------------------
-//          ScrollBar LAYER
+//          VideoProgressBar 
 //-------------------------------
 
-export class ScrollBar extends Slider {
+export class VideoProgressBar extends Slider {
     color: Color4 = new Color4("white");
     cornerRadius: number;
     // Dragging state

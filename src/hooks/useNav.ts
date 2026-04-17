@@ -1,4 +1,4 @@
-import { useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 
 import { useNavigate } from "react-router";
 import { Navigation } from "../components/elements/ui/Navigation";
@@ -10,7 +10,7 @@ import useSceneStore from "../stores/sceneStore";
 function useNav() {
     const navRef = useRef<Navigation | null>(null);
 
-    const { isReady } = useSceneStore();
+    const isReady = useSceneStore((s) => s.isReady);
 
     const navigate = useNavigate();
     const goTo = (p: string) => navigate(p);

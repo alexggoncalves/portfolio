@@ -28,8 +28,6 @@ export class Button extends InteractiveElement {
         unit: Unit,
         color?: Color,
         backgroundColor?: Color4,
-
-        resetCursorOnClick?: boolean,
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {

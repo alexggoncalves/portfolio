@@ -5,13 +5,11 @@ import getWorldPosition from "../../utils/getWorldPosition";
 import { MathUtils, Mesh, MeshStandardMaterial, Vector3 } from "three";
 import { getObjectSize } from "../../utils/getWorldScale";
 import { FBXLoader } from "three/examples/jsm/Addons.js";
-import useCursorStore from "../../stores/pointerStore";
 import { RenderConfig } from "../render/RenderConfig";
 import { AppState } from "../app/AppState";
 
 function CatSection() {
     const { camera, size } = useThree();
-    const { mouseEnter, mouseLeave } = useCursorStore();
 
     const sectionRef = useRef<any>(null);
 
@@ -61,12 +59,9 @@ function CatSection() {
     }, [catModel, catTexture]);
 
     // Store references to star meshes
-    useEffect(() => {
-        starsArray.current = starsRef.current.children[0].children[0].children;
-    }, []);
-
     // Get original size of the cat model once
     useEffect(() => {
+        starsArray.current = starsRef.current.children[0].children[0].children;
         if (!baseSize.current && catRef.current) {
             baseSize.current = getObjectSize(catRef.current);
         }
@@ -194,7 +189,7 @@ function CatSection() {
 
     const onMouseEnter = () => {
         isMouseOver.current = true;
-        mouseEnter();
+        // mouseEnter();
 
         // Set shape key influence to 1 (retracted legs)
         if (catMeshRef.current?.morphTargetInfluences) {
@@ -204,7 +199,7 @@ function CatSection() {
 
     const onMouseLeave = () => {
         isMouseOver.current = false;
-        mouseLeave();
+        // mouseLeave();
     };
 
     return (

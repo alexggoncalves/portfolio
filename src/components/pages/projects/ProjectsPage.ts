@@ -38,7 +38,7 @@ export class ProjectPage extends Page {
         this.worksGrid = new ProjectsGrid(
             this.projects,
             0,
-            16,
+            12,
             gridWidth,
             this.minCardWidth,
             this.maxCardWidth,
@@ -48,7 +48,7 @@ export class ProjectPage extends Page {
             false,
         );
 
-        this.setPageHeight(this.worksGrid.gridSize.y + 16);
+        this.setPageHeight(this.worksGrid.gridSize.y + 12 +margin/2);
 
         this.layers.push(this.worksGrid);
         this.createGradient();
