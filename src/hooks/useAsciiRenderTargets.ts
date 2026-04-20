@@ -3,11 +3,11 @@ import { type Texture } from "three";
 import { useThree } from "@react-three/fiber";
 import {
     createAsciiRenderTarget,
-    createBackgroundRenderTarget,
+    createBgRenderTarget,
 } from "../utils/createRenderTargets";
 import type Color4 from "three/src/renderers/common/Color4.js";
 
-import { RenderConfig } from "../components/render/RenderConfig";
+import { AsciiRenderConfig } from "../components/app/RenderConfig";
 import { AppState } from "../components/app/AppState";
 
 function useAsciiRenderTargets() {
@@ -25,17 +25,14 @@ function useAsciiRenderTargets() {
 
     useEffect(() => {
         // Calculate ascii grid size
-        const gridWidth = size.width / RenderConfig.charSize.x;
-        const gridHeight = size.height / RenderConfig.charSize.y;
+        const gridWidth = size.width / AsciiRenderConfig.charSize.x;
+        const gridHeight = size.height / AsciiRenderConfig.charSize.y;
 
         // Create a render target to draw ASCII on the GPU
         const uiRenderTarget = createAsciiRenderTarget(gridWidth, gridHeight);
 
         // Create a render target to draw background behind the ascii on the GPU
-        const bgRenderTarget = createBackgroundRenderTarget(
-            size.width,
-            size.height,
-        );
+        const bgRenderTarget = createBgRenderTarget(size.width, size.height);
 
         // Save locally
         ascii.current = {
@@ -46,10 +43,14 @@ function useAsciiRenderTargets() {
             texture: bgRenderTarget.texture,
             context: bgRenderTarget.context,
         };
-        
+
         AppState.setBackground(bgRenderTarget.texture);
         AppState.setUI(uiRenderTarget.texture);
 
+        return () => {
+            uiRenderTarget.texture.dispose();
+            bgRenderTarget.texture.dispose();
+        };
     }, [size.width, size.height]);
 
     const clearRenderTargets = (

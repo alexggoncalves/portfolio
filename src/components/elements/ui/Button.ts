@@ -3,7 +3,7 @@ import Color4 from "three/src/renderers/common/Color4.js";
 
 import { InteractiveElement } from "../core/InteractiveElement";
 import type { Unit } from "../core/Element";
-import { images } from "../../app/assetRecords";
+import { images } from "../../assets/assetRecords";
 
 //------------------------------------------
 // Button Class

@@ -4,7 +4,7 @@ import { Layer } from "../core/Layer";
 import { AsciiButton } from "../ascii/AsciiButton";
 import type { InteractiveElement } from "../core/InteractiveElement";
 import { ScrollBar } from "./ScrollBar";
-import { RenderConfig } from "../../render/RenderConfig";
+import { AsciiRenderConfig } from "../../app/RenderConfig";
 
 //-------------------------------
 //          FRAME LAYER
@@ -82,7 +82,7 @@ export class Navigation extends Layer {
             -40,
             y,
             15,
-            RenderConfig.canvasSize.y / 2,
+            AsciiRenderConfig.canvasSize.y / 2,
             10,
         );
         this.addElement(this.scrollBar);

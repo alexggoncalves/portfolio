@@ -2,8 +2,8 @@ import { Vector2 } from "three";
 import { InteractiveElement } from "../core/InteractiveElement";
 import type { Layer } from "../core/Layer";
 import { Button } from "../ui/Button";
-import { getIconById } from "../../app/contentAssets";
-import { videos } from "../../app/assetRecords";
+import { getIconById } from "../../assets/contentAssets";
+import { videos } from "../../assets/assetRecords";
 //------------------------------------------
 // Ascii Image Class
 //------------------------------------------

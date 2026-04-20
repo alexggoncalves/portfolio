@@ -5,8 +5,8 @@ import { CanvasImage } from "../../elements/canvas/CanvasImage";
 import TagLabel from "../../elements/ui/TagLabel";
 import type { NavigationSource } from "../../app/AppState";
 import { InteractiveElement } from "../../elements/core/InteractiveElement";
-import { RenderConfig } from "../../render/RenderConfig";
-import { getTagsById, type Project, type Tag } from "../../app/contentAssets";
+import { AsciiRenderConfig } from "../../app/RenderConfig";
+import { getTagsById, type Project, type Tag } from "../../assets/contentAssets";
 import type { Layer } from "../../elements/core/Layer";
 import type { Unit } from "../../elements/core/Element";
 
@@ -71,8 +71,8 @@ export class ProjectCard extends InteractiveElement {
     }
 
     initializeTagLabels(tags: Tag[]) {
-        const hMargin = 0 * RenderConfig.charSize.x;
-        const vMargin = 2.4 * RenderConfig.charSize.x;
+        const hMargin = 0 * AsciiRenderConfig.charSize.x;
+        const vMargin = 2.4 * AsciiRenderConfig.charSize.x;
 
         let yPos = this.y;
         tags.forEach((tag: Tag) => {

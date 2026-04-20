@@ -1,7 +1,7 @@
 import { Color } from "three";
 
 import { Element } from "../core/Element";
-import { RenderConfig } from "../../render/RenderConfig";
+import { AsciiRenderConfig } from "../../app/RenderConfig";
 
 //------------------------------------------
 // Text Class
@@ -42,7 +42,7 @@ export class CanvasText extends Element {
         this.applyAlignment();
 
         // Calculate width in pixels
-        const charWidth = RenderConfig.charSize.x;
+        const charWidth = AsciiRenderConfig.charSize.x;
         const textGridWidth = maxWidth - padding * 2;
 
         // Wrap the text
@@ -73,7 +73,7 @@ export class CanvasText extends Element {
         bgCtx.font = `${this.fontWeight} ${this.fontSize}px ${this.font}`;
 
         const position = {
-            x: Math.floor(this.x + this.padding * RenderConfig.charSize.x),
+            x: Math.floor(this.x + this.padding * AsciiRenderConfig.charSize.x),
             y: Math.floor(this.y - this.offsetY),
         };
 
@@ -111,8 +111,8 @@ export class CanvasText extends Element {
 
     getGridSize(): { w: number; h: number } {
         return {
-            w: this.gridW / RenderConfig.charSize.x,
-            h: this.gridH / RenderConfig.charSize.y,
+            w: this.gridW / AsciiRenderConfig.charSize.x,
+            h: this.gridH / AsciiRenderConfig.charSize.y,
         };
     }
 }

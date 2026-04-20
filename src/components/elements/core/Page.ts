@@ -2,8 +2,7 @@ import { Layer } from "./Layer";
 import { MathUtils } from "three";
 import { clamp } from "three/src/math/MathUtils.js";
 import type { InteractiveElement } from "./InteractiveElement";
-import { ProjectsRow } from "../../pages/homepage/ProjectsRow";
-import { RenderConfig } from "../../render/RenderConfig";
+import { AsciiRenderConfig } from "../../app/RenderConfig";
 import { AppState } from "../../app/AppState";
 import { DraggableLayer } from "./DraggableLayer";
 
@@ -145,7 +144,7 @@ export class Page {
 
     updateScroll(scrollDelta: number): void {
         // Get max scroll
-        const max = Math.max(0, this.pageHeight - RenderConfig.gridSize.y);
+        const max = Math.max(0, this.pageHeight - AsciiRenderConfig.gridSize.y);
 
         if (max <= 0) {
             this.scrollOffset = 0;

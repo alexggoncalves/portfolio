@@ -9,11 +9,16 @@ import type { Unit } from "../core/Element";
 //------------------------------------------
 
 export class Slider extends InteractiveElement {
-    
+    direction: "horizontal" | "vertical" = "vertical";
+
     trackSize: number = 0;
     dragStartX: number = 0;
     dragLastX: number = 0;
     isMouseDown: boolean = false;
+
+    velocity: number = 0;
+    decay: number = 0.95;
+    // isMouseDown: boolean = false;
 
     constructor(
         x: number,
@@ -42,20 +47,24 @@ export class Slider extends InteractiveElement {
         // this.callback = callback;
     }
 
-    // update(): void {
-    //     super.update();
-    // }
+    onPointerDown(y: number) {
+        this.isMouseDown = true;
+        this.dragStartX = y;
+        this.dragLastX = y;
+        this.velocity = 0;
+    }
 
-    // draw(
-    //     _ui: CanvasRenderingContext2D,
-    //     background: CanvasRenderingContext2D,
-    // ): void {
+    onPointerUp() {
+        this.isMouseDown = false;
+    }
 
-    // }
+    onPointerMove(y: number) {
+        if (!this.isMouseDown) return;
 
-    onClick(): void {
-        super.onClick();
-        // if (this.callback) this.callback();
+        const delta = y - this.dragLastX;
+        this.dragLastX = y;
+
+        this.velocity = delta;
     }
 
     destroy(): void {

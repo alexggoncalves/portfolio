@@ -1,8 +1,12 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 
-const scrollSpeed = 0.005;
-const touchSpeed = 0.03;
+const wheelSpeed = 0.0045;
+const wheelDecay = 0.8;
+
+const touchSpeed = 0.028;
+const touchDecay = 0.965;
+const touchMoveDecay = 0.72;
 
 function useScroll() {
     const scrollDelta = useRef(0);
@@ -11,13 +15,14 @@ function useScroll() {
 
     const velocityRef = useRef(0);
     const lastDirectionRef = useRef<1 | -1 | 0>(0);
+    const isDragging = useRef(false);
 
     useEffect(() => {
         // WHEEL SCROLL
         function handleWheel(e: WheelEvent) {
             isTouch.current = false;
 
-            const delta = e.deltaY * scrollSpeed;
+            const delta = e.deltaY * wheelSpeed;
             const direction = Math.sign(delta) as 1 | -1 | 0;
 
             if (
@@ -34,11 +39,13 @@ function useScroll() {
 
         // TOUCH SCROLL
         let lastTouchY = 0;
-        let isDragging = false;
+        isDragging.current = false;
         function handleTouchStart(e: TouchEvent) {
+            if (e.touches.length > 1) return;
+
             isTouch.current = true;
             isFingerDown.current = true;
-            isDragging = false;
+            isDragging.current = false;
 
             lastTouchY = e.touches[0].clientY;
 
@@ -46,6 +53,8 @@ function useScroll() {
         }
 
         function handleTouchMove(e: TouchEvent) {
+            if (e.touches.length > 1) return;
+
             const touchY = e.touches[0].clientY;
             const delta = lastTouchY - touchY;
 
@@ -59,7 +68,7 @@ function useScroll() {
                 return;
             }
 
-            isDragging = true;
+            isDragging.current = true;
 
             if (direction !== lastDirectionRef.current) {
                 velocityRef.current *= 0.3;
@@ -77,14 +86,10 @@ function useScroll() {
             }
         }
 
-        window.addEventListener("wheel", handleWheel, { passive: false });
-        window.addEventListener("touchstart", handleTouchStart, {
-            passive: false,
-        });
-        window.addEventListener("touchmove", handleTouchMove, {
-            passive: false,
-        });
-        window.addEventListener("touchend", handleTouchEnd, { passive: false });
+        window.addEventListener("wheel", handleWheel);
+        window.addEventListener("touchstart", handleTouchStart);
+        window.addEventListener("touchmove", handleTouchMove);
+        window.addEventListener("touchend", handleTouchEnd);
 
         return () => {
             window.removeEventListener("wheel", handleWheel);
@@ -94,19 +99,19 @@ function useScroll() {
         };
     }, []);
 
-    useFrame((_state, _delta) => {
+    useFrame((_state, delta) => {
+        const touch = isTouch.current;
+        const fingerDown = isFingerDown.current;
+
         // Multiplier for the decay
-        const decay = isTouch.current
-            ? isFingerDown.current
-                ? 0.7
-                : 0.96
-            : 0.9;
+        const decay = touch
+            ? fingerDown
+                ? touchMoveDecay
+                : touchDecay
+            : wheelDecay;
 
         // const isActive = isTouch.current ? isFingerDown.current : false;
-
-        // if (!isActive) {
-            velocityRef.current *= decay;
-        // }
+        velocityRef.current *= Math.pow(decay, delta * 60);
 
         // Ignore small movements
         if (Math.abs(velocityRef.current) < 0.001) {
@@ -114,7 +119,7 @@ function useScroll() {
         }
 
         scrollDelta.current = velocityRef.current;
-    });
+    }, -1);
 
     return scrollDelta;
 }

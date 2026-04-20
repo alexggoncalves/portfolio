@@ -1,7 +1,8 @@
-import PROJECTS from "./../../data/projects.json";
-import PEOPLE from "./../../data/people.json";
-import TAGS from "./../../data/tags.json";
-import ICONS from "./../../data/icons.json";
+import PROJECTS from "../../data/projects.json";
+import PEOPLE from "../../data/people.json";
+import TAGS from "../../data/tags.json";
+import ICONS from "../../data/icons.json";
+import { createASCIITitle } from "./asciiFonts";
 
 // Layout types
 export type HeadingBlock = {
@@ -41,6 +42,7 @@ export type MediaBlock =
 export type Person = {
     id: string;
     name: string;
+    asciiName: number[];
     avatarSrc?: string;
     link?: string;
 };
@@ -64,6 +66,9 @@ export type Project = {
     tools: string[];
     team?: TeamMember[];
     media: MediaBlock[];
+
+    asciiTitle?: number[];
+    asciiSubtitle?: number[];
 };
 
 // Tag type
@@ -84,6 +89,56 @@ export const projects = PROJECTS as Project[];
 export const people = PEOPLE as Person[];
 export const tags = TAGS as Tag[];
 export const icons = ICONS as Icon[];
+
+export const brightnessMap = new Map<string, number>();
+
+export async function createAsciiTitleArrays() {
+    for (let i = 0; i < projects.length; i++) {
+        projects[i].asciiTitle = [];
+
+        const title = createASCIITitle(projects[i].title);
+        for (let j = 0; j < title.length; j++) {
+            const charBrightness = getBrightnessFromChar(title[j]);
+            projects[i].asciiTitle?.push(charBrightness);
+        }
+
+        const subtitle = projects[i].subtitle;
+        for (let j = 0; j < subtitle.length; j++) {
+            const charBrightness = getBrightnessFromChar(subtitle[j]);
+            projects[i].asciiSubtitle?.push(charBrightness);
+        }
+    }
+}
+
+export async function createAsciiTeamNames() {
+    for (let i = 0; i < people.length; i++) {
+        const name = people[i].name;
+        for (let j = 0; j < name.length; j++) {
+            const charBrightness = getBrightnessFromChar(name[j]);
+            people[i].asciiName?.push(charBrightness);
+        }
+    }
+}
+
+export function getBrightnessFromChar(char: string): number {
+    const brightness = brightnessMap.get(char);
+    if (brightness) return brightness;
+    else return 0;
+}
+
+export function createBrightnessMap(asciiSequence: string) {
+    const asciiArray = asciiSequence.split("");
+
+    asciiArray.forEach((char, index) => {
+        let mappedBrightness = index / asciiArray.length + 0.002; //  Offset brightness to avoid rounding to wrong value
+
+        brightnessMap.set(char, mappedBrightness);
+    });
+
+    console.log(brightnessMap);
+}
+
+// createAsciiTitles();
 
 export function getProjectById(id: string): Project | null {
     const project = projects.find((work) => work.id === id);

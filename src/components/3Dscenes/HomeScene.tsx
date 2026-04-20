@@ -4,7 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
 import type { Vector3 } from "three";
 import CatSection from "./CatSection";
-import { RenderConfig } from "../render/RenderConfig";
+import { AsciiRenderConfig } from "../app/RenderConfig";
 import { AppState } from "../app/AppState";
 
 function HomeScene() {
@@ -30,17 +30,17 @@ function HomeScene() {
         }
 
         const worldPos = getWorldPosition(
-            { x: RenderConfig.gridSize.x/2, y: RenderConfig.gridSize.y/2 -homeScrollOffset },
+            { x: AsciiRenderConfig.gridSize.x/2, y: AsciiRenderConfig.gridSize.y/2 -homeScrollOffset },
             6,
             camera,
             size,
             "grid",
-            RenderConfig.gridSize,
+            AsciiRenderConfig.gridSize,
         );
 
         const worldScale = getWorldScale(
             {
-                width:  Math.min(pageSize/(homeScrollOffset), RenderConfig.gridSize.x),
+                width:  Math.min(pageSize/(homeScrollOffset), AsciiRenderConfig.gridSize.x),
                 height: 20,
             },
             baseSize.current,
@@ -48,7 +48,7 @@ function HomeScene() {
             camera,
             size,
             "grid",
-            RenderConfig.charSize,
+            AsciiRenderConfig.charSize,
         );
 
         groupRef.current.position.copy(worldPos);

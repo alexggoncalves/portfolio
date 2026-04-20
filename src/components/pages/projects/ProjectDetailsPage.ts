@@ -1,7 +1,7 @@
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { createASCIITitle } from "../../../utils/asciiFonts";
+import { createASCIITitle } from "../../assets/asciiFonts";
 import { Page } from "../../elements/core/Page";
 import { Layer } from "../../elements/core/Layer";
 import { AsciiBlock } from "../../elements/ascii/AsciiBlock";
@@ -10,7 +10,7 @@ import { FadeGradient } from "../../elements/canvas/FadeGradient";
 import { MediaLayout } from "./MediaLayout";
 import { CanvasText } from "../../elements/canvas/CanvasText";
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
-import { RenderConfig } from "../../render/RenderConfig";
+import { AsciiRenderConfig } from "../../app/RenderConfig";
 import {
     getIconById,
     getPersonById,
@@ -19,7 +19,7 @@ import {
     type Project,
     type TeamMember,
     type TextBlock,
-} from "../../app/contentAssets";
+} from "../../assets/contentAssets";
 import TagLabel from "../../elements/ui/TagLabel";
 
 export class ProjectDetailsPage extends Page {
@@ -53,7 +53,7 @@ export class ProjectDetailsPage extends Page {
         super(project.id, isMobile, goTo);
         this.project = project;
         this.goTo = goTo;
-        this.asciigridSize = RenderConfig.gridSize;
+        this.asciigridSize = AsciiRenderConfig.gridSize;
 
         this.fixedLayer.isScrollable = false;
 
@@ -250,7 +250,7 @@ export class ProjectDetailsPage extends Page {
         y -= this.subtitleElement.gridH + 3; // Space for the title
 
         this.titleElement = new AsciiBlock(
-            asciiTitle,
+            asciiTitle, // !!!
             x,
             y,
             this.textColor,
@@ -264,8 +264,8 @@ export class ProjectDetailsPage extends Page {
     }
 
     placeTags(tags: string[]) {
-        let x = this.placementX * RenderConfig.charSize.x;
-        let y = (this.placementY - 1) * RenderConfig.charSize.y;
+        let x = this.placementX * AsciiRenderConfig.charSize.x;
+        let y = (this.placementY - 1) * AsciiRenderConfig.charSize.y;
 
         const tagObjects = getTagsById(tags);
 
@@ -288,7 +288,7 @@ export class ProjectDetailsPage extends Page {
     }
 
     placeMediaLayout(media: MediaBlock[]): void {
-        const gridSize = RenderConfig.gridSize;
+        const gridSize = AsciiRenderConfig.gridSize;
 
         const margin = Math.ceil(gridSize.x * 0.05);
 
@@ -313,10 +313,10 @@ export class ProjectDetailsPage extends Page {
         // Bottom gradient
         this.fixedLayer.addElement(
             new FadeGradient(
-                RenderConfig.bgColor,
+                AsciiRenderConfig.bgColor,
                 0, // x
-                RenderConfig.gridSize.y, // y
-                RenderConfig.gridSize.x, // w
+                AsciiRenderConfig.gridSize.y, // y
+                AsciiRenderConfig.gridSize.x, // w
                 8, // h
                 "bottom",
             ),
@@ -325,10 +325,10 @@ export class ProjectDetailsPage extends Page {
         // Top gradient
         this.fixedLayer.addElement(
             new FadeGradient(
-                RenderConfig.bgColor,
+                AsciiRenderConfig.bgColor,
                 0,
                 0,
-                RenderConfig.gridSize.x,
+                AsciiRenderConfig.gridSize.x,
                 10,
                 "top",
             ),

@@ -1,7 +1,7 @@
 import { Layer } from "../../elements/core/Layer";
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
 import { VideoPlayer } from "../../elements/canvas/Video";
-import type { MediaBlock } from "../../app/contentAssets";
+import type { MediaBlock } from "../../assets/contentAssets";
 
 //-------------------------------
 //          MEDIA LAYOUT LAYER

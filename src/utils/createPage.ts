@@ -4,8 +4,8 @@ import { ContactsPage } from "../components/pages/contacts/ContactsPage";
 import { ProjectDetailsPage } from "../components/pages/projects/ProjectDetailsPage";
 import { Page } from "../components/elements/core/Page";
 
-import { getProjectById, projects } from "../components/app/contentAssets";
-import { buildPageAssets, requestAssets } from "../components/app/assetStream";
+import { getProjectById, projects } from "../components/assets/contentAssets";
+import { buildPageAssets, requestAssets } from "../components/assets/assetStream";
 
 //------------------------------------------------------------------------
 // Create ASCII page: Initilializes an instance of the page to load

@@ -1,5 +1,5 @@
 import { Element, type Unit } from "../core/Element";
-import { images } from "../../app/assetRecords";
+import { images } from "../../assets/assetRecords";
 
 //------------------------------------------
 // Ascii Image Class

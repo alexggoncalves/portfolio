@@ -3,7 +3,7 @@ import { Vector2 } from "three";
 import { ProjectCard } from "./ProjectCard";
 
 import { Layer } from "../../elements/core/Layer";
-import { type Project } from "../../app/contentAssets";
+import { type Project } from "../../assets/contentAssets";
 
 //-------------------------------
 //          WORKS GRID LAYER

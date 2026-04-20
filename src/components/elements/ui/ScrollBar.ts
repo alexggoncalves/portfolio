@@ -1,4 +1,4 @@
-import { RenderConfig } from "../../render/RenderConfig";
+import { AsciiRenderConfig } from "../../app/RenderConfig";
 import { Slider } from "./Slider";
 import Color4 from "three/src/renderers/common/Color4.js";
 
@@ -37,7 +37,7 @@ export class ScrollBar extends Slider {
         this.trackSize = this.h - this.knobPadding * 2;
 
         this.knobH =
-            (RenderConfig.gridSize.y * this.trackSize) / this.pageHeight;
+            (AsciiRenderConfig.gridSize.y * this.trackSize) / this.pageHeight;
 
         this.cornerRadius = cornerRadius;
 
@@ -53,7 +53,7 @@ export class ScrollBar extends Slider {
         this.pageHeight = value;
         // Recalculate knob height
         this.knobH =
-            (RenderConfig.gridSize.y * this.trackSize) / this.pageHeight;
+            (AsciiRenderConfig.gridSize.y * this.trackSize) / this.pageHeight;
     }
 
     updateScrollOffset(value: number) {

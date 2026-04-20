@@ -4,7 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import getWorldPosition from "../../utils/getWorldPosition";
 import { Vector3 } from "three";
 import getWorldScale, { getObjectSize } from "../../utils/getWorldScale";
-import { RenderConfig } from "../render/RenderConfig";
+import { AsciiRenderConfig } from "../app/RenderConfig";
 // import useSceneStore from "../../stores/sceneStore";
 
 function NamePlate({ text }: { text: string }) {
@@ -52,7 +52,7 @@ function NamePlate({ text }: { text: string }) {
             camera,
             size,
             "grid",
-            RenderConfig.gridSize,
+            AsciiRenderConfig.gridSize,
         );
 
         const worldScale = getWorldScale(
@@ -62,7 +62,7 @@ function NamePlate({ text }: { text: string }) {
             camera,
             size,
             "grid",
-            RenderConfig.charSize,
+            AsciiRenderConfig.charSize,
         );
 
         // setScrollPosition(scrollPosition + delta)

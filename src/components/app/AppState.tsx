@@ -1,21 +1,21 @@
-import { CanvasTexture } from "three";
+import { Texture } from "three";
 
 export type NavigationSource = "home" | "projects" | "contacts" | "outside";
 
 export class AppState {
-    static backgroundTexture?: CanvasTexture | null;
-    static uiTexture?: CanvasTexture | null;
+    static backgroundTexture?: Texture | null;
+    static uiTexture?: Texture | null;
 
     static navigationSource: NavigationSource = "outside";
     static pageHeight: number = 0;
 
     static pageScrolls: Record<string, number> = {};
 
-    static setBackground(texture: CanvasTexture) {
+    static setBackground(texture: Texture) {
         this.backgroundTexture = texture;
     }
 
-    static setUI(texture: CanvasTexture) {
+    static setUI(texture: Texture) {
         this.uiTexture = texture;
     }
 

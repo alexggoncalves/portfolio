@@ -10,7 +10,7 @@ import { LensDistortion } from "./LensDistortion";
 import { Vector2 } from "three";
 
 import { useMemo } from "react";
-import { RenderConfig } from "../RenderConfig";
+import { AsciiRenderConfig } from "../app/RenderConfig";
 
 function Postprocessing() {
 
@@ -20,19 +20,19 @@ function Postprocessing() {
         <>
             <EffectComposer multisampling={0}>
                 <AsciiEffect
-                    fontAtlasSrc={RenderConfig.fontAtlas}
-                    charSize={RenderConfig.charSize}
-                    atlasGridSize={RenderConfig.atlasGridSize}
-                    gridSize={RenderConfig.gridSize}
+                    fontAtlasSrc={AsciiRenderConfig.fontAtlas}
+                    charSize={AsciiRenderConfig.charSize}
+                    atlasGridSize={AsciiRenderConfig.atlasGridSize}
+                    gridSize={AsciiRenderConfig.gridSize}
                 ></AsciiEffect>
 
                 <ChromaticAberration offset={[0.0, 0.0]} />
                 {/* <Vignette darkness={2} offset={-0.9} opacity={0.1} /> */}
 
                 <LensDistortion
-                    distortion={RenderConfig.distortion}
+                    distortion={AsciiRenderConfig.distortion}
                     principalPoint={principalPoint}
-                    focalLength={RenderConfig.focalLength}
+                    focalLength={AsciiRenderConfig.focalLength}
                     skew={0}
                 />
             </EffectComposer>

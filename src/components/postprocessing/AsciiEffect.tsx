@@ -3,7 +3,7 @@ import { useMemo, forwardRef, useRef } from "react";
 import { BlendFunction, Effect } from "postprocessing";
 import { TextureLoader } from "three";
 import { useFrame, useLoader } from "@react-three/fiber";
-import { AppState } from "../../app/AppState";
+import { AppState } from "../app/AppState";
 
 // import { useControls } from "leva";
 

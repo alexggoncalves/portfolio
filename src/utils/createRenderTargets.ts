@@ -23,7 +23,7 @@ export function createAsciiRenderTarget(width: number, height: number) {
     return { texture, context };
 }
 
-export function createBackgroundRenderTarget(width: number, height: number) {
+export function createBgRenderTarget(width: number, height: number) {
     const dpr = window.devicePixelRatio || 1;
 
     const canvas = document.createElement("canvas");

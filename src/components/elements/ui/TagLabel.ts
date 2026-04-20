@@ -1,6 +1,6 @@
 import { Color } from "three";
 import drawRoundRect from "../../../utils/drawRoundRect";
-import type { Tag } from "../../app/contentAssets";
+import type { Tag } from "../../assets/contentAssets";
 import { Element, type Unit } from "../core/Element";
 
 class TagLabel extends Element {

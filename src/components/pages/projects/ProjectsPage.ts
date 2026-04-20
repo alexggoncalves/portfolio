@@ -3,8 +3,8 @@ import { Page } from "../../elements/core/Page";
 import { ProjectsGrid } from "./ProjectsGrid";
 import { Layer } from "../../elements/core/Layer";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
-import { RenderConfig } from "../../render/RenderConfig";
-import type { Project } from "../../app/contentAssets";
+import { AsciiRenderConfig } from "../../app/RenderConfig";
+import type { Project } from "../../assets/contentAssets";
 
 export class ProjectPage extends Page {
     projects: Project[] = [];
@@ -27,7 +27,7 @@ export class ProjectPage extends Page {
     }
 
     init(): void {
-        const gridSize = RenderConfig.gridSize;
+        const gridSize = AsciiRenderConfig.gridSize;
         const margin = Math.ceil(gridSize.x * this.marginRatio);
 
         // filters
@@ -59,10 +59,10 @@ export class ProjectPage extends Page {
 
         gradientLayer.addElement(
             new FadeGradient(
-                RenderConfig.bgColor,
+                AsciiRenderConfig.bgColor,
                 0,
                 0,
-                RenderConfig.gridSize.x,
+                AsciiRenderConfig.gridSize.x,
                 14,
                 "top",
             ),

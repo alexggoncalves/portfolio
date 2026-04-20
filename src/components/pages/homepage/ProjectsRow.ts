@@ -2,8 +2,8 @@ import { Color, MathUtils } from "three";
 
 import { ProjectCard } from "../projects/ProjectCard";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
-import { RenderConfig } from "../../render/RenderConfig";
-import type { Project } from "../../app/contentAssets";
+import { AsciiRenderConfig } from "../../app/RenderConfig";
+import type { Project } from "../../assets/contentAssets";
 import { DraggableLayer } from "../../elements/core/DraggableLayer";
 
 //-------------------------------
@@ -70,7 +70,7 @@ export class ProjectsRow extends DraggableLayer {
             gradientExtension / 2;
 
         const leftGradient = new FadeGradient(
-            RenderConfig.bgColor,
+            AsciiRenderConfig.bgColor,
             0,
             yPosition,
             this.indentWidth,
@@ -79,8 +79,8 @@ export class ProjectsRow extends DraggableLayer {
         );
 
         const rightGradient = new FadeGradient(
-            RenderConfig.bgColor,
-            RenderConfig.gridSize.x - this.indentWidth,
+            AsciiRenderConfig.bgColor,
+            AsciiRenderConfig.gridSize.x - this.indentWidth,
             yPosition,
             this.indentWidth,
             this.h + gradientExtension,

@@ -1,5 +1,5 @@
 import { MathUtils } from "three";
-import { RenderConfig } from "../../render/RenderConfig";
+import { AsciiRenderConfig } from "../../app/RenderConfig";
 import type { Element } from "./Element";
 import { InteractiveElement } from "./InteractiveElement";
 import { Layer } from "./Layer";
@@ -99,14 +99,14 @@ export class DraggableLayer extends Layer {
     }
 
     updateDrag() {
-        const maxOffset = Math.max(0, this.w - RenderConfig.gridSize.x);
+        const maxOffset = Math.max(0, this.w - AsciiRenderConfig.gridSize.x);
 
         if (this.isMouseDown) {
             const deltaX = this.mouseX - this.dragLastX;
 
-            this.xOffset -= deltaX / RenderConfig.charSize.x;
+            this.xOffset -= deltaX / AsciiRenderConfig.charSize.x;
 
-            this.velocity = -deltaX / RenderConfig.charSize.x;
+            this.velocity = -deltaX / AsciiRenderConfig.charSize.x;
             this.dragLastX = this.mouseX;
 
             this.xOffset = MathUtils.clamp(this.xOffset, 0, maxOffset);
@@ -127,9 +127,9 @@ export class DraggableLayer extends Layer {
     }
 
     contains(_x: number, y: number): boolean {
-        const top = (this.y - this.pageOffset) * RenderConfig.charSize.y;
+        const top = (this.y - this.pageOffset) * AsciiRenderConfig.charSize.y;
 
-        const bottom = top + this.h * RenderConfig.charSize.y;
+        const bottom = top + this.h * AsciiRenderConfig.charSize.y;
 
         return y > top && y < bottom;
     }

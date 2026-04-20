@@ -5,7 +5,7 @@ import getWorldPosition from "../../utils/getWorldPosition";
 import { MathUtils, Mesh, MeshStandardMaterial, Vector3 } from "three";
 import { getObjectSize } from "../../utils/getWorldScale";
 import { FBXLoader } from "three/examples/jsm/Addons.js";
-import { RenderConfig } from "../render/RenderConfig";
+import { AsciiRenderConfig } from "../app/RenderConfig";
 import { AppState } from "../app/AppState";
 
 function CatSection() {
@@ -14,8 +14,8 @@ function CatSection() {
     const sectionRef = useRef<any>(null);
 
     const pageCoords = {
-        x: RenderConfig.gridSize.x / 2,
-        y: RenderConfig.gridSize.y * 1.85,
+        x: AsciiRenderConfig.gridSize.x / 2,
+        y: AsciiRenderConfig.gridSize.y * 1.85,
     };
 
     // STARS
@@ -114,7 +114,7 @@ function CatSection() {
             camera,
             size,
             "grid",
-            RenderConfig.gridSize,
+            AsciiRenderConfig.gridSize,
         );
 
         // Base Cat position

@@ -1,74 +1,92 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import { Page } from "../components/elements/core/Page";
 
 import createPage from "../utils/createPage";
-import useSceneStore from "../stores/sceneStore";
 import { AppState } from "../components/app/AppState";
-import useGridCanvasSize from "./useGridCanvasSize";
+import { Navigation } from "../components/elements/ui/Navigation";
 
 function usePageManager(location: any, isMobile: boolean) {
-    const { setCurrentPage, setNextPage } = useSceneStore();
+    const currentPage = useRef<Page | null>(null);
+    const nextPage = useRef<Page | null>(null);
+    const nav = useRef<Navigation | null>(null);
 
-    const currentPage = useSceneStore((s) => s.currentPage);
-    const nextPage = useSceneStore((s) => s.nextPage);
+    // prevents overlapping transitions
+    const transitionId = useRef(0);
 
-    const navigate = useNavigate();
+    // Set goTo function
+    const navigateRef = useRef(useNavigate());
+    const goTo = useCallback((path: string) => {
+        navigateRef.current(path);
+    }, []);
 
-    const goTo = useCallback(
-        (p: string) => {
-            navigate(p);
-        },
-        [navigate],
-    );
+    // Create nav layer
+    useEffect(() => {
+        if (!nav.current) {
+            nav.current = new Navigation(goTo);
+            nav.current.init(isMobile);
+        }
+        return () => {
+            nav.current?.destroy();
+            nav.current = null;
+        };
+    }, []);
 
     useEffect(() => {
-        // Create or switch pages when route or dependencies change
-        updatePage();
-    }, [isMobile, location.pathname]);
-
-    const updatePage = useCallback(() => {
         const scene = location.pathname.slice(1);
 
         const newPage = createPage(scene, isMobile, goTo);
 
+        // Get page last scroll
         const storedScroll = AppState.pageScrolls[newPage.name] || 0;
         newPage.scrollOffset = storedScroll;
 
-        if (!currentPage) {
+        // Set page as current on first load
+        if (!currentPage.current) {
+            newPage.opacity = 0;
+            newPage.targetOpacity = 1;
             newPage.fadeSpeed = 3;
-            setCurrentPage(newPage);
+            currentPage.current = newPage;
             AppState.pageHeight = newPage.pageHeight;
             return;
         }
 
-        startTransitionTo(newPage);
-    }, [location.pathname, isMobile, goTo, currentPage, setCurrentPage]);
+        // Destroy any page currently on transition
+        nextPage.current?.destroy?.();
 
-    function startTransitionTo(page: Page) {
-        if (!currentPage) return;
+        // Start transition
+        startTransitionFromTo(currentPage.current, newPage);
+    }, [location.pathname, isMobile]);
 
-        currentPage.disableButtons();
+    function startTransitionFromTo(from: Page, to: Page) {
+        transitionId.current += 1;
+        const id = transitionId.current;
 
-        currentPage.targetOpacity = 0;
-        page.targetOpacity = 1;
+        from.disableButtons();
+        from.targetOpacity = 0;
 
-        setNextPage(page);
+        to.targetOpacity = 1;
+        to.opacity = 0;
+        nextPage.current = to;
+
+        from.onFadeOutComplete = () => {
+            if (id !== transitionId.current) return;
+
+            // Destroy currentPage
+            from.destroy?.();
+
+            // Switch new page to current and set it's height to global state
+            currentPage.current = to;
+            nextPage.current = null;
+            AppState.pageHeight = to.pageHeight;
+        };
     }
 
-    // Handle page transitions
-    useEffect(() => {
-        if (!currentPage || !nextPage) return;
-
-        const next = nextPage;
-
-        currentPage.onFadeOutComplete = () => {
-            currentPage.destroy?.();
-            setCurrentPage(next);
-            AppState.pageHeight = next.pageHeight;
-            setNextPage(null);
-        };
-    }, [currentPage, nextPage, setCurrentPage, setNextPage]);
+    return {
+        currentPage,
+        nextPage,
+        nav,
+    };
 }
 
 export default usePageManager;

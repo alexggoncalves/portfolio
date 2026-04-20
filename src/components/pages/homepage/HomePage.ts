@@ -2,8 +2,8 @@ import { Page } from "../../elements/core/Page";
 import { Layer } from "../../elements/core/Layer";
 import { ProjectsRow } from "./ProjectsRow";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
-import { RenderConfig } from "../../render/RenderConfig";
-import type { Project } from "../../app/contentAssets";
+import { AsciiRenderConfig } from "../../app/RenderConfig";
+import type { Project } from "../../assets/contentAssets";
 import { CanvasText } from "../../elements/canvas/CanvasText";
 import { Color } from "three";
 
@@ -24,7 +24,7 @@ export class HomePage extends Page {
         const mainLayer = new Layer("home", []);
         this.layers.push(mainLayer);
 
-        this.pageHeight = RenderConfig.gridSize.y;
+        this.pageHeight = AsciiRenderConfig.gridSize.y;
 
         this.placeWorksRow();
 
@@ -32,7 +32,7 @@ export class HomePage extends Page {
     }
 
     placeWorksRow(): void {
-        const y = RenderConfig.gridSize.y - 12;
+        const y = AsciiRenderConfig.gridSize.y - 12;
         const indent = 5;
         const cardHeight = 20;
         const gap = 1;
@@ -77,10 +77,10 @@ export class HomePage extends Page {
 
         gradientLayer.addElement(
             new FadeGradient(
-                RenderConfig.bgColor,
+                AsciiRenderConfig.bgColor,
                 0,
                 0,
-                RenderConfig.gridSize.x,
+                AsciiRenderConfig.gridSize.x,
                 14,
                 "top",
             ),
