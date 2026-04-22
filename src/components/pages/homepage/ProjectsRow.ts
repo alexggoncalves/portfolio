@@ -1,8 +1,6 @@
-import { Color, MathUtils } from "three";
-
 import { ProjectCard } from "../projects/ProjectCard";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
-import { AsciiRenderConfig } from "../../app/RenderConfig";
+import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 import type { Project } from "../../assets/contentAssets";
 import { DraggableLayer } from "../../elements/core/DraggableLayer";
 
@@ -32,8 +30,7 @@ export class ProjectsRow extends DraggableLayer {
         cardHeight: number,
         indentWidth: number,
         gap: number,
-        goTo: (path: string) => void,
-        _isMobile: boolean,
+        goTo: (path: string) => void
     ) {
         super("works-row", [], x, y, 1, 1, goTo);
 
@@ -50,16 +47,17 @@ export class ProjectsRow extends DraggableLayer {
         this.isDraggable = true;
 
         this.placeRow();
-        // this.placeTitle();
         this.placeGradient();
     }
 
     update(_delta: number, yOffset: number): void {
         super.update(_delta, yOffset);
         this.pageOffset = yOffset
+        let count = 0;
         for (const card of this.cards) {
             card.setXOffset(this.xOffset);
             card.setYOffset(yOffset);
+            count += card.tags.length
         }
     }
 

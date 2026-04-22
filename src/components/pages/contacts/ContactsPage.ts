@@ -1,16 +1,17 @@
 import { Page } from "../../elements/core/Page";
 import { Layer } from "../../elements/core/Layer";
-import { Vector2, Color } from "three";
+import { Color } from "three";
 import { AsciiBlock } from "../../elements/ascii/AsciiBlock";
 import Color4 from "three/src/renderers/common/Color4.js";
+import { AppState } from "../../app/AppState";
 
 const title = `CONTACTS`;
 
 const titleMobile = `CONTACTS-mobile`;
 
 export class ContactsPage extends Page {
-    constructor(isMobile: boolean, goTo: (path: string) => void) {
-        super("contacts", isMobile, goTo);
+    constructor( goTo: (path: string) => void) {
+        super("contacts", goTo);
 
         this.init();
     }
@@ -20,7 +21,7 @@ export class ContactsPage extends Page {
 
         mainLayer.addElement(
             new AsciiBlock(
-                this.isMobile ? titleMobile : title,
+                AppState.device == "mobile" ? titleMobile : title,
                 5,
                 4,
                 new Color("white"),

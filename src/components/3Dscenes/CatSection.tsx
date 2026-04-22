@@ -5,7 +5,7 @@ import getWorldPosition from "../../utils/getWorldPosition";
 import { MathUtils, Mesh, MeshStandardMaterial, Vector3 } from "three";
 import { getObjectSize } from "../../utils/getWorldScale";
 import { FBXLoader } from "three/examples/jsm/Addons.js";
-import { AsciiRenderConfig } from "../app/RenderConfig";
+import { AsciiRenderConfig } from "../app/AsciiRenderConfig";
 import { AppState } from "../app/AppState";
 
 function CatSection() {
@@ -38,25 +38,54 @@ function CatSection() {
     const rotationSpeed = 14;
     const rotationAmount = useRef(0);
 
-    // Set material once the model is loaded
     useEffect(() => {
+        if (!catModel) return;
+
         catModel.traverse((child) => {
             if (child instanceof Mesh) {
-                // Cleanup original materials
-                if (Array.isArray(child.material)) {
-                    child.material.forEach((m) => m.dispose());
-                } else {
-                    child.material.dispose();
+                if (child.material) {
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach((m) => m.dispose());
+                    } else {
+                        child.material.dispose();
+                    }
                 }
 
-                // Set material with baked texture
+                if (child.geometry) {
+                    child.geometry.dispose(); // IMPORTANT (missing in your code)
+                }
+
                 child.material = new MeshStandardMaterial({
                     map: catTexture,
                 });
             }
         });
+
         catMeshRef.current = catModel.children[0] as Mesh;
+
+        return () => {
+            catModel.traverse((child) => {
+                if (child instanceof Mesh) {
+                    child.geometry?.dispose?.();
+                    if (Array.isArray(child.material)) {
+                        child.material.forEach((m) => m.dispose());
+                    } else {
+                        child.material?.dispose?.();
+                    }
+                }
+            });
+        };
     }, [catModel, catTexture]);
+
+    useEffect(() => {
+        if (!starsRef.current) return;
+
+        starsArray.current = starsRef.current.children[0].children[0].children;
+
+        starBaseScales.current = [];
+        starScaledUp.current = [];
+        starScaledDown.current = [];
+    }, []);
 
     // Store references to star meshes
     // Get original size of the cat model once
@@ -104,8 +133,8 @@ function CatSection() {
     });
 
     const updatePosition = (elapsed: number) => {
-        let homeScrollOffset = Math.round(AppState.pageScrolls["home"])
-        if(!homeScrollOffset) homeScrollOffset = 0;
+        let homeScrollOffset = Math.round(AppState.pageScrolls["home"]);
+        if (!homeScrollOffset) homeScrollOffset = 0;
 
         // Get world position for the page coords
         const sectionWorldPos = getWorldPosition(
@@ -204,7 +233,7 @@ function CatSection() {
 
     return (
         <>
-            <group ref={sectionRef}>
+            <group ref={sectionRef} position={[-99, 0, -99]}>
                 {/* Cat */}
                 <Center position={[-0.15, -0.1, 0]}>
                     <primitive

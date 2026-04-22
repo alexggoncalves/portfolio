@@ -1,6 +1,7 @@
 import type { Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
-import { brightnessMap, Element } from "../core/Element";
+import { Element } from "../core/Element";
+import { getBrightnessFromChar } from "../../assets/contentAssets";
 
 //-----------------------------------------
 // Ascii Line Class
@@ -55,7 +56,7 @@ export class AsciiLine extends Element {
         asciiCtx: CanvasRenderingContext2D,
         _bgCtx: CanvasRenderingContext2D,
     ): void {
-        const brightness = brightnessMap.get(this.char) || 0;
+        const brightness = getBrightnessFromChar(this.char) || 0 ;
 
         this.drawASCIILine(
             this.xA,

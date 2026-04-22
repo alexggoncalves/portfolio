@@ -1,4 +1,4 @@
-import { AsciiRenderConfig } from "../../app/RenderConfig";
+import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 import { Slider } from "./Slider";
 import Color4 from "three/src/renderers/common/Color4.js";
 

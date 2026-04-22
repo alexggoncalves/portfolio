@@ -10,7 +10,7 @@ import { FadeGradient } from "../../elements/canvas/FadeGradient";
 import { MediaLayout } from "./MediaLayout";
 import { CanvasText } from "../../elements/canvas/CanvasText";
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
-import { AsciiRenderConfig } from "../../app/RenderConfig";
+import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 import {
     getIconById,
     getPersonById,
@@ -21,6 +21,7 @@ import {
     type TextBlock,
 } from "../../assets/contentAssets";
 import TagLabel from "../../elements/ui/TagLabel";
+import { AppState } from "../../app/AppState";
 
 export class ProjectDetailsPage extends Page {
     project: Project | null = null;
@@ -45,12 +46,8 @@ export class ProjectDetailsPage extends Page {
     tags: TagLabel[] = [];
     tagsInitialized: boolean = false;
 
-    constructor(
-        project: Project,
-        goTo: (path: string) => void,
-        isMobile: boolean,
-    ) {
-        super(project.id, isMobile, goTo);
+    constructor(project: Project, goTo: (path: string) => void) {
+        super(project.id, goTo);
         this.project = project;
         this.goTo = goTo;
         this.asciigridSize = AsciiRenderConfig.gridSize;
@@ -203,7 +200,7 @@ export class ProjectDetailsPage extends Page {
 
         const paragraphs = description.paragraphs;
 
-        for (let i = paragraphs.length-1; i >= 0; i--) {
+        for (let i = paragraphs.length - 1; i >= 0; i--) {
             const textBlock = new CanvasText(
                 x,
                 y,
@@ -292,7 +289,7 @@ export class ProjectDetailsPage extends Page {
 
         const margin = Math.ceil(gridSize.x * 0.05);
 
-        const layoutWidth = gridSize.x/2;
+        const layoutWidth = gridSize.x / 2;
 
         // Create and place scrollable layout layer
         const mediaLayer = new MediaLayout(
@@ -306,7 +303,7 @@ export class ProjectDetailsPage extends Page {
 
         // Add the media layer below everything
         this.layers.push(mediaLayer);
-        this.pageHeight += mediaLayer.h;
+        this.setPageHeight(mediaLayer.h);
     }
 
     placeFadeGradients() {
@@ -336,14 +333,12 @@ export class ProjectDetailsPage extends Page {
     }
 
     placeBackButton() {
-        const navigationSource = "home"
-
         this.fixedLayer.addElement(
             new AsciiButton(
                 "<< Go back",
                 () => {
                     const backDestination =
-                        navigationSource === "home" ? "/" : "/projects";
+                        AppState.navigationSource === "home" ? "/" : "/projects";
                     this.goTo(backDestination);
                 },
                 4,
@@ -376,6 +371,31 @@ export class ProjectDetailsPage extends Page {
 
             this.tagsInitialized = true;
         }
+    }
+
+    onResize(): void {
+        // destroy old layers
+        this.layers.forEach((l) => l.destroy?.());
+        this.layers = [];
+
+        // reset fixed layer completely
+        this.fixedLayer?.destroy?.();
+        this.fixedLayer = new Layer("fixed", []);
+
+        // reset layout state
+        this.placementX = 4;
+        this.placementY = this.asciigridSize.y - 2;
+
+        this.pageHeight = 0;
+
+        // reset UI state
+        this.tags = [];
+        this.tagsInitialized = false;
+
+        this.titleElement = null;
+        this.subtitleElement = null;
+
+        this.init();
     }
 
     destroy(): void {

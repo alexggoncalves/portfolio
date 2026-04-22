@@ -4,7 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
 import type { Vector3 } from "three";
 import CatSection from "./CatSection";
-import { AsciiRenderConfig } from "../app/RenderConfig";
+import { AsciiRenderConfig } from "../app/AsciiRenderConfig";
 import { AppState } from "../app/AppState";
 
 function HomeScene() {

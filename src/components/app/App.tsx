@@ -3,24 +3,23 @@ import "../../styles/css/App.css";
 // import ErrorElement from "./ErrorElement";
 
 // import { Outlet, useLocation, useRouteError } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { buildGlobalAssets, requestAssets } from "../assets/assetStream";
-import useSceneStore from "../../stores/sceneStore";
 import AsciiSceneStage from "./AsciiSceneStage";
 import {
     createAsciiTeamNames,
     createAsciiTitleArrays,
     createBrightnessMap,
 } from "../assets/contentAssets";
-import { AsciiRenderConfig } from "./RenderConfig";
+import { AsciiRenderConfig } from "./AsciiRenderConfig";
 
 function App() {
     // Error message
     // const error = useRouteError();
     // const location = useLocation();
 
-    const isReady = useSceneStore((s) => s.isReady);
+    const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
         createBrightnessMap(AsciiRenderConfig.asciiSequence);
@@ -29,7 +28,8 @@ function App() {
             await createAsciiTitleArrays();
             await createAsciiTeamNames();
             await requestAssets(buildGlobalAssets());
-            useSceneStore.setState({ isReady: true });
+            console.log("aaa")
+            setIsReady(true);
         })();
     }, []);
 

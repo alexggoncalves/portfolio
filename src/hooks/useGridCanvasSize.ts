@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { AsciiRenderConfig } from "../components/app/RenderConfig";
+import { AsciiRenderConfig } from "../components/app/AsciiRenderConfig";
 
 export type CanvasSize = {
     width: number;

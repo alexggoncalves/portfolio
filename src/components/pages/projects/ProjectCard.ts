@@ -3,12 +3,11 @@ import Color4 from "three/src/renderers/common/Color4.js";
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
 
 import TagLabel from "../../elements/ui/TagLabel";
-import type { NavigationSource } from "../../app/AppState";
+import { AppState, type NavigationSource } from "../../app/AppState";
 import { InteractiveElement } from "../../elements/core/InteractiveElement";
-import { AsciiRenderConfig } from "../../app/RenderConfig";
+import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 import { getTagsById, type Project, type Tag } from "../../assets/contentAssets";
 import type { Layer } from "../../elements/core/Layer";
-import type { Unit } from "../../elements/core/Element";
 
 export class ProjectCard extends InteractiveElement {
     project: Project;
@@ -152,6 +151,7 @@ export class ProjectCard extends InteractiveElement {
         super.onClick();
         if (this.goTo) {
             this.goTo(`/projects/${this.project.id}`);
+            AppState.navigationSource = this.navigationSource
         }
     }
 
@@ -178,7 +178,7 @@ export class ProjectCard extends InteractiveElement {
             tag.destroy();
         });
 
-        this.tags = [];
+        this.tags.length = 0;
         this.goTo = undefined;
 
         super.destroy();

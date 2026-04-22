@@ -1,7 +1,7 @@
 import { Color } from "three";
 
 import { Element } from "../core/Element";
-import { AsciiRenderConfig } from "../../app/RenderConfig";
+import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 
 //------------------------------------------
 // Text Class

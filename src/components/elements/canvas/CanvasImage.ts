@@ -1,5 +1,5 @@
 import { Element, type Unit } from "../core/Element";
-import { images } from "../../assets/assetRecords";
+import { images, type ImageRecord } from "../../assets/assetRecords";
 
 //------------------------------------------
 // Ascii Image Class
@@ -7,6 +7,7 @@ import { images } from "../../assets/assetRecords";
 
 export class CanvasImage extends Element {
     image: HTMLImageElement | null = null; // Image to draw
+    private record?: ImageRecord;
 
     src: string;
     loaded = false;
@@ -37,11 +38,11 @@ export class CanvasImage extends Element {
     }
 
     private resolveImage() {
-        const record = images.get(this.src);
+       this.record = images.get(this.src);
 
-        if (record) {
-            this.image = record.element;
-            this.loaded = record.loaded;
+        if (this.record) {
+            this.image = this.record.element;
+            this.loaded = this.record.loaded;
             return;
         }
         this.loaded = false;
@@ -51,22 +52,20 @@ export class CanvasImage extends Element {
         _asciiCtx: CanvasRenderingContext2D,
         bgCtx: CanvasRenderingContext2D,
     ): void {
-        const record = images.get(this.src);
-
-        if (record?.loaded && !this.loaded) {
-            this.image = record.element;
+        if (this.record?.loaded && !this.loaded) {
+            this.image = this.record.element;
             this.loaded = true;
         }
 
         bgCtx.save();
-        bgCtx.translate(-this.offsetX, -this.offsetY);
+        bgCtx.translate(this.x-this.offsetX, this.y-this.offsetY);
 
         if (this.radius > 0) {
             bgCtx.clip(this.getClipPath());
         }
 
         if (this.loaded && this.image) {
-            bgCtx.drawImage(this.image, this.x, this.y, this.w, this.h);
+            bgCtx.drawImage(this.image, 0, 0, this.w, this.h);
         } else this.drawPlaceholder(bgCtx);
 
         bgCtx.restore();
@@ -76,14 +75,14 @@ export class CanvasImage extends Element {
         bgCtx.fillStyle = "#595959";
 
         // Draw image to "background" canvas
-        bgCtx.fillRect(this.x, this.y, this.w, this.h);
+        bgCtx.fillRect(0, 0, this.w, this.h);
     }
 
     private getClipPath() {
         if (this.clipPath) return this.clipPath;
 
-        const x = this.x;
-        const y = this.y;
+        const x = 0;
+        const y = 0;
         const width = this.w;
         const height = this.h;
 

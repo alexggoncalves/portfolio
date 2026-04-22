@@ -4,7 +4,7 @@ type VideoRecord = {
     loaded: boolean;
 };
 
-type ImageRecord = {
+export type ImageRecord = {
     type: "image";
     element: HTMLImageElement;
     loaded: boolean;

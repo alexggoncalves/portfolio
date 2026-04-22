@@ -57,6 +57,7 @@ export class Layer {
                 window.innerWidth,
             );
         });
+        
     }
 
     draw(

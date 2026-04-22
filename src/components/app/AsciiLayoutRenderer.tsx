@@ -6,7 +6,7 @@ import useAsciiRenderTargets from "../../hooks/useAsciiRenderTargets";
 import usePointer from "../../hooks/usePointer";
 import { getDistortedPosition } from "../../utils/getDistortedPosition";
 import { useRef } from "react";
-import { AsciiRenderConfig } from "./RenderConfig";
+import { AsciiRenderConfig } from "./AsciiRenderConfig";
 import { type Page } from "../elements/core/Page";
 import type { CanvasSize } from "../../hooks/useGridCanvasSize";
 import type { Navigation } from "../elements/ui/Navigation";
@@ -29,12 +29,23 @@ function AsciiLayoutRenderer({
     const scrollDelta = useScroll();
     const { pointerPosition, isMouseDown, updateCursor, setClickTarget } =
         usePointer();
+    const lastMouse = useRef(new Vector2(-1, -1));
+    const mouseDirty = useRef(true);
 
     // Mouse position with distortion applied
     const distortedPointerPosition = useRef<Vector2>(new Vector2(0));
 
     // Update and render pages (->layers->elements)
     useFrame((_state, delta) => {
+        const mouseMoved =
+            lastMouse.current.x !== pointerPosition.current.x ||
+            lastMouse.current.y !== pointerPosition.current.y;
+
+        if (mouseMoved) {
+            mouseDirty.current = true;
+            lastMouse.current.copy(pointerPosition.current);
+        }
+
         if (!size.current) return;
         const { width, height } = size.current;
 
@@ -60,20 +71,18 @@ function AsciiLayoutRenderer({
         if (!asciiCtx || !asciiTexture || !bgCtx || !bgTexture) return;
 
         // Clear Render Targets
-        clearRenderTargets(
-            asciiCtx,
-            bgCtx,
-            AsciiRenderConfig.bgColor,
-        );
+        clearRenderTargets(asciiCtx, bgCtx, AsciiRenderConfig.bgColor);
 
         // Map the mouse or touch position to fit the applied lens distortion
-        getDistortedPosition(
-            pointerPosition.current,
-            size.current,
-            AsciiRenderConfig.distortion,
-            AsciiRenderConfig.focalLength,
-            distortedPointerPosition.current,
-        );
+        if (mouseDirty.current) {
+            getDistortedPosition(
+                pointerPosition.current,
+                size.current,
+                AsciiRenderConfig.distortion,
+                AsciiRenderConfig.focalLength,
+                distortedPointerPosition.current,
+            );
+        }
 
         // Update and draw current and next page
         updatePages(
@@ -83,9 +92,11 @@ function AsciiLayoutRenderer({
             isMouseDown.current,
         );
 
-        // Update mouse targets
-        updateMouseTargets();
-        updateCursor();
+        if (mouseDirty.current) {
+            // Update mouse targets
+            updateMouseTargets();
+            updateCursor();
+        }
 
         // Draw pages
         drawPages(asciiCtx, bgCtx);
@@ -110,15 +121,18 @@ function AsciiLayoutRenderer({
             isTransitioning ? 0 : scrollDelta.current,
             isMouseDown,
         );
-
-        // Update next page if it exists
-        nextPage.current?.update(
-            delta,
-            mouseX,
-            mouseY,
-            isTransitioning ? scrollDelta.current : 0,
-            isMouseDown,
-        );
+        
+        // Update next page if transition is happening
+        if (isTransitioning) {
+            
+            nextPage.current?.update(
+                delta,
+                mouseX,
+                mouseY,
+                isTransitioning ? scrollDelta.current : 0,
+                isMouseDown,
+            );
+        }
 
         // Update navigation
         nav.current?.updateNavMouseState(mouseX, mouseY);

@@ -3,7 +3,7 @@ import { Page } from "../../elements/core/Page";
 import { ProjectsGrid } from "./ProjectsGrid";
 import { Layer } from "../../elements/core/Layer";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
-import { AsciiRenderConfig } from "../../app/RenderConfig";
+import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 import type { Project } from "../../assets/contentAssets";
 
 export class ProjectPage extends Page {
@@ -17,10 +17,9 @@ export class ProjectPage extends Page {
 
     constructor(
         projects: Project[],
-        isMobile: boolean,
         goTo: (path: string) => void,
     ) {
-        super("projects", isMobile, goTo);
+        super("projects", goTo);
         this.projects = projects;
 
         this.init();
@@ -48,7 +47,7 @@ export class ProjectPage extends Page {
             false,
         );
 
-        this.setPageHeight(this.worksGrid.gridSize.y + 12 +margin/2);
+        this.setPageHeight(this.worksGrid.gridSize.y + 12 + margin / 2);
 
         this.layers.push(this.worksGrid);
         this.createGradient();
@@ -69,6 +68,17 @@ export class ProjectPage extends Page {
         );
 
         this.layers.push(gradientLayer);
+    }
+
+    onResize(): void {
+        this.layers.forEach((l) => l.destroy?.());
+        this.layers = [];
+
+        this.pageHeight = 0;
+
+        this.worksGrid?.destroy();
+
+        this.init();
     }
 
     destroy(): void {

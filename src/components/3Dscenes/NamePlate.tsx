@@ -4,7 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import getWorldPosition from "../../utils/getWorldPosition";
 import { Vector3 } from "three";
 import getWorldScale, { getObjectSize } from "../../utils/getWorldScale";
-import { AsciiRenderConfig } from "../app/RenderConfig";
+import { AsciiRenderConfig } from "../app/AsciiRenderConfig";
 // import useSceneStore from "../../stores/sceneStore";
 
 function NamePlate({ text }: { text: string }) {
@@ -76,7 +76,7 @@ function NamePlate({ text }: { text: string }) {
 
     return (
         <>
-            <group ref={groupRef} position={[0, 0, 0]} scale={[1, 1, 1]}>
+            <group ref={groupRef} position={[-99, 0, 0]} scale={[1, 1, 1]}>
                 <Text3D
                     ref={wordRef}
                     scale={[1, 1, 1]}

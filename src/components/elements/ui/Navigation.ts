@@ -4,7 +4,7 @@ import { Layer } from "../core/Layer";
 import { AsciiButton } from "../ascii/AsciiButton";
 import type { InteractiveElement } from "../core/InteractiveElement";
 import { ScrollBar } from "./ScrollBar";
-import { AsciiRenderConfig } from "../../app/RenderConfig";
+import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 
 //-------------------------------
 //          FRAME LAYER

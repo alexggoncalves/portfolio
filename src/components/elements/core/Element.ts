@@ -2,11 +2,8 @@ import { Color, Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 import getColorString from "../../../utils/color";
 import drawRoundRect from "../../../utils/drawRoundRect";
-import { AsciiRenderConfig } from "../../app/RenderConfig";
-import {
-    brightnessMap,
-    getBrightnessFromChar,
-} from "../../assets/contentAssets";
+import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
+import { getBrightnessFromChar } from "../../assets/contentAssets";
 
 //-----------------------------------------
 // ELEMENT CLASS

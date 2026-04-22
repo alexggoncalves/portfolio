@@ -1,5 +1,5 @@
 import { MathUtils } from "three";
-import { AsciiRenderConfig } from "../../app/RenderConfig";
+import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 import type { Element } from "./Element";
 import { InteractiveElement } from "./InteractiveElement";
 import { Layer } from "./Layer";

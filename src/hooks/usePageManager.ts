@@ -6,7 +6,7 @@ import createPage from "../utils/createPage";
 import { AppState } from "../components/app/AppState";
 import { Navigation } from "../components/elements/ui/Navigation";
 
-function usePageManager(location: any, isMobile: boolean) {
+function usePageManager(location: any) {
     const currentPage = useRef<Page | null>(null);
     const nextPage = useRef<Page | null>(null);
     const nav = useRef<Navigation | null>(null);
@@ -24,7 +24,7 @@ function usePageManager(location: any, isMobile: boolean) {
     useEffect(() => {
         if (!nav.current) {
             nav.current = new Navigation(goTo);
-            nav.current.init(isMobile);
+            nav.current.init();
         }
         return () => {
             nav.current?.destroy();
@@ -35,7 +35,7 @@ function usePageManager(location: any, isMobile: boolean) {
     useEffect(() => {
         const scene = location.pathname.slice(1);
 
-        const newPage = createPage(scene, isMobile, goTo);
+        const newPage = createPage(scene, goTo);
 
         // Get page last scroll
         const storedScroll = AppState.pageScrolls[newPage.name] || 0;
@@ -56,7 +56,7 @@ function usePageManager(location: any, isMobile: boolean) {
 
         // Start transition
         startTransitionFromTo(currentPage.current, newPage);
-    }, [location.pathname, isMobile]);
+    }, [location.pathname]);
 
     function startTransitionFromTo(from: Page, to: Page) {
         transitionId.current += 1;

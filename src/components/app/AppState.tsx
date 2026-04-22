@@ -1,15 +1,22 @@
 import { Texture } from "three";
 
 export type NavigationSource = "home" | "projects" | "contacts" | "outside";
+export type Device = "mobile" | "tablet" | "desktop";
 
 export class AppState {
     static backgroundTexture?: Texture | null;
     static uiTexture?: Texture | null;
 
+    static device: Device = "desktop";
+
     static navigationSource: NavigationSource = "outside";
     static pageHeight: number = 0;
 
     static pageScrolls: Record<string, number> = {};
+
+    static setDevice(device: Device) {
+        this.device = device;
+    }
 
     static setBackground(texture: Texture) {
         this.backgroundTexture = texture;

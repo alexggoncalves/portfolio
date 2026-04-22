@@ -1,7 +1,5 @@
 import { useLocation } from "react-router";
 
-import useSceneStore from "../../stores/sceneStore";
-
 import Postprocessing from "../postprocessing/Postprocessing";
 
 import SceneRenderer from "../3Dscenes/SceneRenderer";
@@ -37,20 +35,15 @@ const canvasProps = {
 //---------------------------------------------------------------------
 function AsciiSceneStage() {
     const location = useLocation();
-    const { isMobile } = useSceneStore();
 
     // Initialize the page manager state
     const { size, containerRef } = useGridCanvasSize();
-    const { currentPage, nextPage, nav } = usePageManager(location, isMobile);
+    const { currentPage, nextPage, nav } = usePageManager(location);
 
     return (
         <>
             <div ref={containerRef} style={{ overflow: "hidden" }}>
-                <Canvas {...canvasProps} >
-                    {/* 3D Scene */}
-                    {/* (This scene will be converted to ascii by the Ascii shader) */}
-                    <SceneRenderer />
-
+                <Canvas {...canvasProps}>
                     {/* Create and draw ascii ui and background to textures */}
                     {/* (Textures get saved on global App State) */}
                     <AsciiLayoutRenderer
@@ -59,6 +52,10 @@ function AsciiSceneStage() {
                         nav={nav}
                         size={size}
                     />
+
+                    {/* 3D Scene */}
+                    {/* (This scene will be converted to ascii by the Ascii shader) */}
+                    <SceneRenderer />
 
                     {/* Apply ascii+background shader pass and postprocessing effects*/}
                     <Postprocessing />

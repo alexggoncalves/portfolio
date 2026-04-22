@@ -2,7 +2,7 @@ import { Layer } from "./Layer";
 import { MathUtils } from "three";
 import { clamp } from "three/src/math/MathUtils.js";
 import type { InteractiveElement } from "./InteractiveElement";
-import { AsciiRenderConfig } from "../../app/RenderConfig";
+import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 import { AppState } from "../../app/AppState";
 import { DraggableLayer } from "./DraggableLayer";
 
@@ -26,19 +26,23 @@ export class Page {
     scrollOffset: number = 0;
     pageHeight: number = 0;
     bottomScrollMargin: number = 0;
-    readonly scrollDampingRange: number = 10;
+    scrollDampingRange: number = 10;
+    lastMaxScroll: number = 0;
+
+    lastMouseX = -1;
+    lastMouseY = -1;
+    hoverDirty = true;
 
     // Callbacks
     onFadeOutComplete?: () => void;
     goTo: (path: string) => void;
 
     // Flags
-    isMobile: boolean;
+    pendingLayoutUpdate: boolean = false;
 
-    constructor(name: string, isMobile: boolean, goTo: (path: string) => void) {
+    constructor(name: string, goTo: (path: string) => void) {
         this.name = name;
         this.goTo = goTo;
-        this.isMobile = isMobile;
     }
 
     update(
@@ -50,7 +54,10 @@ export class Page {
     ): void {
         this.updateTransitions(delta);
         this.updateScroll(scrollDelta);
-        this.updateInteractiveElements(mouseX, mouseY, isMouseDown);
+
+        if (this.hoverDirty) {
+            this.updateInteractiveElements(mouseX, mouseY, isMouseDown);
+        }
 
         // Update all page layers
         this.layers.forEach((layer: Layer) => {
@@ -82,14 +89,15 @@ export class Page {
             }
         }
 
-        // reset only once, and only set one active hover
+        // Reset hover state
         for (const layer of this.layers) {
-            for (const element of layer.interactiveElements) {
-                element.isMouseOver = false;
+            const list = layer.interactiveElements;
+            for (let i = 0; i < list.length; i++) {
+                list[i].isMouseOver = false;
             }
         }
 
-        if (top && this.targetOpacity !=0) {
+        if (top && this.targetOpacity != 0) {
             this.currentHoveredElement = top;
         } else {
             this.currentHoveredElement = null;
@@ -104,9 +112,9 @@ export class Page {
         bgCtx.globalAlpha = this.opacity;
         asciiCtx.globalAlpha = this.opacity;
 
-        this.layers.forEach((layer: Layer) => {
-            layer.draw(asciiCtx, bgCtx, this.opacity);
-        });
+        for (let i = 0; i < this.layers.length; i++) {
+            this.layers[i].draw(asciiCtx, bgCtx, this.opacity);
+        }
 
         asciiCtx.restore();
         bgCtx.restore();
@@ -114,6 +122,7 @@ export class Page {
 
     protected setPageHeight(height: number) {
         this.pageHeight = height;
+        this.pendingLayoutUpdate = true;
     }
 
     updateTransitions(delta: number): void {
@@ -143,8 +152,21 @@ export class Page {
     }
 
     updateScroll(scrollDelta: number): void {
+        if (scrollDelta === 0) return;
+        this.hoverDirty = true;
+
         // Get max scroll
         const max = Math.max(0, this.pageHeight - AsciiRenderConfig.gridSize.y);
+
+        if (this.pendingLayoutUpdate) {
+            if (this.lastMaxScroll > 0) {
+                const ratio = this.scrollOffset / this.lastMaxScroll;
+                this.scrollOffset = ratio * max;
+            }
+
+            this.lastMaxScroll = max;
+            this.pendingLayoutUpdate = false;
+        }
 
         if (max <= 0) {
             this.scrollOffset = 0;
@@ -175,10 +197,7 @@ export class Page {
             });
         });
     }
-
-    onResize() {
-        console.log("resize");
-    }
+    onResize() {}
 
     destroy(): void {
         // Destroy all layers

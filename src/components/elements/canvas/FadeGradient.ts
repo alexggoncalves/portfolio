@@ -75,6 +75,6 @@ export class FadeGradient extends Element {
     }
 
     destroy(): void {
-        this.gradient = undefined as any;
+        this.gradient = null;
     }
 }

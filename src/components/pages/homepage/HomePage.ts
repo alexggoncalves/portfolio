@@ -2,7 +2,7 @@ import { Page } from "../../elements/core/Page";
 import { Layer } from "../../elements/core/Layer";
 import { ProjectsRow } from "./ProjectsRow";
 import { FadeGradient } from "../../elements/canvas/FadeGradient";
-import { AsciiRenderConfig } from "../../app/RenderConfig";
+import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 import type { Project } from "../../assets/contentAssets";
 import { CanvasText } from "../../elements/canvas/CanvasText";
 import { Color } from "three";
@@ -12,10 +12,9 @@ export class HomePage extends Page {
 
     constructor(
         projects: Project[],
-        isMobile: boolean,
         goTo: (path: string) => void,
     ) {
-        super("home", isMobile, goTo);
+        super("home", goTo);
         this.projects = projects;
         this.init();
     }
@@ -36,7 +35,7 @@ export class HomePage extends Page {
         const indent = 5;
         const cardHeight = 20;
         const gap = 1;
-        const titleSize = 3
+        const titleSize = 3;
         const titlePadding = 1;
 
         const workRow = new ProjectsRow(
@@ -46,8 +45,7 @@ export class HomePage extends Page {
             cardHeight,
             indent,
             gap,
-            this.goTo,
-            this.isMobile,
+            this.goTo
         );
 
         const title = new CanvasText(
@@ -91,6 +89,13 @@ export class HomePage extends Page {
 
     disableButtons(): void {
         super.disableButtons();
+    }
+
+    onResize(): void {
+        this.layers.forEach((layer) => layer.destroy?.());
+        this.layers = [];
+
+        this.init();
     }
 
     destroy(): void {

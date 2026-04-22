@@ -10,7 +10,7 @@ import { LensDistortion } from "./LensDistortion";
 import { Vector2 } from "three";
 
 import { useMemo } from "react";
-import { AsciiRenderConfig } from "../app/RenderConfig";
+import { AsciiRenderConfig } from "../app/AsciiRenderConfig";
 
 function Postprocessing() {
 

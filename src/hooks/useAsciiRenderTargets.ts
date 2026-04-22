@@ -7,7 +7,7 @@ import {
 } from "../utils/createRenderTargets";
 import type Color4 from "three/src/renderers/common/Color4.js";
 
-import { AsciiRenderConfig } from "../components/app/RenderConfig";
+import { AsciiRenderConfig } from "../components/app/AsciiRenderConfig";
 import { AppState } from "../components/app/AppState";
 
 function useAsciiRenderTargets() {
