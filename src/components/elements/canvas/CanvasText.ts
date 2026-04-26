@@ -15,6 +15,8 @@ export class CanvasText extends Element {
     fontSize: number;
     fontWeight: number;
 
+    fontString: string;
+
     padding: number;
 
     constructor(
@@ -38,6 +40,8 @@ export class CanvasText extends Element {
         this.fontWeight = fontWeight;
         this.lineHeight = lineHeight;
         this.padding = padding;
+
+        this.fontString = `${this.fontWeight} ${this.fontSize}px ${this.font}`;
 
         this.applyAlignment();
 
@@ -70,16 +74,14 @@ export class CanvasText extends Element {
         bgCtx.textBaseline = "top";
         bgCtx.textAlign = "left";
 
-        bgCtx.font = `${this.fontWeight} ${this.fontSize}px ${this.font}`;
+        bgCtx.font = this.fontString
 
-        const position = {
-            x: Math.floor(this.x + this.padding * AsciiRenderConfig.charSize.x),
-            y: Math.floor(this.y - this.offsetY),
-        };
+        const x =  Math.floor(this.x + this.padding * AsciiRenderConfig.charSize.x)
+        const y =  Math.floor(this.y - this.offsetY)
 
         let yOffset = 0;
         this.lines.forEach((line) => {
-            bgCtx.fillText(line, position.x, position.y + yOffset);
+            bgCtx.fillText(line, x, y + yOffset);
             yOffset += this.lineHeight * this.fontSize;
         });
     }

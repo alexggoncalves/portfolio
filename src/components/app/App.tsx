@@ -7,12 +7,9 @@ import { useEffect, useState } from "react";
 
 import { buildGlobalAssets, requestAssets } from "../assets/assetStream";
 import AsciiSceneStage from "./AsciiSceneStage";
-import {
-    createAsciiTeamNames,
-    createAsciiTitleArrays,
-    createBrightnessMap,
-} from "../assets/contentAssets";
+
 import { AsciiRenderConfig } from "./AsciiRenderConfig";
+import { createAsciiBlocks, createBrightnessMap } from "../assets/asciiBlocks";
 
 function App() {
     // Error message
@@ -25,10 +22,8 @@ function App() {
         createBrightnessMap(AsciiRenderConfig.asciiSequence);
 
         (async () => {
-            await createAsciiTitleArrays();
-            await createAsciiTeamNames();
+            await createAsciiBlocks();
             await requestAssets(buildGlobalAssets());
-            console.log("aaa")
             setIsReady(true);
         })();
     }, []);

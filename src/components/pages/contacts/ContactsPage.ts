@@ -5,9 +5,9 @@ import { AsciiBlock } from "../../elements/ascii/AsciiBlock";
 import Color4 from "three/src/renderers/common/Color4.js";
 import { AppState } from "../../app/AppState";
 
-const title = `CONTACTS`;
+const title = [["CONTACTS"]];
 
-const titleMobile = `CONTACTS-mobile`;
+const titleMobile = [["CONTACTS-mobile"]];
 
 export class ContactsPage extends Page {
     constructor( goTo: (path: string) => void) {
@@ -21,7 +21,7 @@ export class ContactsPage extends Page {
 
         mainLayer.addElement(
             new AsciiBlock(
-                AppState.device == "mobile" ? titleMobile : title,
+                "a",
                 5,
                 4,
                 new Color("white"),

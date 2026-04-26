@@ -1,7 +1,6 @@
 import { Vector2, Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 
-import { createASCIITitle } from "../../assets/asciiFonts";
 import { Page } from "../../elements/core/Page";
 import { Layer } from "../../elements/core/Layer";
 import { AsciiBlock } from "../../elements/ascii/AsciiBlock";
@@ -75,7 +74,7 @@ export class ProjectDetailsPage extends Page {
         this.placeDescription(this.project.description);
 
         // Create title and subtitle elements
-        this.createTitleAndSubtitle(this.project.title, this.project.subtitle);
+        this.createTitleAndSubtitle();
         // Add title and subtitle to fixed layer (on top of gradients)
         this.fixedLayer.addElement(this.subtitleElement!);
         this.fixedLayer.addElement(this.titleElement!);
@@ -98,9 +97,8 @@ export class ProjectDetailsPage extends Page {
         team.forEach((teamMember) => {
             const person = getPersonById(teamMember.id);
             if (person) {
-                const name = person.name.replace(/ /g, "\n");
                 const element = new AsciiBlock(
-                    name,
+                    person.id,
                     x,
                     y,
                     this.textColor,
@@ -226,28 +224,28 @@ export class ProjectDetailsPage extends Page {
         this.placementY = y;
     }
 
-    createTitleAndSubtitle(title: string, subtitle: string) {
-        const asciiTitle = createASCIITitle(title);
+    createTitleAndSubtitle() {
+        if(!this.project) return
 
         let x = this.placementX;
         let y = this.placementY;
 
         this.subtitleElement = new AsciiBlock(
-            subtitle,
+            this.project.id + "_subtitle",
             x,
             y,
             this.textColor,
-            new Color4(0, 0.4, 0.4, 0),
+            new Color4(1, 1, 1, 0),
             "left",
             "top",
         );
         this.subtitleElement.isScrollable = false;
 
-        x = this.subtitleElement.gridX - 1; // Offset block's x
+        x = this.subtitleElement.gridX ; // Offset block's x
         y -= this.subtitleElement.gridH + 3; // Space for the title
 
         this.titleElement = new AsciiBlock(
-            asciiTitle, // !!!
+            this.project.id,
             x,
             y,
             this.textColor,
@@ -335,7 +333,7 @@ export class ProjectDetailsPage extends Page {
     placeBackButton() {
         this.fixedLayer.addElement(
             new AsciiButton(
-                "<< Go back",
+                "back",
                 () => {
                     const backDestination =
                         AppState.navigationSource === "home" ? "/" : "/projects";

@@ -53,6 +53,7 @@ function usePageManager(location: any) {
 
         // Destroy any page currently on transition
         nextPage.current?.destroy?.();
+        nextPage.current = null;
 
         // Start transition
         startTransitionFromTo(currentPage.current, newPage);
@@ -69,6 +70,7 @@ function usePageManager(location: any) {
         to.opacity = 0;
         nextPage.current = to;
 
+        from.onFadeOutComplete = undefined;
         from.onFadeOutComplete = () => {
             if (id !== transitionId.current) return;
 

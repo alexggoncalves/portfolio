@@ -69,27 +69,26 @@ export class ScrollBar extends Slider {
         background: CanvasRenderingContext2D,
     ): void {
         // Draw container
-        background.fillStyle = "white";
-        this.drawBackgroundRect(
+        this.drawRect(
             this.x,
             this.y,
             this.w,
             this.h,
             this.w / 2,
             true,
-            this.color,
+            "white",
             background,
         );
 
         // Draw Knob
-        this.drawBackgroundRect(
+        this.drawRect(
             this.x + this.knobPadding ,
             this.y + this.knobPadding + this.knobPosition,
             this.knobW,
             this.knobH,
             this.knobW / 2,
             false,
-            this.color,
+            "white",
             background,
         );
     }

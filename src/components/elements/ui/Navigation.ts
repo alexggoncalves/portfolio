@@ -58,8 +58,7 @@ export class Navigation extends Layer {
             this.color,
             this.backgroundColor,
             "right",
-            isMobile ? "bottom" : "top",
-            undefined,
+            isMobile ? "bottom" : "top"
         );
         this.addElement(this.projectsButton);
 
@@ -73,8 +72,7 @@ export class Navigation extends Layer {
             this.color,
             this.backgroundColor,
             "right",
-            isMobile ? "bottom" : "top",
-            undefined,
+            isMobile ? "bottom" : "top"
         );
         this.addElement(this.homeButton);
 

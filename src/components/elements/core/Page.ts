@@ -138,17 +138,27 @@ export class Page {
             delta,
         );
 
+        if(this.targetOpacity === 0 && this.opacity < 0.001){
+            this.opacity = 0;
+        }
+
+        if(this.targetOpacity === 1 && this.opacity > 0.999){
+            this.opacity = 1;
+        }
+
         // Trigger the fade out completion event
         // (to destroy the fading out page)
         if (
             this.targetOpacity === 0 &&
-            this.opacity <= 0.003 &&
+            this.opacity <= 0.01 &&
             this.onFadeOutComplete
         ) {
             const callback = this.onFadeOutComplete;
             this.onFadeOutComplete = undefined; // prevent multiple calls
             callback();
         }
+
+
     }
 
     updateScroll(scrollDelta: number): void {

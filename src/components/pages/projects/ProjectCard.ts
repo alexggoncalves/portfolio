@@ -1,5 +1,3 @@
-import Color4 from "three/src/renderers/common/Color4.js";
-
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
 
 import TagLabel from "../../elements/ui/TagLabel";
@@ -18,7 +16,7 @@ export class ProjectCard extends InteractiveElement {
     padding: number = 10;
     cornerRadius: number = 40;
     tagGap: number = 3;
-    highlightColor: Color4 = new Color4(1, 1, 1, 0.8);
+    highlightColor: string = "rgba(1, 1, 1, 0.8)"
 
     navigationSource: NavigationSource = "home";
     goTo?: (path: string) => void;
@@ -135,7 +133,7 @@ export class ProjectCard extends InteractiveElement {
     }
 
     drawHoverState(background: CanvasRenderingContext2D): void {
-        this.drawBackgroundRect(
+        this.drawRect(
             this.x - this.offsetX - this.padding / 2,
             this.y - this.offsetY - this.padding / 2,
             this.w + this.padding,

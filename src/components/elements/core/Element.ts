@@ -1,9 +1,8 @@
 import { Color, Vector2 } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
-import getColorString from "../../../utils/color";
+// import getColorString from "../../../utils/color";
 import drawRoundRect from "../../../utils/drawRoundRect";
 import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
-import { getBrightnessFromChar } from "../../assets/contentAssets";
 
 //-----------------------------------------
 // ELEMENT CLASS
@@ -38,8 +37,9 @@ export class Element {
 
     // Colors
     color: Color = new Color("white");
+    colorString: string = `rgb(${this.color.r * 255}, ${this.color.g * 255}, ${this.color.b * 255})`;
     backgroundColor: Color4 = new Color4(0);
-    opacity: number;
+    opacity: number = 0;
 
     //Flags
     isInteractive: boolean = false;
@@ -61,9 +61,11 @@ export class Element {
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
         this.setPosition(x, y, unit);
-        this.opacity = 0;
 
-        if (color) this.color = color;
+        if (color) {
+            this.color = color;
+            this.colorString = `rgb(${this.color.r * 255}, ${this.color.g * 255}, ${this.color.b * 255})`;
+        }
         if (backgroundColor) this.backgroundColor = backgroundColor;
         if (horizontalAlign) this.horizontalAlign = horizontalAlign;
         if (verticalAlign) this.verticalAlign = verticalAlign;
@@ -192,142 +194,98 @@ export class Element {
         this.y = this.gridY * AsciiRenderConfig.charSize.y;
     }
 
-    // Paint pixel on ui canvas
-    drawPixel(
-        x: number,
-        y: number,
-        r: number,
-        g: number,
-        b: number,
-        brightnessValue: number,
+    static drawBlock(
+        bitmap: ImageBitmap,
+        gridX: number,
+        gridY: number,
         asciiCtx: CanvasRenderingContext2D,
-    ): void {
-        // Set color
-        asciiCtx.fillStyle = `rgba(${r * 255 * this.opacity},${g * 255 * this.opacity},${b * 255 * this.opacity},${brightnessValue})`;
-
-        // Clear and draw new character pixel
-        asciiCtx.fillRect(x, y + this.gridOffsetY, 1, 1);
-    }
-
-    drawBlock(
-        text: string,
-        asciiCtx: CanvasRenderingContext2D,
-        bgCtx: CanvasRenderingContext2D,
-        positionOffset?: Vector2,
+        opacity: number,
     ) {
-        let x = this.gridX;
-        let y = this.gridY;
+        if (!bitmap) return;
 
-        if (positionOffset) {
-            x += positionOffset.x;
-            y += positionOffset.y;
-        }
-        for (let i = 0; i < text.length; i++) {
-            const char = text.charAt(i);
+        const w = bitmap.width;
+        const h = bitmap.height;
 
-            if (char != "\n") {
-                //  Draw background pixel
-                if (this.backgroundColor.a != 0) {
-                    this.drawBackgroundTexel(
-                        x,
-                        y,
-                        AsciiRenderConfig.charSize.x,
-                        AsciiRenderConfig.charSize.y,
-                        this.backgroundColor,
-                        bgCtx,
-                    );
-                }
+        const v = opacity;
+        const c = Math.floor(v * 255);
 
-                if (char != "") {
-                    const brightnessValue = getBrightnessFromChar(char);
+        asciiCtx.save();
+        asciiCtx.beginPath();
+        asciiCtx.rect(gridX, gridY, w, h);
+        asciiCtx.clip();
 
-                    if (char !== undefined) {
-                        // Draw ui pixel with char brightness as opacity
-                        this.drawPixel(
-                            x,
-                            y,
-                            this.color.r,
-                            this.color.g,
-                            this.color.b,
-                            brightnessValue,
-                            asciiCtx,
-                        );
-                    }
-                }
-                x++;
-            } else {
-                y++;
-                x = this.gridX;
-            }
-        }
+        asciiCtx.globalCompositeOperation = "source-over";
+        asciiCtx.drawImage(bitmap, gridX, gridY);
+
+        asciiCtx.globalCompositeOperation = "source-in";
+        asciiCtx.fillStyle = `rgb(${c}, ${c}, ${c})`;
+
+        asciiCtx.fillRect(gridX, gridY, w, h);
+
+        asciiCtx.restore();
     }
 
-    drawASCIILine(
+    static drawASCIILine(
         xA: number,
         yA: number,
         xB: number,
         yB: number,
         strokeWidth: number,
-        r: number,
-        g: number,
-        b: number,
-        brightnessValue: number,
-
+        strokeStyle: string,
         asciiCtx: CanvasRenderingContext2D,
     ): void {
-        // Set color
-        asciiCtx.strokeStyle = `rgba(${r * 255 * this.opacity},${g * 255 * this.opacity},${b * 255 * this.opacity},${brightnessValue * this.opacity})`;
-
-        asciiCtx.lineWidth = strokeWidth;
         asciiCtx.beginPath();
+        asciiCtx.lineWidth = strokeWidth;
+        asciiCtx.strokeStyle = strokeStyle;
+        // asciiCtx.strokeStyle = `rgba(${r * 255},${g * 255},${b * 255},${brightnessValue})`;
         asciiCtx.moveTo(xA - strokeWidth / 2, yA);
         asciiCtx.lineTo(xB - strokeWidth / 2, yB);
         asciiCtx.stroke();
     }
 
-    drawBackgroundTexel(
-        x: number,
-        y: number,
-        w: number,
-        h: number,
-        color: Color4,
-        bgCtx: CanvasRenderingContext2D,
-    ): void {
-        // Set ui color
-        bgCtx.fillStyle = getColorString(color, this.opacity);
+    // drawBackgroundTexel(
+    //     x: number,
+    //     y: number,
+    //     w: number,
+    //     h: number,
+    //     color: Color4,
+    //     bgCtx: CanvasRenderingContext2D,
+    // ): void {
+    //     // Set ui color
+    //     bgCtx.fillStyle = getColorString(color, this.opacity);
 
-        // Clear and draw new character pixel
-        bgCtx.fillRect(x * w, y * h, w, h);
-    }
+    //     // Clear and draw new character pixel
+    //     bgCtx.fillRect(x * w, y * h, w, h);
+    // }
 
-    drawBackgroundRect(
+    drawRect(
         x: number,
         y: number,
         w: number,
         h: number,
         radius: number,
         strokeOnly: boolean,
-        color: Color4,
-        bgCtx: CanvasRenderingContext2D,
+        fillStyle: string,
+        context: CanvasRenderingContext2D,
     ): void {
         // Set ui color
-        bgCtx.beginPath();
+        context.beginPath();
 
         if (radius > 0) {
-            drawRoundRect(bgCtx, x, y, w, h, radius);
+            drawRoundRect(context, x, y, w, h, radius);
         } else {
-            bgCtx.rect(x, y, w, h);
+            context.rect(x, y, w, h);
         }
 
         if (strokeOnly) {
-            bgCtx.strokeStyle = "white";
-            bgCtx.lineWidth = 2;
-            bgCtx.stroke();
+            context.strokeStyle = "white";
+            context.lineWidth = 2;
+            context.stroke();
         } else {
-            bgCtx.fillStyle = getColorString(color, this.opacity);
-            bgCtx.fill();
+            context.fillStyle = fillStyle;
+            context.fill();
         }
-        bgCtx.closePath();
+        context.closePath();
     }
 
     draw(

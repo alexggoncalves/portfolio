@@ -1,7 +1,7 @@
 import type { Color } from "three";
 import Color4 from "three/src/renderers/common/Color4.js";
 import { Element } from "../core/Element";
-import { getBrightnessFromChar } from "../../assets/contentAssets";
+import { getBrightnessFromChar } from "../../assets/asciiBlocks";
 
 //-----------------------------------------
 // Ascii Line Class
