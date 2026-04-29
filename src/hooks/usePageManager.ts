@@ -11,14 +11,14 @@ function usePageManager(location: any) {
     const nextPage = useRef<Page | null>(null);
     const nav = useRef<Navigation | null>(null);
 
-    // prevents overlapping transitions
-    const transitionId = useRef(0);
-
     // Set goTo function
-    const navigateRef = useRef(useNavigate());
-    const goTo = useCallback((path: string) => {
-        navigateRef.current(path);
-    }, []);
+    const navigate = useNavigate();
+    const goTo = useCallback(
+        (path: string) => {
+            navigate(path);
+        },
+        [navigate],
+    );
 
     // Create nav layer
     useEffect(() => {
@@ -60,29 +60,42 @@ function usePageManager(location: any) {
     }, [location.pathname]);
 
     function startTransitionFromTo(from: Page, to: Page) {
-        transitionId.current += 1;
-        const id = transitionId.current;
-
         from.disableButtons();
         from.targetOpacity = 0;
 
-        to.targetOpacity = 1;
         to.opacity = 0;
+        to.targetOpacity = 1;
+
         nextPage.current = to;
 
-        from.onFadeOutComplete = undefined;
         from.onFadeOutComplete = () => {
-            if (id !== transitionId.current) return;
+            
+            if (nextPage.current !== to) {
+                to.destroy?.();
+                return;
+            }
 
-            // Destroy currentPage
             from.destroy?.();
 
-            // Switch new page to current and set it's height to global state
             currentPage.current = to;
             nextPage.current = null;
             AppState.pageHeight = to.pageHeight;
+
+            to.targetOpacity = 1;
         };
     }
+
+    useEffect(() => {
+        return () => {
+            currentPage.current?.destroy?.();
+            nextPage.current?.destroy?.();
+            nav.current?.destroy?.();
+
+            currentPage.current = null;
+            nextPage.current = null;
+            nav.current = null;
+        };
+    }, []);
 
     return {
         currentPage,

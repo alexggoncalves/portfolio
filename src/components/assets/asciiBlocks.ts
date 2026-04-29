@@ -18,8 +18,8 @@ export function createBrightnessMap(asciiSequence: string) {
 
 export function getBrightnessFromChar(char: string): number {
     const brightness = brightnessMap.get(char);
-    if (brightness) return brightness;
-    else return 0;
+    if (brightness !== undefined) return brightness;
+    return 0;
 }
 
 // ASCII BLOCK ATLAS
@@ -75,9 +75,6 @@ async function createBitmapFromAscii(ascii: string[]): Promise<ImageBitmap> {
                 buffer[index + 2] = 255;
                 buffer[index + 3] = brightness;
             } else {
-                buffer[index] = 1;
-                buffer[index + 1] = 0;
-                buffer[index + 2] = 0;
                 buffer[index + 3] = 0;
             }
         }
@@ -108,8 +105,6 @@ export async function createAsciiTeamNames() {
     for (let i = 0; i < people.length; i++) {
         const name = people[i].name;
         const splitName = name.split(" ");
-
-        console.log(splitName);
 
         const bitmap = await createBitmapFromAscii(splitName);
         asciiBlockBitmaps.set(people[i].id, bitmap);

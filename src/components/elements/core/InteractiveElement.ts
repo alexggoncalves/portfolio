@@ -1,5 +1,3 @@
-import { Color } from "three";
-import Color4 from "three/src/renderers/common/Color4.js";
 import { Element, type Unit } from "./Element";
 
 //-----------------------------------------
@@ -17,12 +15,11 @@ export class InteractiveElement extends Element {
         x:number,
         y:number,
         unit: Unit = "pixel",
-        color?: Color,
-        backgroundColor?: Color4,
+        color?: string,
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        super(x, y, unit, color, backgroundColor, horizontalAlign, verticalAlign);
+        super(x, y, unit, color, horizontalAlign, verticalAlign);
         this.setSize(1,1,"pixel")
         this.isInteractive = true;
     }

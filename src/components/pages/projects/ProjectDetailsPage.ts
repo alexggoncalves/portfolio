@@ -1,6 +1,4 @@
-import { Vector2, Color } from "three";
-import Color4 from "three/src/renderers/common/Color4.js";
-
+import { Vector2 } from "three";
 import { Page } from "../../elements/core/Page";
 import { Layer } from "../../elements/core/Layer";
 import { AsciiBlock } from "../../elements/ascii/AsciiBlock";
@@ -28,6 +26,7 @@ export class ProjectDetailsPage extends Page {
     asciigridSize: Vector2;
 
     fixedLayer: Layer = new Layer("fixed", []);
+
     placementX: number = 0;
     placementY: number = 0;
 
@@ -38,7 +37,7 @@ export class ProjectDetailsPage extends Page {
     textFont: string = "Open Sans";
     textLineHeight: number = 1.1;
     textPadding: number = 0;
-    textColor: Color = new Color("white");
+    textColor: string = "white";
 
     toolIconsHeight = 3;
 
@@ -102,7 +101,6 @@ export class ProjectDetailsPage extends Page {
                     x,
                     y,
                     this.textColor,
-                    new Color4(0, 0, 0, 0),
                     "left",
                     "top",
                 );
@@ -225,7 +223,7 @@ export class ProjectDetailsPage extends Page {
     }
 
     createTitleAndSubtitle() {
-        if(!this.project) return
+        if (!this.project) return;
 
         let x = this.placementX;
         let y = this.placementY;
@@ -235,13 +233,12 @@ export class ProjectDetailsPage extends Page {
             x,
             y,
             this.textColor,
-            new Color4(1, 1, 1, 0),
             "left",
             "top",
         );
         this.subtitleElement.isScrollable = false;
 
-        x = this.subtitleElement.gridX ; // Offset block's x
+        x = this.subtitleElement.gridX; // Offset block's x
         y -= this.subtitleElement.gridH + 3; // Space for the title
 
         this.titleElement = new AsciiBlock(
@@ -249,7 +246,6 @@ export class ProjectDetailsPage extends Page {
             x,
             y,
             this.textColor,
-            new Color4(1, 1, 1, 0),
             "left",
             "top",
         );
@@ -301,6 +297,7 @@ export class ProjectDetailsPage extends Page {
 
         // Add the media layer below everything
         this.layers.push(mediaLayer);
+        // this.mediaLayer = mediaLayer;
         this.setPageHeight(mediaLayer.h);
     }
 
@@ -336,13 +333,15 @@ export class ProjectDetailsPage extends Page {
                 "back",
                 () => {
                     const backDestination =
-                        AppState.navigationSource === "home" ? "/" : "/projects";
+                        AppState.navigationSource === "home"
+                            ? "/"
+                            : "/projects";
                     this.goTo(backDestination);
                 },
                 4,
                 10,
                 this.textColor,
-                new Color4(0, 0.4, 0.4, 0),
+                "transparent",
                 "left",
                 "top",
             ),
@@ -360,6 +359,7 @@ export class ProjectDetailsPage extends Page {
 
         // Update tag positions after size is set
         if (!this.tags) return;
+
         if (this.tags[0].initialized && !this.tagsInitialized) {
             let offset = 0;
             this.tags.forEach((tag) => {
@@ -397,12 +397,18 @@ export class ProjectDetailsPage extends Page {
     }
 
     destroy(): void {
-        this.fixedLayer.destroy();
+        this.fixedLayer?.destroy();
         this.fixedLayer = undefined as any;
 
+        // this.mediaLayer?.destroy();
+        // this.mediaLayer = null;
+
+        this.layers.forEach((l) => l.destroy?.());
+        this.layers = [];
+
         this.project = undefined as any;
-        this.titleElement = undefined as any;
-        this.subtitleElement = undefined as any;
+        this.titleElement = null;
+        this.subtitleElement = null;
 
         super.destroy();
     }

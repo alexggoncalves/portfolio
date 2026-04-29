@@ -1,5 +1,3 @@
-import { Color } from "three";
-
 import { Element } from "../core/Element";
 import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 
@@ -29,11 +27,11 @@ export class CanvasText extends Element {
         maxWidth: number, // in ascii cells
         lineHeight: number,
         padding: number,
-        color: Color,
+        color: string,
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        super(x, y, "grid", color, undefined, horizontalAlign, verticalAlign);
+        super(x, y, "grid", color, horizontalAlign, verticalAlign);
         this.isScrollable = true;
         this.font = font;
         this.fontSize = fontSize;
@@ -71,30 +69,33 @@ export class CanvasText extends Element {
         bgCtx: CanvasRenderingContext2D,
     ): void {
         bgCtx.fillStyle = "white";
-        bgCtx.textBaseline = "top";
-        bgCtx.textAlign = "left";
 
-        bgCtx.font = this.fontString
+        if (bgCtx.font !== this.fontString) {
+            bgCtx.font = this.fontString;
+        }
 
-        const x =  Math.floor(this.x + this.padding * AsciiRenderConfig.charSize.x)
-        const y =  Math.floor(this.y - this.offsetY)
+        const x = Math.floor(
+            this.x + this.padding * AsciiRenderConfig.charSize.x,
+        );
+        const y = Math.floor(this.y - this.offsetY);
 
         let yOffset = 0;
-        this.lines.forEach((line) => {
-            bgCtx.fillText(line, x, y + yOffset);
+        for (let i = 0; i < this.lines.length; i++) {
+            bgCtx.fillText(this.lines[i], x, y + yOffset);
             yOffset += this.lineHeight * this.fontSize;
-        });
+        }
     }
 
     wrapText(text: string, maxWidth: number) {
         const ctx = CanvasText.measureCtx;
-        ctx.font = `${this.fontSize}px ${this.font}`;
+        ctx.font = this.fontString;
 
         const words = text.split(" ");
         const lines: string[] = [];
         let currentLine = "";
 
-        words.forEach((word) => {
+        for (let i = 0; i < words.length; i++) {
+            const word = words[i];
             const testLine = currentLine ? currentLine + " " + word : word;
 
             const lineWidth = CanvasText.measureCtx.measureText(testLine).width;
@@ -105,7 +106,8 @@ export class CanvasText extends Element {
                 if (currentLine) lines.push(currentLine);
                 currentLine = word;
             }
-        });
+        }
+
         if (currentLine) lines.push(currentLine);
 
         return lines;
@@ -116,5 +118,9 @@ export class CanvasText extends Element {
             w: this.gridW / AsciiRenderConfig.charSize.x,
             h: this.gridH / AsciiRenderConfig.charSize.y,
         };
+    }
+
+    destroy(): void {
+        this.lines.length = 0;
     }
 }

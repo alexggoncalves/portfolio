@@ -1,6 +1,3 @@
-import { Color } from "three";
-import Color4 from "three/src/renderers/common/Color4.js";
-
 import { InteractiveElement } from "../core/InteractiveElement";
 import type { Unit } from "../core/Element";
 import { images } from "../../assets/assetRecords";
@@ -26,8 +23,8 @@ export class Button extends InteractiveElement {
         w: number,
         h: number,
         unit: Unit,
-        color?: Color,
-        backgroundColor?: Color4,
+        color?: string,
+        _backgroundColor?: string,
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
@@ -36,7 +33,6 @@ export class Button extends InteractiveElement {
             y,
             unit,
             color,
-            backgroundColor,
             horizontalAlign,
             verticalAlign,
         );
@@ -67,10 +63,7 @@ export class Button extends InteractiveElement {
         context: CanvasRenderingContext2D,
     ): void {
         // Set color and stroke
-        context.strokeStyle = `rgba(${this.color.r * 255},
-        ${this.color.g * 255},
-        ${this.color.b * 255},
-        ${this.opacity})`;
+        context.strokeStyle = this.color;
         context.lineWidth = strokeWeight;
 
         // Draw frame
@@ -114,6 +107,7 @@ export class Button extends InteractiveElement {
 
     destroy(): void {
         this.icon = null;
+        this.callback = () => {};
 
         super.destroy();
     }

@@ -26,7 +26,7 @@ export class CanvasImage extends Element {
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        super(x, y, unit, undefined, undefined, horizontalAlign, verticalAlign);
+        super(x, y, unit, undefined, horizontalAlign, verticalAlign);
         this.isScrollable = true;
         this.setSize(w, h, unit);
         // this.applyAlignment();

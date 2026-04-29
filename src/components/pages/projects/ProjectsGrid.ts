@@ -124,7 +124,7 @@ export class ProjectsGrid extends Layer {
     }
 
     destroy(): void {
-        super.destroy();
         this.projects = [];
+        super.destroy();
     }
 }

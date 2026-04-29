@@ -24,9 +24,8 @@ export class Page {
 
     // Scroll
     scrollOffset: number = 0;
+    scrollSpeed: number = 2;
     pageHeight: number = 0;
-    bottomScrollMargin: number = 0;
-    scrollDampingRange: number = 10;
     lastMaxScroll: number = 0;
 
     lastMouseX = -1;
@@ -60,9 +59,9 @@ export class Page {
         }
 
         // Update all page layers
-        this.layers.forEach((layer: Layer) => {
-            layer.update(delta, this.scrollOffset);
-        });
+        for (let i = 0; i < this.layers.length; i++) {
+            this.layers[i].update(delta, this.scrollOffset);
+        }
     }
 
     updateInteractiveElements(
@@ -72,32 +71,29 @@ export class Page {
     ) {
         let top: InteractiveElement | null = null;
 
-        for (const layer of this.layers) {
-            // Update worksRow dragging state
+        for (let i = 0; i < this.layers.length; i++) {
+            const layer = this.layers[i];
+
+            // Update draggable layer's state
             if (layer instanceof DraggableLayer) {
                 layer.updateDragState(mouseX, mouseY, isMouseDown);
             }
 
-            for (const element of layer.interactiveElements) {
-                // if (!element.active) continue;
+            // Update interactive elements and find topmost hovered element
+            for (let j = 0; j < layer.interactiveElements.length; j++) {
+                const element = layer.interactiveElements[j];
 
                 if (element.contains(mouseX, mouseY)) {
                     if (!top || element.zIndex > top.zIndex) {
                         top = element;
                     }
                 }
-            }
-        }
-
-        // Reset hover state
-        for (const layer of this.layers) {
-            const list = layer.interactiveElements;
-            for (let i = 0; i < list.length; i++) {
-                list[i].isMouseOver = false;
+                element.isMouseOver = false;
             }
         }
 
         if (top && this.targetOpacity != 0) {
+            top.isMouseOver = true;
             this.currentHoveredElement = top;
         } else {
             this.currentHoveredElement = null;
@@ -138,58 +134,44 @@ export class Page {
             delta,
         );
 
-        if(this.targetOpacity === 0 && this.opacity < 0.001){
-            this.opacity = 0;
-        }
-
-        if(this.targetOpacity === 1 && this.opacity > 0.999){
+        if (this.targetOpacity === 1 && this.opacity > 0.999) {
             this.opacity = 1;
         }
 
-        // Trigger the fade out completion event
-        // (to destroy the fading out page)
-        if (
-            this.targetOpacity === 0 &&
-            this.opacity <= 0.01 &&
-            this.onFadeOutComplete
-        ) {
-            const callback = this.onFadeOutComplete;
-            this.onFadeOutComplete = undefined; // prevent multiple calls
-            callback();
+        if (this.targetOpacity === 0 && this.opacity < 0.001) {
+            this.opacity = 0;
+
+            if (this.onFadeOutComplete) {
+                const callback = this.onFadeOutComplete;
+                this.onFadeOutComplete = undefined;
+                callback();
+            }
         }
-
-
     }
 
     updateScroll(scrollDelta: number): void {
-        if (scrollDelta === 0) return;
-        this.hoverDirty = true;
+        // this.hoverDirty = true;
 
-        // Get max scroll
+        // Constrain scroll offset to page height
         const max = Math.max(0, this.pageHeight - AsciiRenderConfig.gridSize.y);
 
+        // Update scroll on page resize to maintain position
         if (this.pendingLayoutUpdate) {
-            if (this.lastMaxScroll > 0) {
-                const ratio = this.scrollOffset / this.lastMaxScroll;
-                this.scrollOffset = ratio * max;
-            }
-
+            this.scrollOffset =
+                max > 0 && this.lastMaxScroll > 0
+                    ? (this.scrollOffset / this.lastMaxScroll) * max
+                    : 0;
             this.lastMaxScroll = max;
             this.pendingLayoutUpdate = false;
         }
 
-        if (max <= 0) {
-            this.scrollOffset = 0;
-            return;
-        }
-
-        // Only apply scroll if it's significant
-        if (Math.abs(scrollDelta) > 0.01) {
-            this.scrollOffset = clamp(this.scrollOffset + scrollDelta, 0, max);
-        }
-
-        // Update pageScrolls
-        if (AppState.pageScrolls[this.name] !== this.scrollOffset) {
+        // Update offset
+        if (scrollDelta !== 0) {
+            this.scrollOffset = clamp(
+                this.scrollOffset + scrollDelta * this.scrollSpeed,
+                0,
+                max,
+            );
             AppState.recordScroll(this.name, this.scrollOffset);
         }
     }
@@ -201,26 +183,30 @@ export class Page {
     }
 
     disableButtons(): void {
-        this.layers.forEach((layer) => {
-            layer.interactiveElements.forEach((element) => {
+        for (let i = 0; i < this.layers.length; i++) {
+            const layer = this.layers[i].interactiveElements;
+
+            for (let j = 0; j < layer.length; j++) {
+                const element = this.layers[i].interactiveElements[j];
                 element.active = false;
-            });
-        });
+            }
+        }
     }
     onResize() {}
 
     destroy(): void {
+        // Clear hovered elements
+        this.currentHoveredElement = null;
+        this.hoveredLayer = null;
+
         // Destroy all layers
         this.layers.forEach((layer) => layer.destroy());
         this.layers = [];
-
-        // Clear arrays to release references
-        this.currentHoveredElement = null;
-        this.hoveredLayer = null;
+        this.layers.length = 0;
 
         // Remove callbacks
         this.onFadeOutComplete = undefined;
 
-        this.goTo = undefined as any;
+        this.goTo = () => {};
     }
 }

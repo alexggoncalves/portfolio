@@ -1,5 +1,24 @@
+import { Color } from "three";
 import { Element, type Unit } from "../core/Element";
-import type Color4 from "three/src/renderers/common/Color4.js";
+
+function parseRGB(color: string) {
+    const match = color.match(/rgba?\(([^)]+)\)/);
+
+    if (!match) {
+        const c = new Color(color);
+        return {
+            r: c.r * 255,
+            g: c.g * 255,
+            b: c.b * 255,
+        };
+    }
+
+    const [r, g, b] = match[1]
+        .split(",")
+        .map(v => parseFloat(v.trim()));
+
+    return { r, g, b };
+}
 
 //------------------------------------------
 // Fade Gradient Class
@@ -9,8 +28,12 @@ export class FadeGradient extends Element {
     gradient: CanvasGradient | null;
     direction: "top" | "bottom" | "left" | "right";
 
+    r: number;
+    g: number;
+    b: number;
+
     constructor(
-        color: Color4,
+        color: string,
         x: number,
         y: number,
         w: number,
@@ -18,8 +41,13 @@ export class FadeGradient extends Element {
         direction: "top" | "bottom" | "left" | "right",
         unit: Unit = "grid",
     ) {
-        super(x,y,unit, undefined, color);
+        super(x, y, unit, color);
         this.setSize(w, h, unit);
+
+        const c = parseRGB(color);
+        this.r = c.r;
+        this.g = c.g;
+        this.b = c.b;
 
         this.direction = direction;
         this.gradient = null;
@@ -35,11 +63,11 @@ export class FadeGradient extends Element {
         const w = this.w;
         const h = this.h;
 
-        const r = this.backgroundColor.r * 255;
-        const g = this.backgroundColor.g * 255;
-        const b = this.backgroundColor.b * 255;
-
         if (!this.gradient) {
+            const r = this.r;
+            const g = this.g;
+            const b = this.b;
+
             if (this.direction === "top") {
                 this.gradient = bgCtx.createLinearGradient(x, y, x, y + h);
                 this.gradient.addColorStop(0, `rgba(${r},${g},${b},0.95)`);
@@ -69,7 +97,7 @@ export class FadeGradient extends Element {
             bgCtx.fillRect(x, y, w, h);
         } else if (this.direction === "bottom") {
             bgCtx.fillRect(x, y - h, w, h);
-        } else if (this.direction === "left" || "right") {
+        } else if (this.direction === "left" || this.direction === "right") {
             bgCtx.fillRect(x, this.y - this.offsetY, w, h);
         }
     }

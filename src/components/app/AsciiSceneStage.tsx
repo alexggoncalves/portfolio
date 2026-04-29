@@ -8,7 +8,7 @@ import usePageManager from "../../hooks/usePageManager";
 import AsciiLayoutRenderer from "./AsciiLayoutRenderer";
 import { Canvas, type CanvasProps } from "@react-three/fiber";
 import { LinearToneMapping } from "three";
-import useGridCanvasSize from "../../hooks/useGridCanvasSize";
+import useAsciiRenderTargets from "../../hooks/useAsciiRenderTargets";
 
 const canvasProps = {
     shadows: true,
@@ -37,8 +37,8 @@ function AsciiSceneStage() {
     const location = useLocation();
 
     // Initialize the page manager state
-    const { size, containerRef } = useGridCanvasSize();
     const { currentPage, nextPage, nav } = usePageManager(location);
+    const { ascii, bg, size, containerRef } = useAsciiRenderTargets();
 
     return (
         <>
@@ -51,6 +51,8 @@ function AsciiSceneStage() {
                         nextPage={nextPage}
                         nav={nav}
                         size={size}
+                        asciiRenderTarget={ascii}
+                        backgroundRenderTarget={bg}
                     />
 
                     {/* 3D Scene */}
@@ -58,7 +60,10 @@ function AsciiSceneStage() {
                     <SceneRenderer />
 
                     {/* Apply ascii+background shader pass and postprocessing effects*/}
-                    <Postprocessing />
+                    <Postprocessing 
+                        asciiRenderTarget={ascii}
+                        backgroundRenderTarget={bg}
+                    />
                 </Canvas>
             </div>
         </>

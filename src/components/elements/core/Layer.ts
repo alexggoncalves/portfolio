@@ -26,38 +26,36 @@ export class Layer {
 
     update(_delta: number, yOffset: number): void {
         // Update all interactive elements
-        this.interactiveElements.forEach(
-            (interactiveElement: InteractiveElement) => {
-                // Apply scroll offset to elements
-                if (this.isScrollable && interactiveElement.isScrollable) {
-                    interactiveElement.setYOffset(yOffset);
-                }
+        for (let i = 0; i < this.interactiveElements.length; i++) {
+            const interactiveElement = this.interactiveElements[i];
 
-                interactiveElement.checkBoundaries(
-                    yOffset,
-                    window.innerHeight,
-                    window.innerWidth,
-                );
+            if (this.isScrollable && interactiveElement.isScrollable) {
+                interactiveElement.setYOffset(yOffset);
+            }
 
-                // Update interactive element
-                interactiveElement.update();
-            },
-        );
+            interactiveElement.checkBoundaries(
+                yOffset,
+                window.innerHeight, // !!!!
+                window.innerWidth, // !!!!
+            );
 
-        // Update all elements in the layer
-        this.elements.forEach((element: Element) => {
-            // Apply scroll offset to elements
+            // Update interactive element
+            interactiveElement.update();
+        }
+
+        for (let i = 0; i < this.elements.length; i++) {
+            const element = this.elements[i];
+
             if (this.isScrollable && element.isScrollable) {
                 element.setYOffset(yOffset);
             }
 
             element.checkBoundaries(
                 yOffset,
-                window.innerHeight,
-                window.innerWidth,
+                window.innerHeight, // !!!!
+                window.innerWidth, // !!!!
             );
-        });
-        
+        }
     }
 
     draw(
@@ -65,18 +63,23 @@ export class Layer {
         bgCtx: CanvasRenderingContext2D,
         opacity: number,
     ): void {
-        this.interactiveElements.forEach((element: Element) => {
+        for (let i = 0; i < this.interactiveElements.length; i++) {
+            const element = this.interactiveElements[i];
+
             if (element.isInsidePageBoundaries) {
                 element.setOpacity(opacity);
                 element.draw(asciiCtx, bgCtx);
             }
-        });
-        this.elements.forEach((element: Element) => {
+        }
+
+        for (let i = 0; i < this.elements.length; i++) {
+            const element = this.elements[i];
+
             if (element.isInsidePageBoundaries) {
                 element.setOpacity(opacity);
                 element.draw(asciiCtx, bgCtx);
             }
-        });
+        }
     }
 
     addElement(element: Element): Element {
@@ -97,12 +100,12 @@ export class Layer {
     destroy(): void {
         // Destroy normal elements
         this.elements.forEach((e) => e.destroy());
-        this.elements = [];
+        this.elements.length = 0;
 
         // Destroy interactive elements
         this.interactiveElements.forEach((e) => e.destroy());
-        this.interactiveElements = [];
+        this.interactiveElements.length = 0;
 
-        this.goTo = undefined;
+        this.goTo = () => {};
     }
 }

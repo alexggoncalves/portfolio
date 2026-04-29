@@ -112,11 +112,11 @@ export function getIconById(id: string): Icon | null {
 
 export function getTagsById(tagIds: string[]): Tag[] {
     const output = [] as Tag[];
-
-    tagIds.forEach((id) => {
-        const tag = getTagById(id);
+    
+    for (let i = 0; i < tagIds.length; i++) {
+        const tag = getTagById(tagIds[i]);
         if (tag !== null) output.push(tag);
-    });
+    }
 
     return output;
 }

@@ -1,61 +1,61 @@
-import { Color } from "three";
-import Color4 from "three/src/renderers/common/Color4.js";
+// import { Color } from "three";
+// import Color4 from "three/src/renderers/common/Color4.js";
 
-import { Element } from "../core/Element";
+// import { Element } from "../core/Element";
 
-//-----------------------------------------
-// Ascii Text Class
-//-----------------------------------------
+// //-----------------------------------------
+// // Ascii Text Class
+// //-----------------------------------------
 
-export class AsciiText extends Element {
-    text: string; // Ascii formated string
+// export class AsciiText extends Element {
+//     text: string; // Ascii formated string
 
-    constructor(
-        text: string,
-        x: number,
-        y: number,
-        color: Color,
-        bgColor: Color4,
-        maxWidth: number,
-        horizontalAlign?: "left" | "center" | "right",
-        verticalAlign?: "top" | "middle" | "bottom",
-    ) {
-        super(x, y, "grid", color, bgColor, horizontalAlign, verticalAlign);
-        this.text = this.wrapText(text, maxWidth);
+//     constructor(
+//         text: string,
+//         x: number,
+//         y: number,
+//         color: Color,
+//         bgColor: Color4,
+//         maxWidth: number,
+//         horizontalAlign?: "left" | "center" | "right",
+//         verticalAlign?: "top" | "middle" | "bottom",
+//     ) {
+//         super(x, y, "grid", color, bgColor, horizontalAlign, verticalAlign);
+//         this.text = this.wrapText(text, maxWidth);
 
-        this.setSize(this.text);
-        this.applyAlignment();
-    }
+//         this.setSize(this.text);
+//         this.applyAlignment();
+//     }
 
-    draw(
-        asciiCtx: CanvasRenderingContext2D,
-        bgCtx: CanvasRenderingContext2D,
-    ): void {
-        this.drawBlock(this.text, asciiCtx, bgCtx);
-    }
+//     draw(
+//         asciiCtx: CanvasRenderingContext2D,
+//         bgCtx: CanvasRenderingContext2D,
+//     ): void {
+//         this.drawBlock(this.text, asciiCtx, bgCtx);
+//     }
 
-    wrapText(text: string, maxWidth: number) {
-        const paragraphs = text.split("\n");
-        const wrappedParagraphs: string[] = [];
+//     wrapText(text: string, maxWidth: number) {
+//         const paragraphs = text.split("\n");
+//         const wrappedParagraphs: string[] = [];
 
-        paragraphs.forEach((paragraph) => {
-            const words = paragraph.split(" ");
-            const lines: string[] = [];
-            let currentLine = "";
+//         paragraphs.forEach((paragraph) => {
+//             const words = paragraph.split(" ");
+//             const lines: string[] = [];
+//             let currentLine = "";
 
-            words.forEach((word) => {
-                // console.log(word)
-                if (word.length + currentLine.length <= maxWidth) {
-                    currentLine += (currentLine ? " " : "") + word;
-                } else {
-                    lines.push(currentLine);
-                    currentLine = word;
-                }
-            });
-            if (currentLine) lines.push(currentLine);
-            wrappedParagraphs.push(lines.join("\n"));
-        });
+//             words.forEach((word) => {
+//                 // console.log(word)
+//                 if (word.length + currentLine.length <= maxWidth) {
+//                     currentLine += (currentLine ? " " : "") + word;
+//                 } else {
+//                     lines.push(currentLine);
+//                     currentLine = word;
+//                 }
+//             });
+//             if (currentLine) lines.push(currentLine);
+//             wrappedParagraphs.push(lines.join("\n"));
+//         });
 
-        return wrappedParagraphs.join("\n\n");
-    }
-}
+//         return wrappedParagraphs.join("\n\n");
+//     }
+// }

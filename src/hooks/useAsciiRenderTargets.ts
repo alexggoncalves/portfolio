@@ -1,76 +1,126 @@
 import { useEffect, useRef } from "react";
-import { type Texture } from "three";
-import { useThree } from "@react-three/fiber";
+import { CanvasTexture } from "three";
 import {
     createAsciiRenderTarget,
     createBgRenderTarget,
 } from "../utils/createRenderTargets";
-import type Color4 from "three/src/renderers/common/Color4.js";
 
 import { AsciiRenderConfig } from "../components/app/AsciiRenderConfig";
-import { AppState } from "../components/app/AppState";
+
+export type CanvasSize = {
+    width: number;
+    height: number;
+    left: number;
+    top: number;
+};
 
 function useAsciiRenderTargets() {
-    const { size } = useThree();
+    const prev = useRef({ cols: 0, rows: 0 });
+
+    const size = useRef<CanvasSize>({ width: 0, height: 0, left: 0, top: 0 });
+    const containerRef = useRef<HTMLDivElement | null>(null);
 
     const ascii = useRef<{
-        texture: Texture | null;
+        texture: CanvasTexture | null;
         context: CanvasRenderingContext2D | null;
     }>({ texture: null, context: null });
 
     const bg = useRef<{
-        texture: Texture | null;
+        texture: CanvasTexture | null;
         context: CanvasRenderingContext2D | null;
     }>({ texture: null, context: null });
 
     useEffect(() => {
-        // Calculate ascii grid size
-        const gridWidth = size.width / AsciiRenderConfig.charSize.x;
-        const gridHeight = size.height / AsciiRenderConfig.charSize.y;
+        function updateRenderTargets() {
+            
+            // Calculate ascii grid size
+            const gridWidth = Math.floor(
+                size.current.width / AsciiRenderConfig.charSize.x,
+            );
+            const gridHeight = Math.floor(
+                size.current.height / AsciiRenderConfig.charSize.y,
+            );
 
-        // Create a render target to draw ASCII on the GPU
-        const uiRenderTarget = createAsciiRenderTarget(gridWidth, gridHeight);
+            // Create a render target to draw ASCII on the GPU
+            const uiRenderTarget = createAsciiRenderTarget(
+                gridWidth,
+                gridHeight,
+            );
 
-        // Create a render target to draw background behind the ascii on the GPU
-        const bgRenderTarget = createBgRenderTarget(size.width, size.height);
+            // Create a render target to draw background behind the ascii on the GPU
+            const bgRenderTarget = createBgRenderTarget(
+                size.current.width,
+                size.current.height,
+            );
 
-        // Save locally
-        ascii.current = {
-            texture: uiRenderTarget.texture,
-            context: uiRenderTarget.context,
-        };
-        bg.current = {
-            texture: bgRenderTarget.texture,
-            context: bgRenderTarget.context,
-        };
+            ascii.current = {
+                texture: uiRenderTarget.texture,
+                context: uiRenderTarget.context,
+            };
+            bg.current = {
+                texture: bgRenderTarget.texture,
+                context: bgRenderTarget.context,
+            };
+            
+        }
 
-        AppState.setBackground(bgRenderTarget.texture);
-        AppState.setUI(uiRenderTarget.texture);
+        function updateSize() {
+            const viewportWidth = Math.round(window.innerWidth);
+            const viewportHeight = Math.round(window.innerHeight);
 
-        return () => {
-            uiRenderTarget.texture.dispose();
-            bgRenderTarget.texture.dispose();
-        };
-    }, [size.width, size.height]);
+            // Determine the number of columns that fit in the screen + extra
+            const gridCols =
+                Math.floor(viewportWidth / AsciiRenderConfig.charSize.x) +
+                AsciiRenderConfig.extraColumns;
+            const gridRows =
+                Math.floor(viewportHeight / AsciiRenderConfig.charSize.y) +
+                AsciiRenderConfig.extraRows;
 
-    const clearRenderTargets = (
-        uiContext: CanvasRenderingContext2D,
-        bgContext: CanvasRenderingContext2D,
-        bgColor: Color4,
-    ) => {
-        const { width: uiW, height: uiH } = uiContext.canvas;
-        const { width: bgW, height: bgH } = bgContext.canvas;
+            if (
+                prev.current.cols === gridCols &&
+                prev.current.rows === gridRows
+            ) {
+                return;
+            }
 
-        // Clear ui and background textures
-        uiContext.clearRect(0, 0, uiW, uiH);
-        bgContext.fillStyle = `rgb(
-            ${bgColor.r * 255},
-            ${bgColor.g * 255},
-            ${bgColor.b * 255})`;
-        bgContext.fillRect(0, 0, bgW, bgH);
-    };
+            prev.current = { cols: gridCols, rows: gridRows };
 
-    return { ascii, bg, clearRenderTargets };
+            // Update global state for renderer
+            AsciiRenderConfig.setGridSize(gridCols, gridRows);
+
+            const canvasWidth = gridCols * AsciiRenderConfig.charSize.x;
+            const canvasHeight = gridRows * AsciiRenderConfig.charSize.y;
+            const left = Math.floor((canvasWidth - viewportWidth) / 2);
+            const top = Math.floor((canvasHeight - viewportHeight) / 2);
+
+            // Update size ref
+
+            size.current.width = canvasWidth;
+            size.current.height = canvasHeight;
+            size.current.left = left;
+            size.current.top = top;
+
+            // Update div container size
+            const container = containerRef.current;
+            if (container) {
+                container.style.position = "fixed";
+                container.style.top = "0";
+                container.style.left = "0";
+                container.style.width = canvasWidth + "px";
+                container.style.height = canvasHeight + "px";
+                container.style.transform = `translate(${-left}px, ${-top}px)`;
+            }
+
+            updateRenderTargets();
+        }
+
+        updateSize();
+
+        window.addEventListener("resize", updateSize);
+        return () => window.removeEventListener("resize", updateSize);
+    }, []);
+
+    return { ascii, bg, size, containerRef };
 }
 
 export default useAsciiRenderTargets;

@@ -1,9 +1,9 @@
-import { Vector2 } from "three";
 import { InteractiveElement } from "../core/InteractiveElement";
 import type { Layer } from "../core/Layer";
 import { Button } from "../ui/Button";
 import { getIconById } from "../../assets/contentAssets";
 import { videos } from "../../assets/assetRecords";
+import { VideoProgressBar } from "../ui/VideoProgressBar";
 //------------------------------------------
 // Ascii Image Class
 //------------------------------------------
@@ -12,14 +12,17 @@ export class VideoPlayer extends InteractiveElement {
     layer: Layer;
     video: HTMLVideoElement | null = null; // Video to draw
     src: string;
-    imageSize: Vector2 = new Vector2(0, 0);
 
     controlsHeight: number = 25; // controls size in pixels
+    barHeight: number = 6;
+    margin: number = 12;
 
     loaded = false;
     radius: number;
 
     isPlaying: boolean = false;
+
+    progressBar: VideoProgressBar | null = null;
 
     constructor(
         layer: Layer,
@@ -32,7 +35,7 @@ export class VideoPlayer extends InteractiveElement {
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
-        super(x, y,"grid",undefined, undefined, horizontalAlign, verticalAlign);
+        super(x, y, "grid", undefined, horizontalAlign, verticalAlign);
 
         this.layer = layer;
         this.isScrollable = true;
@@ -40,7 +43,7 @@ export class VideoPlayer extends InteractiveElement {
         this.src = src;
 
         this.setSize(w, h, "pixel");
-        this.applyAlignment();
+        // this.applyAlignment();
 
         this.zIndex = 2;
         this.hasPointerOnHover = false;
@@ -67,8 +70,7 @@ export class VideoPlayer extends InteractiveElement {
             this.video.play();
             this.isPlaying = true;
             this.video.muted = false;
-            this.video.volume = 1
-            
+            this.video.volume = 1;
         } else {
             this.video.pause();
             this.isPlaying = false;
@@ -77,9 +79,9 @@ export class VideoPlayer extends InteractiveElement {
 
     private createVideoControls() {
         const playIcon = getIconById("play");
-        
-        const x = this.x + this.controlsHeight/2;
-        const y = this.y + this.h - this.controlsHeight - 1;
+
+        let x = this.x + this.controlsHeight / 2;
+        let y = this.y + this.h - this.controlsHeight - 1;
 
         if (playIcon) {
             const playButton = new Button(
@@ -89,12 +91,26 @@ export class VideoPlayer extends InteractiveElement {
                 y,
                 this.controlsHeight,
                 this.controlsHeight,
-                "pixel"
+                "pixel",
             );
             playButton.zIndex = 20;
             playButton.isScrollable = true;
             this.layer.addElement(playButton);
         }
+
+        x += this.controlsHeight + this.margin;
+
+        this.progressBar = new VideoProgressBar(
+            x,
+            y + this.controlsHeight / 2 - this.barHeight * 1.5,
+            this.w - this.controlsHeight * 4,
+            this.barHeight,
+            this.barHeight / 2,
+        );
+
+        this.progressBar.zIndex = 20;
+
+        this.layer.addElement(this.progressBar);
     }
 
     draw(
@@ -120,6 +136,25 @@ export class VideoPlayer extends InteractiveElement {
         }
 
         bgCtx.restore();
+    }
+
+    update(): void {
+        super.update();
+
+        // Update progress bar
+        if (this.progressBar && this.video) {
+            const currentTime = this.video.currentTime;
+            const totalTime = this.video.duration;
+            this.progressBar.updateTime(currentTime);
+            this.progressBar.setTotalTime(totalTime);
+        }
+
+        // Update volume
+        if (this.video) {
+            if (this.isPlaying) {
+                this.video.volume = this.opacity;
+            }
+        }
     }
 
     private drawVideo(bgCtx: CanvasRenderingContext2D): void {
@@ -158,14 +193,21 @@ export class VideoPlayer extends InteractiveElement {
     destroy(): void {
         // stop video
         if (this.video) {
+            this.video?.pause();
+            this.video.currentTime = 0;
+            this.video.remove();
             this.video = null;
+        }
+
+        if (this.progressBar) {
+            this.progressBar.destroy();
+            this.progressBar = null;
         }
 
         // reset state
         this.isPlaying = false;
         this.loaded = false;
 
-        this.layer.destroy();
         this.layer = undefined as any;
 
         super.destroy();

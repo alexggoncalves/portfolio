@@ -83,7 +83,7 @@ export class ProjectPage extends Page {
 
     destroy(): void {
         this.worksGrid?.destroy();
-        this.projects = null as any;
+        this.projects = [];
 
         super.destroy();
     }

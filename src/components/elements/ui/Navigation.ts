@@ -1,5 +1,3 @@
-import { Color } from "three";
-import Color4 from "three/src/renderers/common/Color4.js";
 import { Layer } from "../core/Layer";
 import { AsciiButton } from "../ascii/AsciiButton";
 import type { InteractiveElement } from "../core/InteractiveElement";
@@ -11,9 +9,6 @@ import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 //-------------------------------
 
 export class Navigation extends Layer {
-    color: Color = new Color("white");
-    backgroundColor: Color4 = new Color4(0, 0.4, 0.4, 0);
-
     goTo: (path: string) => void;
 
     hoveredElement: InteractiveElement | null = null;
@@ -41,8 +36,8 @@ export class Navigation extends Layer {
             () => this.goTo("/contacts"),
             x,
             y,
-            this.color,
-            this.backgroundColor,
+            "white",
+            "transparent",
             "right",
             isMobile ? "bottom" : "top",
         );
@@ -55,8 +50,8 @@ export class Navigation extends Layer {
             () => this.goTo("/projects"),
             x,
             y,
-            this.color,
-            this.backgroundColor,
+            "white",
+            "transparent",
             "right",
             isMobile ? "bottom" : "top"
         );
@@ -69,8 +64,8 @@ export class Navigation extends Layer {
             () => this.goTo("/"),
             x,
             y,
-            this.color,
-            this.backgroundColor,
+            "white",
+            "transparent",
             "right",
             isMobile ? "bottom" : "top"
         );
@@ -119,6 +114,8 @@ export class Navigation extends Layer {
         this.projectsButton = null;
         this.homeButton = null;
         this.scrollBar = null;
+
+        this.goTo = () => {};
         super.destroy();
     }
 }

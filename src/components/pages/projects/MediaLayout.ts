@@ -1,6 +1,6 @@
 import { Layer } from "../../elements/core/Layer";
 import { CanvasImage } from "../../elements/canvas/CanvasImage";
-import { VideoPlayer } from "../../elements/canvas/Video";
+import { VideoPlayer } from "../../elements/canvas/VideoPlayer";
 import type { MediaBlock } from "../../assets/contentAssets";
 
 //-------------------------------
@@ -99,5 +99,10 @@ export class MediaLayout extends Layer {
         this.h += block.gridH + this.imageGap;
     }
 
-    destroy(): void {}
+    destroy(): void {
+        super.destroy();
+        this.goTo = () => {};
+        this.media = [];
+        this.media.length = 0;
+    }
 }

@@ -1,13 +1,12 @@
 import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
+import { Element } from "../core/Element";
 import { Slider } from "./Slider";
-import Color4 from "three/src/renderers/common/Color4.js";
 
 //-------------------------------
 //          ScrollBar LAYER
 //-------------------------------
 
 export class ScrollBar extends Slider {
-    color: Color4 = new Color4("white");
     cornerRadius: number;
     // Dragging state
     mouseX: number = -1;
@@ -29,7 +28,7 @@ export class ScrollBar extends Slider {
         h: number,
         cornerRadius: number,
     ) {
-        super(x, y, w, h, "pixel", undefined, undefined, "right", "middle");
+        super(x, y, w, h, "pixel", "white", "right", "middle");
         this.setSize(w, h, "pixel");
         this.applyAlignment();
 
@@ -59,36 +58,35 @@ export class ScrollBar extends Slider {
     updateScrollOffset(value: number) {
         this.scrollOffset = value;
 
-        this.knobPosition = (this.scrollOffset * this.trackSize) / this.pageHeight
+        this.knobPosition =
+            (this.scrollOffset * this.trackSize) / this.pageHeight;
     }
-
-   
 
     draw(
         _ui: CanvasRenderingContext2D,
         background: CanvasRenderingContext2D,
     ): void {
         // Draw container
-        this.drawRect(
+        Element.drawRect(
             this.x,
             this.y,
             this.w,
             this.h,
             this.w / 2,
             true,
-            "white",
+            this.color,
             background,
         );
 
         // Draw Knob
-        this.drawRect(
-            this.x + this.knobPadding ,
+        Element.drawRect(
+            this.x + this.knobPadding,
             this.y + this.knobPadding + this.knobPosition,
             this.knobW,
             this.knobH,
             this.knobW / 2,
             false,
-            "white",
+            this.color,
             background,
         );
     }

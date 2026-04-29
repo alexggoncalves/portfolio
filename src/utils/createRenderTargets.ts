@@ -1,4 +1,4 @@
-import { CanvasTexture, NearestFilter} from "three";
+import { CanvasTexture} from "three";
 
 // Create context to draw in and use on the the GPU
 export function createAsciiRenderTarget(width: number, height: number) {
@@ -9,14 +9,13 @@ export function createAsciiRenderTarget(width: number, height: number) {
     canvas.height = height * dpr;
 
     const context = canvas.getContext("2d", { alpha: true })!;
-    context.imageSmoothingEnabled = false;
     context.globalAlpha = 1;
     context.scale(dpr, dpr);
 
     const texture = new CanvasTexture(canvas);
 
-    texture.magFilter = NearestFilter;
-    texture.minFilter = NearestFilter;
+    // texture.magFilter = NearestFilter;
+    // texture.minFilter = NearestFilter;
     texture.generateMipmaps = false;
     texture.needsUpdate = true;
 
@@ -31,16 +30,14 @@ export function createBgRenderTarget(width: number, height: number) {
     canvas.height = height * dpr;
 
     const context = canvas.getContext("2d", { alpha: true })!;
-    context.imageSmoothingEnabled = true;
-    // context.imageSmoothingQuality = "low";
 
     context.globalAlpha = 1;
     context.scale(dpr, dpr);
 
     const texture = new CanvasTexture(canvas);
 
-    texture.magFilter = NearestFilter;
-    texture.minFilter = NearestFilter;
+    // texture.magFilter = NearestFilter;
+    // texture.minFilter = NearestFilter;
     texture.needsUpdate = true;
 
     return { texture, context };

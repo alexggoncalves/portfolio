@@ -1,14 +1,11 @@
 import "./styles/css/index.css";
-// import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
-import { createBrowserRouter } from "react-router";
-import { RouterProvider } from "react-router/dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import App from "./components/app/App.tsx";
 import ErrorElement from "./components/app/ErrorElement.tsx";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-// import { StrictMode } from "react";
 
 const queryClient = new QueryClient();
 
@@ -16,7 +13,6 @@ const router = createBrowserRouter([
     {
         path: "/",
         element: <App />,
-        // errorElement: <ErrorElement/>,
         children: [
             {
                 path: "projects",
@@ -39,11 +35,8 @@ const router = createBrowserRouter([
                 path: "more",
                 element: <></>,
             },
-            {
-                path: "*",
-                element: <ErrorElement />,
-            },
         ],
+        errorElement: <ErrorElement />,
     },
     {
         path: "/mobile",
@@ -53,11 +46,17 @@ const router = createBrowserRouter([
             </h1>
         ),
     },
+    {
+        path: "*",
+        element: <ErrorElement />,
+    },
 ]);
 
 const root = document.getElementById("root");
 
-ReactDOM.createRoot(root!).render(
+if (!root) throw new Error("Root element not found");
+
+ReactDOM.createRoot(root).render(
     <QueryClientProvider client={queryClient}>
         <RouterProvider router={router} />
     </QueryClientProvider>,

@@ -1,8 +1,13 @@
-import { Color, Vector2 } from "three";
-import Color4 from "three/src/renderers/common/Color4.js";
+import { Vector2 } from "three";
 // import getColorString from "../../../utils/color";
 import drawRoundRect from "../../../utils/drawRoundRect";
 import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
+
+export const grayscaleCache = new Array(256);
+
+for (let i = 0; i < 256; i++) {
+    grayscaleCache[i] = `rgb(${i},${i},${i}, 1)`;
+}
 
 //-----------------------------------------
 // ELEMENT CLASS
@@ -36,9 +41,7 @@ export class Element {
     verticalAlign: "top" | "middle" | "bottom" = "top"; // Vertical alignment
 
     // Colors
-    color: Color = new Color("white");
-    colorString: string = `rgb(${this.color.r * 255}, ${this.color.g * 255}, ${this.color.b * 255})`;
-    backgroundColor: Color4 = new Color4(0);
+    color: string = "white";
     opacity: number = 0;
 
     //Flags
@@ -55,8 +58,7 @@ export class Element {
         x: number,
         y: number,
         unit: Unit = "grid",
-        color?: Color,
-        backgroundColor?: Color4,
+        color?: string,
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
@@ -64,9 +66,7 @@ export class Element {
 
         if (color) {
             this.color = color;
-            this.colorString = `rgb(${this.color.r * 255}, ${this.color.g * 255}, ${this.color.b * 255})`;
         }
-        if (backgroundColor) this.backgroundColor = backgroundColor;
         if (horizontalAlign) this.horizontalAlign = horizontalAlign;
         if (verticalAlign) this.verticalAlign = verticalAlign;
     }
@@ -203,25 +203,25 @@ export class Element {
     ) {
         if (!bitmap) return;
 
+        const x = gridX;
+        const y = gridY;
         const w = bitmap.width;
         const h = bitmap.height;
 
-        const v = opacity;
-        const c = Math.floor(v * 255);
-
         asciiCtx.save();
         asciiCtx.beginPath();
-        asciiCtx.rect(gridX, gridY, w, h);
+        asciiCtx.rect(x, y, w, h);
         asciiCtx.clip();
-
         asciiCtx.globalCompositeOperation = "source-over";
-        asciiCtx.drawImage(bitmap, gridX, gridY);
+        asciiCtx.drawImage(bitmap, x, y);
 
+        // Apply fade-in mask
+        const v = opacity;
+        const c = Math.round(v * 255);
+        asciiCtx.fillStyle = grayscaleCache[c];
         asciiCtx.globalCompositeOperation = "source-in";
-        asciiCtx.fillStyle = `rgb(${c}, ${c}, ${c})`;
-
-        asciiCtx.fillRect(gridX, gridY, w, h);
-
+        asciiCtx.fillRect(x, y, w, h);
+        asciiCtx.closePath();
         asciiCtx.restore();
     }
 
@@ -243,29 +243,14 @@ export class Element {
         asciiCtx.stroke();
     }
 
-    // drawBackgroundTexel(
-    //     x: number,
-    //     y: number,
-    //     w: number,
-    //     h: number,
-    //     color: Color4,
-    //     bgCtx: CanvasRenderingContext2D,
-    // ): void {
-    //     // Set ui color
-    //     bgCtx.fillStyle = getColorString(color, this.opacity);
-
-    //     // Clear and draw new character pixel
-    //     bgCtx.fillRect(x * w, y * h, w, h);
-    // }
-
-    drawRect(
+    static drawRect(
         x: number,
         y: number,
         w: number,
         h: number,
         radius: number,
         strokeOnly: boolean,
-        fillStyle: string,
+        color: string,
         context: CanvasRenderingContext2D,
     ): void {
         // Set ui color
@@ -278,11 +263,11 @@ export class Element {
         }
 
         if (strokeOnly) {
-            context.strokeStyle = "white";
+            context.strokeStyle = color;
             context.lineWidth = 2;
             context.stroke();
         } else {
-            context.fillStyle = fillStyle;
+            context.fillStyle = color;
             context.fill();
         }
         context.closePath();

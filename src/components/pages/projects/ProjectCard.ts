@@ -4,8 +4,13 @@ import TagLabel from "../../elements/ui/TagLabel";
 import { AppState, type NavigationSource } from "../../app/AppState";
 import { InteractiveElement } from "../../elements/core/InteractiveElement";
 import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
-import { getTagsById, type Project, type Tag } from "../../assets/contentAssets";
+import {
+    getTagsById,
+    type Project,
+    type Tag,
+} from "../../assets/contentAssets";
 import type { Layer } from "../../elements/core/Layer";
+import { Element } from "../../elements/core/Element";
 
 export class ProjectCard extends InteractiveElement {
     project: Project;
@@ -16,7 +21,7 @@ export class ProjectCard extends InteractiveElement {
     padding: number = 10;
     cornerRadius: number = 40;
     tagGap: number = 3;
-    highlightColor: string = "rgba(1, 1, 1, 0.8)"
+    highlightColor: string = "rgba(255, 255, 255, 0.8)";
 
     navigationSource: NavigationSource = "home";
     goTo?: (path: string) => void;
@@ -83,7 +88,7 @@ export class ProjectCard extends InteractiveElement {
                 14,
                 4,
                 18,
-                "right"
+                "right",
             );
             this.tags.push(tagLabel);
             this.layer.addElement(tagLabel);
@@ -133,7 +138,7 @@ export class ProjectCard extends InteractiveElement {
     }
 
     drawHoverState(background: CanvasRenderingContext2D): void {
-        this.drawRect(
+        Element.drawRect(
             this.x - this.offsetX - this.padding / 2,
             this.y - this.offsetY - this.padding / 2,
             this.w + this.padding,
@@ -149,7 +154,7 @@ export class ProjectCard extends InteractiveElement {
         super.onClick();
         if (this.goTo) {
             this.goTo(`/projects/${this.project.id}`);
-            AppState.navigationSource = this.navigationSource
+            AppState.navigationSource = this.navigationSource;
         }
     }
 
@@ -166,18 +171,18 @@ export class ProjectCard extends InteractiveElement {
     }
 
     destroy(): void {
-        if (!this.tags) return;
-
         this.canvasImage?.destroy();
         this.canvasImage = undefined;
 
+        this.goTo = () => {};
+
+        if (!this.tags) return;
         this.tags.forEach((tag) => {
             this.layer.removeElement(tag);
             tag.destroy();
         });
 
         this.tags.length = 0;
-        this.goTo = undefined;
 
         super.destroy();
     }

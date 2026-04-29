@@ -1,6 +1,3 @@
-import { Color } from "three";
-import Color4 from "three/src/renderers/common/Color4.js";
-
 import { InteractiveElement } from "../core/InteractiveElement";
 import type { Unit } from "../core/Element";
 
@@ -26,8 +23,7 @@ export class Slider extends InteractiveElement {
         w: number,
         h: number,
         unit: Unit,
-        color?: Color,
-        backgroundColor?: Color4,
+        color?: string,
         horizontalAlign?: "left" | "center" | "right",
         verticalAlign?: "top" | "middle" | "bottom",
     ) {
@@ -36,7 +32,6 @@ export class Slider extends InteractiveElement {
             y,
             unit,
             color,
-            backgroundColor,
             horizontalAlign,
             verticalAlign,
         );

@@ -1,9 +1,8 @@
-import { Texture, Uniform, Vector2 } from "three";
+import { CanvasTexture, Texture, Uniform, Vector2 } from "three";
 import { useMemo, forwardRef, useRef } from "react";
 import { BlendFunction, Effect } from "postprocessing";
 import { TextureLoader } from "three";
 import { useFrame, useLoader } from "@react-three/fiber";
-import { AppState } from "../app/AppState";
 
 // import { useControls } from "leva";
 
@@ -117,11 +116,21 @@ export const AsciiEffect = forwardRef(
             charSize,
             atlasGridSize,
             gridSize,
+            asciiRenderTarget,
+            backgroundRenderTarget,
         }: {
             fontAtlasSrc: string;
             charSize: Vector2;
             atlasGridSize: Vector2;
             gridSize: Vector2;
+            asciiRenderTarget: React.RefObject<{
+                texture: CanvasTexture | null;
+                context: CanvasRenderingContext2D | null;
+            }>;
+            backgroundRenderTarget: React.RefObject<{
+                texture: CanvasTexture | null;
+                context: CanvasRenderingContext2D | null;
+            }>;
         },
         ref,
     ) => {
@@ -145,17 +154,23 @@ export const AsciiEffect = forwardRef(
         }, [fontAtlas]);
 
         useFrame(() => {
-            const effect = effectRef.current;
-            if (!effect) return;
+            if (
+                !effectRef.current ||
+                !asciiRenderTarget ||
+                !backgroundRenderTarget
+            )
+                return;
 
-            const uniforms = effect.uniforms;
+            const ui = effect.uniforms.get("uUITexture");
+            const bg = effect.uniforms.get("uBackgroundTexture");
 
-            const ui = uniforms.get("uUITexture");
-            const bg = uniforms.get("uBackgroundTexture");
+            if (ui) ui.value = asciiRenderTarget.current?.texture;
+            if (bg) bg.value = backgroundRenderTarget.current?.texture;
 
-            if (ui) ui.value = AppState.uiTexture;
-            if (bg) bg.value = AppState.backgroundTexture;
-        });
+            asciiRenderTarget.current?.texture?.dispose();
+            backgroundRenderTarget.current?.texture?.dispose();
+        }, 2);
+
         return <primitive ref={ref} object={effect} />;
     },
 );

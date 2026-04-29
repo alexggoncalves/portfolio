@@ -1,11 +1,10 @@
 import { Vector2 } from "three";
-import Color4 from "three/src/renderers/common/Color4.js";
 
 export class AsciiRenderConfig {
     static charSize = new Vector2(12, 16);
     static gridSize = new Vector2();
     static canvasSize = new Vector2();
-    static bgColor = new Color4(0.1, 0.1, 0.1, 1);
+    static bgColor = "rgb(28, 26, 29)";
     static distortion = new Vector2(0.02, 0.02);
     static focalLength = new Vector2(0.96, 0.96);
 
@@ -18,8 +17,8 @@ export class AsciiRenderConfig {
     static extraColumns = 1;
     static extraRows = 1;
 
-    static setBackgroundColor(color: Color4) {
-        this.bgColor.copy(color);
+    static setBackgroundColor(color: string) {
+        this.bgColor = color;
     }
 
     static setGridSize(w: number, h: number) {

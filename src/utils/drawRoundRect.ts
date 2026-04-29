@@ -17,6 +17,7 @@ function drawRoundRect(
     ctx.lineTo(x, y + radius);
     ctx.quadraticCurveTo(x, y, x + radius, y);
     ctx.closePath();
+    ctx.fill();
 }
 
 export default drawRoundRect;

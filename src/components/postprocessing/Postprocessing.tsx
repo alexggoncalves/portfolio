@@ -7,23 +7,36 @@ import {
 // import { GlitchMode } from "postprocessing";
 import { AsciiEffect } from "./AsciiEffect";
 import { LensDistortion } from "./LensDistortion";
-import { Vector2 } from "three";
+import { CanvasTexture, Vector2 } from "three";
 
 import { useMemo } from "react";
 import { AsciiRenderConfig } from "../app/AsciiRenderConfig";
 
-function Postprocessing() {
-
+function Postprocessing({
+    asciiRenderTarget,
+    backgroundRenderTarget,
+}: {
+    asciiRenderTarget: React.RefObject<{
+        texture: CanvasTexture | null;
+        context: CanvasRenderingContext2D | null;
+    }>;
+    backgroundRenderTarget: React.RefObject<{
+        texture: CanvasTexture | null;
+        context: CanvasRenderingContext2D | null;
+    }>;
+}) {
     const principalPoint = useMemo(() => new Vector2(0, 0), []);
 
     return (
         <>
-            <EffectComposer multisampling={0}>
+            <EffectComposer>
                 <AsciiEffect
                     fontAtlasSrc={AsciiRenderConfig.fontAtlas}
                     charSize={AsciiRenderConfig.charSize}
                     atlasGridSize={AsciiRenderConfig.atlasGridSize}
                     gridSize={AsciiRenderConfig.gridSize}
+                    asciiRenderTarget={asciiRenderTarget}
+                    backgroundRenderTarget={backgroundRenderTarget}
                 ></AsciiEffect>
 
                 <ChromaticAberration offset={[0.0, 0.0]} />

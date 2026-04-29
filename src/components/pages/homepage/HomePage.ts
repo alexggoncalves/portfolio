@@ -5,7 +5,6 @@ import { FadeGradient } from "../../elements/canvas/FadeGradient";
 import { AsciiRenderConfig } from "../../app/AsciiRenderConfig";
 import type { Project } from "../../assets/contentAssets";
 import { CanvasText } from "../../elements/canvas/CanvasText";
-import { Color } from "three";
 
 export class HomePage extends Page {
     projects: Project[] = [];
@@ -58,7 +57,7 @@ export class HomePage extends Page {
             100,
             1,
             0,
-            new Color("white"),
+            "white",
         );
 
         workRow.addElement(title);
@@ -99,6 +98,7 @@ export class HomePage extends Page {
     }
 
     destroy(): void {
+        this.projects = [];
         super.destroy();
     }
 }

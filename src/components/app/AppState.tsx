@@ -1,11 +1,7 @@
-import { Texture } from "three";
-
 export type NavigationSource = "home" | "projects" | "contacts" | "outside";
 export type Device = "mobile" | "tablet" | "desktop";
-
+console.log("AppState module loaded");
 export class AppState {
-    static backgroundTexture?: Texture | null;
-    static uiTexture?: Texture | null;
 
     static device: Device = "desktop";
 
@@ -16,14 +12,6 @@ export class AppState {
 
     static setDevice(device: Device) {
         this.device = device;
-    }
-
-    static setBackground(texture: Texture) {
-        this.backgroundTexture = texture;
-    }
-
-    static setUI(texture: Texture) {
-        this.uiTexture = texture;
     }
 
     static setNavigationSource(source: NavigationSource) {
