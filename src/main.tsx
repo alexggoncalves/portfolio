@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import App from "./components/app/App.tsx";
-import ErrorElement from "./components/app/ErrorElement.tsx";
+import ErrorElement from "./components/OLD/ErrorElement.tsx";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 

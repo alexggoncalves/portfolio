@@ -1,11 +1,10 @@
 import { useEffect, useRef } from "react";
 import { CanvasTexture } from "three";
 import {
-    createAsciiRenderTarget,
-    createBgRenderTarget,
+    createAsciiRenderTarget
 } from "../utils/createRenderTargets";
 
-import { AsciiRenderConfig } from "../components/app/AsciiRenderConfig";
+import { AsciiRenderConfig } from "../components/app/config/AsciiRenderConfig";
 
 export type CanvasSize = {
     width: number;
@@ -21,11 +20,6 @@ function useAsciiRenderTargets() {
     const containerRef = useRef<HTMLDivElement | null>(null);
 
     const ascii = useRef<{
-        texture: CanvasTexture | null;
-        context: CanvasRenderingContext2D | null;
-    }>({ texture: null, context: null });
-
-    const bg = useRef<{
         texture: CanvasTexture | null;
         context: CanvasRenderingContext2D | null;
     }>({ texture: null, context: null });
@@ -47,20 +41,11 @@ function useAsciiRenderTargets() {
                 gridHeight,
             );
 
-            // Create a render target to draw background behind the ascii on the GPU
-            const bgRenderTarget = createBgRenderTarget(
-                size.current.width,
-                size.current.height,
-            );
-
             ascii.current = {
                 texture: uiRenderTarget.texture,
                 context: uiRenderTarget.context,
             };
-            bg.current = {
-                texture: bgRenderTarget.texture,
-                context: bgRenderTarget.context,
-            };
+
             
         }
 
@@ -70,11 +55,9 @@ function useAsciiRenderTargets() {
 
             // Determine the number of columns that fit in the screen + extra
             const gridCols =
-                Math.floor(viewportWidth / AsciiRenderConfig.charSize.x) +
-                AsciiRenderConfig.extraColumns;
+                Math.floor(viewportWidth / AsciiRenderConfig.charSize.x);
             const gridRows =
-                Math.floor(viewportHeight / AsciiRenderConfig.charSize.y) +
-                AsciiRenderConfig.extraRows;
+                Math.floor(viewportHeight / AsciiRenderConfig.charSize.y);
 
             if (
                 prev.current.cols === gridCols &&
@@ -90,15 +73,15 @@ function useAsciiRenderTargets() {
 
             const canvasWidth = gridCols * AsciiRenderConfig.charSize.x;
             const canvasHeight = gridRows * AsciiRenderConfig.charSize.y;
-            const left = Math.floor((canvasWidth - viewportWidth) / 2);
-            const top = Math.floor((canvasHeight - viewportHeight) / 2);
+            // const left = Math.floor((canvasWidth - viewportWidth) / 2);
+            // const top = Math.floor((canvasHeight - viewportHeight) / 2);
 
             // Update size ref
 
             size.current.width = canvasWidth;
             size.current.height = canvasHeight;
-            size.current.left = left;
-            size.current.top = top;
+            // size.current.left = left;
+            // size.current.top = top;
 
             // Update div container size
             const container = containerRef.current;
@@ -108,7 +91,7 @@ function useAsciiRenderTargets() {
                 container.style.left = "0";
                 container.style.width = canvasWidth + "px";
                 container.style.height = canvasHeight + "px";
-                container.style.transform = `translate(${-left}px, ${-top}px)`;
+                // container.style.transform = `translate(${-left}px, ${-top}px)`;
             }
 
             updateRenderTargets();
@@ -120,7 +103,7 @@ function useAsciiRenderTargets() {
         return () => window.removeEventListener("resize", updateSize);
     }, []);
 
-    return { ascii, bg, size, containerRef };
+    return { ascii, size, containerRef };
 }
 
 export default useAsciiRenderTargets;

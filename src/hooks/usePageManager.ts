@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
-import { Page } from "../components/elements/core/Page";
+import { Page } from "../components/OLD/elements/core/Page";
 
 import createPage from "../utils/createPage";
-import { AppState } from "../components/app/AppState";
-import { Navigation } from "../components/elements/ui/Navigation";
+import { AppState } from "../components/app/config/AppState";
+import { Navigation } from "../components/OLD/elements/ui/Navigation";
 
 function usePageManager(location: any) {
     const currentPage = useRef<Page | null>(null);

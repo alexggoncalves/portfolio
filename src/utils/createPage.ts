@@ -1,11 +1,11 @@
-import { HomePage } from "../components/pages/homepage/HomePage";
-import { ProjectPage } from "../components/pages/projects/ProjectsPage";
-import { ContactsPage } from "../components/pages/contacts/ContactsPage";
-import { ProjectDetailsPage } from "../components/pages/projects/ProjectDetailsPage";
-import { Page } from "../components/elements/core/Page";
+import { HomePage } from "../components/OLD/pages/HomePage";
+import { ProjectPage } from "../components/OLD/elements/projects/ProjectsPage";
+import { ContactsPage } from "../components/OLD/pages/ContactsPage";
+import { ProjectDetailsPage } from "../components/OLD/elements/projects/ProjectDetailsPage";
+import { Page } from "../components/OLD/elements/core/Page";
 
-import { getProjectById, projects } from "../components/assets/contentAssets";
-import { buildPageAssets, requestAssets } from "../components/assets/assetStream";
+import { getProjectById, projects } from "../components/app/assets/contentAssets";
+import { buildPageAssets, requestAssets } from "../components/app/assets/assetStream";
 
 //------------------------------------------------------------------------
 // Create ASCII page: Initilializes an instance of the page to load
@@ -45,11 +45,11 @@ function createPage(
     }
 
     // Initialize opacity for fade transition
-    page.opacity = 0;
-    page.targetOpacity = 1;
-    page.fadeSpeed = 5;
+    // page.opacity = 0;
+    // page.targetOpacity = 1;
+    // page.fadeSpeed = 5;
 
-    return page;
+    return page as Page;
 }
 
 export default createPage;

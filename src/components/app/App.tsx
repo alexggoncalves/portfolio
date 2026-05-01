@@ -2,11 +2,9 @@ import "../../styles/css/App.css";
 
 import { useEffect, useState } from "react";
 
-import { buildGlobalAssets, requestAssets } from "../assets/assetStream";
-import AsciiSceneStage from "./AsciiSceneStage";
-
-import { AsciiRenderConfig } from "./AsciiRenderConfig";
-import { createAsciiBlocks, createBrightnessMap } from "../assets/asciiBlocks";
+import { AsciiRenderConfig } from "./config/AsciiRenderConfig";
+import { createAsciiBlocks, createBrightnessMap } from "./assets/asciiBlocks";
+import SceneRoot from "../layout/SceneRoot";
 
 function App() {
     const [isReady, setIsReady] = useState(false);
@@ -17,7 +15,7 @@ function App() {
                 createBrightnessMap(AsciiRenderConfig.asciiSequence);
 
                 await createAsciiBlocks();
-                await requestAssets(buildGlobalAssets());
+                // await requestAssets(buildGlobalAssets());
 
                 setIsReady(true);
             } catch (err) {
@@ -28,7 +26,7 @@ function App() {
         init();
     }, []);
     
-    return <>{isReady && <AsciiSceneStage />}</>;
+    return <>{isReady && <SceneRoot />}</>;
 }
 
 export default App;

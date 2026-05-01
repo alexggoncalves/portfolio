@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Vector2 } from "three";
-import type { InteractiveElement } from "../components/elements/core/InteractiveElement";
+import type { InteractiveElement } from "../components/OLD/elements/core/InteractiveElement";
 import { useFrame } from "@react-three/fiber";
 
 function useInput() {
