@@ -1,110 +1,168 @@
-import Postprocessing from "../app/postprocessing/Postprocessing";
+import Postprocessing from "../postprocessing/Postprocessing";
 
-import AsciiLayoutScene from "./AsciiLayoutScene";
+import AsciiLayoutScene from "./ascii/AsciiLayoutScene";
 
-import { CanvasTexture, LinearFilter, PerspectiveCamera, Scene } from "three";
+import {
+    Mesh,
+    NearestFilter,
+    PerspectiveCamera,
+    Scene,
+    TextureLoader,
+} from "three";
 import { useEffect, useMemo, useRef } from "react";
 import { ScrollControls, useFBO } from "@react-three/drei";
-import MainLayoutScene from "./MainLayoutScene";
-import { createPortal, useFrame, useThree } from "@react-three/fiber";
-import { AsciiRenderConfig } from "../app/config/AsciiRenderConfig";
-import { useLocation } from "react-router";
+import MainLayoutScene from "./main/MainLayoutScene";
+import {
+    createPortal,
+    useFrame,
+    useLoader,
+    useThree,
+} from "@react-three/fiber";
+import { EffectComposer } from "@react-three/postprocessing";
 
-//---------------------------------------------------------------------
-// RenderStage: Handle page layout and 3d Scene + transitions
-//---------------------------------------------------------------------
-function LayoutRenderPipeline({
-    ascii,
-}: {
-    ascii: React.RefObject<{
-        texture: CanvasTexture | null;
-        context: CanvasRenderingContext2D | null;
-    }>;
-}) {
-    const { gl, size, camera } = useThree();
+import useAsciiRenderStore from "../../stores/asciiRenderStore";
+import createAsciiShaderMaterial from "../AsciiShaderMaterial";
 
-    // Initialize the page manager state
-    const location = useLocation();
-    // const { currentPage, nextPage, nav } = usePageManager(location);
+//* ----------------------------------------------------------------------------------------------
+//* Layout Render Pipeline - Renders main layout scene and ascii scene with shader pass.
+//*     - Renders the ascii scene to a pixelated fbo then applies ascii pass.
+//*     - Draws the resulting pass in a plane covering the camera view over the main layout scene.
+//  TODO - Add a second fbo for main layout scene transitions (mix current and next in shader)
+//* ----------------------------------------------------------------------------------------------
 
-    const uiScene = useRef<Scene>(new Scene());
+function LayoutRenderPipeline() {
+    const { gl, size, viewport } = useThree();
 
-    const uiCamera = useMemo(() => {
-        // const aspectRatio = size.width / size.height;
-        // const cam = new OrthographicCamera(
-        //     -aspectRatio,
-        //     aspectRatio,
-        //     1,
-        //     -1,
-        //     1,
-        //     1000,
-        // );
+    // ---- STATES ----
+    const asciiAtlasSrc = useAsciiRenderStore((state) => state.asciiAtlasSrc);
+    const gridSize = useAsciiRenderStore((state) => state.gridSize);
+    const atlasGridSize = useAsciiRenderStore((state) => state.atlasGridSize);
+    const charSize = useAsciiRenderStore((state) => state.charSize);
+    const glyphSoftness = useAsciiRenderStore((state) => state.glyphSoftness);
+    const glyphThreshold = useAsciiRenderStore((state) => state.glyphThreshold);
 
+    // ---- LOAD ASCII ATLAS
+    const asciiAtlas = useLoader(TextureLoader, asciiAtlasSrc);
+
+    // set texture properties
+    useEffect(() => {
+        asciiAtlas.generateMipmaps = false;
+        asciiAtlas.magFilter = NearestFilter;
+        asciiAtlas.minFilter = NearestFilter;
+        asciiAtlas.needsUpdate = true;
+    }, [asciiAtlas]);
+
+    // ---- SCENES ----
+    const asciiScene = useMemo(() => new Scene(), []);
+    const fullScreenPlane = useRef<Mesh>(null);
+
+    // ---- RENDER TARGETS ----
+    const asciiRenderTarget = useFBO(gridSize.cols, gridSize.rows, {
+        minFilter: NearestFilter, //
+        magFilter: NearestFilter,
+        generateMipmaps: false,
+    });
+
+    // ---- CAMERAS ----
+    const asciiCamera = useMemo(() => {
         const cam = new PerspectiveCamera(
             45,
             size.width / size.height,
-            1,
-            1000,
+            0.1,
+            40,
         );
-
         cam.position.z = 10;
         return cam;
-    }, [size]);
+    }, [size.width, size.height]);
 
-    const layoutRenderTarget = useFBO(size.width, size.height, {
-        minFilter: LinearFilter,
-        magFilter: LinearFilter,
-    });
-
-    // Render layout to render target every frame
-    useFrame(() => {
-        if (!uiScene.current) return;
-        if (uiScene.current.children.length === 0) return;
-
-        gl.setRenderTarget(layoutRenderTarget);
-        gl.setClearColor(AsciiRenderConfig.bgColor, 1);
-        gl.clear(true, true, true);
-
-        gl.render(uiScene.current, uiCamera);
-
-        gl.setClearColor("#000000", 1);
-        gl.setRenderTarget(null);
-    });
-
+    // ---- ASCII PASS ----
+    const asciiShaderMaterial = useMemo(
+        () =>
+            createAsciiShaderMaterial(
+                asciiAtlas,
+                atlasGridSize,
+                gridSize,
+                charSize,
+                glyphThreshold,
+                glyphSoftness,
+            ),
+        [
+            asciiAtlas,
+            gridSize.cols,
+            gridSize.rows,
+            atlasGridSize.cols,
+            atlasGridSize.rows,
+            charSize.w,
+            charSize.h,
+            glyphThreshold,
+            glyphSoftness,
+        ],
+    );
+    // dispose 
     useEffect(() => {
-        layoutRenderTarget.setSize(
-            size.width * devicePixelRatio,
-            size.height * devicePixelRatio,
-        );
-    }, [size]);
+        return () => {
+            asciiShaderMaterial.uniforms.uPixelizedTex.value = null;
+            asciiShaderMaterial.dispose();
+        };
+    }, [asciiShaderMaterial]);
+
+    // ---- RENDER LOOP ----
+    useFrame(() => {
+        if (!fullScreenPlane.current || asciiScene.children.length === 0) return;
+        
+        gl.autoClear = false;
+        
+        // Render ascii scene to render target
+        gl.setRenderTarget(asciiRenderTarget);
+        gl.clear();
+
+        // Render layer containing main elements
+        asciiCamera.layers.set(0);
+        gl.render(asciiScene, asciiCamera);
+        gl.clearDepth();
+
+        // Render layer containing fixed elements
+        asciiCamera.layers.set(1);
+        gl.render(asciiScene, asciiCamera);
+        asciiCamera.layers.enableAll();
+
+        gl.setRenderTarget(null);
+
+        // Set render target uniform for ascii pass
+        asciiShaderMaterial.uniforms.uPixelizedTex.value = asciiRenderTarget.texture;
+    }, 0);
+
+    
 
     return (
         <>
-            <ScrollControls pages={10} distance={0.2}>
-                {createPortal(<MainLayoutScene />, uiScene.current)}
+            <ScrollControls
+                pages={10}
+                distance={0.2 / window.devicePixelRatio}
+                damping={0.2}
+            >
+                {/* Main Layout Scene */}
+                <MainLayoutScene />
 
-                <AsciiLayoutScene />
+                {/* Ascii Layout Scene Portal */}
+                {createPortal(<AsciiLayoutScene />, asciiScene)}
             </ScrollControls>
 
-            {/* Create and draw ascii ui and background to textures */}
-            {/* (Textures get saved on global App State) */}
-            {/* <AsciiLayoutRenderer
-                        currentPage={currentPage}
-                        nextPage={nextPage}
-                        nav={nav}
-                        size={size}
-                        asciiRenderTarget={ascii}
-                        backgroundRenderTarget={bg}
-                    /> */}
+            {/* Ascii Pass */}
+            <mesh renderOrder={100} ref={fullScreenPlane}>
+                <planeGeometry args={[viewport.width, viewport.height]} />
+                <primitive
+                    key={asciiShaderMaterial.uuid}
+                    object={asciiShaderMaterial}
+                    attach="material"
+                />
+            </mesh>
 
-            {/* 3D Scene */}
-            {/* (This scene will be converted to ascii by the Ascii shader) */}
+            {/* Apply postprocessing effects*/}
 
-            {/* Apply ascii+background shader pass and postprocessing effects*/}
-            <Postprocessing
-                asciiUITexture={ascii.current.texture}
-                layoutRenderTarget={layoutRenderTarget.texture}
-            />
+            <EffectComposer>
+                <Postprocessing></Postprocessing>
+            </EffectComposer>
         </>
     );
 }

@@ -7,6 +7,7 @@ import { people, projects } from "./contentAssets";
 export const brightnessMap = new Map<string, number>();
 
 export function createBrightnessMap(asciiSequence: string) {
+    brightnessMap.clear();
     const asciiArray = asciiSequence.split("");
 
     asciiArray.forEach((char, index) => {
@@ -25,6 +26,8 @@ export function getBrightnessFromChar(char: string): number {
 // ASCII BLOCK ATLAS
 
 export const asciiBlockBitmaps = new Map<string, ImageBitmap>();
+let asciiBlocksInitPromise: Promise<void> | null = null;
+let areAsciiBlocksReady = false;
 
 export function getAsciiBitmap(id: string) {
     const bitmap = asciiBlockBitmaps.get(id);
@@ -34,9 +37,37 @@ export function getAsciiBitmap(id: string) {
 }
 
 export async function createAsciiBlocks() {
-    await createProjectAsciiBlocks();
-    await createAsciiTeamNames();
-    await createAsciiButtons();
+    if (areAsciiBlocksReady) return;
+    if (asciiBlocksInitPromise) {
+        await asciiBlocksInitPromise;
+        return;
+    }
+
+    asciiBlocksInitPromise = (async () => {
+        clearAsciiBlocks();
+        await createProjectAsciiBlocks();
+        await createAsciiTeamNames();
+        await createAsciiButtons();
+        areAsciiBlocksReady = true;
+    })();
+
+    try {
+        await asciiBlocksInitPromise;
+    } finally {
+        asciiBlocksInitPromise = null;
+    }
+}
+
+export function clearAsciiBlocks() {
+    asciiBlockBitmaps.forEach((bitmap) => bitmap.close());
+    asciiBlockBitmaps.clear();
+    areAsciiBlocksReady = false;
+}
+
+function setAsciiBlockBitmap(id: string, bitmap: ImageBitmap) {
+    const previous = asciiBlockBitmaps.get(id);
+    if (previous) previous.close();
+    asciiBlockBitmaps.set(id, bitmap);
 }
 
 const buttons = [
@@ -50,7 +81,7 @@ const buttons = [
 async function createAsciiButtons() {
     for (let i = 0; i < buttons.length; i++) {
         const bitmap = await createBitmapFromAscii(buttons[i].text);
-        asciiBlockBitmaps.set(buttons[i].id, bitmap);
+        setAsciiBlockBitmap(buttons[i].id, bitmap);
     }
 }
 
@@ -91,13 +122,13 @@ async function createProjectAsciiBlocks() {
         // Title
         const asciiTitle = createASCIITitle(projects[i].title);
         const titleBitmap = await createBitmapFromAscii(asciiTitle);
-        asciiBlockBitmaps.set(projects[i].id, titleBitmap);
+        setAsciiBlockBitmap(projects[i].id, titleBitmap);
 
         // Subtitle
         const subtitleBitmap = await createBitmapFromAscii([
             projects[i].subtitle,
         ]);
-        asciiBlockBitmaps.set(projects[i].id + "_subtitle", subtitleBitmap);
+        setAsciiBlockBitmap(projects[i].id + "_subtitle", subtitleBitmap);
     }
 }
 
@@ -107,6 +138,6 @@ export async function createAsciiTeamNames() {
         const splitName = name.split(" ");
 
         const bitmap = await createBitmapFromAscii(splitName);
-        asciiBlockBitmaps.set(people[i].id, bitmap);
+        setAsciiBlockBitmap(people[i].id, bitmap);
     }
 }

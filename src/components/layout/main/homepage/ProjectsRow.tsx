@@ -1,80 +1,165 @@
-import { useFrame, useThree } from "@react-three/fiber";
+import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
 import ProjectCard from "../projects/ProjectCard";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import type { Group } from "three";
 import { projects } from "../../../app/assets/contentAssets";
-import { Center, DragControls } from "@react-three/drei";
-import {
-    Container,
-    Content,
-    Fullscreen,
-    Image,
-    Portal,
-    Text,
-    VanillaContainer,
-    type PortalProperties,
-} from "@react-three/uikit";
-// extend({ RoundedPlaneGeometry: geometry.RoundedPlaneGeometry })
+import { Container, Text } from "@react-three/uikit";
+import Button3D from "../general/Button3D";
 
-const scale = 2.5;
-const spacing = 1.4;
 const titleSize = 30;
 
-function ProjectsRow({ height = 2 }: { height: number }) {
-    const rowRef = useRef<Group>(null);
-    const pageRef = useRef(null);
+const friction = 8; // inertia damping
+const springK = 80; // spring stiffness at bounds
+const springDamping = 20; // spring damping
 
+function ProjectsRow({
+    height = 2,
+    margin = 50,
+    cardGap = 10,
+    cardAspect = 4 / 3,
+}: {
+    height: number;
+    cardGap?: number;
+    margin?: number;
+    cardAspect?: number;
+}) {
     const { viewport, size } = useThree();
 
-    const dragging = useRef(false);
+    const rowRef = useRef<Group>(null);
 
-    useFrame((state) => {
+    const maxOffset = useMemo(() => {
+        const cardWidthWorld = height * cardAspect;
+
+        const gapWorld = (cardGap / size.width) * viewport.width;
+
+        const marginWorld = (margin / size.width) * viewport.width;
+
+        const totalContentWorld =
+            projects.length * cardWidthWorld +
+            Math.max(0, projects.length - 1) * gapWorld;
+        const visibleWorld = Math.max(0, viewport.width - marginWorld * 2);
+        return Math.max(0, totalContentWorld - visibleWorld);
+    }, [height, size.width, viewport.width, projects.length]);
+
+    const currentX = useRef(0);
+    const dragLastX = useRef(0);
+    const velocity = useRef(0);
+
+    const isDragging = useRef(false);
+
+    const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
+        e.stopPropagation();
+
+        dragLastX.current = e.point.x;
+        isDragging.current = true;
+        velocity.current = 0;
+    };
+
+    const onPointerUp = (_e: ThreeEvent<PointerEvent>) => {
+        isDragging.current = false;
+    };
+
+    const onPointerMove = (e: ThreeEvent<PointerEvent>) => {
+        if (!isDragging.current || !rowRef.current) return;
+
+        // Calculate delta
+        const delta = e.point.x - dragLastX.current;
+        dragLastX.current = e.point.x;
+
+        // Update velocity for damping on release
+        velocity.current = delta * 60;
+
+        let nextX = currentX.current + delta;
+
+        currentX.current = nextX;
+    };
+
+    useFrame((_state, delta) => {
         if (!rowRef.current) return;
-        if (dragging.current) {
-            rowRef.current.position.x = state.pointer.x * 10;
+
+        const isLeft = currentX.current > 0;
+        const isRight = currentX.current < -maxOffset;
+
+        if (isLeft || isRight) {
+            const targetX = isLeft ? 0 : -maxOffset;
+
+            const springForce =
+                -springK * (currentX.current - targetX) -
+                springDamping * velocity.current;
+            if (!isDragging.current) {
+                velocity.current += springForce * delta;
+                currentX.current += velocity.current * delta;
+            }
+        } else {
+            currentX.current += velocity.current * delta;
+            velocity.current *= Math.exp(-friction * delta);
+            if (Math.abs(velocity.current) < 0.001) velocity.current = 0;
+        }
+        if (velocity.current != 0) {
+            rowRef.current.position.x = currentX.current;
         }
     });
 
     return (
         <>
             <group position={[0, -viewport.height / 2, 0]}>
+                {/* Title */}
                 <Container
                     sizeY={height}
                     sizeX={viewport.width}
-                    marginLeft={50}
+                    paddingLeft={50}
+                    paddingRight={50}
                     positionType={"relative"}
                 >
-                    <Text
-                        color={"white"}
-                        textAlign={"left"}
-                        fontSize={titleSize}
+                    <Container
+                        width={"100%"}
                         height={titleSize}
-                        fontWeight={500}
-                        transformTranslateY={"-170%"}
-                        positionType={"absolute"}
-                        anchorY={"top"}
+                        positionType={"relative"}
+                        transformTranslateY={"-180%"}
+                        flexDirection={"row"}
+                        justifyContent={"space-between"}
                     >
-                        MY PROJECTS
-                    </Text>
+                        <Container gap={40} flexDirection={"row"}>
+                            <Text
+                                color={"white"}
+                                textAlign={"left"}
+                                fontSize={titleSize}
+                                fontWeight={500}
+                            >
+                                MY PROJECTS
+                            </Text>
+
+                            <Button3D
+                                width={8}
+                                height={2}
+                                depth={1.2}
+                            ></Button3D>
+                        </Container>
+                        <Container
+                            height={"50%"}
+                            width={100}
+                            anchorX={"right"}
+                            borderRadius={25}
+                            borderColor={"white"}
+                            borderWidth={1}
+                            alignSelf={"center"}
+                        ></Container>
+                    </Container>
                 </Container>
 
-                {/* INTERACTION LAYER */}
+                {/* Interaction quad stripe */}
                 <mesh
-                    position={[0, 0, 0.1]} // slightly in front
-                    onPointerDown={(e) => {
-                        e.stopPropagation();
-                        dragging.current = true;
-                    }}
-                    onPointerUp={() => (dragging.current = false)}
-                    onPointerLeave={() => (dragging.current = false)}
-                    onPointerMove={(e) => {
-                        if (!dragging.current || !rowRef.current) return;
-                        rowRef.current.position.x += e.movementX * 0.01;
-                    }}
+                    position={[0, 0, 0.1]}
+                    onPointerDown={onPointerDown}
+                    onPointerUp={onPointerUp}
+                    onPointerMove={onPointerMove}
+                    onPointerCancel={onPointerUp}
+                    onPointerLeave={onPointerUp}
                 >
                     <planeGeometry args={[viewport.width, height]} />
                     <meshBasicMaterial opacity={0} transparent />
                 </mesh>
+
                 <group ref={rowRef}>
                     <Container
                         flexDirection={"column"}
@@ -85,11 +170,13 @@ function ProjectsRow({ height = 2 }: { height: number }) {
                             sizeY={height}
                             sizeX={viewport.width}
                             positionType={"relative"}
-                            gap={10}
+                            flexDirection={"row"}
+                            gap={cardGap}
                         >
                             {projects?.map((project, index) => (
                                 <ProjectCard
                                     height={height}
+                                    width={height * cardAspect}
                                     key={index}
                                     project={project}
                                 ></ProjectCard>
@@ -97,25 +184,6 @@ function ProjectsRow({ height = 2 }: { height: number }) {
                         </Container>
                     </Container>
                 </group>
-
-                {/* Row Container */}
-                {/* <Container sizeX={viewport.width}>
-                        <Content
-                            sizeY={height}
-                            flexGrow={1}
-                            flexDirection={"row"}
-                        >
-                            <group ref={rowRef}>
-                                {projects?.map((project, index) => (
-                                    <ProjectCard
-                                        height={height}
-                                        key={index}
-                                        project={project}
-                                    ></ProjectCard>
-                                ))}
-                            </group>
-                        </Content>
-                    </Container> */}
             </group>
         </>
     );

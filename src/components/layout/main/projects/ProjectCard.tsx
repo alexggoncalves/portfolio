@@ -1,42 +1,38 @@
-import { useLoader, type Vector3 } from "@react-three/fiber";
-import { TextureLoader } from "three";
 import type { Project } from "../../../app/assets/contentAssets";
-import { useNavigate } from "react-router";
-import { Container, Image, SuspendingImage } from "@react-three/uikit";
-import { Suspense } from "react";
-
-// extend({ RoundedPlaneGeometry: geometry.RoundedPlaneGeometry })
+import { Container, Content } from "@react-three/uikit";
+import { createSquircleGeometry } from "../../../../utils/createSquircle";
+import { useMemo } from "react";
+import { useTexture } from "@react-three/drei";
 
 function ProjectCard({
-    height,
     project,
+    width,
+    height,
 }: {
-    height: number;
     project: Project;
+    width: number;
+    height: number;
 }) {
-    const texture = useLoader(TextureLoader, project.thumbnailSrc);
+    const thumbnail = useTexture(project.thumbnailSrc);
 
-    const navigate = useNavigate();
+    const squircle = useMemo(() => createSquircleGeometry(width, height, 0.5), []);
 
-    const aspect = texture.image.width / texture.image.height;
     return (
         <Container height={"100%"} flexShrink={0}>
-            <Image src={project.thumbnailSrc} onPointerDown={() => navigate(`/projects/${project.id}`)}></Image>
-        </Container>
-        
-        // // Projects Row
-        // <group position={position} scale={scale}>
-        // <mesh
-        //     position={[0, 0, 0]}
-            
-        // >
-        //     <planeGeometry args={[aspect, 1]}></planeGeometry>
-        //     <meshBasicMaterial attach="material" map={texture} transparent />
-        //     {/* <meshBasicMaterial color="red" wireframe /> */}
-        // </mesh>
+            <Content>
+                {squircle && (
+                    <mesh  geometry={squircle}>
+                        <meshBasicMaterial  map={thumbnail}></meshBasicMaterial>
+                    </mesh>
+                )}
+            </Content>
 
-        //
-        // </group>
+            <Container positionType={"absolute"}>
+                {/* {project.tags.map((tag)=>{
+                    return <></>
+                })} */}
+            </Container>
+        </Container>
     );
 }
 

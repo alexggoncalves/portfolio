@@ -1,15 +1,15 @@
-// extend({ RoundedPlaneGeometry: geometry.RoundedPlaneGeometry })
-
-import { useThree } from "@react-three/fiber";
 import ProjectsRow from "./ProjectsRow";
 
 function HomepageLayout() {
-    const { viewport } = useThree();
     return (
         <>
+            <pointLight position={[-1, -2, 3]} intensity={10} />
+            <mesh position={[0, 0, 0]} rotation={[-0.3, 0.3, 0]}>
+                <boxGeometry args={[2, 2, 2]} />
+                <meshStandardMaterial color={"red"} />
+            </mesh>
             <ProjectsRow height={2.5}></ProjectsRow>
         </>
-        // Projects Row
     );
 }
 

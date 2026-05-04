@@ -2,31 +2,39 @@ import "../../styles/css/App.css";
 
 import { useEffect, useState } from "react";
 
-import { AsciiRenderConfig } from "./config/AsciiRenderConfig";
-import { createAsciiBlocks, createBrightnessMap } from "./assets/asciiBlocks";
-import SceneRoot from "../layout/SceneRoot";
+import AsciiLayoutRoot from "./AsciiLayoutRoot";
 
 function App() {
     const [isReady, setIsReady] = useState(false);
 
+    // const asciiSequence = useAsciiRenderStore((state) => state.asciiSequence)
+
     useEffect(() => {
+        let isMounted = true;
+
         const init = async () => {
             try {
-                createBrightnessMap(AsciiRenderConfig.asciiSequence);
+                // createBrightnessMap(AsciiRenderConfig.asciiSequence);
 
-                await createAsciiBlocks();
+                // await createAsciiBlocks();
                 // await requestAssets(buildGlobalAssets());
 
-                setIsReady(true);
+                if (isMounted) setIsReady(true);
             } catch (err) {
                 console.error("App init failed:", err);
             }
         };
 
         init();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
-    
-    return <>{isReady && <SceneRoot />}</>;
+
+    return <>
+
+    {isReady && <AsciiLayoutRoot />}</>;
 }
 
 export default App;

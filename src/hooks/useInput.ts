@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
 import { Vector2 } from "three";
-import type { InteractiveElement } from "../components/OLD/elements/core/InteractiveElement";
 import { useFrame } from "@react-three/fiber";
 
 function useInput() {
@@ -11,7 +10,6 @@ function useInput() {
     const isDragging = useRef(false);
 
     const mouseDownPos = useRef(new Vector2());
-    const clickTarget = useRef<InteractiveElement | null>(null);
 
     const DRAG_THRESHOLD = 5;
 
@@ -28,24 +26,9 @@ function useInput() {
     const lastTouchX = useRef(0);
 
     // ------ CURSOR ------
-    const lastCursor = useRef<string>("default");
+    // const lastCursor = useRef<string>("default");
     const cursorDirty = useRef(false);
 
-    const setClickTarget = (el: InteractiveElement | null) => {
-        clickTarget.current = el;
-    };
-
-    const updateCursor = () => {
-        let next = "default";
-
-        if (false) next = "w-resize";
-        else if (clickTarget.current?.hasPointerOnHover) next = "pointer";
-
-        if (lastCursor.current !== next) {
-            document.body.style.cursor = next;
-            lastCursor.current = next;
-        }
-    };
 
     // ------- EVENTS -------------
     useEffect(() => {
@@ -78,7 +61,7 @@ function useInput() {
         const end = () => {
             // If it was not a drag, trigger onClick function on current target
             if (isPointerDown.current && !isDragging.current) {
-                clickTarget.current?.onClick?.();
+                // clickTarget.current?.onClick?.();
             }
 
             // Reset state
@@ -188,7 +171,7 @@ function useInput() {
 
         // cursor update (batched, not event-driven)
         if (cursorDirty.current) {
-            updateCursor();
+            // updateCursor();
             cursorDirty.current = false;
         }
     }, -2);
@@ -197,10 +180,10 @@ function useInput() {
         pointerPosition,
         isPointerInside,
         isPointerDown,
-        clickTarget,
+        // clickTarget,
         scrollVelocity,
-        setClickTarget,
-        updateCursor,
+        // setClickTarget,
+        // updateCursor,
     };
 }
 
