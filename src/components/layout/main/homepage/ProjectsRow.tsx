@@ -60,6 +60,7 @@ function ProjectsRow({
     };
 
     const onPointerMove = (e: ThreeEvent<PointerEvent>) => {
+        e.stopPropagation();
         if (!isDragging.current || !rowRef.current) return;
 
         // Calculate delta
@@ -68,10 +69,7 @@ function ProjectsRow({
 
         // Update velocity for damping on release
         velocity.current = delta * 60;
-
-        let nextX = currentX.current + delta;
-
-        currentX.current = nextX;
+        currentX.current += delta;
     };
 
     useFrame((_state, delta) => {
