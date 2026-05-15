@@ -23,6 +23,27 @@ export function createSquircleShape(
     return s;
 }
 
+
+export function drawSquirclePath(
+    ctx: CanvasRenderingContext2D,
+    w: number,
+    h: number,
+    r: number,
+) {
+    ctx.beginPath();
+    ctx.moveTo(0, r);
+    ctx.lineTo(0, h - r);
+    ctx.quadraticCurveTo(0, h, r, h);
+    ctx.lineTo(w - r, h);
+    ctx.quadraticCurveTo(w, h, w, h - r);
+    ctx.lineTo(w, r);
+    ctx.quadraticCurveTo(w, 0, w - r, 0);
+    ctx.lineTo(r, 0);
+    ctx.quadraticCurveTo(0, 0, 0, r);
+    ctx.closePath();
+}
+
+
 export function createSquircleGeometry(
     width: number,
     height: number,
@@ -44,13 +65,18 @@ export function createSquircleGeometry(
         }
         uv.needsUpdate = true;
 
+        geom.computeBoundingBox();
+        geom.computeBoundingSphere();
+
         return geom;
     } else {
         const geom = new ExtrudeGeometry(squircleShape, {
             depth: depth,
             bevelEnabled: false,
-            
         });
+
+        geom.computeBoundingBox();
+        geom.computeBoundingSphere();
         return geom;
     }
 }

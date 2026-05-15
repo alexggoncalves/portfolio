@@ -1,11 +1,13 @@
 [
     {
         "id": "github",
-        "src": "https://cloud.alexgg.com/icons/github.svg"
+        "src": "https://cloud.alexgg.com/icons/github.svg",
+        "aspect": 1
     },
     {
         "id": "link",
-        "src": "https://cloud.alexgg.com/icons/link.svg"
+        "src": "https://cloud.alexgg.com/icons/link.svg",
+        "aspect": 1
     },
     {
         "id": "blender",
@@ -25,6 +27,11 @@
     {
         "id": "play",
         "src": "/images/play.svg",
-        "aspect": 2.38
+        "aspect": 1
+    },
+    {
+        "id": "pause",
+        "src": "/images/pause.svg",
+        "aspect": 1
     }
 ]

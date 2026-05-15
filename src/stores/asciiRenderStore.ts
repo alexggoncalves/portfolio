@@ -45,7 +45,7 @@ const useAsciiRenderStore = create<AsciiRenderState>((set, get) => ({
     extraRows: 2,
 
     bgColor: "rgb(13, 13, 19)",
-    distortion: { x: 0.02, y: 0.02 },
+    distortion: { x: 0.01, y: 0.01 },
     focalLength: { x: 0.96, y: 0.96 },
 
     asciiAtlasSrc: "/font_atlas/fontAtlas-ibmplex-16x9(12-16).png",

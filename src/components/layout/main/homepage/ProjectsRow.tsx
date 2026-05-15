@@ -1,21 +1,25 @@
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
-import ProjectCard from "../projects/ProjectCard";
-import { useMemo, useRef } from "react";
+import ProjectCard from "../general/ProjectCard";
+import { useCallback, useMemo, useRef } from "react";
 import type { Group } from "three";
 import { projects } from "../../../app/assets/contentAssets";
 import { Container, Text } from "@react-three/uikit";
 import Button3D from "../general/Button3D";
+import { useNavigate } from "react-router";
 
 const titleSize = 30;
 
 const friction = 8; // inertia damping
 const springK = 80; // spring stiffness at bounds
 const springDamping = 20; // spring damping
+const bottomMargin = 0.5;
+
+const DRAG_CLICK_THRESHOLD = 0.02;
 
 function ProjectsRow({
     height = 2,
     margin = 50,
-    cardGap = 10,
+    cardGap = 15,
     cardAspect = 4 / 3,
 }: {
     height: number;
@@ -24,8 +28,11 @@ function ProjectsRow({
     cardAspect?: number;
 }) {
     const { viewport, size } = useThree();
+    const navigate = useNavigate();
 
     const rowRef = useRef<Group>(null);
+    const totalDrag = useRef(0);
+    const suppressCardClick = useRef(false);
 
     const maxOffset = useMemo(() => {
         const cardWidthWorld = height * cardAspect;
@@ -48,11 +55,12 @@ function ProjectsRow({
     const isDragging = useRef(false);
 
     const onPointerDown = (e: ThreeEvent<PointerEvent>) => {
-        e.stopPropagation();
-
         dragLastX.current = e.point.x;
         isDragging.current = true;
         velocity.current = 0;
+
+        totalDrag.current = 0;
+        suppressCardClick.current = false;
     };
 
     const onPointerUp = (_e: ThreeEvent<PointerEvent>) => {
@@ -60,12 +68,17 @@ function ProjectsRow({
     };
 
     const onPointerMove = (e: ThreeEvent<PointerEvent>) => {
-        e.stopPropagation();
         if (!isDragging.current || !rowRef.current) return;
 
         // Calculate delta
         const delta = e.point.x - dragLastX.current;
         dragLastX.current = e.point.x;
+
+        // Add up total drag to supress card navigation
+        totalDrag.current += Math.abs(delta);
+        if (totalDrag.current > DRAG_CLICK_THRESHOLD) {
+            suppressCardClick.current = true;
+        }
 
         // Update velocity for damping on release
         velocity.current = delta * 60;
@@ -74,6 +87,11 @@ function ProjectsRow({
 
     useFrame((_state, delta) => {
         if (!rowRef.current) return;
+
+        if (isDragging.current) {
+            rowRef.current.position.x = currentX.current;
+            return;
+        }
 
         const isLeft = currentX.current > 0;
         const isRight = currentX.current < -maxOffset;
@@ -98,9 +116,19 @@ function ProjectsRow({
         }
     });
 
+    const goToProjectsGrid = useCallback(() => {
+        navigate("/projects");
+    }, [navigate]);
+
     return (
         <>
-            <group position={[0, -viewport.height / 2, 0]}>
+            <group
+                position={[
+                    0,
+                    -viewport.height / 2 + height / 2 + bottomMargin,
+                    0,
+                ]}
+            >
                 {/* Title */}
                 <Container
                     sizeY={height}
@@ -131,6 +159,7 @@ function ProjectsRow({
                                 width={8}
                                 height={2}
                                 depth={1.2}
+                                callBack={goToProjectsGrid}
                             ></Button3D>
                         </Container>
                         <Container
@@ -177,6 +206,7 @@ function ProjectsRow({
                                     width={height * cardAspect}
                                     key={index}
                                     project={project}
+                                    suppressClickRef={suppressCardClick}
                                 ></ProjectCard>
                             ))}
                         </Container>

@@ -4,45 +4,31 @@ import TAGS from "../../../data/tags.json";
 import ICONS from "../../../data/icons.json";
 
 // Layout types
-export type HeadingBlock = {
-    type: "heading";
-    text: string;
-};
-export type ImageBlock = {
+export type ImageAsset = {
     type: "image";
     src: string;
-    alt?: string;
+    id?: string;
 };
 
-export type ImagePairBlock = {
-    type: "image-pair";
-    images: { src: string; alt?: string }[];
-};
-
-export type VideoBlock = {
+export type VideoAsset = {
     type: "video";
     src: string;
-    alt?: string;
+    id?: string;
 };
 
-export type TextBlock = {
-    type: "text";
-    paragraphs: string[];
+export type ModelAsset = {
+    type: "model";
+    src: string;
+    id?: string;
 };
 
-export type MediaBlock =
-    | HeadingBlock
-    | TextBlock
-    | ImageBlock
-    | ImagePairBlock
-    | VideoBlock;
+export type Media = ImageAsset | VideoAsset | ModelAsset;
 
 // Person types
 export type Person = {
     id: string;
     name: string;
     asciiName: number[];
-    avatarSrc?: string;
     link?: string;
 };
 
@@ -59,12 +45,12 @@ export type Project = {
     tags: string[];
     year: string;
     thumbnailSrc: string;
-    description: TextBlock;
+    description: string[];
     link?: string;
     git?: string;
     tools: string[];
     team?: TeamMember[];
-    media: MediaBlock[];
+    media: Media[];
 
     asciiTitle?: number[];
     asciiSubtitle?: number[];
@@ -75,6 +61,7 @@ export type Tag = {
     id: string;
     name: string;
     color: string;
+    textColor: string;
 };
 
 // Icon type
@@ -112,7 +99,7 @@ export function getIconById(id: string): Icon | null {
 
 export function getTagsById(tagIds: string[]): Tag[] {
     const output = [] as Tag[];
-    
+
     for (let i = 0; i < tagIds.length; i++) {
         const tag = getTagById(tagIds[i]);
         if (tag !== null) output.push(tag);

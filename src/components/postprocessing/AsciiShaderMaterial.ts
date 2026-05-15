@@ -1,5 +1,5 @@
 import { ShaderMaterial, Texture, Vector2 } from "three";
-import asciiShader from "./postprocessing/asciiShader";
+import asciiShader from "./asciiShader";
 
 const createAsciiShaderMaterial = (
     atlas: Texture,

@@ -42,3 +42,39 @@ export function getDistortedPosition(
 
     return target;
 }
+
+export function undistortUV(
+    uv: Vector2,
+    {
+      distortion,
+      focalLength,
+    }: {
+      distortion: { x: number; y: number };
+      focalLength: { x: number; y: number };
+    }
+  ) {
+    let x = uv.x;
+    let y = uv.y;
+  
+    // iterative inverse
+    for (let i = 0; i < 4; i++) {
+      let xnX = x * 2 - 1;
+      let xnY = y * 2 - 1;
+  
+      xnX *= focalLength.x;
+      xnY *= focalLength.y;
+  
+      const r2 = xnX * xnX + xnY * xnY;
+  
+      const xdX = xnX * (1 + distortion.x * r2);
+      const xdY = xnY * (1 + distortion.y * r2);
+  
+      const projectedX = xdX * 0.5 + 0.5;
+      const projectedY = xdY * 0.5 + 0.5;
+  
+      x -= (projectedX - uv.x);
+      y -= (projectedY - uv.y);
+    }
+  
+    return new Vector2(x, y);
+  }

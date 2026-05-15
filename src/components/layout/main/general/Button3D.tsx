@@ -1,16 +1,18 @@
 import { Content } from "@react-three/uikit";
 import { createSquircleGeometry } from "../../../../utils/createSquircle";
 import { useMemo, useState } from "react";
-import { Text, useMatcapTexture } from "@react-three/drei";
+import { Text, useCursor, useMatcapTexture } from "@react-three/drei";
 
 function Button3D({
     width,
     height,
     depth,
+    callBack,
 }: {
     width: number;
     height: number;
     depth: number;
+    callBack: () => void;
 }) {
     const [hovered, setHovered] = useState(false);
 
@@ -22,22 +24,25 @@ function Button3D({
         [width, height, depth],
     );
 
+    useCursor(hovered);
+
     return (
         <Content>
             {squircle && (
                 <group>
                     <mesh
                         geometry={squircle}
-                        position={[0, 0, depth/2]}
+                        position={[0, 0, depth / 2]}
                         onPointerOver={() => setHovered(true)}
                         onPointerOut={() => setHovered(false)}
+                        onClick={callBack}
                     >
                         <meshMatcapMaterial
                             matcap={hovered ? matcapHover : matcapIdle}
                         />
                     </mesh>
                     <Text
-                        position={[0.2, 0, 1.5 *depth + 0.01]}
+                        position={[0.2, 0, 1.5 * depth + 0.01]}
                         fontWeight={800}
                         color={hovered ? "green" : "black"}
                     >

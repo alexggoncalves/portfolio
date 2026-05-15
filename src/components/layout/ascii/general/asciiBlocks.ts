@@ -1,7 +1,7 @@
 // JS Stick Letters  https://patorjk.com/software/taag/#p=display&f=JS+Stick+Letters&t=Work&x=none&v=4&h=4&w=80&we=false
 
 import { createASCIITitle } from "./asciiFonts";
-import { people, projects } from "./contentAssets";
+import { people, projects } from "../../../app/assets/contentAssets";
 
 // ASCII SHADER CHARACTER BRIGHTNESS
 export const brightnessMap = new Map<string, number>();

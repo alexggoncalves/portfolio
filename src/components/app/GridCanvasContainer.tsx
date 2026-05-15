@@ -1,5 +1,8 @@
 import { useEffect, useRef, type ReactElement } from "react";
-import { Canvas, type CanvasProps } from "@react-three/fiber";
+import {
+    Canvas,
+    type CanvasProps,
+} from "@react-three/fiber";
 import useAsciiRenderStore from "../../stores/asciiRenderStore";
 import { NoToneMapping } from "three";
 
@@ -19,18 +22,17 @@ const canvasProps = {
         far: 20,
     },
     gl: {
-        antialias: false,
+        antialias: true,
         alpha: true,
         toneMapping: NoToneMapping,
         localClippingEnabled: true,
     },
-    dpr: [1, 1.5],
+    dpr: [2, 3],
     // flat: true,
     style: {
-        position: "absolute",
+        // position: "absolute",
         width: "100%",
         height: "100%",
-        inset: "0",
         touchAction: "none",
     },
 } as CanvasProps;
@@ -108,10 +110,15 @@ function GridCanvasContainer({
             ref={containerRef}
             style={{
                 overflow: "hidden",
+                width: "100vw",
+                height: "100vh",
                 backgroundColor: "rgb(20.0,20.0,20.0)",
             }}
         >
-            <Canvas {...canvasProps}>{children}</Canvas>
+            {/* <Canvas {...canvasProps} events={eventsConfig}> */}
+            <Canvas {...canvasProps}>
+                {children}
+            </Canvas>
         </div>
     );
 }

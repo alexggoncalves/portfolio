@@ -2,51 +2,61 @@
     {
         "id": "game-dev",
         "name": "Game Dev",
-        "color": "#F29A9A"
+        "color": "#F29A9A",
+        "textColor": "#4f1f1f"
     },
     {
         "id": "frontend",
         "name": "Frontend",
-        "color": "#F7B38A"
+        "color": "#F7B38A",
+        "textColor": "#6b3819"
     },
     {
         "id": "backend",
         "name": "Backend",
-        "color": "#F5D67A"
+        "color": "#F5D67A",
+        "textColor": "#473a13"
     },
     {
         "id": "3d",
         "name": "3D",
-        "color": "#FF6B6B"
+        "color": "#FF6B6B",
+        "textColor": "#3d0d0d"
     },
     {
         "id": "vr",
         "name": "VR",
-        "color": "#B8A7F5"
+        "color": "#B8A7F5",
+        "textColor": "#221942"
     },
     {
         "id": "interaction-design",
         "name": "Interaction Design",
-        "color": "#F2A9D3"
+        "color": "#F2A9D3",
+        "textColor": "#52243e"
     },
     {
         "id": "generative",
         "name": "Generative",
-        "color": "#FFBE8E"
+        "color": "#FFBE8E",
+        "textColor": "#59371e"
     },
     {
         "id": "animation",
         "name": "Motion/Animation",
-        "color": "#C7EFA2"
+        "color": "#C7EFA2",
+        "textColor": "#2b4017"
     },
     {
         "id": "film",
         "name": "Film",
-        "color": "#6A7F98"
+        "color": "#6A7F98",
+        "textColor": "#112338"
     },
     {
         "id": "graphic-design",
         "name": "Graphic Design",
-        "color": "#DE6EB1"
+        "color": "#DE6EB1",
+        "textColor": "#4d1b39"
     }
 ]

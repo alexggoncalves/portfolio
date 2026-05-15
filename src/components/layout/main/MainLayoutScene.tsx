@@ -4,6 +4,7 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useRef } from "react";
 import { MultiplyBlending, type Group } from "three";
 import useAsciiRenderStore from "../../../stores/asciiRenderStore";
+import Nav from "./general/Nav";
 
 function MainLayoutScene() {
     const pageContainer = useRef<Group>(null);
@@ -31,29 +32,33 @@ function MainLayoutScene() {
 
     return (
         <>
-            <group ref={pageContainer} position={[0, 0, -0.1]}>
+            <group ref={pageContainer} position={[0, 0, 0]}>
                 <HomepageLayout></HomepageLayout>
+                {/* <ProjectDetailsPage></ProjectDetailsPage> */}
             </group>
 
             {/* Top gradient */}
-            <mesh position={[0, viewport.height / 2 - 0.9, -0.05]}>
-                <planeGeometry args={[viewport.width + 1, 2]} />
+            <mesh
+                position={[0, viewport.height / 2 - 0.8, -0.05]}
+                renderOrder={50}
+            >
+                <planeGeometry args={[viewport.width + 1, 1.5]} />
                 <meshBasicMaterial
                     transparent
                     premultipliedAlpha
                     blending={MultiplyBlending}
-                    // depthWrite={false}
-                    opacity={0.6}
+                    opacity={1}
                     depthWrite={false}
                     depthTest={false}
                     toneMapped={false}
                 >
                     <GradientTexture
-                        stops={[0, 1]}
-                        colors={[bgColor, "white"]}
+                        stops={[0, 0.99, 1]}
+                        colors={[bgColor, "white", "white"]}
                     />
                 </meshBasicMaterial>
             </mesh>
+            <Nav></Nav>
         </>
     );
 }

@@ -21,7 +21,7 @@ import {
 import { EffectComposer } from "@react-three/postprocessing";
 
 import useAsciiRenderStore from "../../stores/asciiRenderStore";
-import createAsciiShaderMaterial from "../AsciiShaderMaterial";
+import createAsciiShaderMaterial from "../postprocessing/AsciiShaderMaterial";
 
 //* ----------------------------------------------------------------------------------------------
 //* Layout Render Pipeline - Renders main layout scene and ascii scene with shader pass.
@@ -98,7 +98,7 @@ function LayoutRenderPipeline() {
             glyphSoftness,
         ],
     );
-    // dispose 
+    // dispose
     useEffect(() => {
         return () => {
             asciiShaderMaterial.uniforms.uPixelizedTex.value = null;
@@ -108,10 +108,16 @@ function LayoutRenderPipeline() {
 
     // ---- RENDER LOOP ----
     useFrame(() => {
-        if (!fullScreenPlane.current || asciiScene.children.length === 0) return;
-        
+        if (!asciiAtlas.image) return;
+
+        const atlasReady = asciiAtlas.image.width && asciiAtlas.image.height;
+        if (!atlasReady) return;
+
+        if (!fullScreenPlane.current || asciiScene.children.length === 0)
+            return;
+
         gl.autoClear = false;
-        
+
         // Render ascii scene to render target
         gl.setRenderTarget(asciiRenderTarget);
         gl.clear();
@@ -129,10 +135,9 @@ function LayoutRenderPipeline() {
         gl.setRenderTarget(null);
 
         // Set render target uniform for ascii pass
-        asciiShaderMaterial.uniforms.uPixelizedTex.value = asciiRenderTarget.texture;
+        asciiShaderMaterial.uniforms.uPixelizedTex.value =
+            asciiRenderTarget.texture;
     }, 0);
-
-    
 
     return (
         <>
