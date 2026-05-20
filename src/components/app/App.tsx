@@ -1,11 +1,10 @@
-import "../../styles/css/App.css";
-
 import { useEffect, useState } from "react";
 
-import AsciiLayoutRoot from "./AsciiLayoutRoot";
 import useAsciiRenderStore from "../../stores/asciiRenderStore";
 import useAssetStore from "./assets/assetStore";
-
+import GridCanvasContainer from "./ascii/GridCanvasContainer";
+import AsciiPipeline from "./ascii/AsciiPipeline";
+import LayoutRoot from "./LayoutRoot";
 
 function App() {
     const [isReady, setIsReady] = useState(false);
@@ -15,9 +14,7 @@ function App() {
 
     useEffect(() => {
         loadGlobalAssets();
-        
     }, [loadGlobalAssets]);
-
 
     useEffect(() => {
         let isMounted = true;
@@ -44,13 +41,15 @@ function App() {
 
     return (
         <>
-            {/* <LayoutRoot>
-
-            </LayoutRoot>
-            <GridCanvasContainer cellWidth={charSize.w} cellHeight={charSize.h}>
-                <LayoutRenderPipeline />
-            </GridCanvasContainer> */}
-            {isReady && <AsciiLayoutRoot />}
+            <LayoutRoot />
+            {isReady && (
+                <GridCanvasContainer
+                    cellWidth={charSize.w}
+                    cellHeight={charSize.h}
+                >
+                    <AsciiPipeline />
+                </GridCanvasContainer>
+            )}
         </>
     );
 }

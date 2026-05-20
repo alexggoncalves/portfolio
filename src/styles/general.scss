@@ -1,0 +1,40 @@
+main {
+    --main-inline-padding: 3vw;
+    flex: 1 1 0;
+    padding-left: var(--main-inline-padding);
+    padding-right: var(--main-inline-padding);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+nav {
+    padding-right: 40px;
+    display: flex;
+    width: 100%;
+    height: 100px;
+
+    position: fixed;
+
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+
+    gap: 10px;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(25, 25, 25, 0.9),
+        rgba(0, 0, 0, 0)
+    );
+    z-index: 30;
+}
+
+nav > a {
+    margin-left: 15px;
+    color: white;
+}
+
+nav > a:hover {
+    color: aqua;
+}

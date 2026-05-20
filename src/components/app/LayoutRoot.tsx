@@ -1,13 +1,13 @@
-import "../../styles/css/App.css";
-
-import Homepage from "./Homepage/Homepage";
+import Nav from "./Nav";
+import Homepage from "./pages/homepage/Homepage";
 
 function LayoutRoot() {
-
-
     return (
         <>
-            <Homepage></Homepage>
+            <Nav />
+            <main>
+                <Homepage></Homepage>
+            </main>
         </>
     );
 }

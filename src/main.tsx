@@ -1,4 +1,5 @@
-import "./styles/css/index.css";
+import "./styles/index.scss";
+import "./styles/general.scss"
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
@@ -18,7 +19,7 @@ ReactDOM.createRoot(root).render(
                 <Route path="projects" element={null}>
                     <Route path=":projectId" element={null} />
                 </Route>
-                <Route path="contacts" element={null} />
+                <Route path="contact" element={null} />
                 <Route path="more" element={null} />
                 <Route path="*" element={null} />
             </Routes>
