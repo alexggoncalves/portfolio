@@ -6,9 +6,9 @@ import useAssetStore from "../../../app/assets/assetStore";
 import useAsciiRenderStore from "../../../../stores/asciiRenderStore";
 import ProjectDetails from "./ProjectDetails";
 
-const projectId = "endless-purrs"; // ! TEMP
+// const projectId = "endless-purrs"; // ! TEMP
 
-function ProjectDetailsPage() {
+function ProjectDetailsPage({ projectId }: { projectId: string }) {
     const loadProjectAssets = useAssetStore((s) => s.loadProjectAssets);
 
     const charSize = useAsciiRenderStore((s) => s.charSize);
@@ -26,7 +26,7 @@ function ProjectDetailsPage() {
     if (!project) return;
 
     return (
-        <>
+        <group>
             <Fullscreen
                 paddingTop={charSize.h * 8}
                 paddingX={charSize.w * 4}
@@ -44,20 +44,6 @@ function ProjectDetailsPage() {
                         justifyContent={"center"}
                         paddingRight={35}
                     >
-                        {/* Back button */}
-                        {/* <Container
-                        borderWidth={1}
-                        borderColor={"white"}
-                        borderRadius={50}
-                        width={120}
-                        height={30}
-                        marginTop={20}
-                    >
-                        <Text marginLeft={10}  color={"white"}>
-                            {"< Go back"}
-                        </Text>
-                    </Container> */}
-
                         {/* Details */}
                         <ProjectDetails project={project} />
                     </Container>
@@ -77,7 +63,7 @@ function ProjectDetailsPage() {
                     </Container>
                 </Container>
             </Fullscreen>
-        </>
+        </group>
     );
 }
 

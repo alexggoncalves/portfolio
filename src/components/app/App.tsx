@@ -3,11 +3,21 @@ import "../../styles/css/App.css";
 import { useEffect, useState } from "react";
 
 import AsciiLayoutRoot from "./AsciiLayoutRoot";
+import useAsciiRenderStore from "../../stores/asciiRenderStore";
+import useAssetStore from "./assets/assetStore";
+
 
 function App() {
     const [isReady, setIsReady] = useState(false);
 
-    // const asciiSequence = useAsciiRenderStore((state) => state.asciiSequence)
+    const charSize = useAsciiRenderStore((state) => state.charSize);
+    const loadGlobalAssets = useAssetStore((state) => state.loadGlobalAssets);
+
+    useEffect(() => {
+        loadGlobalAssets();
+        
+    }, [loadGlobalAssets]);
+
 
     useEffect(() => {
         let isMounted = true;
@@ -32,9 +42,17 @@ function App() {
         };
     }, []);
 
-    return <>
+    return (
+        <>
+            {/* <LayoutRoot>
 
-    {isReady && <AsciiLayoutRoot />}</>;
+            </LayoutRoot>
+            <GridCanvasContainer cellWidth={charSize.w} cellHeight={charSize.h}>
+                <LayoutRenderPipeline />
+            </GridCanvasContainer> */}
+            {isReady && <AsciiLayoutRoot />}
+        </>
+    );
 }
 
 export default App;

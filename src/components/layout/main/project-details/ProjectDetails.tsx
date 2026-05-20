@@ -29,7 +29,7 @@ function ProjectDetails({ project }: { project: Project }) {
                 </Text>
 
                 {/* Description */}
-                {project.description.map((paragraph, index) => (
+                {project.description?.map((paragraph, index) => (
                     <Text
                         color={"white"}
                         fontSize={16}

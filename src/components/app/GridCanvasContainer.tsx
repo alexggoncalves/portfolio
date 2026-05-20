@@ -1,10 +1,7 @@
 import { useEffect, useRef, type ReactElement } from "react";
-import {
-    Canvas,
-    type CanvasProps,
-} from "@react-three/fiber";
+import { Canvas, type CanvasProps } from "@react-three/fiber";
 import useAsciiRenderStore from "../../stores/asciiRenderStore";
-import { NoToneMapping } from "three";
+import { LinearSRGBColorSpace, NoToneMapping, SRGBColorSpace } from "three";
 
 export type CanvasSize = {
     width: number;
@@ -53,6 +50,8 @@ function GridCanvasContainer({
 }: GridContainerProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
+    const bgColor = useAsciiRenderStore((state) => state.bgColor);
+
     const lastSize = useRef({ cols: 0, rows: 0 });
 
     useEffect(() => {
@@ -85,8 +84,8 @@ function GridCanvasContainer({
             const canvasHeight = rows * cellHeight;
 
             // Calculate the position of the canvas to center it in the viewport
-            const left = Math.floor((canvasWidth - viewportWidth) / 2);
-            const top = Math.floor((canvasHeight - viewportHeight) / 2);
+            const offsetX = Math.floor((viewportWidth - canvasWidth) / 2);
+            const offsetY = Math.floor((viewportHeight - canvasHeight) / 2);
 
             // Center and update the size of the container
             const container = containerRef.current;
@@ -96,7 +95,8 @@ function GridCanvasContainer({
                 container.style.left = "0";
                 container.style.width = `${canvasWidth}px`;
                 container.style.height = `${canvasHeight}px`;
-                container.style.transform = `translate(${-left}px, ${-top}px)`;
+                container.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+                container.style.backgroundColor = bgColor;
             }
         }
         updateSize();
@@ -106,20 +106,18 @@ function GridCanvasContainer({
     }, [cellWidth, cellHeight]);
 
     return (
-        <div
-            ref={containerRef}
-            style={{
-                overflow: "hidden",
-                width: "100vw",
-                height: "100vh",
-                backgroundColor: "rgb(20.0,20.0,20.0)",
-            }}
-        >
-            {/* <Canvas {...canvasProps} events={eventsConfig}> */}
-            <Canvas {...canvasProps}>
-                {children}
-            </Canvas>
-        </div>
+        <>
+            <div
+                ref={containerRef}
+                style={{
+                    overflow: "hidden",
+                    backgroundColor: "rgb(20.0,20.0,20.0)",
+                }}
+            >
+                {/* <Canvas {...canvasProps} events={eventsConfig}> */}
+                <Canvas {...canvasProps}>{children}</Canvas>
+            </div>
+        </>
     );
 }
 

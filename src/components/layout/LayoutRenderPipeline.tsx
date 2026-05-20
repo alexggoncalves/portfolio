@@ -1,143 +1,98 @@
-import Postprocessing from "../postprocessing/Postprocessing";
-
-import AsciiLayoutScene from "./ascii/AsciiLayoutScene";
-
-import {
-    Mesh,
-    NearestFilter,
-    PerspectiveCamera,
-    Scene,
-    TextureLoader,
-} from "three";
-import { useEffect, useMemo, useRef } from "react";
+// LayoutRenderPipeline.tsx
+import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal, useFrame, useThree } from "@react-three/fiber";
 import { ScrollControls, useFBO } from "@react-three/drei";
-import MainLayoutScene from "./main/MainLayoutScene";
-import {
-    createPortal,
-    useFrame,
-    useLoader,
-    useThree,
-} from "@react-three/fiber";
-import { EffectComposer } from "@react-three/postprocessing";
-
+import { useLocation } from "react-router";
+import { Color, Mesh, MeshBasicMaterial, Scene } from "three";
+import AsciiLayoutScene from "./ascii/AsciiLayoutScene";
+import AsciiPipeline from "./AsciiPipeline";
+import RouteScene from "./main/RouteScene";
+import Nav from "./main/nav/Nav";
 import useAsciiRenderStore from "../../stores/asciiRenderStore";
-import createAsciiShaderMaterial from "../postprocessing/AsciiShaderMaterial";
 
-//* ----------------------------------------------------------------------------------------------
-//* Layout Render Pipeline - Renders main layout scene and ascii scene with shader pass.
-//*     - Renders the ascii scene to a pixelated fbo then applies ascii pass.
-//*     - Draws the resulting pass in a plane covering the camera view over the main layout scene.
-//  TODO - Add a second fbo for main layout scene transitions (mix current and next in shader)
-//* ----------------------------------------------------------------------------------------------
+const TRANSITION_DURATION = 0.8;
 
 function LayoutRenderPipeline() {
-    const { gl, size, viewport } = useThree();
-
-    // ---- STATES ----
-    const asciiAtlasSrc = useAsciiRenderStore((state) => state.asciiAtlasSrc);
-    const gridSize = useAsciiRenderStore((state) => state.gridSize);
-    const atlasGridSize = useAsciiRenderStore((state) => state.atlasGridSize);
-    const charSize = useAsciiRenderStore((state) => state.charSize);
-    const glyphSoftness = useAsciiRenderStore((state) => state.glyphSoftness);
-    const glyphThreshold = useAsciiRenderStore((state) => state.glyphThreshold);
-
-    // ---- LOAD ASCII ATLAS
-    const asciiAtlas = useLoader(TextureLoader, asciiAtlasSrc);
-
-    // set texture properties
-    useEffect(() => {
-        asciiAtlas.generateMipmaps = false;
-        asciiAtlas.magFilter = NearestFilter;
-        asciiAtlas.minFilter = NearestFilter;
-        asciiAtlas.needsUpdate = true;
-    }, [asciiAtlas]);
-
-    // ---- SCENES ----
+    const location = useLocation();
     const asciiScene = useMemo(() => new Scene(), []);
-    const fullScreenPlane = useRef<Mesh>(null);
+    const bgColor = useAsciiRenderStore((s) => s.bgColor);
+    const { gl } = useThree();
 
-    // ---- RENDER TARGETS ----
-    const asciiRenderTarget = useFBO(gridSize.cols, gridSize.rows, {
-        minFilter: NearestFilter, //
-        magFilter: NearestFilter,
-        generateMipmaps: false,
+    useEffect(() => {
+        gl.setClearColor(new Color(bgColor), 1);
+    }, [gl, bgColor]);
+
+
+    // The path RouteScene is currently rendering
+    const [activePath, setActivePath] = useState(location.pathname);
+
+    // Pending path waiting for the capture to happen
+    const pendingPath = useRef<string | null>(null);
+
+    // FBO storing the frozen outgoing frame
+    const frozenFBO = useFBO();
+
+    // The fullscreen plane that shows the frozen frame
+    const frozenPlane = useRef<Mesh>(null);
+
+    // Fade-out progress: null = not transitioning
+    const transitionStart = useRef<number | null>(null);
+
+    // Detect location changes and queue a pending path
+    const prevPathname = useRef(location.pathname);
+    useEffect(() => {
+        if (location.pathname !== prevPathname.current) {
+            pendingPath.current = location.pathname;
+            prevPathname.current = location.pathname;
+        }
+    }, [location.pathname]);
+
+    useFrame(({ gl, scene, camera, clock }) => {
+        const plane = frozenPlane.current;
+
+        // ── 1. Pending transition: capture current frame ──────────────────────
+        if (pendingPath.current !== null) {
+            const targetPath = pendingPath.current;
+            pendingPath.current = null;
+
+            // Hide frozen overlay while capturing to avoid recursive snapshots.
+            if (plane) plane.visible = false;
+
+            // Render current scene into the FBO before the route changes
+            gl.setRenderTarget(frozenFBO);
+            gl.clear();
+            gl.render(scene, camera);
+            gl.setRenderTarget(null);
+
+            // Show the frozen plane
+            if (plane) {
+                plane.visible = true;
+                const mat = plane.material as MeshBasicMaterial;
+                mat.map = frozenFBO.texture;
+                mat.opacity = 1;
+                mat.needsUpdate = true;
+            }
+
+            // Swap the active route — new scene starts rendering underneath
+            setActivePath(targetPath);
+            transitionStart.current = clock.elapsedTime;
+        }
+
+        // ── 2. Active transition: fade out the frozen plane ───────────────────
+        if (transitionStart.current !== null && plane?.visible) {
+            const elapsed = clock.elapsedTime - transitionStart.current;
+            const t = Math.min(elapsed / TRANSITION_DURATION, 1);
+            const mat = plane.material as MeshBasicMaterial;
+            mat.opacity = 1 - t;
+
+            if (t >= 1) {
+                plane.visible = false;
+                transitionStart.current = null;
+            }
+        }
     });
 
-    // ---- CAMERAS ----
-    const asciiCamera = useMemo(() => {
-        const cam = new PerspectiveCamera(
-            45,
-            size.width / size.height,
-            0.1,
-            40,
-        );
-        cam.position.z = 10;
-        return cam;
-    }, [size.width, size.height]);
-
-    // ---- ASCII PASS ----
-    const asciiShaderMaterial = useMemo(
-        () =>
-            createAsciiShaderMaterial(
-                asciiAtlas,
-                atlasGridSize,
-                gridSize,
-                charSize,
-                glyphThreshold,
-                glyphSoftness,
-            ),
-        [
-            asciiAtlas,
-            gridSize.cols,
-            gridSize.rows,
-            atlasGridSize.cols,
-            atlasGridSize.rows,
-            charSize.w,
-            charSize.h,
-            glyphThreshold,
-            glyphSoftness,
-        ],
-    );
-    // dispose
-    useEffect(() => {
-        return () => {
-            asciiShaderMaterial.uniforms.uPixelizedTex.value = null;
-            asciiShaderMaterial.dispose();
-        };
-    }, [asciiShaderMaterial]);
-
-    // ---- RENDER LOOP ----
-    useFrame(() => {
-        if (!asciiAtlas.image) return;
-
-        const atlasReady = asciiAtlas.image.width && asciiAtlas.image.height;
-        if (!atlasReady) return;
-
-        if (!fullScreenPlane.current || asciiScene.children.length === 0)
-            return;
-
-        gl.autoClear = false;
-
-        // Render ascii scene to render target
-        gl.setRenderTarget(asciiRenderTarget);
-        gl.clear();
-
-        // Render layer containing main elements
-        asciiCamera.layers.set(0);
-        gl.render(asciiScene, asciiCamera);
-        gl.clearDepth();
-
-        // Render layer containing fixed elements
-        asciiCamera.layers.set(1);
-        gl.render(asciiScene, asciiCamera);
-        asciiCamera.layers.enableAll();
-
-        gl.setRenderTarget(null);
-
-        // Set render target uniform for ascii pass
-        asciiShaderMaterial.uniforms.uPixelizedTex.value =
-            asciiRenderTarget.texture;
-    }, 0);
+    const { viewport } = useThree();
 
     return (
         <>
@@ -146,28 +101,23 @@ function LayoutRenderPipeline() {
                 distance={0.2 / window.devicePixelRatio}
                 damping={0.2}
             >
-                {/* Main Layout Scene */}
-                <MainLayoutScene />
-
-                {/* Ascii Layout Scene Portal */}
+                <RouteScene path={activePath} />
                 {createPortal(<AsciiLayoutScene />, asciiScene)}
             </ScrollControls>
 
-            {/* Ascii Pass */}
-            <mesh renderOrder={100} ref={fullScreenPlane}>
+            {/* Frozen outgoing frame — sits above everything, fades out */}
+            <mesh ref={frozenPlane} renderOrder={70} visible={false}>
                 <planeGeometry args={[viewport.width, viewport.height]} />
-                <primitive
-                    key={asciiShaderMaterial.uuid}
-                    object={asciiShaderMaterial}
-                    attach="material"
+                <meshBasicMaterial
+                    transparent
+                    depthTest={false}
+                    depthWrite={false}
                 />
             </mesh>
 
-            {/* Apply postprocessing effects*/}
-
-            <EffectComposer>
-                <Postprocessing></Postprocessing>
-            </EffectComposer>
+            <AsciiPipeline asciiScene={asciiScene} />
+            <Nav />
+            {/* <Postprocessing /> */}
         </>
     );
 }

@@ -45,6 +45,7 @@ function ProjectsRow({
             projects.length * cardWidthWorld +
             Math.max(0, projects.length - 1) * gapWorld;
         const visibleWorld = Math.max(0, viewport.width - marginWorld * 2);
+        
         return Math.max(0, totalContentWorld - visibleWorld);
     }, [height, size.width, viewport.width, projects.length]);
 
@@ -161,6 +162,7 @@ function ProjectsRow({
                                 depth={1.2}
                                 callBack={goToProjectsGrid}
                             ></Button3D>
+                            
                         </Container>
                         <Container
                             height={"50%"}
@@ -187,6 +189,7 @@ function ProjectsRow({
                     <meshBasicMaterial opacity={0} transparent />
                 </mesh>
 
+                {/* Card row */}
                 <group ref={rowRef}>
                     <Container
                         flexDirection={"column"}
@@ -212,6 +215,9 @@ function ProjectsRow({
                         </Container>
                     </Container>
                 </group>
+
+                {/* Gradients */}
+                
             </group>
         </>
     );

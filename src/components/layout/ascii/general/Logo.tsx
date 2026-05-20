@@ -1,4 +1,4 @@
-import { Text3D, useAspect } from "@react-three/drei";
+import { Text, Text3D, useAspect } from "@react-three/drei";
 import { useEffect, useRef } from "react";
 import { useThree } from "@react-three/fiber";
 import { Container, Content } from "@react-three/uikit";
@@ -9,7 +9,7 @@ const headerH = 1.4; // world units
 
 function Logo({ text }: { text: string }) {
     const { viewport, size } = useThree();
-    const charSize = useAsciiRenderStore((s)=>s.charSize)
+    const charSize = useAsciiRenderStore((s) => s.charSize);
 
     const rootRef = useRef<Group>(null);
 
@@ -34,14 +34,11 @@ function Logo({ text }: { text: string }) {
                 marginTop={charSize.h * 2}
                 marginLeft={charSize.w * 5}
             >
-                <Content
-                    positionType={"relative"}
-                    sizeY={headerH * 0.8}
-                >
+                <Content positionType={"relative"} sizeY={headerH * 0.8}>
                     <Text3D
                         rotation={[0, 0, 0]}
                         font={"/fonts/IBMPlexMono_Regular.json"}
-                        scale={[scale,scale,scale]}
+                        scale={[scale, scale, scale]}
                         position={[0, 0, 0]}
                         renderOrder={100}
                     >
