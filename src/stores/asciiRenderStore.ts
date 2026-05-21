@@ -37,7 +37,7 @@ type AsciiRenderState = {
 };
 
 const useAsciiRenderStore = create<AsciiRenderState>((set, get) => ({
-    charSize: { w: 12, h: 16 },
+    charSize: { w: 8, h: 12 },
 
     gridSize: { cols: 1, rows: 1 },
     canvasSize: { w: 1, h: 1 },

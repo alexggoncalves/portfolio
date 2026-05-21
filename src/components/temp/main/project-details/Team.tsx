@@ -1,5 +1,5 @@
 import { Container, Text } from "@react-three/uikit";
-import { type TeamMember } from "../../../app/assets/contentAssets";
+import { type TeamMember } from "../../../asset-handling/contentAssets";
 
 function Team({ team }: { team: TeamMember[] }) {
     return (

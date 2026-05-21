@@ -1,5 +1,5 @@
 import { Center, useTexture } from "@react-three/drei";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef, type RefObject } from "react";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import {
     Group,
@@ -14,12 +14,12 @@ import {
 import { FBXLoader } from "three/examples/jsm/Addons.js";
 
 /** World-space offset after projecting the HTML section (tune placement vs layout) */
-const CAT_ALIGN_OFFSET = new Vector3(-0.4, 0, -1);
+const CAT_ALIGN_OFFSET = new Vector3(-0.6, 0, -1);
 
 /** Ray / plane intersection uses this world Z plane (same as your previous group origin) */
 const CAT_ALIGN_PLANE_Z = 0;
 
-function CatSection() {
+function CatSection({ opacity }: { opacity: RefObject<number> }) {
     const { camera, gl } = useThree();
 
     const alignGroupRef = useRef<Group>(null);
@@ -31,25 +31,28 @@ function CatSection() {
         [],
     );
 
-
     // const sectionRef = useRef<any>(null);
 
-    // ---- STARS ---- 
+    // ---- STARS ----
     // const starsRef = useRef<any>(null);
     // const starsArray = useRef<any[]>([]);
     // const starBaseScales = useRef<Vector3[]>([]);
     // const starScaledUp = useRef<Vector3[]>([]);
     // const starScaledDown = useRef<Vector3[]>([]);
 
-    // ---- CAT ---- 
+    // ---- CAT ----
     const catRef = useRef<any>(null);
     const catTexture = useTexture("/models/cat/baked_cat.png");
     const catSourceModel = useLoader(FBXLoader, `/models/cat/cat.fbx`);
-    const catModel = useMemo(() => catSourceModel.clone(true), [catSourceModel]);
+    const catModel = useMemo(
+        () => catSourceModel.clone(true),
+        [catSourceModel],
+    );
     const catMaterial = useMemo(
         () =>
             new MeshStandardMaterial({
                 map: catTexture,
+                transparent: true,
             }),
         [catTexture],
     );
@@ -95,7 +98,11 @@ function CatSection() {
         if (!group || typeof document === "undefined") return;
 
         const el = document.getElementById("cat-section");
-        if (!el) return;
+
+        if (!el){
+            group.position.set(-1000,0,0)
+            return
+        }
 
         const canvas = gl.domElement;
         const canvasRect = canvas.getBoundingClientRect();
@@ -121,6 +128,10 @@ function CatSection() {
         syncCatToHtmlSection();
 
         if (!catRef.current) return;
+
+        if (catMaterial) {
+            catMaterial.opacity = opacity.current;
+        }
 
         // const elapsed = state.clock.elapsedTime;
         const target = isMouseOver.current ? 1 : 0;
@@ -227,7 +238,7 @@ function CatSection() {
 
     return (
         <>
-            <group ref={alignGroupRef} position={[-1000,0,0]}>
+            <group ref={alignGroupRef} position={[-1000, 0, 0]}>
                 <Center>
                     <primitive
                         scale={0.1}

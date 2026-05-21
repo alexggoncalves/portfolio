@@ -1,8 +1,8 @@
 import { Link } from "react-router";
 
-import { projects } from "../../assets/contentAssets";
+import { projects } from "../../asset-handling/contentAssets";
 import ProjectCard from "../general/ProjectCard";
-import useHorizontalDragScroll from "../../../../hooks/useHorizontalDragScroll";
+import useHorizontalDragScroll from "../../../hooks/useHorizontalDragScroll";
 
 function ProjectsRow() {
     const { viewportRef, trackRef, onPointerDown } = useHorizontalDragScroll();
@@ -29,7 +29,7 @@ function ProjectsRow() {
                 >
                     <div ref={trackRef} className="projects-row__track">
                         {projects.map((project) => (
-                            <ProjectCard key={project.id} project={project} />
+                            <ProjectCard key={project.id} project={project} route={`/${project.id}`}/>
                         ))}
                     </div>
                 </div>

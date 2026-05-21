@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactElement } from "react";
 import { Canvas, type CanvasProps } from "@react-three/fiber";
-import useAsciiRenderStore from "../../../stores/asciiRenderStore";
+import useAsciiRenderStore from "../../stores/asciiRenderStore";
 import { NoToneMapping } from "three";
 
 export type CanvasSize = {
@@ -25,13 +25,10 @@ const canvasProps = {
         localClippingEnabled: true,
     },
     dpr: [2, 3],
-    // flat: true,
     style: {
-        // position: "absolute",
         width: "100%",
         height: "100%",
         touchAction: "none",
-        // Let pointer events reach HTML underneath; R3F uses eventSource + eventPrefix instead
         pointerEvents: "none",
     },
 } as CanvasProps;
@@ -45,7 +42,7 @@ type GridContainerProps = {
 //* --------------------------------------------------------------------------------------------
 //* Grid Canvas Container: Creates as canvas and keeps it centered and with the integer size of a grid
 //* --------------------------------------------------------------------------------------------
-function GridCanvasContainer({
+function GridCanvas({
     children,
     cellWidth,
     cellHeight,
@@ -111,11 +108,9 @@ function GridCanvasContainer({
                 className="ascii-canvas-layer"
                 style={{
                     overflow: "hidden",
-                    // Children default to pointer-events: auto; force the whole stack to ignore hits
                     pointerEvents: "none",
                 }}
             >
-                {/* <Canvas {...canvasProps} events={eventsConfig}> */}
                 <Canvas
                     {...canvasProps}
                     eventSource={
@@ -130,4 +125,4 @@ function GridCanvasContainer({
     );
 }
 
-export default GridCanvasContainer;
+export default GridCanvas;

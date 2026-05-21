@@ -3,7 +3,7 @@ import { Container, Image } from "@react-three/uikit";
 import { useEffect, useMemo } from "react";
 import { SRGBColorSpace, Texture } from "three";
 import { useFrame } from "@react-three/fiber";
-import type { ImageRecord } from "../../../../app/assets/assetLoaders";
+import type { ImageRecord } from "../../../../asset-handling/assetLoaders";
 
 function ImageView({ asset }: { asset: ImageRecord }) {
     // Create image texture

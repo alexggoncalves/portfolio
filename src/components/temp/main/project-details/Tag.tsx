@@ -1,7 +1,7 @@
 import { Container, Image, Text } from "@react-three/uikit";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { CanvasTexture, SRGBColorSpace } from "three";
-import { getTagById } from "../../../app/assets/contentAssets";
+import { getTagById } from "../../../asset-handling/contentAssets";
 import { drawSquirclePath } from "../../../../utils/createSquircle";
 
 function Tag({ tagId }: { tagId: string }) {

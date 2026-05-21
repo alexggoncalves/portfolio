@@ -3,9 +3,9 @@ import { useRef } from "react";
 import { useThree } from "@react-three/fiber";
 import { Container, Content } from "@react-three/uikit";
 import { Group } from "three";
-import useAsciiRenderStore from "../../../../stores/asciiRenderStore";
+import useAsciiRenderStore from "../../../stores/asciiRenderStore";
 
-const headerH = 1.4; // world units
+const headerH = 1; // world units
 
 function Logo({ text }: { text: string }) {
     const { viewport, size } = useThree();
@@ -19,13 +19,14 @@ function Logo({ text }: { text: string }) {
         <group
             ref={rootRef}
             position={[0, viewport.height / 2 - headerH / 2, 0]}
+            renderOrder={999}
         >
             <Container
                 sizeX={viewport.width}
                 alignItems={"center"}
                 sizeY={headerH}
                 marginTop={charSize.h * 2}
-                marginLeft={charSize.w * 5}
+                marginLeft={charSize.w * 8}
             >
                 <Content positionType={"relative"} sizeY={headerH * 0.8}>
                     <Text3D

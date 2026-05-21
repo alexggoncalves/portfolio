@@ -1,7 +1,7 @@
-import PROJECTS from "../../../data/projects.json";
-import PEOPLE from "../../../data/people.json";
-import TAGS from "../../../data/tags.json";
-import ICONS from "../../../data/icons.json";
+import PROJECTS from "../../data/projects.json";
+import PEOPLE from "../../data/people.json";
+import TAGS from "../../data/tags.json";
+import ICONS from "../../data/icons.json";
 
 // Layout types
 export type ImageAsset = {

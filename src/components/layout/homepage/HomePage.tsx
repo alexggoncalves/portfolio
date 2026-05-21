@@ -3,7 +3,7 @@ import Hero from "./Hero";
 import "./homepage.scss";
 import ProjectsRow from "./ProjectsRow";
 
-function Homepage() {
+function HomePage() {
     return (
         <>
             <Hero/>
@@ -17,4 +17,4 @@ function Homepage() {
     );
 }
 
-export default Homepage;
+export default HomePage;

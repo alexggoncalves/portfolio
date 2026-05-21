@@ -1,5 +1,5 @@
 import { Container } from "@react-three/uikit";
-import type { ModelRecord } from "../../../../app/assets/assetLoaders";
+import type { ModelRecord } from "../../../../asset-handling/assetLoaders";
 
 
 function ModelView({ asset }: { asset: ModelRecord }) {

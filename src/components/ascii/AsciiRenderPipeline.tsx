@@ -3,50 +3,57 @@ import {
     NearestFilter,
     PerspectiveCamera,
     Scene,
-    TextureLoader,
+    Texture,
     type Object3D,
 } from "three";
 import { useEffect, useMemo, useRef } from "react";
 import { useFBO } from "@react-three/drei";
 
-import {
-    createPortal,
-    useFrame,
-    useLoader,
-    useThree,
-} from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 
-import useAsciiRenderStore from "../../../stores/asciiRenderStore";
 import createAsciiShaderMaterial from "./AsciiShaderMaterial";
-import AsciiLayoutScene from "./AsciiScene";
 
-/** Fullscreen composite quad should not participate in R3F pointer raycasts */
+// Prevent the fullscreen quad from blocking pointer events
 const noopRaycast: Object3D["raycast"] = () => {};
 
-function AsciiPipeline() {
+type AsciiRenderPipelineProps = {
+    scene: Scene;
+    atlas: Texture;
+    gridSize: {
+        cols: number;
+        rows: number;
+    };
+    atlasGridSize: {
+        cols: number;
+        rows: number;
+    };
+    charSize: {
+        w: number;
+        h: number;
+    };
+    glyphSoftness: number;
+    glyphThreshold: number;
+};
+
+function AsciiRenderPipeline({
+    scene,
+    gridSize,
+    atlas,
+    atlasGridSize,
+    glyphSoftness,
+    glyphThreshold,
+    charSize,
+}: AsciiRenderPipelineProps) {
     const { gl, size, viewport } = useThree();
     const fullScreenPlane = useRef<Mesh>(null);
 
-    const asciiScene = useMemo(() => new Scene(), []);
-
-    // ---- STATES ----
-    const asciiAtlasSrc = useAsciiRenderStore((state) => state.asciiAtlasSrc);
-    const gridSize = useAsciiRenderStore((state) => state.gridSize);
-    const atlasGridSize = useAsciiRenderStore((state) => state.atlasGridSize);
-    const charSize = useAsciiRenderStore((state) => state.charSize);
-    const glyphSoftness = useAsciiRenderStore((state) => state.glyphSoftness);
-    const glyphThreshold = useAsciiRenderStore((state) => state.glyphThreshold);
-
-    // ---- LOAD ASCII ATLAS
-    const asciiAtlas = useLoader(TextureLoader, asciiAtlasSrc);
-
-    // set texture properties
+    // ---- SET ATLAS CONFIG ----
     useEffect(() => {
-        asciiAtlas.generateMipmaps = false;
-        asciiAtlas.magFilter = NearestFilter;
-        asciiAtlas.minFilter = NearestFilter;
-        asciiAtlas.needsUpdate = true;
-    }, [asciiAtlas]);
+        atlas.generateMipmaps = false;
+        atlas.magFilter = NearestFilter;
+        atlas.minFilter = NearestFilter;
+        atlas.needsUpdate = true;
+    }, [atlas]);
 
     // ---- RENDER TARGETS ----
     const asciiRenderTarget = useFBO(gridSize.cols, gridSize.rows, {
@@ -55,8 +62,8 @@ function AsciiPipeline() {
         generateMipmaps: false,
     });
 
-    // ---- CAMERAS ----
-    const asciiCamera = useMemo(() => {
+    // ---- CAMERA ----
+    const camera = useMemo(() => {
         const cam = new PerspectiveCamera(
             45,
             size.width / size.height,
@@ -71,7 +78,7 @@ function AsciiPipeline() {
     const asciiShaderMaterial = useMemo(
         () =>
             createAsciiShaderMaterial(
-                asciiAtlas,
+                atlas,
                 atlasGridSize,
                 gridSize,
                 charSize,
@@ -79,7 +86,7 @@ function AsciiPipeline() {
                 glyphSoftness,
             ),
         [
-            asciiAtlas,
+            atlas,
             gridSize.cols,
             gridSize.rows,
             atlasGridSize.cols,
@@ -91,7 +98,7 @@ function AsciiPipeline() {
         ],
     );
 
-    // dispose
+    // dispose shader material
     useEffect(() => {
         return () => {
             asciiShaderMaterial.uniforms.uPixelizedTex.value = null;
@@ -101,20 +108,16 @@ function AsciiPipeline() {
 
     // ---- RENDER LOOP ----
     useFrame(() => {
-        if (!asciiAtlas.image) return;
-        const atlasReady = asciiAtlas.image.width && asciiAtlas.image.height;
-        if (!atlasReady) return;
+        const atlasImage = atlas.image as HTMLImageElement;
 
-        if (!fullScreenPlane.current || asciiScene.children.length === 0)
-            return;
+        if (!atlasImage) return;
+        const atlasReady = !!(atlasImage.width && atlasImage.height);
+        if (!atlasReady || !fullScreenPlane.current || scene.children.length === 0) return;
 
         // Render ascii scene to render target
         gl.setRenderTarget(asciiRenderTarget);
         gl.clear();
-
-        asciiCamera.layers.enableAll();
-        gl.render(asciiScene, asciiCamera);
-
+        gl.render(scene, camera);
         gl.setRenderTarget(null);
 
         // Set render target uniform for ascii pass
@@ -124,13 +127,7 @@ function AsciiPipeline() {
 
     return (
         <group>
-            {createPortal(<AsciiLayoutScene />, asciiScene)}
-
-            <mesh
-                renderOrder={100}
-                ref={fullScreenPlane}
-                raycast={noopRaycast}
-            >
+            <mesh renderOrder={100} ref={fullScreenPlane} raycast={noopRaycast}>
                 <planeGeometry args={[viewport.width, viewport.height]} />
                 <primitive
                     key={asciiShaderMaterial.uuid}
@@ -143,4 +140,4 @@ function AsciiPipeline() {
     );
 }
 
-export default AsciiPipeline;
+export default AsciiRenderPipeline;

@@ -91,7 +91,7 @@
         );
     }
 
-    // ROW — viewport does not clip; inner track is panned with transforms
+    // ROW 
     .projects-row {
         width: 100%;
         overflow: visible;
@@ -154,7 +154,12 @@
 
 // ---- ABOUT ME ----
 .about-me {
+    display: flex;
+    flex-direction: column;
     height: 80vh;
     border: 1px solid white;
     margin-bottom: 40px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
