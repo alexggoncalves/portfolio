@@ -8,23 +8,23 @@ function ProjectsRow() {
     const { viewportRef, trackRef, onPointerDown } = useHorizontalDragScroll();
 
     return (
-        <section className="projects-row-container">
-            <div className="projects-row-header">
-                <div className="projects-row-header-left">
-                    <h1>MY PROJECTS</h1>
-                    <Link to="/projects" className="projects-row-header-link">
+        <section className="projects-row">
+            <div className="projects-row__header">
+                <div className="projects-row__header-left">
+                    <h1 className="projects-row__title">MY PROJECTS</h1>
+                    <Link to="/projects" className="projects-row__grid-link">
                         View Grid
                     </Link>
                 </div>
 
-                <div className="projects-row-scroll" />
+                <div className="projects-row__scroll-indicator" />
             </div>
 
-            <div className="projects-row-viewport-wrap">
-                <div className="left-gradient" />
+            <div className="projects-row__wrap">
+                <div className="projects-row__gradient  projects-row__gradient--left" />
                 <div
                     ref={viewportRef}
-                    className="projects-row"
+                    className="projects-row__scroller"
                     onPointerDown={onPointerDown}
                 >
                     <div ref={trackRef} className="projects-row__track">
@@ -33,7 +33,7 @@ function ProjectsRow() {
                         ))}
                     </div>
                 </div>
-                <div className="right-gradient" />
+                <div className="projects-row__gradient projects-row__gradient--right" />
             </div>
         </section>
     );

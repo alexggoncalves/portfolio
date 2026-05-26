@@ -6,7 +6,7 @@
 }
 
 :root {
-  --main-inline-padding: 3vw;
+  --main-padding: 3vw;
   --background-color: rgb(25, 25, 25);
   --nav-height: 100px;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

@@ -1,7 +1,7 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import useAsciiRenderStore from "../../stores/asciiRenderStore";
 import { Scene, TextureLoader } from "three";
-import { createPortal, useLoader } from "@react-three/fiber";
+import { createPortal } from "@react-three/fiber";
 import AsciiScene from "./AsciiScene";
 import GridCanvas from "./GridCanvas";
 import AsciiRenderPipeline from "./AsciiRenderPipeline";
@@ -14,13 +14,27 @@ function AsciiStage() {
     const glyphSoftness = useAsciiRenderStore((state) => state.glyphSoftness);
     const glyphThreshold = useAsciiRenderStore((state) => state.glyphThreshold);
     const asciiAtlasSrc = useAsciiRenderStore((state) => state.asciiAtlasSrc);
+    const asciiAtlas = useAsciiRenderStore((s) => s.asciiAtlas);
+    const isAtlasReady = useAsciiRenderStore((s) => s.isAtlasReady);
 
     // ---- LOAD ATLAS ----
-    const asciiAtlas = useLoader(TextureLoader, asciiAtlasSrc);
-    if (!asciiAtlas) return;
+    useEffect(() => {
+        const load = async () => {
+            const loader = new TextureLoader();
+
+            const atlas = await loader.loadAsync(asciiAtlasSrc);
+
+            useAsciiRenderStore.getState().setAtlas(atlas);
+            useAsciiRenderStore.getState().setAtlasReady(true);
+        };
+
+        load();
+    }, []);
 
     // ---- SCENE ----
     const asciiScene = useMemo(() => new Scene(), []);
+
+    if (!isAtlasReady || !asciiAtlas) return null;
 
     return (
         <>

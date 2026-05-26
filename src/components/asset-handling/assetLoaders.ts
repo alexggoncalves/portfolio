@@ -1,5 +1,3 @@
-import { SRGBColorSpace, Texture } from "three";
-
 export type VideoRecord = {
     id: string;
     type: "video";
@@ -11,7 +9,6 @@ export type ImageRecord = {
     id: string;
     type: "image" | "icon";
     element: HTMLImageElement | null;
-    texture: Texture | null;
     isLoaded: boolean;
 };
 
@@ -61,16 +58,10 @@ export function loadImage(
         img.src = src;
 
         img.onload = () => {
-            let tex = null;
-            if (type === "icon") {
-                tex = createTexture(img);
-            }
-
             resolve({
                 id,
                 type,
                 element: img,
-                texture: tex,
                 isLoaded: true,
             });
         };
@@ -92,12 +83,4 @@ export function loadModel(src: string, id: string): Promise<ModelRecord> {
             isLoaded: true,
         });
     });
-}
-
-function createTexture(img: HTMLImageElement) {
-    const tex = new Texture(img);
-    tex.colorSpace = SRGBColorSpace;
-    tex.premultiplyAlpha = true;
-    tex.needsUpdate = true;
-    return tex;
 }

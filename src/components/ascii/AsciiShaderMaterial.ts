@@ -11,6 +11,7 @@ const vertexShader = `
 
 const fragmentShader = `
     uniform sampler2D uPixelizedTex; // Pixelized texture the same size as grid
+    uniform sampler2D uForcedPixelizedTex; // Pixelized texture for the forced ascii
 
     uniform vec2 uGridResolution; // Resolution of the pixelized render target(==ascii grid size)
     uniform vec2 uCharSize; // Size of each ascii character
@@ -109,6 +110,7 @@ const createAsciiShaderMaterial = (
         fragmentShader: fragmentShader,
         uniforms: {
             uPixelizedTex: { value: null },
+            uForcedPixelizedTex: { value: null },
             uGridResolution: {
                 value: gridSizeVec,
             },

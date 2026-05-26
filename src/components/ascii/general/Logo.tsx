@@ -1,52 +1,69 @@
-import { Text3D, useAspect } from "@react-three/drei";
-import { useRef } from "react";
+import { useTexture } from "@react-three/drei";
+import { useEffect, useMemo } from "react";
 import { useThree } from "@react-three/fiber";
-import { Container, Content } from "@react-three/uikit";
-import { Group } from "three";
+import { NearestFilter, SRGBColorSpace } from "three";
 import useAsciiRenderStore from "../../../stores/asciiRenderStore";
 
-const headerH = 1; // world units
+function Logo() {
+    const texture = useTexture("/images/LOGO.webp");
 
-function Logo({ text }: { text: string }) {
-    const { viewport, size } = useThree();
-    const charSize = useAsciiRenderStore((s) => s.charSize);
+    const viewCellSize = useAsciiRenderStore((s) => s.viewCellSize);
+    const extraColumns = useAsciiRenderStore((s) => s.extraColumns);
+    const extraRows = useAsciiRenderStore((s) => s.extraRows);
 
-    const rootRef = useRef<Group>(null);
+    const { viewport } = useThree();
 
-    const scale = useAspect(size.width, size.height, 3)[1];
+    // --- texture setup ---
+    useEffect(() => {
+        texture.minFilter = NearestFilter;
+        texture.magFilter = NearestFilter;
+        texture.generateMipmaps = false;
+        texture.colorSpace = SRGBColorSpace;
+    }, [texture]);
+
+    // --- logo size in ASCII cells → world units ---
+    const blockSize = useMemo(() => {
+        const imgW = 30; // cells
+        const imgH = 7;  // cells
+
+        return {
+            w: imgW * viewCellSize.w,
+            h: imgH * viewCellSize.h,
+        };
+    }, [viewCellSize]);
+
+    // --- top-left of screen in world space ---
+    const topLeft = useMemo(() => {
+        return {
+            x: -viewport.width / 2,
+            y: viewport.height / 2,
+        };
+    }, [viewport.width, viewport.height]);
+
+    // --- grid position (ASCII coordinates) ---
+    const gridPos = { x: extraColumns, y: extraRows };
+
+    // --- final snapped position (top-left anchored) ---
+    const position: [number, number, number] = [
+        topLeft.x +
+            gridPos.x * viewCellSize.w +
+            blockSize.w / 2,
+
+        topLeft.y -
+            gridPos.y * viewCellSize.h -
+            blockSize.h / 2,
+
+        0,
+    ];
 
     return (
-        <group
-            ref={rootRef}
-            position={[0, viewport.height / 2 - headerH / 2, 0]}
-            renderOrder={999}
-        >
-            <Container
-                sizeX={viewport.width}
-                alignItems={"center"}
-                sizeY={headerH}
-                marginTop={charSize.h * 2}
-                marginLeft={charSize.w * 8}
-            >
-                <Content positionType={"relative"} sizeY={headerH * 0.8}>
-                    <Text3D
-                        rotation={[0, 0, 0]}
-                        font={"/fonts/IBMPlexMono_Regular.json"}
-                        scale={[scale, scale, scale]}
-                        position={[0, 0, 0]}
-                        renderOrder={100}
-                    >
-                        {text}
-                        <meshBasicMaterial
-                            color="white"
-                            depthTest={false}
-                            depthWrite={false}
-                            toneMapped={false}
-                        />
-                    </Text3D>
-                </Content>
-            </Container>
-        </group>
+        <mesh position={position}>
+            <planeGeometry args={[blockSize.w, blockSize.h]} />
+            <meshBasicMaterial
+                transparent
+                map={texture}
+            />
+        </mesh>
     );
 }
 

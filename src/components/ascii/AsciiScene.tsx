@@ -1,15 +1,18 @@
+import useAsciiRenderStore from "../../stores/asciiRenderStore";
 import Logo from "./general/Logo";
 import HomeScene from "./homepage/HomeScene";
 
 function AsciiScene() {
+    const isGridReady = useAsciiRenderStore((s)=>s.isGridReady)
+
+    if(!isGridReady) return null;
 
     return (
         <>
             {/* Main Lighting */}
             <hemisphereLight intensity={1} />
 
-            {/* My big animated name that also serves as the small header logo */}
-            <Logo text={"ALEX"} />
+            <Logo/>
 
             <group>
                 <HomeScene></HomeScene>

@@ -1,9 +1,9 @@
 import { Link } from "react-router";
-import useAssetStore from "../../asset-handling/assetStore";
-import type { Project } from "../../asset-handling/contentAssets";
+import useAssetStore from "../../../stores/assetStore";
+import { getTagsById, type Project } from "../../asset-handling/contentAssets";
 import "../homepage/homepage.scss";
 
-function ProjectCard({ project, route }: { project: Project, route: string }) {
+function ProjectCard({ project, route }: { project: Project; route: string }) {
     const thumbnailAsset = useAssetStore(
         (s) => s.globalAssets[`${project.id}_thumbnail`],
     );
@@ -15,12 +15,10 @@ function ProjectCard({ project, route }: { project: Project, route: string }) {
             : null;
 
     if (!thumbnailAsset?.isLoaded || !img) {
-        return (
-            <div
-                className="project-card project-card--placeholder"
-            />
-        );
+        return <div className="project-card project-card--placeholder" />;
     }
+
+    const tags = getTagsById(project.tags);
 
     return (
         <Link
@@ -31,11 +29,26 @@ function ProjectCard({ project, route }: { project: Project, route: string }) {
             <img
                 src={img.currentSrc || img.src}
                 alt={project.title}
-                // loading="lazy"
-                // decoding="async"
                 draggable={false}
                 onDragStart={(e) => e.preventDefault()}
             />
+
+            {/* TAGS */}
+            <div className="project-card__tags-container">
+                {tags.map((tag, i) => {
+                    return (
+                        <div
+                            style={{
+                                backgroundColor: tag.color,
+                                color: tag.textColor,
+                            }}
+                            key={i}
+                        >
+                            {tag.name.toUpperCase()}
+                        </div>
+                    );
+                })}
+            </div>
         </Link>
     );
 }

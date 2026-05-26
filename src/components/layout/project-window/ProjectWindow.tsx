@@ -1,12 +1,16 @@
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import {
-    getPersonById,
     getProjectById,
     type Project,
 } from "../../asset-handling/contentAssets";
 import "./projectWindow.scss";
 
 import { useEffect, useMemo, useState } from "react";
+import ProjectDescription from "./ProjectDescription";
+import ProjectTools from "./ProjectTools";
+import ProjectTeam from "./ProjectTeam";
+import MediaCarousel from "./media-carousel/MediaCarousel";
+import ProjectTags from "./ProjectTags";
 
 function ProjectWindow({
     projectId,
@@ -33,51 +37,44 @@ function ProjectWindow({
         }
     }, [isOpen]);
 
+    
+    // Back path
+    const location = useLocation();
+    const backPath = useMemo(() => {
+        if (location.pathname.startsWith("/projects/")) {
+            return "/projects";
+        }
+
+        if (location.pathname.startsWith("/")) {
+            return "/";
+        }
+
+        return "/";
+    }, [location.pathname]);
+
     return (
         <div className={`project-window ${open ? "open" : ""}`}>
-            <div className="project-window-container">
-                <div className="project-window-panel left">
-                    <Link to={"/"} className="project-window-back">
-                        <div>+</div>
-                    </Link>
-                    <div className="project-details">
-                        <h1>{project.title}</h1>
-                        <h2>{project.subtitle}</h2>
+            <Link to={backPath} className="project-window__back-button">
+                <div>+</div>
+            </Link>
+            <Link to={"/"} className="project-window__next-button">
+                <div>next</div>
+            </Link>
+            <div className="project-window__details-panel">
+                <div className="project-window__details">
+                    <ProjectTags tagIds={project.tags}></ProjectTags>
+                    <h1>{project.title}</h1>
+                    <h2>{project.subtitle}</h2>
 
-                        <div>
-                            {project.description.map((paragraph) => {
-                                return <p>{paragraph}</p>;
-                            })}
-                        </div>
+                    <ProjectDescription description={project.description} />
+                    <ProjectTools tools={project.tools} />
 
-                        <h3>TOOLS:</h3>
-                        <div className="project-tools">
-                            {project.tools?.map((tool) => (
-                                <div>{tool}</div>
-                            ))}
-                        </div>
-                        {project.team && (
-                            <>
-                                <h3>TEAM:</h3>
-                                <div className="project-team-container">
-                                    {project.team?.map((teamMember) => {
-                                        const person = getPersonById(
-                                            teamMember.id,
-                                        );
-                                        if (!person) return;
-                                        const splitName = person.name.replace(
-                                            " ",
-                                            "\n",
-                                        );
-                                        return <div>{splitName}</div>;
-                                    })}
-                                </div>
-                            </>
-                        )}
-                    </div>
+                    <ProjectTeam team={project.team} />
                 </div>
+            </div>
 
-                <div className="project-window-panel right"></div>
+            <div className="project-window__media-panel">
+                <MediaCarousel items={project.media}></MediaCarousel>
             </div>
         </div>
     );

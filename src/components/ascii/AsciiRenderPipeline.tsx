@@ -12,6 +12,7 @@ import { useFBO } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 
 import createAsciiShaderMaterial from "./AsciiShaderMaterial";
+import useAsciiRenderStore from "../../stores/asciiRenderStore";
 
 // Prevent the fullscreen quad from blocking pointer events
 const noopRaycast: Object3D["raycast"] = () => {};
@@ -47,6 +48,10 @@ function AsciiRenderPipeline({
     const { gl, size, viewport } = useThree();
     const fullScreenPlane = useRef<Mesh>(null);
 
+    const setViewportCellSize = useAsciiRenderStore(
+        (s) => s.setViewportCellSize,
+    );
+
     // ---- SET ATLAS CONFIG ----
     useEffect(() => {
         atlas.generateMipmaps = false;
@@ -57,7 +62,13 @@ function AsciiRenderPipeline({
 
     // ---- RENDER TARGETS ----
     const asciiRenderTarget = useFBO(gridSize.cols, gridSize.rows, {
-        minFilter: NearestFilter, //
+        minFilter: NearestFilter,
+        magFilter: NearestFilter,
+        generateMipmaps: false,
+    });
+
+    const forcedAsciiRenderTarget = useFBO(gridSize.cols, gridSize.rows, {
+        minFilter: NearestFilter,
         magFilter: NearestFilter,
         generateMipmaps: false,
     });
@@ -106,23 +117,45 @@ function AsciiRenderPipeline({
         };
     }, [asciiShaderMaterial]);
 
+    useEffect(() => {
+        setViewportCellSize(viewport.width, viewport.height);
+    }, [viewport.width, viewport.height]);
+
     // ---- RENDER LOOP ----
     useFrame(() => {
         const atlasImage = atlas.image as HTMLImageElement;
 
         if (!atlasImage) return;
         const atlasReady = !!(atlasImage.width && atlasImage.height);
-        if (!atlasReady || !fullScreenPlane.current || scene.children.length === 0) return;
+        if (
+            !atlasReady ||
+            !fullScreenPlane.current ||
+            scene.children.length === 0
+        )
+            return;
 
-        // Render ascii scene to render target
+        camera.layers.disableAll();
+
+        // PASS 1 - Normal ascii (layer 0)
+        camera.layers.set(0);
         gl.setRenderTarget(asciiRenderTarget);
         gl.clear();
         gl.render(scene, camera);
+
+        // PASS 2 - Forced ascii (layer 1)
+        camera.layers.set(1);
+        gl.setRenderTarget(forcedAsciiRenderTarget);
+        gl.clear();
+        gl.render(scene, camera);
+
+        // RESET
         gl.setRenderTarget(null);
 
-        // Set render target uniform for ascii pass
+        // Set render target uniforms for ascii pass
         asciiShaderMaterial.uniforms.uPixelizedTex.value =
             asciiRenderTarget.texture;
+        asciiShaderMaterial.uniforms.uForcedPixelizedTex.value =
+            forcedAsciiRenderTarget.texture;
     }, -1);
 
     return (

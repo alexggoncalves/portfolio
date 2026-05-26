@@ -4,14 +4,14 @@ import {
     buildProjectAssets,
     requestAssets,
     type AssetRequest,
-} from "./assetRequests";
+} from "../components/asset-handling/assetRequests";
 import {
     loadImage,
     loadModel,
     loadVideo,
     type AssetRecord,
     type ImageRecord,
-} from "./assetLoaders";
+} from "../components/asset-handling/assetLoaders";
 
 // * ----------------------------------------------
 // * Asset Store: handles asset loading and storage

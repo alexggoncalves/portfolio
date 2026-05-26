@@ -42,11 +42,7 @@ type GridContainerProps = {
 //* --------------------------------------------------------------------------------------------
 //* Grid Canvas Container: Creates as canvas and keeps it centered and with the integer size of a grid
 //* --------------------------------------------------------------------------------------------
-function GridCanvas({
-    children,
-    cellWidth,
-    cellHeight,
-}: GridContainerProps) {
+function GridCanvas({ children, cellWidth, cellHeight }: GridContainerProps) {
     const containerRef = useRef<HTMLDivElement>(null);
 
     const lastSize = useRef({ cols: 0, rows: 0 });
@@ -56,7 +52,7 @@ function GridCanvas({
             const viewportWidth = Math.round(window.innerWidth);
             const viewportHeight = Math.round(window.innerHeight);
 
-            const { extraColumns, extraRows, setGridSize } =
+            const { extraColumns, extraRows, setGridSize, setGridReady } =
                 useAsciiRenderStore.getState();
 
             // Determine the number of columns that fit in the screen
@@ -72,9 +68,6 @@ function GridCanvas({
 
             // Update last size for next resize
             lastSize.current = { cols: cols, rows: rows };
-
-            // Update ascii store with new grid size
-            setGridSize(cols, rows);
 
             // Calculate the size of the canvas
             const canvasWidth = cols * cellWidth;
@@ -94,6 +87,10 @@ function GridCanvas({
                 container.style.height = `${canvasHeight}px`;
                 container.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
             }
+
+            // Update ascii store with new grid size
+            setGridSize(cols, rows);
+            setGridReady(true);
         }
         updateSize();
 
@@ -114,7 +111,9 @@ function GridCanvas({
                 <Canvas
                     {...canvasProps}
                     eventSource={
-                        typeof document !== "undefined" ? document.body : undefined
+                        typeof document !== "undefined"
+                            ? document.body
+                            : undefined
                     }
                     eventPrefix="client"
                 >

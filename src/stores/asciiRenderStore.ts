@@ -1,3 +1,4 @@
+import type { Texture } from "three";
 import { create } from "zustand";
 
 // * --------------------------------------------------------------------------------------
@@ -5,8 +6,12 @@ import { create } from "zustand";
 // * --------------------------------------------------------------------------------------
 
 type AsciiRenderState = {
+    isGridReady: boolean;
+    isAtlasReady: boolean;
+
     // Size of the ascii cells
     charSize: { w: number; h: number };
+    viewCellSize: { w: number; h: number };
 
     // Grid and full canvas size
     gridSize: { cols: number; rows: number };
@@ -24,20 +29,30 @@ type AsciiRenderState = {
     focalLength: { x: number; y: number };
 
     // Ascii atlas + sequence
-    asciiSequence: string;
+    asciiAtlas: Texture | null;
     asciiAtlasSrc: string;
+    asciiSequence: string;
     atlasGridSize: { cols: number; rows: number };
 
     // Ascii shader settings
-    glyphThreshold: number,
-    glyphSoftness: number,
+    glyphThreshold: number;
+    glyphSoftness: number;
 
     // Update the size of the grid and canvas
     setGridSize: (cols: number, rows: number) => void;
+    setViewportCellSize: (viewPortW: number, viewPortH: number) => void;
+    setGridReady: (v:boolean) => void,
+
+    setAtlas: (atlas: Texture) => void;
+    setAtlasReady: (v:boolean) => void;
 };
 
 const useAsciiRenderStore = create<AsciiRenderState>((set, get) => ({
+    isGridReady: false,
+    isAtlasReady: false,
+    
     charSize: { w: 8, h: 12 },
+    viewCellSize: {w: 1, h: 1},
 
     gridSize: { cols: 1, rows: 1 },
     canvasSize: { w: 1, h: 1 },
@@ -48,9 +63,11 @@ const useAsciiRenderStore = create<AsciiRenderState>((set, get) => ({
     distortion: { x: 0.01, y: 0.01 },
     focalLength: { x: 0.96, y: 0.96 },
 
+    asciiAtlas: null,
     asciiAtlasSrc: "/font_atlas/fontAtlas-ibmplex-16x9(12-16).png",
     atlasGridSize: { cols: 16, rows: 9 },
     asciiSequence: `       \`·.-\',_:;\"~°º!¡ª÷+=^|)<>(\\/L«≈»v*c[¿?T±rxi≤≥zuìí]t√l7Y{nJ}IFjyîsç1oúùeπaCµ24ZhVfûk3P¢òóE£w95èpXébàáS6mAUGÇqôdH#KΩêÉOãâD&%R0Æ8NBMg@QW$░▒▓█`,
+   
     glyphThreshold: 0.75,
     glyphSoftness: 0.3,
     brightnessMap: {},
@@ -66,10 +83,20 @@ const useAsciiRenderStore = create<AsciiRenderState>((set, get) => ({
         });
     },
 
-    createBrightnessMap: () =>{
+    setViewportCellSize: (viewPortW, viewPortH) => {
+        const { gridSize } = get();
 
-    }
+        set({
+            viewCellSize: { w: viewPortW/gridSize.cols, h: viewPortH/gridSize.rows },
+        });
+    },
 
+    setGridReady: (v) => set({ isGridReady: v }),
+
+    setAtlas: (atlas) => set({ asciiAtlas: atlas }),
+    setAtlasReady: (v) => set({ isAtlasReady: v }),
+
+    // createBrightnessMap: () => {},
 }));
 
 export default useAsciiRenderStore;
