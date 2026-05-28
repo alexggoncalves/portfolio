@@ -1,5 +1,11 @@
 import { Center, useTexture } from "@react-three/drei";
-import { useEffect, useLayoutEffect, useMemo, useRef, type RefObject } from "react";
+import {
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    type RefObject,
+} from "react";
 import { useFrame, useLoader, useThree } from "@react-three/fiber";
 import {
     Group,
@@ -22,22 +28,18 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
     const { camera, gl } = useThree();
 
     const alignGroupRef = useRef<Group>(null);
-    const raycaster = useMemo(() => new Raycaster(), []);
-    const ndc = useRef(new Vector2());
-    const hit = useRef(new Vector3());
-    const alignPlane = useMemo(
-        () => new Plane(new Vector3(0, 0, 1), 0),
-        [],
-    );
 
-    // ---- CAT ----
     const catRef = useRef<any>(null);
+    const catMeshRef = useRef<Mesh | null>(null);
+
     const catTexture = useTexture("/models/cat/baked_cat.png");
     const catSourceModel = useLoader(FBXLoader, `/models/cat/cat.fbx`);
+
     const catModel = useMemo(
         () => catSourceModel.clone(true),
         [catSourceModel],
     );
+
     const catMaterial = useMemo(
         () =>
             new MeshStandardMaterial({
@@ -47,14 +49,31 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
         [catTexture],
     );
 
-    const catMeshRef = useRef<Mesh | null>(null);
+    // -----------------------
+    // DEVICE
+    // -----------------------
+    const isTouchDevice =
+        typeof window !== "undefined" &&
+        window.matchMedia("(pointer: coarse)").matches;
 
-    // ANIMATION
+    // -----------------------
+    // DESKTOP
+    // -----------------------
     const isMouseOver = useRef(false);
     const animationProgress = useRef(0);
     const rotationSpeed = 14;
-    const rotationAmount = useRef(0);
 
+    // -----------------------
+    // MOBILE PHYSICS
+    // -----------------------
+    const rotationAmount = useRef(0);
+    const spinVelocity = useRef(0);
+
+    const REST_STEP = Math.PI * 2;
+
+    // -----------------------
+    // APPLY MATERIAL
+    // -----------------------
     useEffect(() => {
         if (!catModel) return;
 
@@ -73,15 +92,21 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
         };
     }, [catMaterial]);
 
-
+    // -----------------------
+    // LAYER
+    // -----------------------
     useLayoutEffect(() => {
         const apply = () =>
             setRenderLayer(alignGroupRef.current, NORMAL_ASCII_LAYER);
+
         apply();
         const id = requestAnimationFrame(apply);
         return () => cancelAnimationFrame(id);
     }, [catModel]);
 
+    // -----------------------
+    // POSITION SYNC
+    // -----------------------
     const syncCatToHtmlSection = () => {
         const group = alignGroupRef.current;
         if (!group || typeof document === "undefined") return;
@@ -100,19 +125,55 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
         const midX = rect.left + rect.width * 0.5 - canvasRect.left;
         const midY = rect.top + rect.height * 0.5 - canvasRect.top;
 
-        if (canvasRect.width < 1 || canvasRect.height < 1) return;
-
-        ndc.current.set(
+        const ndc = new Vector2(
             (midX / canvasRect.width) * 2 - 1,
             -(midY / canvasRect.height) * 2 + 1,
         );
 
-        raycaster.setFromCamera(ndc.current, camera);
-        if (raycaster.ray.intersectPlane(alignPlane, hit.current)) {
-            group.position.copy(hit.current).add(CAT_ALIGN_OFFSET);
+        const raycaster = new Raycaster();
+        const plane = new Plane(new Vector3(0, 0, 1), 0);
+        const hit = new Vector3();
+
+        raycaster.setFromCamera(ndc, camera);
+
+        if (raycaster.ray.intersectPlane(plane, hit)) {
+            group.position.copy(hit).add(CAT_ALIGN_OFFSET);
         }
     };
 
+    // -----------------------
+    // MOBILE CLICK → SPIN
+    // -----------------------
+    const onClick = () => {
+        if (!isTouchDevice) return;
+
+        spinVelocity.current += Math.PI * 2.5;
+
+        if (catMeshRef.current?.morphTargetInfluences) {
+            catMeshRef.current.morphTargetInfluences[0] = 1;
+        }
+    };
+
+    // -----------------------
+    // DESKTOP HOVER
+    // -----------------------
+    const onPointerEnter = () => {
+        if (isTouchDevice) return;
+        isMouseOver.current = true;
+
+        if (catMeshRef.current?.morphTargetInfluences) {
+            catMeshRef.current.morphTargetInfluences[0] = 1;
+        }
+    };
+
+    const onPointerLeave = () => {
+        if (isTouchDevice) return;
+        isMouseOver.current = false;
+    };
+
+    // -----------------------
+    // FRAME LOOP
+    // -----------------------
     useFrame((_state, delta) => {
         syncCatToHtmlSection();
 
@@ -122,95 +183,114 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
             catMaterial.opacity = opacity.current;
         }
 
-        // const elapsed = state.clock.elapsedTime;
-        const target = isMouseOver.current ? 1 : 0;
+        // =========================================================
+        // 📱 MOBILE: SMOOTH INERTIA + CONTINUOUS REST ATTRACTION
+        // =========================================================
+        if (isTouchDevice) {
+            // apply spin velocity
+            rotationAmount.current += spinVelocity.current * delta * 2;
 
-        animationProgress.current = MathUtils.damp(
-            animationProgress.current,
-            target,
-            target === 1 ? 20 : 5, // faster when moving, slower when freezing
-            delta,
-        );
+            // friction
+            spinVelocity.current = MathUtils.damp(
+                spinVelocity.current,
+                0,
+                3,
+                delta,
+            );
 
-        if (animationProgress.current < 0.01) {
-            animationProgress.current = 0;
-        }
+            const moving = Math.abs(spinVelocity.current) > 0.05;
 
-        // Morph cat model back to original shape when not hovered
-        if (target === 0 && animationProgress.current < 0.02) {
+            // morph only when moving
             if (catMeshRef.current?.morphTargetInfluences) {
-                catMeshRef.current.morphTargetInfluences[0] = 0;
+                catMeshRef.current.morphTargetInfluences[0] = moving ? 1 : 0;
             }
-        }
 
-        updateRotation(delta);
-    });
+            // 🧲 SMOOTH MAGNETIC ALIGNMENT (KEY CHANGE)
+            const target =
+                Math.round(rotationAmount.current / REST_STEP) * REST_STEP;
 
-    const updateRotation = (delta: number) => {
-        // target rotation speed when fully hovered
+            const attractionStrength = moving ? 2 : 6; // stronger when slowing down
 
-        if (isMouseOver.current) {
-            // spin while hovering
-            rotationAmount.current +=
-                rotationSpeed * delta * animationProgress.current;
-        } else {
-            // calculate the next multiple of 2π compared to original rotation
-            const nextRotation =
-                Math.ceil(rotationAmount.current / (2 * Math.PI)) * 2 * Math.PI;
-
-            // lerp toward the original rotation
             rotationAmount.current = MathUtils.damp(
                 rotationAmount.current,
-                nextRotation,
-                5, // same damping as bobbing
+                target,
+                attractionStrength,
                 delta,
             );
         }
 
-        // apply rotation
-        catRef.current.rotation.y = rotationAmount.current;
-    };
+        // =========================================================
+        // 🖥️ DESKTOP (UNCHANGED)
+        // =========================================================
+        else {
+            const target = isMouseOver.current ? 1 : 0;
 
-    const onMouseEnter = () => {
-        isMouseOver.current = true;
+            animationProgress.current = MathUtils.damp(
+                animationProgress.current,
+                target,
+                target === 1 ? 20 : 5,
+                delta,
+            );
 
-        // Set shape key influence to 1 (retracted legs)
-        if (catMeshRef.current?.morphTargetInfluences) {
-            catMeshRef.current.morphTargetInfluences[0] = 1;
+            if (animationProgress.current < 0.01) {
+                animationProgress.current = 0;
+            }
+
+            if (
+                target === 0 &&
+                animationProgress.current < 0.02 &&
+                catMeshRef.current?.morphTargetInfluences
+            ) {
+                catMeshRef.current.morphTargetInfluences[0] = 0;
+            }
+
+            if (isMouseOver.current) {
+                rotationAmount.current +=
+                    rotationSpeed * delta * animationProgress.current;
+            } else {
+                const nextRotation =
+                    Math.ceil(rotationAmount.current / REST_STEP) *
+                    REST_STEP;
+
+                rotationAmount.current = MathUtils.damp(
+                    rotationAmount.current,
+                    nextRotation,
+                    5,
+                    delta,
+                );
+            }
         }
-    };
 
-    const onMouseLeave = () => {
-        isMouseOver.current = false;
-    };
+        catRef.current.rotation.y = rotationAmount.current;
+    });
 
     return (
-        <>
-            <group ref={alignGroupRef} position={[-1000, 0, 0]}>
-                <Center>
-                    <primitive
-                        scale={0.1}
-                        ref={catRef}
-                        object={catModel}
-                        onPointerOver={onMouseEnter}
-                        onPointerOut={onMouseLeave}
-                    />
-                </Center>
-                <pointLight
-                    position={[-5, 8, 8]}
-                    intensity={3}
-                    color={"white"}
-                    decay={0.02}
+        <group ref={alignGroupRef} position={[-1000, 0, 0]}>
+            <Center>
+                <primitive
+                    ref={catRef}
+                    object={catModel}
+                    scale={0.1}
+                    onPointerEnter={onPointerEnter}
+                    onPointerLeave={onPointerLeave}
+                    onClick={onClick}
                 />
+            </Center>
 
-                <CatSectionStars
-                    isMouseOver={isMouseOver}
-                    animationProgress={animationProgress}
-                    rotationAmount={rotationAmount}
-                    opacity={opacity}
-                />
-            </group>
-        </>
+            <pointLight
+                position={[-5, 8, 8]}
+                intensity={3}
+                color={"white"}
+                decay={0.02}
+            />
+
+            <CatSectionStars
+                isMouseOver={isMouseOver}
+                animationProgress={animationProgress}
+                rotationAmount={rotationAmount}
+                opacity={opacity}
+            />
+        </group>
     );
 }
 

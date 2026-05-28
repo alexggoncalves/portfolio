@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import { projects } from "../../asset-handling/contentAssets";
 import ProjectCard from "../general/ProjectCard";
 import useHorizontalDragScroll from "../../../hooks/useHorizontalDragScroll";
+import { GoToGridIcon } from "../general/Icons";
 
 function ProjectsRow() {
     const { viewportRef, trackRef, onPointerDown } = useHorizontalDragScroll();
@@ -11,9 +12,9 @@ function ProjectsRow() {
         <section className="projects-row">
             <div className="projects-row__header">
                 <div className="projects-row__header-left">
-                    <h1 className="projects-row__title">MY PROJECTS</h1>
+                    <h1 className="projects-row__title">PROJECTS</h1>
                     <Link to="/projects" className="projects-row__grid-link">
-                        View Grid
+                        <GoToGridIcon/>
                     </Link>
                 </div>
 

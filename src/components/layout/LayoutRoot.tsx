@@ -1,11 +1,11 @@
 import { matchPath, useLocation } from "react-router-dom";
-import Nav from "./Nav";
+import Nav from "./general/Nav";
 import ProjectWindow from "./project-window/ProjectWindow";
 import ProjectsGridPage from "./projects-grid/ProjectsGridPage";
 import ContactPage from "./contact/ContactPage";
 import HomePage from "./homepage/HomePage";
-import type { Page } from "../../stores/routeStore";
-import useRouteStore from "../../stores/routeStore";
+import type { Page } from "../../stores/sceneStore";
+import useSceneStore from "../../stores/sceneStore";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 const PAGES = ["projects", "contact"] as Page[];
@@ -32,7 +32,8 @@ const getActiveProjectId = (pathname: string): string | null => {
 function LayoutRoot() {
     const { pathname } = useLocation();
     const mainRef = useRef<HTMLElement>(null);
-    const setRoute = useRouteStore((s) => s.setRoute);
+    const setRoute = useSceneStore((s) => s.setRoute);
+    
 
     const activePage = getActivePage(pathname);
     const activeProjectId = getActiveProjectId(pathname);
@@ -62,6 +63,16 @@ function LayoutRoot() {
         el.scrollTop = 0;
     }, [activePage]);
 
+    // Mobile check
+    const setIsMobile = useSceneStore((s) => s.setIsMobile);
+    const mobileSize = useSceneStore((s)=>s.mobileSize)
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth <= mobileSize);
+        check();
+        window.addEventListener("resize", check);
+        return () => window.removeEventListener("resize", check);
+    }, []);
+
     return (
         <>
             <Nav />
@@ -69,14 +80,16 @@ function LayoutRoot() {
                 {activePage === "home" && <HomePage />}
                 {activePage === "projects" && <ProjectsGridPage />}
                 {activePage === "contact" && <ContactPage />}
-            </main>
 
-            {visibleProject && (
+                {visibleProject && (
                 <ProjectWindow
                     projectId={visibleProject}
                     isOpen={!!activeProjectId}
                 />
             )}
+            </main>
+
+            
         </>
     );
 }

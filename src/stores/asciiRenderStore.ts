@@ -41,10 +41,10 @@ type AsciiRenderState = {
     // Update the size of the grid and canvas
     setGridSize: (cols: number, rows: number) => void;
     setViewportCellSize: (viewPortW: number, viewPortH: number) => void;
-    setGridReady: (v:boolean) => void,
+    setGridReady: (value:boolean) => void,
 
     setAtlas: (atlas: Texture) => void;
-    setAtlasReady: (v:boolean) => void;
+    setAtlasReady: (value:boolean) => void;
 };
 
 const useAsciiRenderStore = create<AsciiRenderState>((set, get) => ({
@@ -91,10 +91,10 @@ const useAsciiRenderStore = create<AsciiRenderState>((set, get) => ({
         });
     },
 
-    setGridReady: (v) => set({ isGridReady: v }),
+    setGridReady: (value) => set({ isGridReady: value }),
 
     setAtlas: (atlas) => set({ asciiAtlas: atlas }),
-    setAtlasReady: (v) => set({ isAtlasReady: v }),
+    setAtlasReady: (value) => set({ isAtlasReady: value }),
 
     // createBrightnessMap: () => {},
 }));

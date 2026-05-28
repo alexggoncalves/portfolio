@@ -11,6 +11,8 @@ import ProjectTools from "./ProjectTools";
 import ProjectTeam from "./ProjectTeam";
 import MediaCarousel from "./media-carousel/MediaCarousel";
 import ProjectTags from "./ProjectTags";
+import { CloseIcon } from "../general/Icons";
+import useSceneStore from "../../../stores/sceneStore";
 
 function ProjectWindow({
     projectId,
@@ -20,6 +22,7 @@ function ProjectWindow({
     isOpen: boolean;
 }) {
     const [open, setOpen] = useState(false);
+    const isMobile = useSceneStore((s) => s.isMobile);
 
     const project: Project | null = useMemo(() => {
         if (!projectId) return null;
@@ -37,7 +40,6 @@ function ProjectWindow({
         }
     }, [isOpen]);
 
-    
     // Back path
     const location = useLocation();
     const backPath = useMemo(() => {
@@ -53,30 +55,39 @@ function ProjectWindow({
     }, [location.pathname]);
 
     return (
-        <div className={`project-window ${open ? "open" : ""}`}>
-            <Link to={backPath} className="project-window__back-button">
-                <div>+</div>
-            </Link>
-            <Link to={"/"} className="project-window__next-button">
-                <div>next</div>
-            </Link>
-            <div className="project-window__details-panel">
-                <div className="project-window__details">
-                    <ProjectTags tagIds={project.tags}></ProjectTags>
-                    <h1>{project.title}</h1>
-                    <h2>{project.subtitle}</h2>
+        <>
+            {isMobile && (
+                <Link
+                    to={backPath}
+                    className={`project-window__back-button-mobile ${!open ? "open" : ""}`}
+                >
+                    <CloseIcon />
+                </Link>
+            )}
+            <div className={`project-window ${open ? "open" : ""}`}>
+                {!isMobile && (
+                    <Link to={backPath} className="project-window__back-button">
+                        <CloseIcon />
+                    </Link>
+                )}
+                <div className="project-window__details-panel">
+                    <div className="project-window__details">
+                        <ProjectTags tagIds={project.tags}></ProjectTags>
+                        <h1>{project.title}</h1>
+                        <h2>{project.subtitle}</h2>
 
-                    <ProjectDescription description={project.description} />
-                    <ProjectTools tools={project.tools} />
+                        <ProjectDescription description={project.description} />
+                        <ProjectTools tools={project.tools} />
 
-                    <ProjectTeam team={project.team} />
+                        <ProjectTeam team={project.team} />
+                    </div>
+                </div>
+
+                <div className="project-window__media-panel">
+                    <MediaCarousel items={project.media}></MediaCarousel>
                 </div>
             </div>
-
-            <div className="project-window__media-panel">
-                <MediaCarousel items={project.media}></MediaCarousel>
-            </div>
-        </div>
+        </>
     );
 }
 

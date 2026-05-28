@@ -23,15 +23,5 @@
         "id": "unity",
         "src": "https://cloud.alexgg.com/icons/unity.svg",
         "aspect": 2.38
-    },
-    {
-        "id": "play",
-        "src": "/images/play.svg",
-        "aspect": 1
-    },
-    {
-        "id": "pause",
-        "src": "/images/pause.svg",
-        "aspect": 1
     }
 ]

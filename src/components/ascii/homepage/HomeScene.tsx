@@ -1,12 +1,12 @@
 import { useRef } from "react";
-import useRouteStore from "../../../stores/routeStore";
+import useSceneStore from "../../../stores/sceneStore";
 import CatSection from "./CatSection";
 import { useFrame } from "@react-three/fiber";
 import { MathUtils } from "three";
 
 function HomeScene() {
-    const page = useRouteStore((s) => s.page);
-    const projectId = useRouteStore((s) => s.projectId);
+    const page = useSceneStore((s) => s.page);
+    const projectId = useSceneStore((s) => s.projectId);
     const opacity = useRef(0);
     const targetOpacity = page === "home" && !projectId ? 1 : 0;
 

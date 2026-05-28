@@ -5,7 +5,7 @@
   width: 100vw;
   height: 100vh;
   background: rgb(25, 25, 25);
-  z-index: 2;
+  z-index: 15;
   transform: translateY(100%);
   transition: transform 0.4s ease-in-out;
   display: flex;
@@ -218,4 +218,36 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+
+@media (max-width: 600px) {
+  .project-window {
+    flex-direction: column;
+    position: fixed;
+    inset: 0;
+    height: 100dvh; /* better than 100vh on mobile */
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  .project-window__container {
+    height: auto;
+  }
+  .project-window__media-panel {
+    flex: 0 0 auto;
+  }
+  .project-window__details-panel {
+    width: 100%;
+    max-height: none;
+    overflow: visible;
+    margin-bottom: 20px;
+  }
+  .project-window__back-button {
+    position: sticky;
+    top: 0;
+    right: 0;
+  }
+  .project-window__next-button {
+    display: none;
+  }
 }/*# sourceMappingURL=projectWindow.css.map */

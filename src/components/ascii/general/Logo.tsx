@@ -12,8 +12,6 @@ function Logo() {
     const extraRows = useAsciiRenderStore((s) => s.extraRows);
 
     const { viewport } = useThree();
-
-    // --- texture setup ---
     useEffect(() => {
         texture.minFilter = NearestFilter;
         texture.magFilter = NearestFilter;
@@ -21,10 +19,10 @@ function Logo() {
         texture.colorSpace = SRGBColorSpace;
     }, [texture]);
 
-    // --- logo size in ASCII cells → world units ---
+    // Logo size in world units
     const blockSize = useMemo(() => {
         const imgW = 30; // cells
-        const imgH = 7;  // cells
+        const imgH = 7; // cells
 
         return {
             w: imgW * viewCellSize.w,
@@ -32,7 +30,7 @@ function Logo() {
         };
     }, [viewCellSize]);
 
-    // --- top-left of screen in world space ---
+    // top-left of screen in world units
     const topLeft = useMemo(() => {
         return {
             x: -viewport.width / 2,
@@ -40,28 +38,23 @@ function Logo() {
         };
     }, [viewport.width, viewport.height]);
 
-    // --- grid position (ASCII coordinates) ---
-    const gridPos = { x: extraColumns, y: extraRows };
-
-    // --- final snapped position (top-left anchored) ---
+    // Align to top left
     const position: [number, number, number] = [
-        topLeft.x +
-            gridPos.x * viewCellSize.w +
-            blockSize.w / 2,
+        topLeft.x + (extraColumns + 1) * viewCellSize.w + blockSize.w / 2,
 
-        topLeft.y -
-            gridPos.y * viewCellSize.h -
-            blockSize.h / 2,
+        topLeft.y - extraRows * viewCellSize.h - blockSize.h / 2,
 
         0,
     ];
 
     return (
-        <mesh position={position}>
+        <mesh position={position} renderOrder={999}>
             <planeGeometry args={[blockSize.w, blockSize.h]} />
             <meshBasicMaterial
                 transparent
                 map={texture}
+                depthTest={false}
+                depthWrite={false}
             />
         </mesh>
     );

@@ -1,5 +1,7 @@
 import { Link } from "react-router";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
+import useSceneStore from "../../../stores/sceneStore";
+import { ArrowIcon, BurgerIcon } from "./Icons";
 
 interface IndicatorState {
     left: number;
@@ -8,26 +10,18 @@ interface IndicatorState {
 }
 
 function Nav() {
-    const navRef = useRef<HTMLElement>(null);
     const hasHovered = useRef<boolean>(false);
+    const isMobile = useSceneStore((s) => s.isMobile);
 
+    const [animate, setAnimate] = useState<boolean>(false);
+    const [isOpen, setIsOpen] = useState(false);
+
+    // Hover indicator
     const [indicator, setIndicator] = useState<IndicatorState>({
         left: 0,
         width: 0,
         opacity: 0,
     });
-
-    const [animate, setAnimate] = useState<boolean>(false);
-    const [isOpen, setIsOpen] = useState(false);
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const check = () => setIsMobile(window.innerWidth <= 600);
-        check();
-        window.addEventListener("resize", check);
-        return () => window.removeEventListener("resize", check);
-    }, []);
-
     const handleMouseEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
         if (isMobile) return;
 
@@ -61,28 +55,25 @@ function Nav() {
 
             {isMobile && (
                 <button
-                    className="nav-toggle"
+                    className="toggle toggle-left nav-toggle"
                     onClick={() => setIsOpen((prev) => !prev)}
                 >
-                    ☰
+                    {isOpen ? <ArrowIcon /> : <BurgerIcon />}
                 </button>
             )}
 
-            {isMobile && isOpen && (
+            {isMobile && (
                 <div
-                    className="backdrop"
+                    className={`backdrop ${!isOpen ? "closed" : ""}`}
                     onClick={() => setIsOpen(false)}
                 />
             )}
 
             <nav
-                ref={navRef}
-                className={`nav ${isMobile ? "mobile" : ""} ${
-                    isOpen ? "open" : ""
-                }`}
+                className={`nav ${isOpen ? "open" : ""}`}
                 onMouseLeave={handleMouseLeave}
             >
-                {/* ✅ Desktop indicator */}
+                {/* HOVER INDICATOR */}
                 {!isMobile && (
                     <span
                         style={{
@@ -102,13 +93,25 @@ function Nav() {
                     />
                 )}
 
-                <Link to="/" onMouseEnter={handleMouseEnter} onClick={() => setIsOpen(false)}>
+                <Link
+                    to="/"
+                    onMouseEnter={handleMouseEnter}
+                    onClick={() => setIsOpen(false)}
+                >
                     INDEX
                 </Link>
-                <Link to="/projects" onMouseEnter={handleMouseEnter} onClick={() => setIsOpen(false)}>
+                <Link
+                    to="/projects"
+                    onMouseEnter={handleMouseEnter}
+                    onClick={() => setIsOpen(false)}
+                >
                     PROJECTS
                 </Link>
-                <Link to="/contact" onMouseEnter={handleMouseEnter} onClick={() => setIsOpen(false)}>
+                <Link
+                    to="/contact"
+                    onMouseEnter={handleMouseEnter}
+                    onClick={() => setIsOpen(false)}
+                >
                     CONTACT
                 </Link>
             </nav>

@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import useAssetStore from "../../../stores/assetStore";
 import { getTagsById, type Project } from "../../asset-handling/contentAssets";
 import "../homepage/homepage.scss";
+import { XIcon } from "./Icons";
 
 function ProjectCard({ project, route }: { project: Project; route: string }) {
     const thumbnailAsset = useAssetStore(
@@ -37,14 +38,24 @@ function ProjectCard({ project, route }: { project: Project; route: string }) {
             <div className="project-card__tags-container">
                 {tags.map((tag, i) => {
                     return (
-                        <div
-                            style={{
-                                backgroundColor: tag.color,
-                                color: tag.textColor,
-                            }}
-                            key={i}
-                        >
-                            {tag.name.toUpperCase()}
+                        <div key={i}>
+                            <div
+                                className="tag-label"
+                                style={{
+                                    backgroundColor: tag.color,
+                                    color: tag.textColor,
+                                }}
+                            >
+                                {tag.name.toUpperCase()}
+                            </div>
+                            <div
+                                className="tag-X"
+                                style={{
+                                    color: tag.color,
+                                }}
+                            >
+                                <XIcon></XIcon>
+                            </div>
                         </div>
                     );
                 })}
