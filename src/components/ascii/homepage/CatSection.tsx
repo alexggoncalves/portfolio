@@ -21,11 +21,14 @@ import { FBXLoader } from "three/examples/jsm/Addons.js";
 import CatSectionStars from "./CatSectionStars";
 
 import { NORMAL_ASCII_LAYER, setRenderLayer } from "../asciiLayers";
+import useSceneStore from "../../../stores/sceneStore";
 
 const CAT_ALIGN_OFFSET = new Vector3(-0.6, 0, -1);
+const CAT_ALIGN_OFFSET_MOBILE = new Vector3(-0.32, 0, -1);
 
 function CatSection({ opacity }: { opacity: RefObject<number> }) {
     const { camera, gl } = useThree();
+    const isMobile = useSceneStore((s) => s.isMobile);
 
     const alignGroupRef = useRef<Group>(null);
 
@@ -60,6 +63,7 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
     // DESKTOP
     // -----------------------
     const isMouseOver = useRef(false);
+    const starsTwinkleActive = useRef(false);
     const animationProgress = useRef(0);
     const rotationSpeed = 14;
 
@@ -71,9 +75,7 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
 
     const REST_STEP = Math.PI * 2;
 
-    // -----------------------
     // APPLY MATERIAL
-    // -----------------------
     useEffect(() => {
         if (!catModel) return;
 
@@ -92,9 +94,6 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
         };
     }, [catMaterial]);
 
-    // -----------------------
-    // LAYER
-    // -----------------------
     useLayoutEffect(() => {
         const apply = () =>
             setRenderLayer(alignGroupRef.current, NORMAL_ASCII_LAYER);
@@ -104,9 +103,6 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
         return () => cancelAnimationFrame(id);
     }, [catModel]);
 
-    // -----------------------
-    // POSITION SYNC
-    // -----------------------
     const syncCatToHtmlSection = () => {
         const group = alignGroupRef.current;
         if (!group || typeof document === "undefined") return;
@@ -137,13 +133,15 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
         raycaster.setFromCamera(ndc, camera);
 
         if (raycaster.ray.intersectPlane(plane, hit)) {
-            group.position.copy(hit).add(CAT_ALIGN_OFFSET);
+            if (isMobile) {
+                group.position.copy(hit).add(CAT_ALIGN_OFFSET_MOBILE);
+            } else {
+                group.position.copy(hit).add(CAT_ALIGN_OFFSET);
+            }
         }
     };
 
-    // -----------------------
-    // MOBILE CLICK → SPIN
-    // -----------------------
+    // TOUCH CLICK
     const onClick = () => {
         if (!isTouchDevice) return;
 
@@ -154,9 +152,7 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
         }
     };
 
-    // -----------------------
     // DESKTOP HOVER
-    // -----------------------
     const onPointerEnter = () => {
         if (isTouchDevice) return;
         isMouseOver.current = true;
@@ -171,9 +167,6 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
         isMouseOver.current = false;
     };
 
-    // -----------------------
-    // FRAME LOOP
-    // -----------------------
     useFrame((_state, delta) => {
         syncCatToHtmlSection();
 
@@ -183,14 +176,10 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
             catMaterial.opacity = opacity.current;
         }
 
-        // =========================================================
-        // 📱 MOBILE: SMOOTH INERTIA + CONTINUOUS REST ATTRACTION
-        // =========================================================
+        // TOUCH SCREEN BEHAVIOUR
         if (isTouchDevice) {
-            // apply spin velocity
             rotationAmount.current += spinVelocity.current * delta * 2;
 
-            // friction
             spinVelocity.current = MathUtils.damp(
                 spinVelocity.current,
                 0,
@@ -199,17 +188,23 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
             );
 
             const moving = Math.abs(spinVelocity.current) > 0.05;
+            starsTwinkleActive.current = moving;
 
-            // morph only when moving
+            animationProgress.current = MathUtils.damp(
+                animationProgress.current,
+                moving ? 1 : 0,
+                6,
+                delta,
+            );
+
             if (catMeshRef.current?.morphTargetInfluences) {
                 catMeshRef.current.morphTargetInfluences[0] = moving ? 1 : 0;
             }
 
-            // 🧲 SMOOTH MAGNETIC ALIGNMENT (KEY CHANGE)
             const target =
                 Math.round(rotationAmount.current / REST_STEP) * REST_STEP;
 
-            const attractionStrength = moving ? 2 : 6; // stronger when slowing down
+            const attractionStrength = moving ? 2 : 6;
 
             rotationAmount.current = MathUtils.damp(
                 rotationAmount.current,
@@ -218,11 +213,10 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
                 delta,
             );
         }
-
-        // =========================================================
-        // 🖥️ DESKTOP (UNCHANGED)
-        // =========================================================
+        // DESKTOP BEHAVIOUR
         else {
+            starsTwinkleActive.current = isMouseOver.current;
+
             const target = isMouseOver.current ? 1 : 0;
 
             animationProgress.current = MathUtils.damp(
@@ -249,8 +243,7 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
                     rotationSpeed * delta * animationProgress.current;
             } else {
                 const nextRotation =
-                    Math.ceil(rotationAmount.current / REST_STEP) *
-                    REST_STEP;
+                    Math.ceil(rotationAmount.current / REST_STEP) * REST_STEP;
 
                 rotationAmount.current = MathUtils.damp(
                     rotationAmount.current,
@@ -270,7 +263,7 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
                 <primitive
                     ref={catRef}
                     object={catModel}
-                    scale={0.1}
+                    scale={isMobile ? 0.08 : 0.1}
                     onPointerEnter={onPointerEnter}
                     onPointerLeave={onPointerLeave}
                     onClick={onClick}
@@ -278,14 +271,14 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
             </Center>
 
             <pointLight
-                position={[-5, 8, 8]}
-                intensity={3}
+                position={[-6, 9, 5]}
+                intensity={3.1}
                 color={"white"}
-                decay={0.02}
+                decay={0.005}
             />
 
             <CatSectionStars
-                isMouseOver={isMouseOver}
+                twinkleActive={starsTwinkleActive}
                 animationProgress={animationProgress}
                 rotationAmount={rotationAmount}
                 opacity={opacity}

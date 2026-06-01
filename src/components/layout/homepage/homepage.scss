@@ -4,32 +4,27 @@
     height: 40vh;
 }
 
-.projects-row {
-    width: 100%;
+// --- HEADER ---
+.projects-row__header {
     display: flex;
-    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0px;
 
-    // HEADER
-    &__header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 0px;
-    }
-
-    &__header-left {
+    &-left {
         display: flex;
         align-items: center;
         gap: 20px;
     }
 
-    &__title {
+    .projects-row__title {
         font-size: 2rem;
         margin: 0;
         padding-bottom: 3px;
+        font-family: "Space Grotesk", sans-serif;
     }
 
-    &__grid-link {
+    .projects-row__grid-link {
         font-weight: 500;
         border: 1px solid white;
         border-radius: 15px;
@@ -48,21 +43,38 @@
             color: var(--background-color);
         }
 
-        svg{
+        svg {
             height: 100%;
         }
     }
+}
 
-    // SCROLL INDICATOR
-    &__scroll-indicator {
-        border: 1px solid white;
-        width: 100px;
-        height: 10px;
+// --- SCROLL INDICATOR ---
+.projects-row__scroll-indicator {
+    border: 1px solid white;
+    width: 100px;
+    height: 10px;
+    border-radius: 10px;
+    position: relative;
+
+    &-thumb {
+        height: 100%;
+        background-color: white;
         border-radius: 10px;
-        position: relative;
+    }
+}
+
+// --- ROW ---
+.projects-row {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .project-card {
+        flex: 0 0 auto;
+        width: min(260px, 72vw);
     }
 
-    // SCROLLER SECTION
     &__wrap {
         position: relative;
         padding-top: 10px;
@@ -90,44 +102,39 @@
         width: max-content;
         will-change: transform;
     }
-
-    // GRADIENTS
-    &__gradient {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        width: var(--main-padding);
-        z-index: 2;
-        pointer-events: none;
-
-        &--left {
-            left: 0;
-            background: linear-gradient(
-                to right,
-                rgb(25, 25, 25) 0%,
-                transparent 100%
-            );
-        }
-
-        &--right {
-            right: 0;
-            background: linear-gradient(
-                to left,
-                rgb(25, 25, 25) 0%,
-                transparent 100%
-            );
-        }
-    }
 }
 
-.projects-row__track .project-card {
-    flex: 0 0 auto;
-    width: min(260px, 72vw);
+// --- ROW GRADIENTS ---
+.projects-row__gradient {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: var(--main-padding);
+    z-index: 2;
+    pointer-events: none;
+
+    &--left {
+        left: 0;
+        background: linear-gradient(
+            to right,
+            rgb(25, 25, 25) 0%,
+            transparent 100%
+        );
+    }
+
+    &--right {
+        right: 0;
+        background: linear-gradient(
+            to left,
+            rgb(25, 25, 25) 0%,
+            transparent 100%
+        );
+    }
 }
 
 // ---- CAT SECTION ----
 .cat {
-    height: 80vh;
+    height: 70vh;
 }
 
 // ---- ABOUT ME ----
@@ -140,4 +147,18 @@
     align-items: center;
     justify-content: center;
     text-align: center;
+}
+
+@media (max-width: 700px) {
+    .projects-row__header-left {
+        justify-content: space-between;
+    }
+
+    .projects-row__scroll-indicator {
+        display: none;
+    }
+
+    .cat {
+        height: 100vh;
+    }
 }

@@ -4,7 +4,15 @@ import { getTagsById, type Project } from "../../asset-handling/contentAssets";
 import "../homepage/homepage.scss";
 import { XIcon } from "./Icons";
 
-function ProjectCard({ project, route }: { project: Project; route: string }) {
+function ProjectCard({
+    project,
+    route,
+    displayTags = false,
+}: {
+    project: Project;
+    route: string;
+    displayTags?: boolean;
+}) {
     const thumbnailAsset = useAssetStore(
         (s) => s.globalAssets[`${project.id}_thumbnail`],
     );
@@ -35,31 +43,34 @@ function ProjectCard({ project, route }: { project: Project; route: string }) {
             />
 
             {/* TAGS */}
-            <div className="project-card__tags-container">
-                {tags.map((tag, i) => {
-                    return (
-                        <div key={i}>
-                            <div
-                                className="tag-label"
-                                style={{
-                                    backgroundColor: tag.color,
-                                    color: tag.textColor,
-                                }}
-                            >
-                                {tag.name.toUpperCase()}
+            {displayTags && (
+                <div className="project-card__tags-container">
+                    {tags.map((tag, i) => {
+                        return (
+                            <div key={i} className="tag-item">
+                                <div
+                                    className="tag-label"
+                                    style={{
+                                        backgroundColor: tag.color,
+                                        color: tag.textColor,
+                                    }}
+                                >
+                                    {tag.name.toUpperCase()}
+                                </div>
+
+                                <div
+                                    className="tag-X"
+                                    style={{
+                                        color: tag.color,
+                                    }}
+                                >
+                                    <XIcon />
+                                </div>
                             </div>
-                            <div
-                                className="tag-X"
-                                style={{
-                                    color: tag.color,
-                                }}
-                            >
-                                <XIcon></XIcon>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
+                        );
+                    })}
+                </div>
+            )}
         </Link>
     );
 }

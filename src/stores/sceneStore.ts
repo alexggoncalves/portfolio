@@ -17,7 +17,7 @@ const useSceneStore = create<SceneStoreState>((set) => ({
     page: "home",
     projectId: null,
 
-    mobileSize: 600,
+    mobileSize: 700,
     isMobile: false,
 
     setRoute: (page, projectId) => set(() => ({ page, projectId })),

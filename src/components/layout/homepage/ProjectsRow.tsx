@@ -6,19 +6,25 @@ import useHorizontalDragScroll from "../../../hooks/useHorizontalDragScroll";
 import { GoToGridIcon } from "../general/Icons";
 
 function ProjectsRow() {
-    const { viewportRef, trackRef, onPointerDown } = useHorizontalDragScroll();
+    const { viewportRef, trackRef, onPointerDown, indicatorRef } =
+        useHorizontalDragScroll();
 
     return (
         <section className="projects-row">
             <div className="projects-row__header">
                 <div className="projects-row__header-left">
-                    <h1 className="projects-row__title">PROJECTS</h1>
+                    <h1 className="projects-row__title">MY PROJECTS</h1>
                     <Link to="/projects" className="projects-row__grid-link">
-                        <GoToGridIcon/>
+                        <GoToGridIcon />
                     </Link>
                 </div>
 
-                <div className="projects-row__scroll-indicator" />
+                <div className="projects-row__scroll-indicator">
+                    <div
+                        ref={indicatorRef}
+                        className="projects-row__scroll-indicator-thumb"
+                    />
+                </div>
             </div>
 
             <div className="projects-row__wrap">
@@ -30,7 +36,11 @@ function ProjectsRow() {
                 >
                     <div ref={trackRef} className="projects-row__track">
                         {projects.map((project) => (
-                            <ProjectCard key={project.id} project={project} route={`/${project.id}`}/>
+                            <ProjectCard
+                                key={project.id}
+                                project={project}
+                                route={`/${project.id}`}
+                            />
                         ))}
                     </div>
                 </div>

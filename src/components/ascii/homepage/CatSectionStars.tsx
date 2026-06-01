@@ -1,114 +1,133 @@
-import { Center, Image } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import {
-    useLayoutEffect,
-    useRef,
-    type MutableRefObject,
-    type RefObject,
-} from "react";
+import { Image } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useLayoutEffect, useMemo, useRef, type RefObject } from "react";
 import { Group, Material, Mesh, Object3D, Vector3 } from "three";
 import { NORMAL_ASCII_LAYER, setRenderLayer } from "../asciiLayers";
+import useSceneStore from "../../../stores/sceneStore";
 
 export type CatSectionStarsProps = {
-    isMouseOver: MutableRefObject<boolean>;
-    animationProgress: MutableRefObject<number>;
-    rotationAmount: MutableRefObject<number>;
+    /** True while stars should use the sin-based twinkle (desktop hover or mobile spin). */
+    twinkleActive: RefObject<boolean>;
+    animationProgress: RefObject<number>;
+    rotationAmount: RefObject<number>;
     opacity: RefObject<number>;
-    /** Outer group scale (default matches previous CatSection layout) */
     scale?: number;
-    /** Outer group position relative to the cat align group */
     position?: [number, number, number];
 };
 
-function collectStarMeshes(root: Group | null): Object3D[] {
-    if (!root) return [];
-    const first = root.children[0] as Group | undefined;
-    const second = first?.children[0] as Group | undefined;
-    const leaves = second?.children;
-    if (!leaves?.length) return [];
-    return leaves.filter((c): c is Object3D => c instanceof Object3D);
-}
+type StarDef = {
+    x: number;
+    y: number;
+    scale: number;
+    url: string;
+};
+
+const STAR_LAYOUT: StarDef[] = [
+    // LEFT
+    { x: -0.83, y: 0.2, scale: 2, url: "/images/stars/star2.png" },
+    { x: -0.67, y: -0.2, scale: 1.6, url: "/images/stars/star3.png" },
+    { x: -0.5, y: 0.3, scale: 1.2, url: "/images/stars/star1.png" },
+    { x: -0.4, y: -0.1, scale: 1.2, url: "/images/stars/star2.png" },
+
+    // RIGHT
+    { x: 0.53, y: 0.23, scale: 1.8, url: "/images/stars/star2.png" },
+    { x: 0.66, y: -0.19, scale: 1.4, url: "/images/stars/star1.png" },
+    { x: 0.86, y: 0.25, scale: 1.4, url: "/images/stars/star3.png" },
+    { x: 0.98, y: -0.12, scale: 1.3, url: "/images/stars/star2.png" },
+];
+
+const STAR_LAYOUT_MOBILE: StarDef[] = [
+    { x: -0.05, y: 0.7, scale: 1, url: "/images/stars/star2.png" },
+    { x: -0.6, y: 0.5, scale: 1.8, url: "/images/stars/star1.png" },
+    { x: -0.4, y: -0.6, scale: 1.3, url: "/images/stars/star3.png" },
+    { x: -0.7, y: -0.1, scale: 1.2, url: "/images/stars/star2.png" },
+    { x: 0.9, y: 0.23, scale: 1.4, url: "/images/stars/star2.png" },
+    { x: 0.86, y: -0.3, scale: 1.4, url: "/images/stars/star1.png" },
+    { x: 0.6, y: 0.67, scale: 1.2, url: "/images/stars/star3.png" },
+    { x: 0.4, y: -0.7, scale: 1.3, url: "/images/stars/star2.png" },
+];
 
 function CatSectionStars({
-    isMouseOver,
+    twinkleActive,
     animationProgress,
     rotationAmount,
     opacity,
-    scale = 2,
-    position = [0, 0.45, 0],
+    scale = 1,
 }: CatSectionStarsProps) {
-    const outerGroupRef = useRef<Group>(null);
+    const { viewport } = useThree();
+    const isMobile = useSceneStore((s) => s.isMobile);
+
     const starsRef = useRef<Group | null>(null);
+
     const starsArray = useRef<Object3D[]>([]);
-    const starBaseScales = useRef<Vector3[]>([]);
-    const starScaledUp = useRef<Vector3[]>([]);
-    const starScaledDown = useRef<Vector3[]>([]);
+    const baseScales = useRef<Vector3[]>([]);
+    const upScales = useRef<Vector3[]>([]);
+    const downScales = useRef<Vector3[]>([]);
+
+    const worldLayout = useMemo(() => {
+        // convert normalized layout → viewport space
+        const w = viewport.width * 0.5;
+        const h = viewport.height * 0.5;
+
+        const layout = isMobile ? STAR_LAYOUT_MOBILE : STAR_LAYOUT;
+
+        return layout.map((s) => ({
+            ...s,
+            worldPos: [s.x * w, s.y * h, 0] as [number, number, number],
+        }));
+    }, [viewport.width, viewport.height]);
 
     useLayoutEffect(() => {
-        const applyLayers = () =>
-            setRenderLayer(outerGroupRef.current, NORMAL_ASCII_LAYER);
+        setRenderLayer(starsRef.current, NORMAL_ASCII_LAYER);
 
-        const tryHydrate = () => {
-            const meshes = collectStarMeshes(starsRef.current);
-            if (meshes.length === 0) return false;
-            starsArray.current = meshes;
-            starBaseScales.current = [];
-            starScaledUp.current = [];
-            starScaledDown.current = [];
-            return true;
-        };
+        const root = starsRef.current;
+        if (!root) return;
 
-        const tick = () => {
-            tryHydrate();
-            applyLayers();
-        };
+        const meshes: Object3D[] = [];
+        root.traverse((obj) => {
+            if (obj instanceof Mesh) meshes.push(obj);
+        });
 
-        tick();
-        const id = requestAnimationFrame(tick);
-        return () => cancelAnimationFrame(id);
+        starsArray.current = meshes;
     }, []);
 
     useFrame(() => {
         const a = opacity.current;
 
-        starsArray.current.forEach((star) => {
+        const blink = Math.sin(rotationAmount.current * 0.7);
+
+        starsArray.current.forEach((star, i) => {
+            // opacity
             star.traverse((node) => {
                 if (!(node instanceof Mesh)) return;
-                const materials = Array.isArray(node.material)
+
+                const mats = Array.isArray(node.material)
                     ? node.material
                     : [node.material];
-                for (const mat of materials) {
-                    if (!mat || !("opacity" in mat)) continue;
+
+                for (const mat of mats) {
                     const m = mat as Material & { transparent?: boolean };
                     m.transparent = true;
                     m.opacity = a;
                 }
             });
-        });
 
-        const starBlinkingProgress = Math.sin(rotationAmount.current * 0.7);
-
-        starsArray.current.forEach((star, index) => {
-            if (!starBaseScales.current[index]) {
-                const baseScale = star.scale.clone();
-                starBaseScales.current[index] = baseScale;
-                starScaledUp.current[index] = baseScale
-                    .clone()
-                    .multiplyScalar(1.3);
-                starScaledDown.current[index] = baseScale
-                    .clone()
-                    .multiplyScalar(0.8);
+            // scale init
+            if (!baseScales.current[i]) {
+                const base = star.scale.clone();
+                baseScales.current[i] = base;
+                upScales.current[i] = base.clone().multiplyScalar(1.3);
+                downScales.current[i] = base.clone().multiplyScalar(0.8);
             }
 
-            if (isMouseOver.current) {
-                const targetScale =
-                    starBlinkingProgress > 0
-                        ? starScaledUp.current[index]
-                        : starScaledDown.current[index];
-                star.scale.lerp(targetScale, 0.1 * animationProgress.current);
+            if (twinkleActive.current) {
+                const target =
+                    blink > 0 ? upScales.current[i] : downScales.current[i];
+
+                star.scale.lerp(target, 0.1 * animationProgress.current);
             } else {
                 star.scale.lerp(
-                    starBaseScales.current[index],
+                    baseScales.current[i],
                     0.1 * (1 - animationProgress.current),
                 );
             }
@@ -116,92 +135,16 @@ function CatSectionStars({
     });
 
     return (
-        <group ref={outerGroupRef} scale={scale} position={position}>
-            <Center ref={starsRef} position={[0, 0, 0]}>
+        <group ref={starsRef} scale={scale} position={[0, 0, 0]}>
+            {worldLayout.map((s, i) => (
                 <Image
-                    scale={[0.5, 0.5]}
+                    key={i}
+                    scale={[s.scale, s.scale]}
                     transparent
-                    url="/images/stars/star2.png"
-                    position={[-1.85, 0.51, 0]}
+                    url={s.url}
+                    position={s.worldPos}
                 />
-
-                <Image
-                    scale={[0.8, 0.8]}
-                    transparent
-                    url="/images/stars/star1.png"
-                    position={[-2.32, -0.2, 0]}
-                />
-
-                <Image
-                    scale={[0.3, 0.5]}
-                    transparent
-                    url="/images/stars/star3.png"
-                    position={[-2.7, 0.71, 0]}
-                />
-
-                <Image
-                    scale={[0.4, 0.6]}
-                    transparent
-                    url="/images/stars/star2.png"
-                    position={[-3.2, 0.24, 0]}
-                />
-
-                <Image
-                    scale={[0.5, 0.5]}
-                    transparent
-                    url="/images/stars/star1.png"
-                    position={[-3.8, -0.2, 0]}
-                />
-
-                <Image
-                    scale={[0.6, 0.6]}
-                    transparent
-                    url="/images/stars/star1.png"
-                    position={[-4, 0.6, 0]}
-                />
-
-                <Image
-                    scale={[0.3, 0.5]}
-                    transparent
-                    url="/images/stars/star2.png"
-                    position={[0.89, -0.33, 0]}
-                />
-
-                <Image
-                    scale={[0.7, 0.7]}
-                    transparent
-                    url="/images/stars/star1.png"
-                    position={[1, 0.54, 0]}
-                />
-
-                <Image
-                    scale={[0.4, 0.6]}
-                    transparent
-                    url="/images/stars/star3.png"
-                    position={[1.7, -0.1, 0]}
-                />
-
-                <Image
-                    scale={[0.4, 0.8]}
-                    transparent
-                    url="/images/stars/star2.png"
-                    position={[2.07, 0.6, 0]}
-                />
-
-                <Image
-                    scale={[0.9, 0.9]}
-                    transparent
-                    url="/images/stars/star1.png"
-                    position={[2.8, -0.2, 0]}
-                />
-
-                <Image
-                    scale={[0.4, 0.4]}
-                    transparent
-                    url="/images/stars/star1.png"
-                    position={[3.1, 0.6, 0]}
-                />
-            </Center>
+            ))}
         </group>
     );
 }

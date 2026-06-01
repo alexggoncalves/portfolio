@@ -9,10 +9,10 @@ import { useEffect, useMemo, useState } from "react";
 import ProjectDescription from "./ProjectDescription";
 import ProjectTools from "./ProjectTools";
 import ProjectTeam from "./ProjectTeam";
-import MediaCarousel from "./media-carousel/MediaCarousel";
 import ProjectTags from "./ProjectTags";
 import { CloseIcon } from "../general/Icons";
 import useSceneStore from "../../../stores/sceneStore";
+import MediaPanel from "./media-carousel/MediaPanel";
 
 function ProjectWindow({
     projectId,
@@ -59,22 +59,28 @@ function ProjectWindow({
             {isMobile && (
                 <Link
                     to={backPath}
-                    className={`project-window__back-button-mobile ${!open ? "open" : ""}`}
+                    className={`project-window__close-button-mobile ${!open ? "open" : ""}`}
                 >
                     <CloseIcon />
                 </Link>
             )}
+
             <div className={`project-window ${open ? "open" : ""}`}>
-                {!isMobile && (
-                    <Link to={backPath} className="project-window__back-button">
-                        <CloseIcon />
-                    </Link>
-                )}
                 <div className="project-window__details-panel">
-                    <div className="project-window__details">
+                    <div className="project-window__details-spacer">
+                        {!isMobile && (
+                            <Link
+                                to={backPath}
+                                className="project-window__close-button"
+                            >
+                                <CloseIcon />
+                            </Link>
+                        )}
+                    </div>
+                    <div className="project-window__details-content">
                         <ProjectTags tagIds={project.tags}></ProjectTags>
                         <h1>{project.title}</h1>
-                        <h2>{project.subtitle}</h2>
+                        <h2>{project.subtitle.toUpperCase()}</h2>
 
                         <ProjectDescription description={project.description} />
                         <ProjectTools tools={project.tools} />
@@ -84,7 +90,7 @@ function ProjectWindow({
                 </div>
 
                 <div className="project-window__media-panel">
-                    <MediaCarousel items={project.media}></MediaCarousel>
+                    <MediaPanel items={project.media}></MediaPanel>
                 </div>
             </div>
         </>

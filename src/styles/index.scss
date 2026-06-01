@@ -68,9 +68,14 @@ body {
     pointer-events: auto;
 }
 
-
 .ascii-canvas-layer,
 .ascii-canvas-layer * {
     pointer-events: none;
     z-index: 100;
+}
+
+@media (max-width: 700px) {
+    :root {
+        --main-padding: 4vw;
+    }
 }

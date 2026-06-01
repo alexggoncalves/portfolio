@@ -10,6 +10,8 @@ interface IndicatorState {
 }
 
 function Nav() {
+    const page = useSceneStore((s)=>s.page)
+
     const hasHovered = useRef<boolean>(false);
     const isMobile = useSceneStore((s) => s.isMobile);
 
@@ -22,6 +24,7 @@ function Nav() {
         width: 0,
         opacity: 0,
     });
+    
     const handleMouseEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
         if (isMobile) return;
 
@@ -73,15 +76,40 @@ function Nav() {
                 className={`nav ${isOpen ? "open" : ""}`}
                 onMouseLeave={handleMouseLeave}
             >
+
+                <Link
+                    to="/"
+                    onMouseEnter={handleMouseEnter}
+                    onClick={() => setIsOpen(false)}
+                    className={page === "home" ? "active" : ""}
+                >
+                    INDEX
+                </Link>
+                <Link
+                    to="/projects"
+                    onMouseEnter={handleMouseEnter}
+                    onClick={() => setIsOpen(false)}
+                    className={page === "projects" ? "active" : ""}
+                >
+                    PROJECTS
+                </Link>
+                <Link
+                    to="/contact"
+                    onMouseEnter={handleMouseEnter}
+                    onClick={() => setIsOpen(false)}
+                    className={page === "contact" ? "active" : ""}
+                >
+                    CONTACT
+                </Link>
                 {/* HOVER INDICATOR */}
                 {!isMobile && (
                     <span
                         style={{
                             position: "fixed",
-                            top: `calc((var(--nav-height) - 1.25em) / 2)`,
+                            top: `calc((var(--nav-height) - 1.225em) / 2)`,
                             left: indicator.left,
                             width: indicator.width,
-                            height: "1.5em",
+                            height: "1.55em",
                             border: "1px solid white",
                             borderRadius: "15px",
                             opacity: indicator.opacity,
@@ -92,28 +120,6 @@ function Nav() {
                         }}
                     />
                 )}
-
-                <Link
-                    to="/"
-                    onMouseEnter={handleMouseEnter}
-                    onClick={() => setIsOpen(false)}
-                >
-                    INDEX
-                </Link>
-                <Link
-                    to="/projects"
-                    onMouseEnter={handleMouseEnter}
-                    onClick={() => setIsOpen(false)}
-                >
-                    PROJECTS
-                </Link>
-                <Link
-                    to="/contact"
-                    onMouseEnter={handleMouseEnter}
-                    onClick={() => setIsOpen(false)}
-                >
-                    CONTACT
-                </Link>
             </nav>
         </>
     );
