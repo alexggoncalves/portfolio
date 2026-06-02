@@ -1,6 +1,5 @@
 import { Link } from "react-router";
-import useAssetStore from "../../../stores/assetStore";
-import { getTagsById, type Project } from "../../asset-handling/contentAssets";
+import { getTagsById, type Project } from "./content";
 import "../homepage/homepage.scss";
 import { XIcon } from "./Icons";
 
@@ -13,19 +12,6 @@ function ProjectCard({
     route: string;
     displayTags?: boolean;
 }) {
-    const thumbnailAsset = useAssetStore(
-        (s) => s.globalAssets[`${project.id}_thumbnail`],
-    );
-
-    const img =
-        thumbnailAsset &&
-        (thumbnailAsset.type === "image" || thumbnailAsset.type === "icon")
-            ? thumbnailAsset.element
-            : null;
-
-    if (!thumbnailAsset?.isLoaded || !img) {
-        return <div className="project-card project-card--placeholder" />;
-    }
 
     const tags = getTagsById(project.tags);
 
@@ -36,7 +22,7 @@ function ProjectCard({
             onDragStart={(e) => e.preventDefault()}
         >
             <img
-                src={img.currentSrc || img.src}
+                src={project.thumbnailSrc}
                 alt={project.title}
                 draggable={false}
                 onDragStart={(e) => e.preventDefault()}

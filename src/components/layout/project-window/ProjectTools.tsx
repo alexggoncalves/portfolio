@@ -1,4 +1,4 @@
-import { getIconById } from "../../asset-handling/contentAssets";
+import { getIconById } from "../general/content";
 
 function ProjectTools({ tools }: { tools: string[] }) {
     if (tools)

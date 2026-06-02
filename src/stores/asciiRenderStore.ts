@@ -21,9 +21,6 @@ type AsciiRenderState = {
     extraColumns: number;
     extraRows: number;
 
-    // Background color;
-    bgColor: string;
-
     // Lens distortion parameters
     distortion: { x: number; y: number };
     focalLength: { x: number; y: number };

@@ -6,6 +6,8 @@ type SceneStoreState = {
     page: Page;
     projectId: string | null;
 
+    bgColor: string;
+
     mobileSize: number;
     isMobile: boolean;
 
@@ -16,6 +18,8 @@ type SceneStoreState = {
 const useSceneStore = create<SceneStoreState>((set) => ({
     page: "home",
     projectId: null,
+
+    bgColor: "rgb(13, 13, 19)",
 
     mobileSize: 700,
     isMobile: false,

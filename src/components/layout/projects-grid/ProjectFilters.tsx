@@ -1,5 +1,5 @@
 import "./projectsGrid.scss";
-import { tags } from "../../asset-handling/contentAssets";
+import { tags } from "../general/content";
 import { useState } from "react";
 import { ArrowIcon, CheckboxIcon, FilterIcon } from "../general/Icons";
 

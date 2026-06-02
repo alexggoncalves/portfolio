@@ -1,4 +1,4 @@
-import { Center, useTexture } from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
 import {
     useEffect,
     useLayoutEffect,
@@ -157,6 +157,8 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
         if (isTouchDevice) return;
         isMouseOver.current = true;
 
+        document.body.style.cursor = "crosshair";
+
         if (catMeshRef.current?.morphTargetInfluences) {
             catMeshRef.current.morphTargetInfluences[0] = 1;
         }
@@ -165,6 +167,7 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
     const onPointerLeave = () => {
         if (isTouchDevice) return;
         isMouseOver.current = false;
+        document.body.style.cursor = "default";
     };
 
     useFrame((_state, delta) => {
@@ -259,16 +262,15 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
 
     return (
         <group ref={alignGroupRef} position={[-1000, 0, 0]}>
-            <Center>
-                <primitive
-                    ref={catRef}
-                    object={catModel}
-                    scale={isMobile ? 0.08 : 0.1}
-                    onPointerEnter={onPointerEnter}
-                    onPointerLeave={onPointerLeave}
-                    onClick={onClick}
-                />
-            </Center>
+            <primitive
+                position={[0, -1.6, 0]}
+                ref={catRef}
+                object={catModel}
+                scale={isMobile ? 0.08 : 0.1}
+                onPointerEnter={onPointerEnter}
+                onPointerLeave={onPointerLeave}
+                onClick={onClick}
+            />
 
             <pointLight
                 position={[-6, 9, 5]}

@@ -1,4 +1,4 @@
-import type { Media } from "../../../asset-handling/contentAssets";
+import type { Media } from "../../general/content";
 
 function MediaRenderer({ item }: { item: Media }) {
     switch (item.type) {

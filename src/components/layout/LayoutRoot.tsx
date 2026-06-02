@@ -7,6 +7,7 @@ import HomePage from "./homepage/HomePage";
 import type { Page } from "../../stores/sceneStore";
 import useSceneStore from "../../stores/sceneStore";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import AsciiStage from "../ascii/AsciiStage";
 
 const PAGES = ["projects", "contact"] as Page[];
 
@@ -33,7 +34,6 @@ function LayoutRoot() {
     const { pathname } = useLocation();
     const mainRef = useRef<HTMLElement>(null);
     const setRoute = useSceneStore((s) => s.setRoute);
-    
 
     const activePage = getActivePage(pathname);
     const activeProjectId = getActiveProjectId(pathname);
@@ -65,7 +65,7 @@ function LayoutRoot() {
 
     // Mobile check
     const setIsMobile = useSceneStore((s) => s.setIsMobile);
-    const mobileSize = useSceneStore((s)=>s.mobileSize)
+    const mobileSize = useSceneStore((s) => s.mobileSize);
     useEffect(() => {
         const check = () => setIsMobile(window.innerWidth <= mobileSize);
         check();
@@ -77,19 +77,19 @@ function LayoutRoot() {
         <>
             <Nav />
             <main ref={mainRef}>
+                <AsciiStage />
+
                 {activePage === "home" && <HomePage />}
                 {activePage === "projects" && <ProjectsGridPage />}
                 {activePage === "contact" && <ContactPage />}
 
                 {visibleProject && (
-                <ProjectWindow
-                    projectId={visibleProject}
-                    isOpen={!!activeProjectId}
-                />
-            )}
+                    <ProjectWindow
+                        projectId={visibleProject}
+                        isOpen={!!activeProjectId}
+                    />
+                )}
             </main>
-
-            
         </>
     );
 }

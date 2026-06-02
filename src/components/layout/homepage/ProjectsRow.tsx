@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 
-import { projects } from "../../asset-handling/contentAssets";
+import { projects } from "../general/content";
 import ProjectCard from "../general/ProjectCard";
 import useHorizontalDragScroll from "../../../hooks/useHorizontalDragScroll";
 import { GoToGridIcon } from "../general/Icons";

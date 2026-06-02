@@ -1,7 +1,7 @@
 import {
     getPersonById,
     type TeamMember,
-} from "../../asset-handling/contentAssets";
+} from "../general/content";
 
 function ProjectTeam({ team }: { team: TeamMember[] | undefined }) {
     if (team)

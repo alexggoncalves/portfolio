@@ -1,4 +1,4 @@
-import type { Media } from "../../../asset-handling/contentAssets";
+import type { Media } from "../../general/content";
 import MediaRenderer from "./MediaRenderer";
 
 function MediaPanel({ items }: { items: Media[] }) {

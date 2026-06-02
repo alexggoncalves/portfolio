@@ -23,7 +23,7 @@ nav {
 
     border-radius: 20px;
 
-    background-color: var(--background-color)
+    background-color: var(--background-color);
 }
 
 nav > a {
@@ -49,8 +49,8 @@ nav > a {
         //     color: white;
         // }
     }
-    
-    &:first-child{
+
+    &:first-child {
         margin-left: 0;
     }
 }
@@ -241,6 +241,21 @@ nav > a {
 
 .nav-toggle {
     z-index: 15;
+}
+
+.loading-screen {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    z-index: 9999;
+    background-color: var(--background-color);
 }
 
 @media (max-width: 700px) {

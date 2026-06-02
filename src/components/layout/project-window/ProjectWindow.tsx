@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router";
 import {
     getProjectById,
     type Project,
-} from "../../asset-handling/contentAssets";
+} from "../general/content";
 import "./projectWindow.scss";
 
 import { useEffect, useMemo, useState } from "react";

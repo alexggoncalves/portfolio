@@ -1,5 +1,5 @@
 import "./projectsGrid.scss";
-import { projects } from "../../asset-handling/contentAssets";
+import { projects } from "../general/content";
 import ProjectCard from "../general/ProjectCard";
 import { useMemo, useState } from "react";
 import ProjectFilters from "./ProjectFilters";

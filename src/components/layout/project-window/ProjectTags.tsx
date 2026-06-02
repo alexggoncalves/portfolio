@@ -1,4 +1,4 @@
-import { getTagsById } from "../../asset-handling/contentAssets";
+import { getTagsById } from "../general/content";
 import { XIcon } from "../general/Icons";
 
 function ProjectTags({ tagIds }: { tagIds: string[] }) {

@@ -1,7 +1,7 @@
-import PROJECTS from "../../data/projects.json";
-import PEOPLE from "../../data/people.json";
-import TAGS from "../../data/tags.json";
-import ICONS from "../../data/icons.json";
+import PROJECTS from "../../../data/projects.json";
+import PEOPLE from "../../../data/people.json";
+import TAGS from "../../../data/tags.json";
+import ICONS from "../../../data/icons.json";
 
 // Layout types
 export type ImageAsset = {
@@ -76,7 +76,10 @@ export const people = PEOPLE as Person[];
 export const tags = TAGS as Tag[];
 export const icons = ICONS as Icon[];
 
-// createAsciiTitles();
+// Images to Preload
+const thumbnailUrls = projects.map((project) => project.thumbnailSrc);
+const iconUrls = icons.map((icon) => icon.src);
+export const imagesToPreload = [...thumbnailUrls, ...iconUrls];
 
 export function getProjectById(id: string): Project | null {
     const project = projects.find((work) => work.id === id);
