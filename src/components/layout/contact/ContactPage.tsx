@@ -1,10 +1,6 @@
-import { useEffect } from "react";
 import "./contact.scss";
-import { useFrame } from "@react-three/fiber";
-import { MathUtils } from "three";
 
 function ContactPage() {
-     
     return (
         <>
             <section className="contact-page">

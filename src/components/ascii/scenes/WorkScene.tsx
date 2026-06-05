@@ -1,7 +1,4 @@
-import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
-import type { MeshBasicMaterial } from "three";
-import { damp } from "three/src/math/MathUtils.js";
+import { useMemo} from "react";
 import { createASCIITitle } from "../general/asciiFonts";
 import AsciiBlock from "../general/AsciiBlock";
 

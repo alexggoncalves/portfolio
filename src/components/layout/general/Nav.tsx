@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { useRef, useState } from "react";
 import useSceneStore from "../../../stores/sceneStore";
-import { ArrowIcon, BurgerIcon, CloseIcon } from "./Icons";
+import { BurgerIcon, CloseIcon } from "./Icons";
 
 interface IndicatorState {
     left: number;
