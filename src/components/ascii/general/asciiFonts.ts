@@ -29,27 +29,6 @@ export const TitleFont: Record<string, string[]> = {
     " ": ["  ", "  ", "  ", "  "],
 };
 
-// export function createASCIITitle(title: string): string[][] {
-//     const lines: string[][] = [[], [], [], []];
-
-//     for (const char of title.toUpperCase()) {
-//         const asciiLetter = TitleFont[char] || TitleFont[" "];
-
-//         for (let y = 0; y < lines.length; y++) {
-//             const row = asciiLetter[y] ?? " ";
-
-//             for (let x = 0; x < row.length; x++) {
-//                 lines[y].push(row[x]);
-//             }
-
-//             // space between letters
-//             lines[y].push(" ");
-//         }
-//     }
-
-//     return lines;
-// }
-
 export function createASCIITitle(title: string): string[] {
     const lines: string[] = ["", "", "", ""];
     title = title.toUpperCase();

@@ -23,7 +23,7 @@ function ProjectsGridPage() {
                     <ProjectCard
                         key={project.id}
                         project={project}
-                        route={`/projects/${project.id}`}
+                        route={`/work/${project.id}`}
                         displayTags
                     />
                 ))}

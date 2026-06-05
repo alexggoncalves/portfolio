@@ -20,7 +20,7 @@ import {
 import { FBXLoader } from "three/examples/jsm/Addons.js";
 import CatSectionStars from "./CatSectionStars";
 
-import { NORMAL_ASCII_LAYER, setRenderLayer } from "../asciiLayers";
+import { NORMAL_ASCII_LAYER, setRenderLayer } from "../general/asciiLayers";
 import useSceneStore from "../../../stores/sceneStore";
 
 const CAT_ALIGN_OFFSET = new Vector3(-0.6, 0, -1);
@@ -29,6 +29,7 @@ const CAT_ALIGN_OFFSET_MOBILE = new Vector3(-0.32, 0, -1);
 function CatSection({ opacity }: { opacity: RefObject<number> }) {
     const { camera, gl } = useThree();
     const isMobile = useSceneStore((s) => s.isMobile);
+    const isTouch = useSceneStore((s) => s.isTouch);
 
     const alignGroupRef = useRef<Group>(null);
 
@@ -51,13 +52,6 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
             }),
         [catTexture],
     );
-
-    // -----------------------
-    // DEVICE
-    // -----------------------
-    const isTouchDevice =
-        typeof window !== "undefined" &&
-        window.matchMedia("(pointer: coarse)").matches;
 
     // -----------------------
     // DESKTOP
@@ -143,7 +137,7 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
 
     // TOUCH CLICK
     const onClick = () => {
-        if (!isTouchDevice) return;
+        if (!isTouch) return;
 
         spinVelocity.current += Math.PI * 2.5;
 
@@ -154,7 +148,7 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
 
     // DESKTOP HOVER
     const onPointerEnter = () => {
-        if (isTouchDevice) return;
+        if (isTouch) return;
         isMouseOver.current = true;
 
         document.body.style.cursor = "crosshair";
@@ -165,7 +159,7 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
     };
 
     const onPointerLeave = () => {
-        if (isTouchDevice) return;
+        if (isTouch) return;
         isMouseOver.current = false;
         document.body.style.cursor = "default";
     };
@@ -180,7 +174,7 @@ function CatSection({ opacity }: { opacity: RefObject<number> }) {
         }
 
         // TOUCH SCREEN BEHAVIOUR
-        if (isTouchDevice) {
+        if (isTouch) {
             rotationAmount.current += spinVelocity.current * delta * 2;
 
             spinVelocity.current = MathUtils.damp(

@@ -1,7 +1,7 @@
 import { Link } from "react-router";
 import { useRef, useState } from "react";
 import useSceneStore from "../../../stores/sceneStore";
-import { ArrowIcon, BurgerIcon } from "./Icons";
+import { ArrowIcon, BurgerIcon, CloseIcon } from "./Icons";
 
 interface IndicatorState {
     left: number;
@@ -58,10 +58,10 @@ function Nav() {
 
             {isMobile && (
                 <button
-                    className="toggle toggle-left nav-toggle"
+                    className="toggle nav-toggle"
                     onClick={() => setIsOpen((prev) => !prev)}
                 >
-                    {isOpen ? <ArrowIcon /> : <BurgerIcon />}
+                    {isOpen ? <CloseIcon /> : <BurgerIcon />}
                 </button>
             )}
 
@@ -86,12 +86,12 @@ function Nav() {
                     INDEX
                 </Link>
                 <Link
-                    to="/projects"
+                    to="/work"
                     onMouseEnter={handleMouseEnter}
                     onClick={() => setIsOpen(false)}
-                    className={page === "projects" ? "active" : ""}
+                    className={page === "work" ? "active" : ""}
                 >
-                    PROJECTS
+                    WORK
                 </Link>
                 <Link
                     to="/contact"

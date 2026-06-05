@@ -1,12 +1,5 @@
-import {
-    Mesh,
-    NearestFilter,
-    PerspectiveCamera,
-    Scene,
-    Texture,
-    type Object3D,
-} from "three";
-import { useEffect, useMemo, useRef } from "react";
+import { Mesh, NearestFilter, Scene, Texture, type Object3D } from "three";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { useFBO } from "@react-three/drei";
 
 import { useFrame, useThree } from "@react-three/fiber";
@@ -45,7 +38,7 @@ function AsciiRenderPipeline({
     glyphThreshold,
     charSize,
 }: AsciiRenderPipelineProps) {
-    const { gl, size, viewport } = useThree();
+    const { gl, viewport } = useThree();
     const fullScreenPlane = useRef<Mesh>(null);
 
     const setViewportCellSize = useAsciiRenderStore(
@@ -72,18 +65,6 @@ function AsciiRenderPipeline({
         magFilter: NearestFilter,
         generateMipmaps: false,
     });
-
-    // ---- CAMERA ----
-    const camera = useMemo(() => {
-        const cam = new PerspectiveCamera(
-            45,
-            size.width / size.height,
-            0.1,
-            40,
-        );
-        cam.position.z = 10;
-        return cam;
-    }, [size.width, size.height]);
 
     // ---- ASCII PASS ----
     const asciiShaderMaterial = useMemo(
@@ -117,12 +98,12 @@ function AsciiRenderPipeline({
         };
     }, [asciiShaderMaterial]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         setViewportCellSize(viewport.width, viewport.height);
-    }, [viewport.width, viewport.height]);
+    }, [setViewportCellSize, viewport.width, viewport.height]);
 
     // ---- RENDER LOOP ----
-    useFrame(() => {
+    useFrame((state) => {
         const atlasImage = atlas.image as HTMLImageElement;
 
         if (!atlasImage) return;
@@ -134,24 +115,26 @@ function AsciiRenderPipeline({
         )
             return;
 
-        camera.layers.disableAll();
+        // Same camera as R3F viewport / Logo math — avoids grid vs RT mismatch from a duplicate PerspectiveCamera
+        const cam = state.camera;
 
         // PASS 1 - Normal ascii (layer 0)
-        camera.layers.set(0);
+        cam.layers.set(0);
         gl.setRenderTarget(asciiRenderTarget);
         gl.clear();
-        gl.render(scene, camera);
+        gl.render(scene, cam);
 
         // PASS 2 - Forced ascii (layer 1)
-        camera.layers.set(1);
+        cam.layers.set(1);
         gl.setRenderTarget(forcedAsciiRenderTarget);
         gl.clear();
-        gl.render(scene, camera);
+        gl.render(scene, cam);
 
-        // RESET
         gl.setRenderTarget(null);
 
-        // Set render target uniforms for ascii pass
+        // Restore so the canvas’ own draw sees layer 0 (fullscreen quad, etc.)
+        cam.layers.enableAll();
+
         asciiShaderMaterial.uniforms.uPixelizedTex.value =
             asciiRenderTarget.texture;
         asciiShaderMaterial.uniforms.uForcedPixelizedTex.value =

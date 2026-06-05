@@ -1,143 +1,92 @@
-// JS Stick Letters  https://patorjk.com/software/taag/#p=display&f=JS+Stick+Letters&t=Work&x=none&v=4&h=4&w=80&we=false
+import {
+    DataTexture,
+    NearestFilter,
+    NoColorSpace,
+    RGBAFormat,
+    UnsignedByteType,
+} from "three";
 
-import { createASCIITitle } from "./asciiFonts";
-import { people, projects } from "../../layout/general/content";
+function buildAtlasCharMap(
+    asciiSequence: string,
+    atlasCellCount: number,
+): Map<string, number> {
+    const map = new Map<string, number>();
+    const seq = asciiSequence.slice(0, atlasCellCount);
 
-// ASCII SHADER CHARACTER BRIGHTNESS
-export const brightnessMap = new Map<string, number>();
-
-export function createBrightnessMap(asciiSequence: string) {
-    brightnessMap.clear();
-    const asciiArray = asciiSequence.split("");
-
-    asciiArray.forEach((char, index) => {
-        let mappedBrightness = index / asciiArray.length + 0.002; //  Offset brightness to avoid rounding to wrong value
-
-        brightnessMap.set(char, mappedBrightness);
-    });
-}
-
-export function getBrightnessFromChar(char: string): number {
-    const brightness = brightnessMap.get(char);
-    if (brightness !== undefined) return brightness;
-    return 0;
-}
-
-// ASCII BLOCK ATLAS
-
-export const asciiBlockBitmaps = new Map<string, ImageBitmap>();
-let asciiBlocksInitPromise: Promise<void> | null = null;
-let areAsciiBlocksReady = false;
-
-export function getAsciiBitmap(id: string) {
-    const bitmap = asciiBlockBitmaps.get(id);
-
-    if (bitmap) return bitmap;
-    else return null;
-}
-
-export async function createAsciiBlocks() {
-    if (areAsciiBlocksReady) return;
-    if (asciiBlocksInitPromise) {
-        await asciiBlocksInitPromise;
-        return;
+    for (let i = 0; i < seq.length; i++) {
+        const c = seq[i]!;
+        if (!map.has(c)) map.set(c, i);
     }
-
-    asciiBlocksInitPromise = (async () => {
-        clearAsciiBlocks();
-        await createProjectAsciiBlocks();
-        await createAsciiTeamNames();
-        await createAsciiButtons();
-        areAsciiBlocksReady = true;
-    })();
-
-    try {
-        await asciiBlocksInitPromise;
-    } finally {
-        asciiBlocksInitPromise = null;
-    }
+    return map;
 }
 
-export function clearAsciiBlocks() {
-    asciiBlockBitmaps.forEach((bitmap) => bitmap.close());
-    asciiBlockBitmaps.clear();
-    areAsciiBlocksReady = false;
-}
-
-function setAsciiBlockBitmap(id: string, bitmap: ImageBitmap) {
-    const previous = asciiBlockBitmaps.get(id);
-    if (previous) previous.close();
-    asciiBlockBitmaps.set(id, bitmap);
-}
-
-const buttons = [
-    { text: ["home"], id: "home" },
-    { text: ["projects"], id: "projects" },
-    { text: ["contacts"], id: "contacts" },
-    { text: ["<< Go back"], id: "back" },
-    { text: ["undefined"], id: "fallback" },
-];
-
-async function createAsciiButtons() {
-    for (let i = 0; i < buttons.length; i++) {
-        const bitmap = await createBitmapFromAscii(buttons[i].text);
-        setAsciiBlockBitmap(buttons[i].id, bitmap);
-    }
-}
-
-async function createBitmapFromAscii(ascii: string[]): Promise<ImageBitmap> {
+export function createTextureFromAscii(
+    ascii: string[],
+    atlasCellCount: number,
+    asciiSequence: string,
+): DataTexture {
+    const map = buildAtlasCharMap(asciiSequence, atlasCellCount);
     const height = ascii.length;
-    let width = ascii[0].length;
 
+    let width = ascii[0].length;
     for (let i = 1; i < ascii.length; i++) {
         if (ascii[i].length > width) width = ascii[i].length;
     }
 
-    const buffer = new Uint8ClampedArray(width * height * 4); //rgba
+    const data = new Uint8Array(width * height * 4);
 
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
-            const brightness = getBrightnessFromChar(ascii[y][x]) * 255;
+            const char = ascii[y][x] ?? " ";
+            const i = (y * width + x) * 4;
 
-            const index = (y * width + x) * 4;
-            if (brightness > 0) {
-                buffer[index] = 255;
-                buffer[index + 1] = 255;
-                buffer[index + 2] = 255;
-                buffer[index + 3] = brightness;
-            } else {
-                buffer[index + 3] = 0;
+            if (char === " ") {
+                data[i] = 0;
+                data[i + 1] = 0;
+                data[i + 2] = 0;
+                data[i + 3] = 0;
+                continue;
             }
+
+            const atlasIdx = map.get(char);
+            if (atlasIdx === undefined) {
+                data[i] = 0;
+                data[i + 1] = 0;
+                data[i + 2] = 0;
+                data[i + 3] = 0;
+                continue;
+            }
+
+            const idx = Math.min(atlasIdx, Math.max(0, atlasCellCount - 1));
+            const n = Math.max(1, atlasCellCount);
+            // Bin center in 0…1 so floor(luma * (N - ε)) == idx in the ASCII shader
+            const luma = (idx + 0.5) / n;
+            const a = Math.min(255, Math.max(1, Math.round(luma * 255)));
+
+            data[i] = 255;
+            data[i + 1] = 255;
+            data[i + 2] = 255;
+            data[i + 3] = a;
         }
     }
 
-    const imageData = new ImageData(buffer, width, height);
+    const texture = new DataTexture(
+        data,
+        width,
+        height,
+        RGBAFormat,
+        UnsignedByteType,
+    );
 
-    return await createImageBitmap(imageData);
-}
+    texture.needsUpdate = true;
 
-async function createProjectAsciiBlocks() {
-    // Create project blocks
-    for (let i = 0; i < projects.length; i++) {
-        // Title
-        const asciiTitle = createASCIITitle(projects[i].title);
-        const titleBitmap = await createBitmapFromAscii(asciiTitle);
-        setAsciiBlockBitmap(projects[i].id, titleBitmap);
+    texture.minFilter = NearestFilter;
+    texture.magFilter = NearestFilter;
+    texture.generateMipmaps = false;
+    // true: first row of `ascii[]` is the top of the art; matches PlaneGeometry UV (v up)
+    texture.flipY = true;
+    texture.colorSpace = NoColorSpace;
+    texture.premultiplyAlpha = false;
 
-        // Subtitle
-        const subtitleBitmap = await createBitmapFromAscii([
-            projects[i].subtitle,
-        ]);
-        setAsciiBlockBitmap(projects[i].id + "_subtitle", subtitleBitmap);
-    }
-}
-
-export async function createAsciiTeamNames() {
-    for (let i = 0; i < people.length; i++) {
-        const name = people[i].name;
-        const splitName = name.split(" ");
-
-        const bitmap = await createBitmapFromAscii(splitName);
-        setAsciiBlockBitmap(people[i].id, bitmap);
-    }
+    return texture;
 }

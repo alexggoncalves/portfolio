@@ -18,7 +18,11 @@ function applyPan(track: HTMLDivElement, pan: number) {
     track.style.transform = `translateX(${pan}px)`;
 }
 
-function useHorizontalDragScroll() {
+function useHorizontalDragScroll({
+    onDragStateChange,
+}: {
+    onDragStateChange?: (dragging: boolean) => void;
+} = {}) {
     const viewportRef = useRef<HTMLDivElement | null>(null);
     const trackRef = useRef<HTMLDivElement | null>(null);
     const indicatorRef = useRef<HTMLDivElement | null>(null);
@@ -100,7 +104,6 @@ function useHorizontalDragScroll() {
     const onPointerDown = useCallback(
         (e: React.PointerEvent<HTMLDivElement>) => {
             if (e.button !== 0) return;
-
             const viewport = viewportRef.current;
             const track = trackRef.current;
 
@@ -159,6 +162,7 @@ function useHorizontalDragScroll() {
                     }
 
                     committed = true;
+                    onDragStateChange?.(true);
                     lockVerticalScroll();
                     viewport.classList.add("dragging");
 
@@ -187,6 +191,8 @@ function useHorizontalDragScroll() {
 
             const onUp = (ev: PointerEvent) => {
                 if (ev.pointerId !== pointerId) return;
+
+                onDragStateChange?.(false);
 
                 try {
                     if (viewport.hasPointerCapture(pointerId)) {
@@ -262,6 +268,7 @@ function useHorizontalDragScroll() {
                 } catch {}
 
                 unlockVerticalScroll();
+                onDragStateChange?.(false);
                 viewport.classList.remove("dragging");
 
                 document.removeEventListener("pointermove", onMove);

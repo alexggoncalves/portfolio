@@ -38,24 +38,26 @@ const fragmentShader = `
         vec2 cellCoord = floor(vUv * uGridResolution);
         vec2 cellCenterUV = (cellCoord + 0.5) / uGridResolution;
         vec4 pixelColor = texture(uPixelizedTex, cellCenterUV);
-        // TODO: Add forced ascii texture (with opacity as luma)
-        // TODO: vec4 forcedPixelColor = texture(uForcedPixelizedTex,vUv);
+        vec4 forcedPixelColor = texture(uForcedPixelizedTex,cellCenterUV);
 
-        if(pixelColor.a < 0.001) discard;
-        // TODO: if(pixelColor.a < 0.001 && forcedPixelColor.a < 0.001) return;
+        if(pixelColor.a < 0.001 && forcedPixelColor.a < 0.001) discard;
 
-        // * Convert color to luma
-        float luma = convertToLuma(pixelColor.rgb);
-        luma = clamp(luma, 0.0, 1.0);
+        bool isForced = forcedPixelColor.a > 0.001;
 
-        // * Override luma if there is something in the forced ascii texture
-        // TODO: if(forcedPixelColor.a > 0.) {
-        // TODO:    luma = convertToLuma(vec3(uiColor.a));
-        // TODO: }
+        vec3 displayRgb = pixelColor.rgb;
+        float luma;
 
+        // Forced layer: alpha holds the same “luma” encoding as the main pass (see createTextureFromAscii)
+        if (isForced) {
+            luma = clamp(forcedPixelColor.a, 0.0, 1.0);
+            displayRgb = vec3(1.0);
+        } else {
+            luma = clamp(convertToLuma(pixelColor.rgb), 0.0, 1.0);
+        }
+
+        float cIndex = floor(luma * (atlasCellCount - 0.001));
 
         // * Find the character in the font map that corresponds to the brightness
-        float cIndex = floor(luma * (atlasCellCount - 0.001));
         float cIndexX = mod(cIndex, uAtlasGridResolution.x);
         float cIndexY = floor(cIndex / uAtlasGridResolution.x);
         vec2 charCellUV = fract(vUv * uGridResolution);
@@ -74,15 +76,18 @@ const fragmentShader = `
         // * Sample glyph pixel
         float glyph = texture(uAsciiAtlas, atlasUV).r;
 
-        // * Apply smoothstep
+        // * Apply smoothstep (forced text uses low atlas indices too — soften threshold there)
         float w = max(fwidth(glyph), 0.0005) * max(uGlyphSoftness, 0.001);
         float threshold = clamp(uGlyphThreshold, 0.0, 1.0);
+        if (isForced) {
+            threshold = min(threshold, 0.36);
+        }
         float ascii = smoothstep(threshold - w, threshold + w, glyph);
         
-        outputColor = vec4(pixelColor.rgb,ascii);
+        outputColor = vec4(displayRgb, ascii);
         
         // ? ---- TEMP OVERRIDES -----
-        // outputColor = pixelColor;  // Display color
+        // outputColor = vec4(displayRgb.rgb,1.0);  // Display color
         // outputColor = vec4(luma,luma,luma,pixelColor.a); // Display luma
         // ? --------------------------
         

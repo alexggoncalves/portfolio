@@ -5,10 +5,9 @@ import { useFrame } from "@react-three/fiber";
 import { MathUtils } from "three";
 
 function HomeScene() {
-    const page = useSceneStore((s) => s.page);
     const projectId = useSceneStore((s) => s.projectId);
     const opacity = useRef(0);
-    const targetOpacity = page === "home" && !projectId ? 1 : 0;
+    const targetOpacity = !projectId ? 1 : 0;
 
     useFrame((_, delta) => {
         opacity.current = MathUtils.damp(
@@ -19,7 +18,6 @@ function HomeScene() {
         );
     });
 
-    if(page === "home")
     return (
         <>
             <CatSection opacity={opacity}></CatSection>

@@ -34,6 +34,10 @@ nav > a {
     padding: 0 12px 2px 12px;
     border-radius: 15px;
 
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+
     transition: 300ms ease;
 
     &:hover {
@@ -239,10 +243,6 @@ nav > a {
     }
 }
 
-.nav-toggle {
-    z-index: 15;
-}
-
 .loading-screen {
     position: fixed;
     left: 0;
@@ -253,7 +253,7 @@ nav > a {
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     z-index: 9999;
     background-color: var(--background-color);
 }
@@ -298,12 +298,23 @@ nav > a {
         }
     }
 
+    .nav-toggle {
+        // border: none;
+        z-index: 20;
+        top: 20px;
+        right: 20px;
+
+        svg.closeIcon{
+            width: 50%;
+        }
+    }
+
     .nav {
         position: fixed;
         width: 150px;
 
-        bottom: 80px;
-        left: 20px;
+        top: 85px;
+        right: 20px;
         margin: 0;
 
         padding: 25px 15px;

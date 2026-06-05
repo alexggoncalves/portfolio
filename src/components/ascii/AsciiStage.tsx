@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import useAsciiRenderStore from "../../stores/asciiRenderStore";
 import { Scene, TextureLoader } from "three";
 import { createPortal } from "@react-three/fiber";
-import AsciiScene from "./AsciiScene";
+import AsciiScene from "./scenes/AsciiScene";
 import GridCanvas from "./GridCanvas";
 import AsciiRenderPipeline from "./AsciiRenderPipeline";
 

@@ -63,11 +63,12 @@ const useAsciiRenderStore = create<AsciiRenderState>((set, get) => ({
     asciiAtlas: null,
     asciiAtlasSrc: "/font_atlas/fontAtlas-ibmplex-16x9(12-16).png",
     atlasGridSize: { cols: 16, rows: 9 },
+    // First cols×rows codepoints match the PNG row-major. You can append more for reference;
+    // char→atlas mapping only uses the first atlasCellCount (see asciiBlocks.buildAtlasCharMap).
     asciiSequence: `       \`·.-\',_:;\"~°º!¡ª÷+=^|)<>(\\/L«≈»v*c[¿?T±rxi≤≥zuìí]t√l7Y{nJ}IFjyîsç1oúùeπaCµ24ZhVfûk3P¢òóE£w95èpXébàáS6mAUGÇqôdH#KΩêÉOãâD&%R0Æ8NBMg@QW$░▒▓█`,
-   
+
     glyphThreshold: 0.75,
     glyphSoftness: 0.3,
-    brightnessMap: {},
 
     setGridSize: (cols, rows) => {
         if (cols <= 0 || rows <= 0) return;

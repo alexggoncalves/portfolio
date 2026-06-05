@@ -43,8 +43,8 @@ function ProjectWindow({
     // Back path
     const location = useLocation();
     const backPath = useMemo(() => {
-        if (location.pathname.startsWith("/projects/")) {
-            return "/projects";
+        if (location.pathname.startsWith("/work/")) {
+            return "/work";
         }
 
         if (location.pathname.startsWith("/")) {

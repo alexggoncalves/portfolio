@@ -1,12 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400&display=swap");
 * {
   box-sizing: border-box;
 }
 
 :root {
-  --main-padding: 3vw;
+  --main-padding: 2.5vw;
   --background-color: rgb(25, 25, 25);
   --nav-height: 100px;
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -21,6 +19,9 @@
   margin: 0;
   padding: 0;
   overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 a {
@@ -68,4 +69,10 @@ body {
 .ascii-canvas-layer * {
   pointer-events: none;
   z-index: 100;
+}
+
+@media (max-width: 700px) {
+  :root {
+    --main-padding: 4vw;
+  }
 }/*# sourceMappingURL=index.css.map */

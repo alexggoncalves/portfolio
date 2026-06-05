@@ -1,7 +1,7 @@
 import type { Object3D } from "three";
 
 export const NORMAL_ASCII_LAYER = 0;
-export const FORCED_ASCII_LAyer = 1;
+export const FORCED_ASCII_LAYER = 1;
 
 // Place all children of an element in a camear layer
 export function setRenderLayer(

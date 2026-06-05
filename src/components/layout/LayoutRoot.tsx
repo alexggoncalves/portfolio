@@ -9,10 +9,10 @@ import useSceneStore from "../../stores/sceneStore";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import AsciiStage from "../ascii/AsciiStage";
 
-const PAGES = ["projects", "contact"] as Page[];
+const PAGES = ["work", "contact"] as Page[];
 
 const getActivePage = (pathname: string): Page => {
-    if (pathname.startsWith("/projects")) return "projects";
+    if (pathname.startsWith("/work")) return "work";
     if (pathname === "/contact") return "contact";
     return "home";
 };
@@ -20,7 +20,7 @@ const getActivePage = (pathname: string): Page => {
 const getActiveProjectId = (pathname: string): string | null => {
     const match =
         matchPath("/:projectId", pathname) ||
-        matchPath("/projects/:projectId", pathname);
+        matchPath("/work/:projectId", pathname);
 
     const id = match?.params?.projectId;
 
@@ -66,8 +66,16 @@ function LayoutRoot() {
     // Mobile check
     const setIsMobile = useSceneStore((s) => s.setIsMobile);
     const mobileSize = useSceneStore((s) => s.mobileSize);
+    const setIsTouch = useSceneStore((s) => s.setIsTouch);
     useEffect(() => {
-        const check = () => setIsMobile(window.innerWidth <= mobileSize);
+        const check = () => {
+            setIsMobile(window.innerWidth <= mobileSize);
+
+            setIsTouch(
+                window.matchMedia("(pointer: coarse)").matches ||
+                    navigator.maxTouchPoints > 0,
+            );
+        };
         check();
         window.addEventListener("resize", check);
         return () => window.removeEventListener("resize", check);
@@ -80,7 +88,7 @@ function LayoutRoot() {
                 <AsciiStage />
 
                 {activePage === "home" && <HomePage />}
-                {activePage === "projects" && <ProjectsGridPage />}
+                {activePage === "work" && <ProjectsGridPage />}
                 {activePage === "contact" && <ContactPage />}
 
                 {visibleProject && (

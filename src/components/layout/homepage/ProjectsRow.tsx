@@ -4,17 +4,22 @@ import { projects } from "../general/content";
 import ProjectCard from "../general/ProjectCard";
 import useHorizontalDragScroll from "../../../hooks/useHorizontalDragScroll";
 import { GoToGridIcon } from "../general/Icons";
+import useSceneStore from "../../../stores/sceneStore";
 
 function ProjectsRow() {
+    const setFireworksLocked = useSceneStore((s) => s.setFireworksLocked);
+
     const { viewportRef, trackRef, onPointerDown, indicatorRef } =
-        useHorizontalDragScroll();
+        useHorizontalDragScroll({
+            onDragStateChange: setFireworksLocked,
+        });
 
     return (
         <section className="projects-row">
             <div className="projects-row__header">
                 <div className="projects-row__header-left">
-                    <h1 className="projects-row__title">MY PROJECTS</h1>
-                    <Link to="/projects" className="projects-row__grid-link">
+                    <h1 className="projects-row__title">WORK</h1>
+                    <Link to="/work" className="projects-row__grid-link">
                         <GoToGridIcon />
                     </Link>
                 </div>

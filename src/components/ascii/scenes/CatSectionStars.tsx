@@ -2,7 +2,7 @@ import { Image } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useLayoutEffect, useMemo, useRef, type RefObject } from "react";
 import { Group, Material, Mesh, Object3D, Vector3 } from "three";
-import { NORMAL_ASCII_LAYER, setRenderLayer } from "../asciiLayers";
+import { NORMAL_ASCII_LAYER, setRenderLayer } from "../general/asciiLayers";
 import useSceneStore from "../../../stores/sceneStore";
 
 export type CatSectionStarsProps = {
