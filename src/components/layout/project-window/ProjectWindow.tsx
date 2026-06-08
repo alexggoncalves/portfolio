@@ -1,8 +1,5 @@
 import { Link, useLocation } from "react-router";
-import {
-    getProjectById,
-    type Project,
-} from "../general/content";
+import { getProjectById, type Project } from "../../../data/content";
 import "./projectWindow.scss";
 
 import { useEffect, useMemo, useState } from "react";
@@ -59,7 +56,7 @@ function ProjectWindow({
             {isMobile && (
                 <Link
                     to={backPath}
-                    className={`project-window__close-button-mobile ${!open ? "open" : ""}`}
+                    className={`button button--icon project-close ${!open ? "open" : ""}`}
                 >
                     <CloseIcon />
                 </Link>
@@ -71,7 +68,7 @@ function ProjectWindow({
                         {!isMobile && (
                             <Link
                                 to={backPath}
-                                className="project-window__close-button"
+                                className="button button--icon project-close"
                             >
                                 <CloseIcon />
                             </Link>

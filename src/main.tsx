@@ -1,4 +1,5 @@
 import "./styles/index.scss";
+import "./components/layout/general/buttons.scss"
 import "./components/layout/general/general.scss"
 import ReactDOM from "react-dom/client";
 
@@ -12,5 +13,5 @@ if (!root) throw new Error("Root element not found");
 ReactDOM.createRoot(root).render(
     <StrictMode>
         <App></App>
-    </StrictMode>,
+    </StrictMode>
 );

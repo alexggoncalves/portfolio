@@ -47,11 +47,6 @@ nav > a {
     &.active {
         background-color: white;
         color: var(--background-color);
-
-        // &:hover {
-        //     background-color: var(--background-color);
-        //     color: white;
-        // }
     }
 
     &:first-child {
@@ -170,8 +165,6 @@ nav > a {
         flex-shrink: 0;
     }
 }
-
-/* HOVER STATE */
 .project-card:hover .tag-label {
     opacity: 1;
 }
@@ -196,66 +189,11 @@ nav > a {
     }
 }
 
-.toggle {
-    position: fixed;
-    z-index: 11;
-
-    width: 50px;
-    height: 50px;
-    border-radius: 25px;
-
-    color: white;
-    background-color: var(--background-color);
-    opacity: 0.9;
-    border: 1px solid white;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    cursor: pointer;
-
-    transition: 200ms ease;
-
-    &:hover {
-        background-color: white;
-        color: var(--background-color);
-        scale: 1.06;
-    }
-
-    &:active {
-        scale: 0.9;
-    }
-
-    svg {
-        width: 70%;
-        aspect-ratio: 1;
-    }
-
-    &.toggle-right {
-        bottom: 40px;
-        right: 40px;
-    }
-
-    &.toggle-left {
-        bottom: 40px;
-        left: 40px;
-    }
-}
-
 .loading-screen {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100vh;
-    width: 100vw;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    z-index: 9999;
-    background-color: var(--background-color);
+    .button {
+        position: absolute;
+        margin-top: 80px;
+    }
 }
 
 @media (max-width: 700px) {
@@ -295,17 +233,6 @@ nav > a {
         &.toggle-left {
             bottom: 20px;
             left: 20px;
-        }
-    }
-
-    .nav-toggle {
-        // border: none;
-        z-index: 20;
-        top: 20px;
-        right: 20px;
-
-        svg.closeIcon{
-            width: 50%;
         }
     }
 

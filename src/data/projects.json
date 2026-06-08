@@ -20,34 +20,52 @@
         ],
         "media": [
             {
-                "type": "video",
-                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-video.mp4",
-                "alt": "Endless Purrs - Video"
+                "type": "single",
+                "media": {
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-video.mp4",
+                    "alt": "Endless Purrs - Video"
+                }
             },
             {
-                "type": "image",
-                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-1.png",
-                "alt": "Endless Purrs - Game Screenshot 1"
+                "type": "single",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-1.png",
+                    "alt": "Endless Purrs - Game Screenshot 1"
+                }
             },
             {
-                "type": "image",
-                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-2.png",
-                "alt": "Endless Purrs - Game Screenshot 2"
+                "type": "single",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-2.png",
+                    "alt": "Endless Purrs - Game Screenshot 2"
+                }
             },
             {
-                "type": "image",
-                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-3.png",
-                "alt": "Endless Purrs - Game Screenshot 3"
+                "type": "single",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-3.png",
+                    "alt": "Endless Purrs - Game Screenshot 3"
+                }
             },
             {
-                "type": "image",
-                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-4.png",
-                "alt": "Endless Purrs - Game Screenshot 4"
+                "type": "single",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-4.png",
+                    "alt": "Endless Purrs - Game Screenshot 4"
+                }
             },
             {
-                "type": "image",
-                "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-5.png",
-                "alt": "Endless Purrs - Game Screenshot 5"
+                "type": "single",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-5.png",
+                    "alt": "Endless Purrs - Game Screenshot 5"
+                }
             }
         ]
     },
@@ -61,8 +79,144 @@
         "link": "",
         "git": "",
         "tools": ["unity", "blender", "C#", "Substance Painter"],
-        "media": []
+        "media": [
+            {
+                "type": "single",
+                "title": "Model Sheet",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/gary/gary_model-sheet.webp",
+                    "alt": "Gary - Character Model Sheet"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Animation Demo",
+                "media": {
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/gary/gary_demo.mp4",
+                    "alt": "Gary - Demo Video"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Jump Animation",
+                "media": {
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/gary/gary_jump.mp4",
+                    "alt": "Gary - Jump Video"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Sketch",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/gary/gary_sketch.webp",
+                    "alt": "Gary - Sketch"
+                }
+            },
+            {
+                "type": "multiple",
+                "columns": 2,
+                "items": [
+                    {
+                        "type": "image",
+                        "title": "Blockout",
+                        "src": "https://cloud.alexgg.com/gary/gary_blockout.webp",
+                        "id": "Gary - Blockout"
+                    },
+                    {
+                        "type": "image",
+                        "title": "Sculpt",
+                        "src": "https://cloud.alexgg.com/gary/gary_sculpt.webp",
+                        "id": "Gary - Sculpt"
+                    }
+                ]
+            },
+            {
+                "type": "multiple",
+                "title": "Retopology",
+                "columns": 2,
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/gary/gary_retopology_body.webp",
+                        "id": "Gary - Body retopology "
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/gary/gary_retopology_face.webp",
+                        "id": "Gary - Face retopology"
+                    }
+                ]
+            },
+            {
+                "type": "multiple",
+                "columns": 2,
+                "items": [
+                    {
+                        "type": "image",
+                        "title": "Clothes and accessories",
+                        "src": "https://cloud.alexgg.com/gary/gary_clothes.webp",
+                        "id": "Gary - Clothes"
+                    },
+                    {
+                        "type": "image",
+                        "title": "UV Unwrap",
+                        "src": "https://cloud.alexgg.com/gary/gary_uv.webp",
+                        "id": "Gary - UV Unwrap"
+                    }
+                ]
+            },
+            {
+                "type": "multiple",
+                "columns": 2,
+                "items": [
+                    {
+                        "type": "image",
+                        "title": "Base Color",
+                        "src": "https://cloud.alexgg.com/gary/gary_base-color.webp",
+                        "id": "Gary - Base Color"
+                    },
+                    {
+                        "type": "image",
+                        "title": "Texturing",
+                        "src": "https://cloud.alexgg.com/gary/gary_texturing.webp",
+                        "id": "Gary - Texturing"
+                    }
+                ]
+            },
+            {
+                "type": "multiple",
+                "title": "Rigging",
+                "columns": 4,
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/gary/gary_rig_1.webp",
+                        "id": "Gary - Rigging 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/gary/gary_rig-2.webp",
+                        "id": "Gary - Rigging 2"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/gary/gary_rig-3.webp",
+                        "id": "Gary - Rigging 3"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/gary/gary_rig-4.webp",
+                        "id": "Gary - Rigging 4"
+                    }
+                ]
+            }
+        ]
     },
+
     {
         "id": "pipe-quest",
         "title": "PipeQuest",

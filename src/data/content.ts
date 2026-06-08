@@ -1,28 +1,47 @@
-import PROJECTS from "../../../data/projects.json";
-import PEOPLE from "../../../data/people.json";
-import TAGS from "../../../data/tags.json";
-import ICONS from "../../../data/icons.json";
+import PROJECTS from "./projects.json";
+import PEOPLE from "./people.json";
+import TAGS from "./tags.json";
+import ICONS from "./icons.json";
 
 // Layout types
 export type ImageAsset = {
     type: "image";
+    title?: string;
+    alt?: string;
     src: string;
     id?: string;
 };
 
 export type VideoAsset = {
     type: "video";
+    title?: string;
     src: string;
     id?: string;
 };
 
 export type ModelAsset = {
     type: "model";
+    title?: string;
     src: string;
     id?: string;
 };
 
 export type Media = ImageAsset | VideoAsset | ModelAsset;
+
+export type SingleMediaBlock = {
+    type: "single";
+    title?: string;
+    media: Media;
+};
+
+export type GridMediaBlock = {
+    type: "grid";
+    title?: string;
+    columns: 2 | 3 | 4;
+    items: Media[];
+};
+
+export type MediaBlock = SingleMediaBlock | GridMediaBlock;
 
 // Person types
 export type Person = {
@@ -50,7 +69,7 @@ export type Project = {
     git?: string;
     tools: string[];
     team?: TeamMember[];
-    media: Media[];
+    media: MediaBlock[];
 
     asciiTitle?: number[];
     asciiSubtitle?: number[];

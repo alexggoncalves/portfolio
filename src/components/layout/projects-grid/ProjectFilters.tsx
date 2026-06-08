@@ -1,5 +1,5 @@
 import "./projectsGrid.scss";
-import { tags } from "../general/content";
+import { tags } from "../../../data/content";
 import { useState } from "react";
 import { ArrowIcon, CheckboxIcon, FilterIcon } from "../general/Icons";
 
@@ -36,7 +36,7 @@ function ProjectFilters({
         <>
             {/* Toggle */}
             <button
-                className="toggle toggle-right"
+                className="button button--icon toggle toggle-right-btm filters-toggle"
                 onClick={() => setIsOpen((prev) => !prev)}
             >
                 {isOpen ? <ArrowIcon /> : <FilterIcon />}

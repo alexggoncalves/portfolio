@@ -15,7 +15,6 @@
   overflow-x: hidden;
   transform: translateY(100vh);
   transition: transform 0.4s ease-in-out;
-  box-sizing: border-box;
 }
 
 .project-window.open {
@@ -100,35 +99,6 @@
   height: 12px;
   flex-shrink: 0;
   color: white;
-}
-
-.project-window__close-button {
-  position: absolute;
-  top: 0;
-  left: var(--main-padding);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  font-size: 2rem;
-  line-height: 1;
-  font-weight: 500;
-  color: white;
-  background-color: var(--background-color);
-  border: 1px solid white;
-  border-radius: 25px;
-  transition: 0.2s ease;
-  opacity: 0.9;
-  z-index: 20;
-}
-.project-window__close-button:hover {
-  background: white;
-  color: var(--background-color);
-}
-.project-window__close-button svg {
-  width: 50%;
-  aspect-ratio: 1;
 }
 
 .project-window__tools {
@@ -227,34 +197,5 @@
     width: 100%;
     height: fit-content;
     padding: 0;
-  }
-  .project-window__close-button-mobile {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
-    color: white;
-    background-color: var(--background-color);
-    border: 1px solid white;
-    border-radius: 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s ease;
-    transform: translateY(0);
-    opacity: 0.9;
-    z-index: 100;
-  }
-  .project-window__close-button-mobile:hover {
-    background: var(--background-color);
-    color: white;
-  }
-  .project-window__close-button-mobile svg {
-    width: 50%;
-    aspect-ratio: 1;
-  }
-  .project-window__close-button-mobile.open {
-    transform: translateY(100px);
   }
 }/*# sourceMappingURL=projectWindow.css.map */

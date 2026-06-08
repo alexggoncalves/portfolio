@@ -10,7 +10,7 @@ interface IndicatorState {
 }
 
 function Nav() {
-    const page = useSceneStore((s)=>s.page)
+    const page = useSceneStore((s) => s.page);
 
     const hasHovered = useRef<boolean>(false);
     const isMobile = useSceneStore((s) => s.isMobile);
@@ -24,7 +24,7 @@ function Nav() {
         width: 0,
         opacity: 0,
     });
-    
+
     const handleMouseEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
         if (isMobile) return;
 
@@ -58,7 +58,7 @@ function Nav() {
 
             {isMobile && (
                 <button
-                    className="toggle nav-toggle"
+                    className="button button--icon toggle nav-toggle toggle-right-top"
                     onClick={() => setIsOpen((prev) => !prev)}
                 >
                     {isOpen ? <CloseIcon /> : <BurgerIcon />}
@@ -76,7 +76,6 @@ function Nav() {
                 className={`nav ${isOpen ? "open" : ""}`}
                 onMouseLeave={handleMouseLeave}
             >
-
                 <Link
                     to="/"
                     onMouseEnter={handleMouseEnter}

@@ -70,7 +70,7 @@ function Fireworks() {
             <VFXParticles
                 name="fireworks"
                 settings={{
-                    nbParticles: 8000,
+                    nbParticles: 10000,
                     gravity: [0, -6, 0],
                     fadeSize: [0.05, 0.95],
                     fadeAlpha: [0, 1],
@@ -90,7 +90,7 @@ function Fireworks() {
                     loop: false,
                     spawnMode: "burst",
                     duration: 1,
-                    nbParticles: 14,
+                    nbParticles: 16,
                     delay: 0,
                     particlesLifetime: [0.7, 1.4],
                     startPositionMin: [0, 0, 0],

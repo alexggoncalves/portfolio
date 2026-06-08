@@ -21,10 +21,6 @@ type AsciiRenderState = {
     extraColumns: number;
     extraRows: number;
 
-    // Lens distortion parameters
-    distortion: { x: number; y: number };
-    focalLength: { x: number; y: number };
-
     // Ascii atlas + sequence
     asciiAtlas: Texture | null;
     asciiAtlasSrc: string;
@@ -35,11 +31,9 @@ type AsciiRenderState = {
     glyphThreshold: number;
     glyphSoftness: number;
 
-    // Update the size of the grid and canvas
     setGridSize: (cols: number, rows: number) => void;
     setViewportCellSize: (viewPortW: number, viewPortH: number) => void;
     setGridReady: (value:boolean) => void,
-
     setAtlas: (atlas: Texture) => void;
     setAtlasReady: (value:boolean) => void;
 };
@@ -47,7 +41,7 @@ type AsciiRenderState = {
 const useAsciiRenderStore = create<AsciiRenderState>((set, get) => ({
     isGridReady: false,
     isAtlasReady: false,
-    
+    //       \`·.-\',_:;\"~°º!¡ª÷+=^|)<>(\\/L«≈»v*c[¿?T±rxi≤≥zuìí]t√l7Y{nJ}IFjyîsç1oúùeπaCµ24ZhVfûk3P¢òóE£w95èpXébàáS6mAUGÇqôdH#KΩêÉOãâD&%R0Æ8NBMg@QW$░▒▓█
     charSize: { w: 8, h: 12 },
     viewCellSize: {w: 1, h: 1},
 
@@ -56,16 +50,10 @@ const useAsciiRenderStore = create<AsciiRenderState>((set, get) => ({
     extraColumns: 2,
     extraRows: 2,
 
-    bgColor: "rgb(13, 13, 19)",
-    distortion: { x: 0.01, y: 0.01 },
-    focalLength: { x: 0.96, y: 0.96 },
-
     asciiAtlas: null,
-    asciiAtlasSrc: "/font_atlas/fontAtlas-ibmplex-16x9(12-16).png",
+    asciiAtlasSrc: "/font_atlas/asciiAtlas.webp",
     atlasGridSize: { cols: 16, rows: 9 },
-    // First cols×rows codepoints match the PNG row-major. You can append more for reference;
-    // char→atlas mapping only uses the first atlasCellCount (see asciiBlocks.buildAtlasCharMap).
-    asciiSequence: `       \`·.-\',_:;\"~°º!¡ª÷+=^|)<>(\\/L«≈»v*c[¿?T±rxi≤≥zuìí]t√l7Y{nJ}IFjyîsç1oúùeπaCµ24ZhVfûk3P¢òóE£w95èpXébàáS6mAUGÇqôdH#KΩêÉOãâD&%R0Æ8NBMg@QW$░▒▓█`,
+    asciiSequence: ` \`·.-\',_:;\"~°º!¡ª÷+=^|)<>(\\/L«≈»⬦v*c[¿?T±rxi≤≥zuìí]t√l7Y{nJ}IFjyîsç1oúùeπaCµ24ZhVfûk3P¢òóE£w95èpXébàáS6mAUGÇqôdH#KΩêÉOãâD&%R0Æ8NBMg@QW$✦꩜☽♠★░▒▓█`,
 
     glyphThreshold: 0.75,
     glyphSoftness: 0.3,
@@ -90,11 +78,8 @@ const useAsciiRenderStore = create<AsciiRenderState>((set, get) => ({
     },
 
     setGridReady: (value) => set({ isGridReady: value }),
-
     setAtlas: (atlas) => set({ asciiAtlas: atlas }),
     setAtlasReady: (value) => set({ isAtlasReady: value }),
-
-    // createBrightnessMap: () => {},
 }));
 
 export default useAsciiRenderStore;

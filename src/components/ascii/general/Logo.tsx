@@ -26,7 +26,7 @@ function Logo() {
     const isHovering = useRef(false);
     const scale = useRef(0);
 
-    const texture = useTexture("/images/LOGO.webp");
+    const texture = useTexture("/images/LOGO_ascii_map.webp");
 
     const viewCellSize = useAsciiRenderStore((s) => s.viewCellSize);
     const extraColumns = useAsciiRenderStore((s) => s.extraColumns);

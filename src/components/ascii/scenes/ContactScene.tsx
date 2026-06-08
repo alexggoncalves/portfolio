@@ -23,7 +23,7 @@ function ContactScene() {
 
     return (
         <>
-            <AsciiBlock ascii={ascii} position={[0, 1.5, 0]} />
+            <AsciiBlock ascii={ascii} position={[0, 1.7, 0]} />
         </>
     );
 }

@@ -1,7 +1,7 @@
 .hero {
-    padding-top: calc(var(--nav-height)/2 + 25px);
+    padding-top: calc(var(--nav-height) / 2 + 25px);
     width: 100%;
-    height: calc(100vh - 280px - var(--main-padding)/2);
+    height: calc(100vh - 280px - var(--main-padding) / 2);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -15,20 +15,19 @@
         font-size: 1.2rem;
     }
 
-    #greeting{
+    #greeting {
         font-size: 1.5rem;
     }
 
-    #name{
+    #name {
         font-size: 2.6rem;
         font-weight: 800;
-        color: #B32462;
+        color: #b32462;
     }
 
-    #role{
+    #role {
         text-align: center;
     }
-
 }
 
 // --- HEADER ---
@@ -52,27 +51,11 @@
     }
 
     .projects-row__grid-link {
-        font-weight: 500;
-        border: 1px solid white;
-        border-radius: 15px;
-        padding: 4px 8px 4px 8px;
-        text-decoration: none;
-        transition: 0.2s ease;
-        color: white;
-        position: relative;
         height: 1.8rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+    }
 
-        &:hover {
-            background: white;
-            color: var(--background-color);
-        }
-
-        svg {
-            height: 100%;
-        }
+    .projects-row__grid-link svg {
+        height: 100%;
     }
 }
 
@@ -164,18 +147,6 @@
 .cat {
     margin-top: 20px;
     height: 70vh;
-}
-
-// ---- ABOUT ME ----
-.about-me {
-    display: flex;
-    flex-direction: column;
-    height: 80vh;
-    border: 1px solid white;
-    margin-bottom: var(--main-padding);
-    align-items: center;
-    justify-content: center;
-    text-align: center;
 }
 
 @media (max-width: 700px) {

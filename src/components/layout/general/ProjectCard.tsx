@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { getTagsById, type Project } from "./content";
+import { getTagsById, type Project } from "../../../data/content";
 import "../homepage/homepage.scss";
 import { XIcon } from "./Icons";
 

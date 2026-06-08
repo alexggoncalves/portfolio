@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 
-import { projects } from "../general/content";
+import { projects } from "../../../data/content";
 import ProjectCard from "../general/ProjectCard";
 import useHorizontalDragScroll from "../../../hooks/useHorizontalDragScroll";
 import { GoToGridIcon } from "../general/Icons";
@@ -19,7 +19,7 @@ function ProjectsRow() {
             <div className="projects-row__header">
                 <div className="projects-row__header-left">
                     <h1 className="projects-row__title">WORK</h1>
-                    <Link to="/work" className="projects-row__grid-link">
+                    <Link to="/work" className="button button--sm projects-row__grid-link">
                         <GoToGridIcon />
                     </Link>
                 </div>

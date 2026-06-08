@@ -18,7 +18,6 @@
 
     transform: translateY(100vh);
     transition: transform 0.4s ease-in-out;
-    box-sizing: border-box;
 }
 
 .project-window.open {
@@ -100,7 +99,7 @@
         display: flex;
         align-items: center;
         flex-direction: row;
-        gap: 6px; 
+        gap: 6px;
         white-space: nowrap;
 
         border-radius: 50px;
@@ -110,51 +109,11 @@
         font-family: "Avenir", sans-serif;
 
         svg {
-            width: 12px; 
+            width: 12px;
             height: 12px;
             flex-shrink: 0;
             color: white;
         }
-    }
-}
-
-// =============
-// BACK BUTTON
-// =============
-.project-window__close-button {
-    position: absolute;
-    top: 0;
-    left: var(--main-padding);
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-
-    font-size: 2rem;
-    line-height: 1;
-    font-weight: 500;
-
-    color: white;
-    background-color: var(--background-color);
-
-    border: 1px solid white;
-    border-radius: 25px;
-
-    transition: 0.2s ease;
-    opacity: 0.9;
-
-    z-index: 20;
-
-    &:hover {
-        background: white;
-        color: var(--background-color);
-    }
-
-    svg {
-        width: 50%;
-        aspect-ratio: 1;
     }
 }
 
@@ -227,17 +186,49 @@
 .media {
     width: 100%;
     height: auto;
-    aspect-ratio: 16 / 9;
     object-fit: cover;
-    margin-top: 30px;
     border-radius: 14px;
+}
 
-    &:first-child {
-        margin-top: 20px;
-    }
+.media-block{
+    margin-bottom: var(--main-padding);
+    display: flex;
+    flex-direction: column;
+}
 
-    &:last-child {
-        margin-bottom: var(--main-padding);
+.media-block_content{
+    display: flex;
+    gap: 20px;
+}
+
+.media-item{
+    display: flex;
+    flex-direction: column;
+}
+
+.media__title {
+    display: flex;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    
+    align-items: center;
+    margin-bottom: 14px;
+
+    gap: 16px;
+
+    margin-left: 8px;
+    margin-right: 8px;
+
+    hr{
+        flex: 1;
+        border: none;
+        border-top: 1px solid rgb(219, 219, 219);
+
+        &:first-child{
+            flex: none;
+            width: 20px;
+        }
     }
 }
 
@@ -284,42 +275,5 @@
         width: 100%;
         height: fit-content;
         padding: 0;
-    }
-
-    .project-window__close-button-mobile {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        width: 50px;
-        height: 50px;
-
-        color: white;
-        background-color: var(--background-color);
-        border: 1px solid white;
-        border-radius: 25px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        transition: 0.2s ease;
-        transform: translateY(0);
-        opacity: 0.9;
-
-        z-index: 100;
-
-        &:hover {
-            background: var(--background-color);
-            color: white;
-        }
-
-        svg {
-            width: 50%;
-            aspect-ratio: 1;
-        }
-
-        &.open {
-            transform: translateY(100px);
-        }
     }
 }

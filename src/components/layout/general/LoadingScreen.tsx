@@ -1,4 +1,5 @@
 import { useLayoutEffect, useState } from "react";
+import LOGO from "/images/logo.svg";
 
 const FADE_OUT_TIMER = 1000;
 
@@ -26,15 +27,15 @@ function LoadingScreen({ progress }: { progress: number }) {
             <div
                 className="loading-screen"
                 style={{
-                    // Inline so this layer wins before bundled CSS (Nav is z-index 120).
                     position: "fixed",
                     inset: 0,
                     width: "100vw",
                     height: "100vh",
-                    zIndex: 10_000,
+                    zIndex: 1000,
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
+                    flexDirection: "column",
                     backgroundColor: "rgb(25, 25, 25)",
                     fontFamily:
                         "'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
@@ -43,11 +44,58 @@ function LoadingScreen({ progress }: { progress: number }) {
                     pointerEvents: fadeOut ? "none" : "auto",
                 }}
             >
-                {progress}
+                <img
+                    src={LOGO}
+                    className="loading-screen__logo"
+                    style={{
+                        height: "80px",
+                        position: "absolute",
+                        transform: "translateY(-130%)"
+                    }}
+                ></img>
+                <div
+                    style={{
+                        position: "absolute",
+                        transform: "translateY(-170%)",
+                        fontSize: "16px",
+                        color: "#b32462"
+                    }}
+                >
+                    CREATIVE DEVELOPER
+                </div>
+                <div
+                    className="loading-screen__progress-bar"
+                    style={{
+                        padding: "3px",
+                        width: "300px",
+                        height: "16px",
+                        flexShrink: 0,
+                        border: "1px solid white",
+                        borderRadius: "24px",
+                        overflow: "hidden",
+                        boxSizing: "border-box",
+                    }}
+                >
+                    <div
+                        className="loading-screen__progress-fill"
+                        style={{
+                            height: "100%",
+                            width: "100%",
+                            transformOrigin: "left center",
+                            transform: `scaleX(${Math.min(Math.max(progress, 0), 100) / 100})`,
+                            backgroundColor: "white",
+                            borderRadius: "20px",
+                            transition: "transform 0.5s ease",
+                        }}
+                    />
+                </div>
 
-                <button disabled={!ready} onClick={handleEnter}>
+                <div
+                    className={`button ${ready ? "" : "button-disabled"}`}
+                    onClick={handleEnter}
+                >
                     ENTER
-                </button>
+                </div>
             </div>
         </>
     );

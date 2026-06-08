@@ -1,26 +1,29 @@
-import type { Media } from "../../general/content";
+import type { MediaBlock } from "../../../../data/content";
+import MediaItem from "./MediaItem";
 
-function MediaRenderer({ item }: { item: Media }) {
-    switch (item.type) {
-        case "image":
-            return <img src={item.src} className="media" />;
+function MediaRenderer({ block }: { block: MediaBlock }) {
+    const content =
+        block.type === "single" ? (
+            <MediaItem item={block.media} />
+        ) : (
+            <div className="media-block_content">
+                {block.items.map((m, i) => (
+                    <MediaItem key={i} item={m} />
+                ))}
+            </div>
+        );
 
-        case "video":
-            return (
-                <video
-                    src={item.src}
-                    className="media"
-                    controls
-                    preload="metadata"
-                ></video>
-            );
-
-        case "model":
-            return <div className="media"></div>;
-
-        default:
-            return null;
-    }
+    return (
+        <div className="media-block">
+            {block.title && (
+                <div className="media__title">
+                    <span>{block.title}</span>
+                    <hr />
+                </div>
+            )}
+            {content}
+        </div>
+    );
 }
 
 export default MediaRenderer;

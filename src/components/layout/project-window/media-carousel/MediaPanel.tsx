@@ -1,11 +1,11 @@
-import type { Media } from "../../general/content";
+import type { MediaBlock } from "../../../../data/content";
 import MediaRenderer from "./MediaRenderer";
 
-function MediaPanel({ items }: { items: Media[] }) {
+function MediaPanel({ items }: { items: MediaBlock[] }) {
     return (
         <>
             {items.map((item) => {
-                return <MediaRenderer item={item}></MediaRenderer>;
+                return <MediaRenderer block={item} />;
             })}
         </>
     );

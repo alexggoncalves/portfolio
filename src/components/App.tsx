@@ -1,6 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LayoutRoot from "./layout/LayoutRoot";
-import { imagesToPreload } from "./layout/general/content";
+import { imagesToPreload } from "../data/content";
 import useImagePreloader from "../hooks/useImagePreloader";
 import LoadingScreen from "./layout/general/LoadingScreen";
 
