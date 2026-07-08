@@ -34,16 +34,21 @@ function LayoutRoot() {
     const { pathname } = useLocation();
     const mainRef = useRef<HTMLElement>(null);
     const setRoute = useSceneStore((s) => s.setRoute);
+    const isLoaded = useSceneStore((s) => s.isLoaded);
 
     const activePage = getActivePage(pathname);
     const activeProjectId = getActiveProjectId(pathname);
 
     const [visibleProject, setVisibleProject] = useState<string | null>(null);
 
-    // Handle route changes + projectWindow open + close
-    useEffect(() => {
+    // Keep scene store in sync with the URL before paint so AsciiScene never
+    // renders one frame of the wrong page (avoids ASCII / logo glitches).
+    useLayoutEffect(() => {
         setRoute(activePage, activeProjectId);
+    }, [activePage, activeProjectId, setRoute]);
 
+    // Project window open + delayed close
+    useEffect(() => {
         if (activeProjectId) {
             setVisibleProject(activeProjectId);
         } else {
@@ -53,7 +58,7 @@ function LayoutRoot() {
 
             return () => clearTimeout(timeout);
         }
-    }, [pathname, activeProjectId]);
+    }, [activeProjectId]);
 
     // Reset scroll of main on page change
     useLayoutEffect(() => {
@@ -61,7 +66,7 @@ function LayoutRoot() {
         if (!el) return;
 
         el.scrollTop = 0;
-    }, [activePage]);
+    }, [activePage, isLoaded]);
 
     // Mobile check
     const setIsMobile = useSceneStore((s) => s.setIsMobile);
@@ -84,20 +89,22 @@ function LayoutRoot() {
     return (
         <>
             <Nav />
-            <main ref={mainRef}>
-                <AsciiStage />
+            <AsciiStage />
 
-                {activePage === "home" && <HomePage />}
-                {activePage === "work" && <ProjectsGridPage />}
-                {activePage === "contact" && <ContactPage />}
+            {isLoaded && (
+                <main ref={mainRef}>
+                    {activePage === "home" && <HomePage />}
+                    {activePage === "work" && <ProjectsGridPage />}
+                    {activePage === "contact" && <ContactPage />}
 
-                {visibleProject && (
-                    <ProjectWindow
-                        projectId={visibleProject}
-                        isOpen={!!activeProjectId}
-                    />
-                )}
-            </main>
+                    {visibleProject && (
+                        <ProjectWindow
+                            projectId={visibleProject}
+                            isOpen={!!activeProjectId}
+                        />
+                    )}
+                </main>
+            )}
         </>
     );
 }

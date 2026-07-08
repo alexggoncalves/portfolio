@@ -117,100 +117,95 @@
                 }
             },
             {
-                "type": "multiple",
-                "columns": 2,
+                "type": "row",
                 "items": [
                     {
                         "type": "image",
                         "title": "Blockout",
                         "src": "https://cloud.alexgg.com/gary/gary_blockout.webp",
-                        "id": "Gary - Blockout"
+                        "alt": "Gary - Blockout"
                     },
                     {
                         "type": "image",
                         "title": "Sculpt",
                         "src": "https://cloud.alexgg.com/gary/gary_sculpt.webp",
-                        "id": "Gary - Sculpt"
+                        "alt": "Gary - Sculpt"
                     }
                 ]
             },
             {
-                "type": "multiple",
+                "type": "row",
                 "title": "Retopology",
-                "columns": 2,
                 "items": [
                     {
                         "type": "image",
                         "src": "https://cloud.alexgg.com/gary/gary_retopology_body.webp",
-                        "id": "Gary - Body retopology "
+                        "alt": "Gary - Body retopology "
                     },
                     {
                         "type": "image",
                         "src": "https://cloud.alexgg.com/gary/gary_retopology_face.webp",
-                        "id": "Gary - Face retopology"
+                        "alt": "Gary - Face retopology"
                     }
                 ]
             },
             {
-                "type": "multiple",
-                "columns": 2,
+                "type": "row",
                 "items": [
                     {
                         "type": "image",
                         "title": "Clothes and accessories",
                         "src": "https://cloud.alexgg.com/gary/gary_clothes.webp",
-                        "id": "Gary - Clothes"
+                        "alt": "Gary - Clothes"
                     },
                     {
                         "type": "image",
                         "title": "UV Unwrap",
                         "src": "https://cloud.alexgg.com/gary/gary_uv.webp",
-                        "id": "Gary - UV Unwrap"
+                        "alt": "Gary - UV Unwrap"
                     }
                 ]
             },
             {
-                "type": "multiple",
-                "columns": 2,
+                "type": "row",
                 "items": [
                     {
                         "type": "image",
                         "title": "Base Color",
                         "src": "https://cloud.alexgg.com/gary/gary_base-color.webp",
-                        "id": "Gary - Base Color"
+                        "alt": "Gary - Base Color"
                     },
                     {
                         "type": "image",
                         "title": "Texturing",
                         "src": "https://cloud.alexgg.com/gary/gary_texturing.webp",
-                        "id": "Gary - Texturing"
+                        "alt": "Gary - Texturing"
                     }
                 ]
             },
             {
-                "type": "multiple",
+                "type": "row",
                 "title": "Rigging",
-                "columns": 4,
                 "items": [
                     {
                         "type": "image",
                         "src": "https://cloud.alexgg.com/gary/gary_rig_1.webp",
-                        "id": "Gary - Rigging 1"
+                        "alt": "Gary - Rigging 1"
                     },
                     {
                         "type": "image",
                         "src": "https://cloud.alexgg.com/gary/gary_rig-2.webp",
-                        "id": "Gary - Rigging 2"
+                        "alt": "Gary - Rigging 2"
                     },
                     {
                         "type": "image",
                         "src": "https://cloud.alexgg.com/gary/gary_rig-3.webp",
-                        "id": "Gary - Rigging 3"
+                        "alt": "Gary - Rigging 3"
                     },
                     {
                         "type": "image",
                         "src": "https://cloud.alexgg.com/gary/gary_rig-4.webp",
-                        "id": "Gary - Rigging 4"
+                        "alt": "Gary - Rigging 4"
                     }
                 ]
             }
@@ -235,6 +230,111 @@
             { "id": "joao-santos", "roles": ["Coder"] }
         ],
         "media": []
+    },
+    {
+        "id": "frogger-vr",
+        "title": "Frogger VR",
+        "subtitle": "Reimagining a classic",
+        "tags": ["game-dev", "3d", "vr", "interaction-design"],
+        "year": "2023",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/frogger-vr-thumbnail.webp",
+        "description": ["x", "y"],
+        "link": "",
+        "git": "",
+        "tools": ["Unity", "Blender", "c-sharp"],
+        "team": [{ "id": "alexandre-goncalves", "roles": ["Designer", "3D"] }],
+        "media": [
+            {
+                "type": "single",
+                "title": "Video Demo",
+                "media": {
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/frogger-vr/frogger_video.mp4",
+                    "alt": "Frogger Vr - Video Demo"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Bedroom",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/frogger-vr/frogger_bedroom.webp",
+                    "alt": "Frogger Vr - Bedroom"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Living Room",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/frogger-vr/frogger_living-room.webp",
+                    "alt": "Frogger Vr - Living Room"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Kitchen",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/frogger-vr/frogger_kitchen.webp",
+                    "alt": "Frogger Vr - Kitchen"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Outside",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/frogger-vr/frogger_outside-1.webp",
+                    "alt": "Frogger - Outside"
+                }
+            },
+            {
+                "type": "single",
+                "title": "The House",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/frogger-vr/frogger_outside-2.webp",
+                    "alt": "Frogger - The House"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Road",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/frogger-vr/frogger_cars.webp",
+                    "alt": "Frogger - Road"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Train Tracks",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/frogger-vr/frogger_trains.webp",
+                    "alt": "Frogger - Train Tracks"
+                }
+            },
+            {
+                "type": "single",
+                "title": "River",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/frogger-vr/frogger_river.webp",
+                    "alt": "Frogger - River"
+                }
+            },
+            {
+                "type": "single",
+                "title": "The Train",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/frogger-vr/frogger_objective.webp",
+                    "alt": "Frogger - Objective"
+                }
+            }
+        ]
     },
     {
         "id": "mirage",
@@ -367,13 +467,97 @@
         "description": ["x", "y"],
         "link": "",
         "git": "",
-        "tools": ["Unity", "C#", "Python"],
+        "tools": ["Blender", "Processing", "Arduino"],
         "team": [
             { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
             { "id": "margarida-mendonca", "roles": ["Coder", "Designer"] },
             { "id": "ema-lopes", "roles": ["Coder", "Designer"] }
         ],
-        "media": []
+        "media": [
+            {
+                "type": "single",
+                "media": {
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/waver/waver_video.mp4",
+                    "alt": "Waver - Demo Video"
+                }
+            },
+            {
+                "type": "stacked",
+                "title": "Final Device Prototype",
+                "main": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/waver/waver_final.webp",
+                    "alt": "Waver - Device prototype"
+                },
+                "row": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/waver/waver_side.webp",
+                        "alt": "Waver - Prototype side view"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/waver/waver_closeup.webp",
+                        "alt": "Waver - Prototype closeup"
+                    }
+                ]
+            },
+            {
+                "type": "row",
+                "title": "Interface - Piano • Violin • Oboe",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/waver/waver_piano.webp",
+                        "alt": "Waver - Piano interface"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/waver/waver_violin.webp",
+                        "alt": "Waver - Violin interface"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/waver/waver_flute.webp",
+                        "alt": "Waver - Flute interface"
+                    }
+                ]
+            },
+            {
+                "type": "row",
+                "title": "3D Model",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/waver/waver_model-open.webp",
+                        "alt": "Waver - Model interior"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/waver/waver_model-closed.webp",
+                        "alt": "Waver - Model exterior"
+                    }
+                ]
+            },
+            {
+                "type": "row",
+                "items": [
+                    {
+                        "type": "image",
+                        "title": "Circuit",
+                        "src": "https://cloud.alexgg.com/waver/waver_process-circuit.webp",
+                        "alt": "Waver - Circuit"
+                    },
+                    {
+                        "type": "image",
+                        "title": "Unpainted Device",
+                        "src": "https://cloud.alexgg.com/waver/waver_process-unpainted.webp",
+                        "alt": "Waver - Unpainted device"
+                    }
+                ]
+            }
+        ]
     },
     {
         "id": "samar",

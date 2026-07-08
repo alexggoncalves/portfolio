@@ -2,16 +2,28 @@ import type { MediaBlock } from "../../../../data/content";
 import MediaItem from "./MediaItem";
 
 function MediaRenderer({ block }: { block: MediaBlock }) {
-    const content =
-        block.type === "single" ? (
-            <MediaItem item={block.media} />
-        ) : (
-            <div className="media-block_content">
-                {block.items.map((m, i) => (
-                    <MediaItem key={i} item={m} />
-                ))}
-            </div>
-        );
+    const content = () => {
+        if (block.type === "row") {
+            return (
+                <div className="media-block_content">
+                    {block.items.map((item, i) => (
+                        <MediaItem key={i} item={item} />
+                    ))}
+                </div>
+            );
+        } else if (block.type === "stacked") {
+            return (
+                <>
+                    <MediaItem item={block.main} />
+                    <div className="media-block_content">
+                        {block.row.map((item, i) => (
+                            <MediaItem key={i} item={item} />
+                        ))}
+                    </div>
+                </>
+            );
+        } else return <MediaItem item={block.media} />;
+    };
 
     return (
         <div className="media-block">
@@ -21,7 +33,7 @@ function MediaRenderer({ block }: { block: MediaBlock }) {
                     <hr />
                 </div>
             )}
-            {content}
+            {content()}
         </div>
     );
 }

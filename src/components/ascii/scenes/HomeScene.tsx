@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { Suspense, useRef } from "react";
 import useSceneStore from "../../../stores/sceneStore";
 import CatSection from "./CatSection";
 import { useFrame } from "@react-three/fiber";
@@ -19,9 +19,10 @@ function HomeScene() {
     });
 
     return (
-        <>
+        <Suspense fallback={null}>
+            {/* Cat FBX/textures suspend; boundary keeps Logo from Canvas-level fallback */}
             <CatSection opacity={opacity}></CatSection>
-        </>
+        </Suspense>
     );
 }
 

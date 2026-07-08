@@ -108,12 +108,7 @@ function AsciiRenderPipeline({
 
         if (!atlasImage) return;
         const atlasReady = !!(atlasImage.width && atlasImage.height);
-        if (
-            !atlasReady ||
-            !fullScreenPlane.current ||
-            scene.children.length === 0
-        )
-            return;
+        if (!atlasReady || !fullScreenPlane.current) return;
 
         // Same camera as R3F viewport / Logo math — avoids grid vs RT mismatch from a duplicate PerspectiveCamera
         const cam = state.camera;

@@ -3,7 +3,7 @@ import PEOPLE from "./people.json";
 import TAGS from "./tags.json";
 import ICONS from "./icons.json";
 
-// Layout types
+// Media types
 export type ImageAsset = {
     type: "image";
     title?: string;
@@ -28,20 +28,27 @@ export type ModelAsset = {
 
 export type Media = ImageAsset | VideoAsset | ModelAsset;
 
+// Media Block types
 export type SingleMediaBlock = {
     type: "single";
     title?: string;
     media: Media;
 };
 
-export type GridMediaBlock = {
-    type: "grid";
+export type RowMediaBlock = {
+    type: "row";
     title?: string;
-    columns: 2 | 3 | 4;
     items: Media[];
 };
 
-export type MediaBlock = SingleMediaBlock | GridMediaBlock;
+export type StackedMediaBlock = {
+    type: "stacked";
+    title?: string;
+    main: Media;
+    row: Media[];
+};
+
+export type MediaBlock = SingleMediaBlock | RowMediaBlock | StackedMediaBlock;
 
 // Person types
 export type Person = {
