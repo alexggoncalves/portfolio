@@ -70,21 +70,18 @@ function LayoutRoot() {
 
     // Mobile check
     const setIsMobile = useSceneStore((s) => s.setIsMobile);
-    const mobileSize = useSceneStore((s) => s.mobileSize);
     const setIsTouch = useSceneStore((s) => s.setIsTouch);
-    useEffect(() => {
-        const check = () => {
-            setIsMobile(window.innerWidth <= mobileSize);
 
-            setIsTouch(
-                window.matchMedia("(pointer: coarse)").matches ||
-                    navigator.maxTouchPoints > 0,
-            );
-        };
-        check();
-        window.addEventListener("resize", check);
-        return () => window.removeEventListener("resize", check);
-    }, []);
+    useEffect(() => {
+    const check = () => {
+        const { mobileSize } = useSceneStore.getState();
+        setIsMobile(window.innerWidth <= mobileSize);
+        setIsTouch(window.matchMedia("(pointer: coarse)").matches);
+    };
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+}, [setIsMobile, setIsTouch]);
 
     return (
         <>

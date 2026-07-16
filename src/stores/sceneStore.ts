@@ -12,7 +12,6 @@ type SceneStoreState = {
 
     isFireworksLocked: boolean;
 
-    /** When true, preloaded UI assets are ready and `<main>` may mount. */
     isLoaded: boolean;
 
     setRoute: (page: Page, projectId: string | null) => void;

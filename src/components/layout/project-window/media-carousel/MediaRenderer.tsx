@@ -22,6 +22,14 @@ function MediaRenderer({ block }: { block: MediaBlock }) {
                     </div>
                 </>
             );
+        } else if (block.type === "column") {
+            return (
+                <div className="media-block_content">
+                    {block.items.map((item, i) => (
+                        <MediaItem key={i} item={item} />
+                    ))}
+                </div>
+            );
         } else return <MediaItem item={block.media} />;
     };
 

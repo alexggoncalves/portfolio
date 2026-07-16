@@ -21,50 +21,65 @@
         "media": [
             {
                 "type": "single",
+                "title": "Video Demo",
                 "media": {
                     "type": "video",
-                    "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-video.mp4",
-                    "alt": "Endless Purrs - Video"
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless_purrs_demo.mp4",
+                    "alt": "Endless Purrs - Video Demo"
                 }
             },
             {
                 "type": "single",
+                "title": "WFC World Generation",
                 "media": {
-                    "type": "image",
-                    "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-1.png",
-                    "alt": "Endless Purrs - Game Screenshot 1"
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless_purrs_wfc.mp4",
+                    "alt": "Endless Purrs - WFC World Generation"
                 }
             },
             {
                 "type": "single",
+                "title": "Main House",
                 "media": {
                     "type": "image",
-                    "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-2.png",
-                    "alt": "Endless Purrs - Game Screenshot 2"
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless_purrs_house.webp",
+                    "alt": "Endless Purrs - Main House"
                 }
             },
             {
                 "type": "single",
+                "title": "Cemetery",
                 "media": {
                     "type": "image",
-                    "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-3.png",
-                    "alt": "Endless Purrs - Game Screenshot 3"
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless_purrs_cemetery.webp",
+                    "alt": "Endless Purrs - Cemetery"
                 }
             },
             {
                 "type": "single",
+                "title": "Beach",
                 "media": {
                     "type": "image",
-                    "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-4.png",
-                    "alt": "Endless Purrs - Game Screenshot 4"
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless_purrs_beach.webp",
+                    "alt": "Endless Purrs - Beach"
                 }
             },
             {
                 "type": "single",
+                "title": "Ruins",
                 "media": {
                     "type": "image",
-                    "src": "https://cloud.alexgg.com/endless-purrs/endless-purrs-5.png",
-                    "alt": "Endless Purrs - Game Screenshot 5"
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless_purrs_temple.webp",
+                    "alt": "Endless Purrs - Ruins"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Camping Site",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/endless-purrs/endless_purrs_camping.webp",
+                    "alt": "Endless Purrs - Camping site"
                 }
             }
         ]
@@ -407,8 +422,8 @@
     },
     {
         "id": "alta-baixa-web",
-        "title": "Alta & Baixa - Web",
-        "subtitle": "Typography Magazine",
+        "title": "Alta & Baixa",
+        "subtitle": "Typography Magazine - Digital and Print",
         "tags": ["frontend"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/alta-e-baixa-thumbnail.webp",
@@ -420,7 +435,57 @@
             { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
             { "id": "ana-gil", "roles": ["Designer"] }
         ],
-        "media": []
+        "media": [
+            {
+                "type": "single",
+                "title": "Digital Magazine",
+                "media": {
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_web_video.mp4",
+                    "alt": "Alta & Baixa - Digital Magazine"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Print Magazine Cover",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_cover.webp",
+                    "alt": "Alta & Baixa - Cover"
+                }
+            },
+            {
+                "type": "column",
+                "title": "Print Magazine Spread Examples",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_1.webp",
+                        "alt": "Alta & Baixa - Spread 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_2.webp",
+                        "alt": "Alta & Baixa - Spread 2"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_3.webp",
+                        "alt": "Alta & Baixa - Spread 3"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_4.webp",
+                        "alt": "Alta & Baixa - Spread 4"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_5.webp",
+                        "alt": "Alta & Baixa - Spread 5"
+                    }
+                ]
+            }
+        ]
     },
     {
         "id": "frames",
@@ -561,8 +626,8 @@
     },
     {
         "id": "samar",
-        "title": "Samar",
-        "subtitle": "Interactive Installation",
+        "title": "Samar Maakaroun",
+        "subtitle": "Exhibition + Interactive Installation",
         "tags": ["interaction-design", "generative"],
         "year": "2022",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/samar-thumbnail.webp",
@@ -577,7 +642,136 @@
             { "id": "jolanta-pavliukovic", "roles": ["Designer"] },
             { "id": "pedro-mendes", "roles": ["Designer", "3D"] }
         ],
-        "media": []
+        "media": [
+            {
+                "type": "single",
+                "title": "Interactive Installation Demo",
+                "media": {
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/samar/samar_lines_demo.mp4",
+                    "alt": "Samar - Interactive Installation Demo"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Local View",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/samar/samar_lines_local_view.webp",
+                    "alt": "Samar - Local View"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Full Canvas View",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/samar/samar_lines_full_view.webp",
+                    "alt": "Samar - Full Canvas View"
+                }
+            },
+            {
+                "type": "row",
+                "items": [
+                    {
+                        "type": "image",
+                        "title": "Interaction Diagram",
+                        "src": "https://cloud.alexgg.com/samar/samar_lines_interaction_diagram.webp",
+                        "alt": "Samar - Interaction Diagram"
+                    },
+                    {
+                        "type": "image",
+                        "title": "Installation Layout",
+                        "src": "https://cloud.alexgg.com/samar/samar_lines_interaction_layout.webp",
+                        "alt": "Samar - Installation Layout"
+                    }
+                ]
+            },
+            {
+                "type": "row",
+                "title": "Promotional Posters", 
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/samar/samar_poster1.webp",
+                        "alt": "Samar - Poster 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/samar/samar_poster2.webp",
+                        "alt": "Samar - Poster 2"
+                    }
+                ]
+            },
+            {
+                "type": "column",
+                "title": "Exhibition Layout",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/samar/samar_rooms_layout1.webp",
+                        "alt": "Samar - Exhibition Layout 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/samar/samar_rooms_layout2.webp",
+                        "alt": "Samar - Exhibition Layout 2"
+                    }
+                ]
+            },
+            {
+                "type": "column",
+                "title": "Exhibition Rooms",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/samar/samar_room1.webp",
+                        "alt": "Samar - Exhibition Room 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/samar/samar_room2.webp",
+                        "alt": "Samar - Exhibition Room 2"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/samar/samar_room3.webp",
+                        "alt": "Samar - Exhibition Room 3"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/samar/samar_room4.webp",
+                        "alt": "Samar - Exhibition Room 4"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/samar/samar_room5.webp",
+                        "alt": "Samar - Exhibition Room 5"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/samar/samar_room6.webp",
+                        "alt": "Samar - Exhibition Room 6"
+                    }
+                ]
+            },
+            {
+                "type": "row",
+                "title": "Exterior Installation", 
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/samar/samar_exterior_installation.webp",
+                        "alt": "Samar - Exterior Installation"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/samar/samar_exterior_installation_plant.webp",
+                        "alt": "Samar - Exterior Installation Plant"
+                    }
+                ]
+            }
+        ]
     },
     {
         "id": "visualizers",

@@ -48,7 +48,13 @@ export type StackedMediaBlock = {
     row: Media[];
 };
 
-export type MediaBlock = SingleMediaBlock | RowMediaBlock | StackedMediaBlock;
+export type ColumnMediaBlock = {
+    type: "column";
+    title?: string;
+    items: Media[];
+};
+
+export type MediaBlock = SingleMediaBlock | RowMediaBlock | StackedMediaBlock | ColumnMediaBlock;
 
 // Person types
 export type Person = {
