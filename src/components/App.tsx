@@ -22,7 +22,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-    const { loaded: imagesLoaded, progress: imgProgress } =
+    const { loaded: imagesLoaded, progress: _imgProgress } =
         useImagePreloader(imagesToPreload);
     const setIsLoaded = useSceneStore((s) => s.setIsLoaded);
 
