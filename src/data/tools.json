@@ -1,0 +1,86 @@
+[
+    {
+        "id": "blender",
+        "src": "https://cloud.alexgg.com/icons/tools/blender.svg"
+    },
+    {
+        "id": "react",
+        "src": "https://cloud.alexgg.com/icons/tools/react.svg"
+    },
+    {
+        "id": "unity",
+        "src": "https://cloud.alexgg.com/icons/tools/unity.svg"
+    },
+    {
+        "id": "c-sharp",
+        "src": "https://cloud.alexgg.com/icons/tools/c-sharp.svg"
+    },
+    {
+        "id": "substance-painter",
+        "src": "https://cloud.alexgg.com/icons/tools/substance-painter.svg"
+    },
+    {
+        "id": "meta-sdk",
+        "src": "https://cloud.alexgg.com/icons/tools/meta-sdk.svg"
+    },
+    {
+        "id": "rhino",
+        "src": "https://cloud.alexgg.com/icons/tools/rhino.svg"
+    },
+    {
+        "id": "javascript",
+        "src": "https://cloud.alexgg.com/icons/tools/javascript.svg"
+    },
+    {
+        "id": "typescript",
+        "src": "https://cloud.alexgg.com/icons/tools/typescript.svg"
+    },
+    {
+        "id": "node-js",
+        "src": "https://cloud.alexgg.com/icons/tools/node-js.svg"
+    },
+    {
+        "id": "express",
+        "src": "https://cloud.alexgg.com/icons/tools/express.svg"
+    },
+    {
+        "id": "open-ai-api",
+        "src": "https://cloud.alexgg.com/icons/tools/open-ai-api.svg"
+    },
+    {
+        "id": "processing",
+        "src": "https://cloud.alexgg.com/icons/tools/processing.svg"
+    },
+    {
+        "id": "python",
+        "src": "https://cloud.alexgg.com/icons/tools/python.svg"
+    },
+    {
+        "id": "arduino",
+        "src": "https://cloud.alexgg.com/icons/tools/arduino.svg"
+    },
+    {
+        "id": "illustrator",
+        "src": "https://cloud.alexgg.com/icons/tools/illustrator.svg"
+    },
+    {
+        "id": "photoshop",
+        "src": "https://cloud.alexgg.com/icons/tools/photoshop.svg"
+    },
+    {
+        "id": "indesign",
+        "src": "https://cloud.alexgg.com/icons/tools/indesign.svg"
+    },
+    {
+        "id": "premiere",
+        "src": "https://cloud.alexgg.com/icons/tools/premiere.svg"
+    },
+    {
+        "id": "after-effects",
+        "src": "https://cloud.alexgg.com/icons/tools/after-effects.svg"
+    },
+    {
+        "id": "java",
+        "src": "https://cloud.alexgg.com/icons/tools/java.svg"
+    }
+]

@@ -14,8 +14,9 @@ function MediaRenderer({ block }: { block: MediaBlock }) {
         } else if (block.type === "stacked") {
             return (
                 <>
-                    <MediaItem item={block.main} />
-                    <div className="media-block_content">
+                    <div className="media-block_content media-block--stacked">
+                        <MediaItem item={block.main} />
+
                         {block.row.map((item, i) => (
                             <MediaItem key={i} item={item} />
                         ))}
@@ -24,7 +25,7 @@ function MediaRenderer({ block }: { block: MediaBlock }) {
             );
         } else if (block.type === "column") {
             return (
-                <div className="media-block_content">
+                <div className="media-block_content media-block--column">
                     {block.items.map((item, i) => (
                         <MediaItem key={i} item={item} />
                     ))}

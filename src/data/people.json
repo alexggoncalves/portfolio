@@ -2,17 +2,17 @@
     {
         "id": "alexandre-goncalves",
         "name": "Alexandre Gonçalves",
-        "link": ""
+        "link": "https://www.linkedin.com/in/alexggoncalves/"
     },
     {
         "id": "margarida-mendonca",
         "name": "Margarida Mendonça",
-        "link": "https://www.youtube.com/watch?v=xvFZjo5PgG0"
+        "link": "https://www.linkedin.com/in/margarida-mendonca/"
     },
     {
         "id": "maria-carrilho",
         "name": "Maria Carrilho",
-        "link": ""
+        "link": "https://www.linkedin.com/in/maria-carrilho/"
     },
     {
         "id": "joao-cristovao",
@@ -25,8 +25,38 @@
         "link": "https://www.linkedin.com/in/lu%C3%ADs-costa-8b3908201/"
     },
     {
-        "id": "beatriz-ferreira",
-        "name": "Beatriz Ferreira",
+        "id": "ana-gil",
+        "name": "Ana Gil",
+        "link": "https://www.linkedin.com/in/ana-gil-ferreira-63341026b/"
+    },
+    {
+        "id": "joao-lucas",
+        "name": "João Lucas",
         "link": ""
+    },
+    {
+        "id": "andre-queiros",
+        "name": "André Queirós",
+        "link": ""
+    },
+    {
+        "id": "ema-lopes",
+        "name": "Ema Lopes",
+        "link": ""
+    },
+    {
+        "id": "daniela-mendes",
+        "name": "Daniela Mendes",
+        "link": "https://www.linkedin.com/in/daniela-mendes-604504267/"
+    },
+    {
+        "id": "ines-goncalves",
+        "name": "Inês Gonçalves",
+        "link": "https://www.linkedin.com/in/in%C3%AAs-gon%C3%A7alves-205aa11bb/"
+    },
+    {
+        "id": "pedro-mendes",
+        "name": "Pedro Mendes",
+        "link": "https://www.linkedin.com/in/pedro-branco-mendes/"
     }
 ]

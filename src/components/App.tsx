@@ -4,8 +4,8 @@ import LayoutRoot from "./layout/LayoutRoot";
 import { imagesToPreload } from "../data/content";
 import useImagePreloader from "../hooks/useImagePreloader";
 import useSceneStore from "../stores/sceneStore";
-// import LoadingScreen from "./layout/general/LoadingScreen";
-import ComingSoon from "./layout/general/ComingSoon";
+import LoadingScreen from "./layout/general/LoadingScreen";
+// import ComingSoon from "./layout/general/ComingSoon";
 
 // ROUTES
 const router = createBrowserRouter([
@@ -22,7 +22,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-    const { loaded: imagesLoaded, progress: _imgProgress } =
+    const { loaded: imagesLoaded, progress: imgProgress } =
         useImagePreloader(imagesToPreload);
     const setIsLoaded = useSceneStore((s) => s.setIsLoaded);
 
@@ -32,8 +32,8 @@ function App() {
 
     return (
         <>
-            {/* <LoadingScreen progress={imgProgress}></LoadingScreen> */}
-            <ComingSoon></ComingSoon>
+            <LoadingScreen progress={imgProgress}></LoadingScreen>
+            {/* <ComingSoon></ComingSoon> */}
 
             <RouterProvider router={router} />
         </>

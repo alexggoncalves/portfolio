@@ -14,8 +14,11 @@
         "git": "https://github.com/alexggoncalves/endless-purrs",
         "tools": ["unity", "blender", "c-sharp"],
         "team": [
-            { "id": "alexandre-goncalves", "roles": ["Designer", "Coder"] },
-            { "id": "margarida-mendonca", "roles": ["Coder", "Designer"] },
+            {
+                "id": "alexandre-goncalves",
+                "roles": ["Game Designer", "Game Developer", "3D Artist"]
+            },
+            { "id": "margarida-mendonca", "roles": ["Game Designer"] },
             { "id": "maria-carrilho", "roles": ["Sound Designer"] }
         ],
         "media": [
@@ -93,7 +96,7 @@
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/gary-thumbnail.webp",
         "link": "",
         "git": "",
-        "tools": ["unity", "blender", "C#", "Substance Painter"],
+        "tools": ["unity", "blender", "c-sharp", "substance-painter"],
         "media": [
             {
                 "type": "single",
@@ -226,26 +229,6 @@
             }
         ]
     },
-
-    {
-        "id": "pipe-quest",
-        "title": "PipeQuest",
-        "subtitle": "Plumbing VR Training",
-        "tags": ["game-dev", "3d", "vr", "interaction-design"],
-        "year": "2023",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/pipe-quest-thumbnail.webp",
-        "description": ["x", "y"],
-        "link": "",
-        "git": "",
-        "tools": ["Unity", "Blender", "c-sharp"],
-        "team": [
-            { "id": "alexandre-goncalves", "roles": ["Designer", "3D"] },
-            { "id": "margarida-mendonca", "roles": ["Designer", "3D"] },
-            { "id": "goncalo-barroso", "roles": ["Designer"] },
-            { "id": "joao-santos", "roles": ["Coder"] }
-        ],
-        "media": []
-    },
     {
         "id": "frogger-vr",
         "title": "Frogger VR",
@@ -256,8 +239,7 @@
         "description": ["x", "y"],
         "link": "",
         "git": "",
-        "tools": ["Unity", "Blender", "c-sharp"],
-        "team": [{ "id": "alexandre-goncalves", "roles": ["Designer", "3D"] }],
+        "tools": ["unity", "blender", "c-sharp", "meta-sdk"],
         "media": [
             {
                 "type": "single",
@@ -361,8 +343,93 @@
         "description": ["x", "y"],
         "link": "",
         "git": "",
-        "tools": ["Unity", "Blender", "C#"],
-        "media": []
+        "tools": ["blender", "rhino"],
+        "media": [
+            {
+                "type": "single",
+                "title": "Render",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/mirage/mirage_render.webp",
+                    "alt": "Mirage - Render"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Side Views",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/mirage/mirage_sides.webp",
+                    "alt": "Mirage - Side Views"
+                }
+            },
+            {
+                "type": "row",
+                "title": "Back Top Views",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/mirage/mirage_top.webp",
+                        "alt": "Mirage - Top View"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/mirage/mirage_back.webp",
+                        "alt": "Mirage - Back View"
+                    }
+                ]
+            },
+            {
+                "type": "single",
+                "title": "Sketch",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/mirage/mirage_sketch.webp",
+                    "alt": "Mirage - Sketch"
+                }
+            },
+            {
+                "type": "row",
+                "title": "Materialization",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/mirage/mirage_built1.webp",
+                        "alt": "Mirage - Materialization 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/mirage/mirage_built2.webp",
+                        "alt": "Mirage - Materialization 2"
+                    }
+                ]
+            },
+            {
+                "type": "single",
+                "title": "Wood Blocks",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/mirage/mirage_pieces.webp",
+                    "alt": "Mirage - Wood blocks"
+                }
+            },
+            {
+                "type": "row",
+                "title": "Materialization Process",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/mirage/mirage_process1.webp",
+                        "alt": "Mirage - Materialization Process 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/mirage/mirage_process2.webp",
+                        "alt": "Mirage - Materialization Process 2"
+                    }
+                ]
+            }
+        ]
     },
     {
         "id": "feels-lab",
@@ -374,66 +441,157 @@
         "description": ["x", "y"],
         "link": "",
         "git": "",
-        "tools": ["Unity", "Blender", "C#"],
-        "media": []
+        "tools": ["react", "javascript", "node-js", "express", "open-ai-api"],
+        "media": [
+            {
+                "type": "single",
+                "title": "Demo Video",
+                "media": {
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/feels-lab/feels_lab_video.mp4",
+                    "alt": "FeelsLab - Video Demo"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/feels-lab/feels_lab_1.webp",
+                    "alt": "FeelsLab - 1"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/feels-lab/feels_lab_2.webp",
+                    "alt": "FeelsLab - 2"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/feels-lab/feels_lab_3.webp",
+                    "alt": "FeelsLab - 3"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/feels-lab/feels_lab_4.webp",
+                    "alt": "FeelsLab - 4"
+                }
+            }
+        ]
     },
     {
         "id": "endless",
-        "title": "endless",
-        "subtitle": "Infinite Music",
+        "title": "Endless",
+        "subtitle": "A sea of music",
         "tags": ["frontend", "backend", "generative"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/endless-thumbnail.webp",
         "description": ["x", "y"],
         "link": "",
         "git": "",
-        "tools": ["Unity", "Blender", "C#"],
-        "media": []
+        "tools": ["react", "javascript", "node-js", "express"],
+        "media": [
+            {
+                "type": "single",
+                "title": "Demo Video",
+                "media": {
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/endless/endless_video_demo.mp4",
+                    "alt": "Endless - Video Demo"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/endless/endless_1.webp",
+                    "alt": "Endless - 1"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/endless/endless_2.webp",
+                    "alt": "Endless - 2"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/endless/endless_3.webp",
+                    "alt": "Endless - 3"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/endless/endless_4.webp",
+                    "alt": "Endless - 4"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/endless/endless_5.webp",
+                    "alt": "Endless - 5"
+                }
+            }
+        ]
     },
     {
         "id": "muse",
         "title": "Muse",
-        "subtitle": "Art",
+        "subtitle": "Art Gallery",
         "tags": ["frontend"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/muse-thumbnail.webp",
         "description": ["x", "y"],
         "link": "",
         "git": "",
-        "tools": ["Unity", "Blender", "C#"],
+        "tools": ["react", "javascript"],
         "media": []
     },
     {
-        "id": "radicals",
-        "title": "Radicals",
-        "subtitle": "Radical Sports",
-        "tags": ["frontend", "backend"],
-        "year": "2023",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/radicals-thumbnail.webp",
-        "description": ["x", "y"],
-        "link": "",
-        "git": "",
-        "tools": ["Unity", "Blender", "C#"],
-        "team": [
-            { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
-            { "id": "beatriz-ferreira", "roles": ["Coder", "Designer"] }
-        ],
-        "media": []
-    },
-    {
-        "id": "alta-baixa-web",
+        "id": "alta-baixa",
         "title": "Alta & Baixa",
         "subtitle": "Typography Magazine - Digital and Print",
-        "tags": ["frontend"],
+        "tags": ["print", "graphic-design", "frontend"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/alta-e-baixa-thumbnail.webp",
         "description": ["x", "y"],
         "link": "",
         "git": "",
-        "tools": ["Unity", "Blender", "C#"],
+        "tools": ["indesign", "react", "javascript"],
         "team": [
-            { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
-            { "id": "ana-gil", "roles": ["Designer"] }
+            {
+                "id": "alexandre-goncalves",
+                "roles": [
+                    "Front-end Developer",
+                    "Editorial Designer",
+                    "UI/UX Designer"
+                ]
+            },
+            { "id": "ana-gil", "roles": ["Editorial Designer"] }
         ],
         "media": [
             {
@@ -488,39 +646,123 @@
         ]
     },
     {
-        "id": "frames",
-        "title": "Frames",
-        "subtitle": "Movie Store",
-        "tags": ["frontend", "backend"],
-        "year": "2023",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/frames-thumbnail.webp",
-        "description": ["x", "y"],
-        "link": "",
-        "git": "",
-        "tools": ["Unity", "Blender", "C#"],
-        "team": [
-            { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
-            { "id": "joao-cristovao", "roles": ["Coder", "Designer"] }
-        ],
-        "media": []
-    },
-    {
         "id": "malleus",
         "title": "Malleus",
         "subtitle": "Ding dong",
-        "tags": ["interaction-design", "generative"],
+        "tags": ["vr", "game-dev", "3d"],
         "year": "2022",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/malleus-thumbnail.webp",
         "description": ["x", "y"],
         "link": "",
         "git": "",
-        "tools": ["Unity", "C#", "Python"],
+        "tools": [
+            "unity",
+            "blender",
+            "substance-painter",
+            "c-sharp",
+            "meta-sdk"
+        ],
         "team": [
-            { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
-            { "id": "joao-cristovao", "roles": ["Coder", "Designer"] },
-            { "id": "luis-costa", "roles": ["Sound Designer", "Designer"] }
+            {
+                "id": "alexandre-goncalves",
+                "roles": ["Game Developer", "Interaction Designer", "3D Artist"]
+            },
+            { "id": "joao-cristovao", "roles": ["Interaction Designer"] },
+            { "id": "luis-costa", "roles": ["Graphic Designer"] }
         ],
         "media": []
+    },
+
+    {
+        "id": "undone",
+        "title": "Undone",
+        "subtitle": "A Short Movie",
+        "tags": ["film"],
+        "year": "2022",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/undone-thumbnail.webp",
+        "description": ["x", "y"],
+        "link": "",
+        "git": "",
+        "tools": ["premiere", "after-effects"],
+        "team": [
+            {
+                "id": "alexandre-goncalves",
+                "roles": [
+                    "Cinematographer",
+                    "Editor",
+                    "Co-Director",                    
+                    "Sound Designer",
+                    "Motion Designer"
+                ]
+            },
+            {
+                "id": "joao-cristovao",
+                "roles": [
+                    "Editor",
+                    "Writer",
+                    "Producer",
+                    "Co-Director",
+                    "Sound Designer"
+                ]
+            },
+            {
+                "id": "joao-lucas",
+                "roles": ["Writer", "Sound Designer", "Assistant Director"]
+            },
+            { "id": "andre-queiros", "roles": ["Writer", "Actor"] }
+        ],
+        "media": [
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/undone/UNDONE.mp4",
+                    "alt": "Undone - Video"
+                }
+            },
+            {
+                "type": "column",
+                "title": "Stills",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/undone/undone_still1.webp",
+                        "alt": "Undone - Still 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/undone/undone_still2.webp",
+                        "alt": "Undone - Still 2"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/undone/undone_still3.webp",
+                        "alt": "Undone - Still 3"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/undone/undone_still4.webp",
+                        "alt": "Undone - Still 4"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/undone/undone_still5.webp",
+                        "alt": "Undone - Still 5"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/undone/undone_still6.webp",
+                        "alt": "Undone - Still 6"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/undone/undone_still7.webp",
+                        "alt": "Undone - Still 7"
+                    }
+                ]
+            }
+        ]
     },
     {
         "id": "waver",
@@ -532,11 +774,24 @@
         "description": ["x", "y"],
         "link": "",
         "git": "",
-        "tools": ["Blender", "Processing", "Arduino"],
+        "tools": ["blender", "processing", "arduino", "java"],
         "team": [
-            { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
-            { "id": "margarida-mendonca", "roles": ["Coder", "Designer"] },
-            { "id": "ema-lopes", "roles": ["Coder", "Designer"] }
+            {
+                "id": "alexandre-goncalves",
+                "roles": [
+                    "Creative Developer",
+                    "Interaction Designer",
+                    "3D Artist"
+                ]
+            },
+            {
+                "id": "margarida-mendonca",
+                "roles": ["Creative Developer", "Interaction Designer"]
+            },
+            {
+                "id": "ema-lopes",
+                "roles": ["Creative Developer", "Interaction Designer"]
+            }
         ],
         "media": [
             {
@@ -585,7 +840,7 @@
                     {
                         "type": "image",
                         "src": "https://cloud.alexgg.com/waver/waver_flute.webp",
-                        "alt": "Waver - Flute interface"
+                        "alt": "Waver - Oboe interface"
                     }
                 ]
             },
@@ -634,13 +889,28 @@
         "description": ["x", "y"],
         "link": "",
         "git": "",
-        "tools": ["Unity", "C#", "Python"],
+        "tools": [
+            "processing",
+            "java",
+            "python",
+            "blender",
+            "illustrator",
+            "photoshop"
+        ],
         "team": [
-            { "id": "alexandre-goncalves", "roles": ["Coder", "3D"] },
-            { "id": "daniela-mendes", "roles": ["Designer"] },
-            { "id": "ines-goncalves", "roles": ["Designer"] },
-            { "id": "jolanta-pavliukovic", "roles": ["Designer"] },
-            { "id": "pedro-mendes", "roles": ["Designer", "3D"] }
+            {
+                "id": "alexandre-goncalves",
+                "roles": ["Creative Developer", "3D Artist", "Graphic Designer"]
+            },
+            {
+                "id": "daniela-mendes",
+                "roles": ["Graphic Designer", "Curator"]
+            },
+            {
+                "id": "ines-goncalves",
+                "roles": ["Graphic Designer", "Curator"]
+            },
+            { "id": "pedro-mendes", "roles": ["Graphic Designer", "3D Artist"] }
         ],
         "media": [
             {
@@ -689,7 +959,7 @@
             },
             {
                 "type": "row",
-                "title": "Promotional Posters", 
+                "title": "Promotional Posters",
                 "items": [
                     {
                         "type": "image",
@@ -757,7 +1027,7 @@
             },
             {
                 "type": "row",
-                "title": "Exterior Installation", 
+                "title": "Exterior Installation",
                 "items": [
                     {
                         "type": "image",
@@ -783,11 +1053,226 @@
         "description": ["x", "y"],
         "link": "",
         "git": "",
-        "tools": ["Unity", "C#", "Python"],
+        "tools": ["processing", "java"],
         "team": [
-            { "id": "alexandre-goncalves", "roles": ["Coder", "Designer"] },
-            { "id": "joao-cristovao", "roles": ["Coder", "Designer"] }
+            { "id": "alexandre-goncalves", "roles": ["Creative Developer"] },
+            { "id": "joao-cristovao", "roles": ["Creative Developer"] }
         ],
-        "media": []
+        "media": [
+            {
+                "type": "single",
+                "title": "Demo Video",
+                "media": {
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/visualizers/music_visualizers_demo.mp4",
+                    "alt": "Music Visualizers - Demo Video"
+                }
+            },
+            {
+                "type": "row",
+                "title": "Text Visualizer",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/visualizers/visualizers_text1.webp",
+                        "alt": "Music Visualizers - Text Visualizer 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/visualizers/visualizers_text2.webp",
+                        "alt": "Music Visualizers - Text Visualizer 2"
+                    }
+                ]
+            },
+            {
+                "type": "column",
+                "title": "Branch Visualizer",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/visualizers/visualizers_branch1.webp",
+                        "alt": "Music Visualizers - Branch Visualizer 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/visualizers/visualizers_branch2.webp",
+                        "alt": "Music Visualizers - Branch Visualizer 2"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/visualizers/visualizers_branch3.webp",
+                        "alt": "Music Visualizers - Branch Visualizer 3"
+                    }
+                ]
+            },
+            {
+                "type": "row",
+                "title": "Tunnel Visualizer",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/visualizers/visualizers_tunnel1.webp",
+                        "alt": "Music Visualizers - Tunnel Visualizer 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/visualizers/visualizers_tunnel2.webp",
+                        "alt": "Music Visualizers - Tunnel Visualizer 2"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "criminals_print",
+        "title": "Crimes Exemplares - Print",
+        "subtitle": "A Poster Puzzle",
+        "tags": ["print", "graphic-design"],
+        "year": "2022",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/crimes-exemplares-poster-thumbnail.webp",
+        "description": ["x", "y"],
+        "tools": ["photoshop", "illustrator"],
+        "team": [
+            { "id": "alexandre-goncalves", "roles": ["Graphic Designer"] },
+            { "id": "joao-cristovao", "roles": ["Graphic Designer"] },
+            { "id": "luis-costa", "roles": ["Graphic Designer"] }
+        ],
+        "media": [
+            {
+                "type": "row",
+                "title": "Poster Samples",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/criminals_puzzle/criminals_poster1.webp",
+                        "alt": "Crimes Exemplares - Poster 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/criminals_puzzle/criminals_poster2.webp",
+                        "alt": "Crimes Exemplares - Poster 2"
+                    }
+                ]
+            },
+            {
+                "type": "row",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/criminals_puzzle/criminals_poster3.webp",
+                        "alt": "Crimes Exemplares - Poster 3"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/criminals_puzzle/criminals_poster4.webp",
+                        "alt": "Crimes Exemplares - Poster 4"
+                    }
+                ]
+            },
+            {
+                "type": "row",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/criminals_puzzle/criminals_poster5.webp",
+                        "alt": "Crimes Exemplares - Poster 5"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/criminals_puzzle/criminals_poster6.webp",
+                        "alt": "Crimes Exemplares - Poster 6"
+                    }
+                ]
+            },
+            {
+                "type": "single",
+                "title": "Assembled Puzzle",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/criminals_puzzle/criminals_full_puzzle.webp",
+                    "alt": "Crimes Exemplares - Assembled Puzzle"
+                }
+            },
+            {
+                "type": "row",
+                "items": [
+                    {
+                        "type": "image",
+                        "title": "The criminal's face",
+                        "src": "https://cloud.alexgg.com/criminals_puzzle/criminals_face.webp",
+                        "alt": "Crimes Exemplares - Face"
+                    },
+                    {
+                        "type": "image",
+                        "title": "Unfolded Packaging",
+                        "src": "https://cloud.alexgg.com/criminals_puzzle/criminals_package.webp",
+                        "alt": "Crimes Exemplares - Packaging"
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        "id": "criminals_digital",
+        "title": "Crimes Exemplares - Digital",
+        "subtitle": "Interactive",
+        "tags": ["interaction-design", "game-dev", "3d"],
+        "year": "2022",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/crimes-exemplares-interactive-thumbnail.webp",
+        "description": ["x", "y"],
+        "tools": ["unity", "c-sharp", "blender"],
+        "team": [
+            { "id": "alexandre-goncalves", "roles": ["Game Developer"] },
+            { "id": "joao-cristovao", "roles": ["Illustrator"] },
+            { "id": "luis-costa", "roles": ["Illustrator"] }
+        ],
+        "media": [
+            {
+                "type": "single",
+                "title": "Demo Video",
+                "media": {
+                    "type": "video",
+                    "src": "https://cloud.alexgg.com/criminals_interactive/criminals_demo.mp4",
+                    "alt": "Crimes Exemplares - Video Demo"
+                }
+            },
+            {
+                "type": "column",
+                "title": "Screenshots",
+                "items": [
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/criminals_interactive/criminals_1.webp",
+                        "alt": "Crimes Exemplares - 1"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/criminals_interactive/criminals_2.webp",
+                        "alt": "Crimes Exemplares - 2"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/criminals_interactive/criminals_3.webp",
+                        "alt": "Crimes Exemplares - 3"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/criminals_interactive/criminals_4.webp",
+                        "alt": "Crimes Exemplares - 4"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/criminals_interactive/criminals_5.webp",
+                        "alt": "Crimes Exemplares - 5"
+                    },
+                    {
+                        "type": "image",
+                        "src": "https://cloud.alexgg.com/criminals_interactive/criminals_6.webp",
+                        "alt": "Crimes Exemplares - 6"
+                    }
+                ]
+            }
+        ]
     }
 ]

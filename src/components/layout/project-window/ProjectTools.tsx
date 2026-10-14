@@ -1,4 +1,4 @@
-import { getIconById } from "../../../data/content";
+import { getToolById } from "../../../data/content";
 
 function ProjectTools({ tools }: { tools: string[] }) {
     if (tools)
@@ -7,7 +7,7 @@ function ProjectTools({ tools }: { tools: string[] }) {
                 <h3>TOOLS:</h3>
                 <div className="project-window__tools">
                     {tools?.map((tool) => {
-                        const icon = getIconById(tool);
+                        const icon = getToolById(tool);
 
                         if (icon) return <img src={icon?.src} alt="" />;
                         else return <span>{tool}</span>;

@@ -1,10 +1,25 @@
+import { useState, type CSSProperties } from "react";
 import type { Media } from "../../../../data/content";
 
 function MediaItem({ item }: { item: Media }) {
+    const [ratio, setRatio] = useState<number>();
+
     const renderMedia = () => {
         switch (item.type) {
             case "image":
-                return <img src={item.src} className="media" alt={item.alt} />;
+                return (
+                    <img
+                        src={item.src}
+                        className="media"
+                        alt={item.alt}
+                        onLoad={(e) =>
+                            setRatio(
+                                e.currentTarget.naturalWidth /
+                                    e.currentTarget.naturalHeight,
+                            )
+                        }
+                    />
+                );
 
             case "video":
                 return (
@@ -25,7 +40,7 @@ function MediaItem({ item }: { item: Media }) {
     };
 
     return (
-        <div className="media-item">
+        <div className="media-item" style={{ "--ratio": ratio} as CSSProperties}>
             {item.title && (
                 <div className="media__title">
                     <span>{item.title}</span>

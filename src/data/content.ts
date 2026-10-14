@@ -1,7 +1,7 @@
 import PROJECTS from "./projects.json";
 import PEOPLE from "./people.json";
 import TAGS from "./tags.json";
-import ICONS from "./icons.json";
+import TOOLS from "./tools.json";
 
 // Media types
 export type ImageAsset = {
@@ -106,12 +106,12 @@ export type Icon = {
 export const projects = PROJECTS as Project[];
 export const people = PEOPLE as Person[];
 export const tags = TAGS as Tag[];
-export const icons = ICONS as Icon[];
+export const tools = TOOLS as Icon[];
 
 // Images to Preload
 const thumbnailUrls = projects.map((project) => project.thumbnailSrc);
-const iconUrls = icons.map((icon) => icon.src);
-export const imagesToPreload = [...thumbnailUrls, ...iconUrls];
+const toolUrls = tools.map((tool) => tool.src);
+export const imagesToPreload = [...thumbnailUrls, ...toolUrls];
 
 export function getProjectById(id: string): Project | null {
     const project = projects.find((work) => work.id === id);
@@ -127,9 +127,9 @@ export function getTagById(id: string): Tag | null {
     const tag = tags.find((tag) => tag.id === id);
     return tag || null;
 }
-export function getIconById(id: string): Icon | null {
-    const icon = icons.find((icon) => icon.id === id);
-    return icon || null;
+export function getToolById(id: string): Icon | null {
+    const tool = tools.find((tool) => tool.id === id);
+    return tool || null;
 }
 
 export function getTagsById(tagIds: string[]): Tag[] {
