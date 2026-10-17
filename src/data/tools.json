@@ -1,86 +1,117 @@
 [
     {
         "id": "blender",
+        "title": "Blender",
         "src": "https://cloud.alexgg.com/icons/tools/blender.svg"
     },
     {
         "id": "react",
+        "title": "React",
         "src": "https://cloud.alexgg.com/icons/tools/react.svg"
     },
     {
         "id": "unity",
+        "title": "Unity",
         "src": "https://cloud.alexgg.com/icons/tools/unity.svg"
     },
     {
         "id": "c-sharp",
+        "title": "C#",
         "src": "https://cloud.alexgg.com/icons/tools/c-sharp.svg"
     },
     {
         "id": "substance-painter",
+        "title": "Substance Painter",
         "src": "https://cloud.alexgg.com/icons/tools/substance-painter.svg"
     },
     {
         "id": "meta-sdk",
+        "title": "Meta SDK",
         "src": "https://cloud.alexgg.com/icons/tools/meta-sdk.svg"
     },
     {
         "id": "rhino",
+        "title": "Rhino",
         "src": "https://cloud.alexgg.com/icons/tools/rhino.svg"
     },
     {
         "id": "javascript",
+        "title": "JavaScript",
         "src": "https://cloud.alexgg.com/icons/tools/javascript.svg"
     },
     {
         "id": "typescript",
+        "title": "TypeScript",
         "src": "https://cloud.alexgg.com/icons/tools/typescript.svg"
     },
     {
         "id": "node-js",
+        "title": "Node.js",
         "src": "https://cloud.alexgg.com/icons/tools/node-js.svg"
     },
     {
         "id": "express",
+        "title": "Express",
         "src": "https://cloud.alexgg.com/icons/tools/express.svg"
     },
     {
         "id": "open-ai-api",
+        "title": "OpenAI API",
         "src": "https://cloud.alexgg.com/icons/tools/open-ai-api.svg"
     },
     {
         "id": "processing",
+        "title": "Processing",
         "src": "https://cloud.alexgg.com/icons/tools/processing.svg"
     },
     {
         "id": "python",
+        "title": "Python",
         "src": "https://cloud.alexgg.com/icons/tools/python.svg"
     },
     {
         "id": "arduino",
+        "title": "Arduino",
         "src": "https://cloud.alexgg.com/icons/tools/arduino.svg"
     },
     {
         "id": "illustrator",
+        "title": "Illustrator",
         "src": "https://cloud.alexgg.com/icons/tools/illustrator.svg"
     },
     {
         "id": "photoshop",
+        "title": "Photoshop",
         "src": "https://cloud.alexgg.com/icons/tools/photoshop.svg"
     },
     {
         "id": "indesign",
+        "title": "InDesign",
         "src": "https://cloud.alexgg.com/icons/tools/indesign.svg"
     },
     {
         "id": "premiere",
+        "title": "Premiere Pro",
         "src": "https://cloud.alexgg.com/icons/tools/premiere.svg"
     },
     {
         "id": "after-effects",
+        "title": "After Effects",
         "src": "https://cloud.alexgg.com/icons/tools/after-effects.svg"
     },
     {
         "id": "java",
+        "title": "Java",
         "src": "https://cloud.alexgg.com/icons/tools/java.svg"
+    },
+    {
+        "id": "r3f",
+        "title": "React Three Fiber",
+        "src": "https://cloud.alexgg.com/icons/tools/three-js.svg"
+    },
+    {
+        "id": "open-xr",
+        "title": "Open XR",
+        "src": "https://cloud.alexgg.com/icons/tools/open-xr.svg"
     }
 ]

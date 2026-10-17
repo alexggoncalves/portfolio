@@ -15,6 +15,7 @@ export type ImageAsset = {
 export type VideoAsset = {
     type: "video";
     title?: string;
+    alt?: string;
     src: string;
     id?: string;
 };
@@ -54,7 +55,11 @@ export type ColumnMediaBlock = {
     items: Media[];
 };
 
-export type MediaBlock = SingleMediaBlock | RowMediaBlock | StackedMediaBlock | ColumnMediaBlock;
+export type MediaBlock =
+    | SingleMediaBlock
+    | RowMediaBlock
+    | StackedMediaBlock
+    | ColumnMediaBlock;
 
 // Person types
 export type Person = {
@@ -83,9 +88,6 @@ export type Project = {
     tools: string[];
     team?: TeamMember[];
     media: MediaBlock[];
-
-    asciiTitle?: number[];
-    asciiSubtitle?: number[];
 };
 
 // Tag type
@@ -103,10 +105,16 @@ export type Icon = {
     aspect: number;
 };
 
+export type ToolIcon = {
+    id: string;
+    src: string;
+    title: string;
+};
+
 export const projects = PROJECTS as Project[];
 export const people = PEOPLE as Person[];
 export const tags = TAGS as Tag[];
-export const tools = TOOLS as Icon[];
+export const tools = TOOLS as ToolIcon[];
 
 // Images to Preload
 const thumbnailUrls = projects.map((project) => project.thumbnailSrc);
@@ -127,7 +135,7 @@ export function getTagById(id: string): Tag | null {
     const tag = tags.find((tag) => tag.id === id);
     return tag || null;
 }
-export function getToolById(id: string): Icon | null {
+export function getToolById(id: string): ToolIcon | null {
     const tool = tools.find((tool) => tool.id === id);
     return tool || null;
 }
