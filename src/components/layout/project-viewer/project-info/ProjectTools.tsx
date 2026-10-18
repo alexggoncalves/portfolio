@@ -1,4 +1,4 @@
-import { getToolById } from "../../../data/content";
+import { getToolById } from "../../../../data/content";
 
 function ProjectTools({ tools }: { tools: string[] }) {
     if (tools)

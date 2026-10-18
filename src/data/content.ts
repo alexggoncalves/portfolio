@@ -29,37 +29,37 @@ export type ModelAsset = {
 
 export type Media = ImageAsset | VideoAsset | ModelAsset;
 
-// Media Block types
-export type SingleMediaBlock = {
+// Media Slide types
+export type SingleMediaSlide = {
     type: "single";
     title?: string;
     media: Media;
 };
 
-export type RowMediaBlock = {
+export type RowMediaSlide = {
     type: "row";
     title?: string;
     items: Media[];
 };
 
-export type StackedMediaBlock = {
+export type StackedMediaSlide = {
     type: "stacked";
     title?: string;
     main: Media;
     row: Media[];
 };
 
-export type ColumnMediaBlock = {
+export type ColumnMediaSlide = {
     type: "column";
     title?: string;
     items: Media[];
 };
 
-export type MediaBlock =
-    | SingleMediaBlock
-    | RowMediaBlock
-    | StackedMediaBlock
-    | ColumnMediaBlock;
+export type MediaSlide =
+    | SingleMediaSlide
+    | RowMediaSlide
+    | StackedMediaSlide
+    | ColumnMediaSlide;
 
 // Person types
 export type Person = {
@@ -87,7 +87,7 @@ export type Project = {
     git?: string;
     tools: string[];
     team?: TeamMember[];
-    media: MediaBlock[];
+    media: MediaSlide[];
 };
 
 // Tag type

@@ -4,15 +4,10 @@ import { projects } from "../../../data/content";
 import ProjectCard from "../general/ProjectCard";
 import useHorizontalDragScroll from "../../../hooks/useHorizontalDragScroll";
 import { GoToGridIcon } from "../general/Icons";
-import useSceneStore from "../../../stores/sceneStore";
 
 function ProjectsRow() {
-    const setFireworksLocked = useSceneStore((s) => s.setFireworksLocked);
-
     const { viewportRef, trackRef, onPointerDown, indicatorRef } =
-        useHorizontalDragScroll({
-            onDragStateChange: setFireworksLocked,
-        });
+        useHorizontalDragScroll();
 
     return (
         <section className="projects-row">

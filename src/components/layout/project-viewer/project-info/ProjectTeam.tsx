@@ -1,14 +1,14 @@
 import {
     getPersonById,
     type TeamMember,
-} from "../../../data/content";
+} from "../../../../data/content";
 
 function ProjectTeam({ team }: { team: TeamMember[] | undefined }) {
     if (team)
         return (
             <>
                 <h3>TEAM:</h3>
-                <div className="project-window__team-container">
+                <div className="project-window__team">
                     {team.map((teamMember, i) => {
                         const person = getPersonById(teamMember.id);
                         if (person)

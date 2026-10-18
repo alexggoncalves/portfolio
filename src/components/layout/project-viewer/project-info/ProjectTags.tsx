@@ -1,5 +1,4 @@
-import { getTagsById } from "../../../data/content";
-import { XIcon } from "../general/Icons";
+import { getTagsById } from "../../../../data/content";
 
 function ProjectTags({ tagIds }: { tagIds: string[] }) {
     if (!tagIds) return;
@@ -18,7 +17,6 @@ function ProjectTags({ tagIds }: { tagIds: string[] }) {
                                 color: tag.textColor,
                             }}
                         >
-                            <XIcon></XIcon>
                             <span>{tag.name.toUpperCase()}</span>
                         </div>
                     );

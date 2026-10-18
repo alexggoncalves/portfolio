@@ -52,6 +52,26 @@
   height: 60%;
 }
 
+.button--icon-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.button--icon-text span {
+  padding-bottom: 3px;
+}
+
+.button--icon-sm {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 25px;
+}
+.button--icon-sm svg {
+  width: 58%;
+  height: 58%;
+}
+
 .button--sm {
   padding: 3px 10px;
   font-size: 1.5rem;
