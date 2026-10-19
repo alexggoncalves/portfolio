@@ -1,6 +1,8 @@
 import "./styles/index.scss";
-import "./components/layout/general/buttons.scss"
-import "./components/layout/general/general.scss"
+import "./components/interface/buttons.scss"
+import "./components/general.scss"
+import "./components/interface/window.scss"
+
 import ReactDOM from "react-dom/client";
 
 import App from "./components/App.tsx";

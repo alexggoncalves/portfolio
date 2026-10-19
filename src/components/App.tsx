@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import LayoutRoot from "./layout/LayoutRoot";
+import LayoutRoot from "./pages/LayoutRoot";
 import { imagesToPreload } from "../data/content";
 import useImagePreloader from "../hooks/useImagePreloader";
 import useSceneStore from "../stores/sceneStore";
-import LoadingScreen from "./layout/general/LoadingScreen";
+import LoadingScreen from "./LoadingScreen";
 // import ComingSoon from "./layout/general/ComingSoon";
 
 // ROUTES

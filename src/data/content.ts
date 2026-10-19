@@ -10,6 +10,7 @@ export type ImageAsset = {
     alt?: string;
     src: string;
     id?: string;
+    thumb?: string;
 };
 
 export type VideoAsset = {
@@ -18,6 +19,7 @@ export type VideoAsset = {
     alt?: string;
     src: string;
     id?: string;
+    thumb?: string;
 };
 
 export type ModelAsset = {
@@ -25,6 +27,7 @@ export type ModelAsset = {
     title?: string;
     src: string;
     id?: string;
+    thumb?: string;
 };
 
 export type Media = ImageAsset | VideoAsset | ModelAsset;

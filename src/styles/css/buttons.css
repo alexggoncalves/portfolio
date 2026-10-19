@@ -1,55 +1,61 @@
-.button {
-  display: inline-flex;
+button {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-family: inherit;
-  font-size: 0.9rem;
-  padding: 4px 12px;
-  border-radius: 20px;
-  border: 1px solid white;
-  background-color: var(--background-color);
-  color: white;
+  gap: 5px;
   cursor: pointer;
-  scale: 1;
-  opacity: 1;
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease, scale 0.15s ease, opacity 0.4s ease;
   user-select: none;
+  background-color: transparent;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease, color 0.2s ease, opacity 0.4s ease;
+}
+button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.button:hover {
-  background-color: white;
-  color: var(--background-color);
-}
-
-.button:active {
-  scale: 0.94;
-}
-
-.button-disabled {
+button:disabled {
   opacity: 0;
   pointer-events: none;
 }
 
-.button svg {
-  width: 1.3em;
-  height: 1.3em;
-  display: block;
-  flex-shrink: 0;
+a {
+  text-decoration: none;
 }
 
 .button--pill {
-  border-radius: 50px;
+  border: 1px solid rgb(158, 158, 158);
+  border-radius: 25px;
+  padding: 8px 14px 9px 14px;
+}
+.button--pill > svg {
+  width: 16px;
+  height: 16px;
+  margin-right: 2px;
+}
+.button--pill.active {
+  background-color: rgb(226, 226, 226);
+  border-color: rgb(226, 226, 226);
+  color: rgb(27, 27, 27);
 }
 
 .button--icon {
-  width: 40px;
-  height: 40px;
-  padding: 0;
-  border-radius: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  width: 34px;
+  height: 34px;
+  padding: 6px;
+  border-radius: 8px;
 }
 .button--icon svg {
-  width: 60%;
-  height: 60%;
+  width: 100%;
+  height: 100%;
+}
+.button--icon:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .button--icon-text {
@@ -131,6 +137,22 @@
 }
 
 @media (max-width: 700px) {
+  .toggle:hover {
+    background-color: var(--background-color);
+    color: white;
+    scale: 1;
+  }
+  .toggle:active {
+    scale: 0.9;
+  }
+  .toggle.toggle-right {
+    bottom: 20px;
+    right: 20px;
+  }
+  .toggle.toggle-left {
+    bottom: 20px;
+    left: 20px;
+  }
   .toggle-right-btm {
     bottom: 20px;
     right: 20px;

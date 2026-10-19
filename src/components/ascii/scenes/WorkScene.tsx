@@ -1,6 +1,6 @@
 import { useMemo} from "react";
 import { createASCIITitle } from "../general/asciiFonts";
-import AsciiBlock from "../general/AsciiBlock";
+// import AsciiBlock from "../general/AsciiBlock";
 
 function WorkScene() {
     const ascii = useMemo(() => {
@@ -9,7 +9,7 @@ function WorkScene() {
 
     return (
         <>
-            <AsciiBlock ascii={ascii} position={[0, 3.4, 0]} />
+            {/* <AsciiBlock ascii={ascii} position={[0, 3.4, 0]} /> */}
         </>
     );
 }
