@@ -6,9 +6,9 @@ import MediaThumbnail from "./MediaThumbnail";
 
 export function getSlideItems(slide: MediaSlide): Media[] {
     switch (slide.type) {
-        case "single":  return [slide.media];
-        case "row":     return slide.items;
-        case "column":  return slide.items;
+        case "single": return [slide.media];
+        case "row": return slide.items;
+        case "column": return slide.items;
         case "stacked": return [slide.main, ...slide.row];
     }
 }
@@ -36,39 +36,43 @@ function MediaStrip({ slides, index, setIndex }: Props) {
     }
 
     return (
-        <div className="media-strip">
-            <button onClick={prev} className="media-strip__arrow">
-                <ChevronLeft />
-            </button>
 
-            <div
-                ref={viewportRef}
-                className="media-strip__scroller"
-                onPointerDown={onPointerDown}
-            >
-                <div ref={trackRef} className="media-strip__track">
-                    {slides.map((slide, i) => (
-                        <button
-                            key={i}
-                            type="button"
-                            onClick={() => setIndex(i)}
-                            className={`media-strip__slide ${i === index ? "active" : ""}`}
-                            aria-label={`${i + 1}. ${slide.title || "Media"}`}
-                            aria-current={i === index ? "true" : undefined}
-                            title={slide.title}
-                        >
-                            {getSlideItems(slide).map((media, j) => (
-                                <MediaThumbnail key={j} media={media} />
-                            ))}
-                        </button>
-                    ))}
+        <div className="media-strip__container">
+            <div className="media-strip">
+                <button onClick={prev} className="media-strip__arrow">
+                    <ChevronLeft />
+                </button>
+
+                <div
+                    ref={viewportRef}
+                    className="media-strip__scroller"
+                    onPointerDown={onPointerDown}
+                >
+                    <div ref={trackRef} className="media-strip__track">
+                        {slides.map((slide, i) => (
+                            <button
+                                key={i}
+                                type="button"
+                                onClick={() => setIndex(i)}
+                                className={`media-strip__slide ${i === index ? "active" : ""}`}
+                                aria-label={`${i + 1}. ${slide.title || "Media"}`}
+                                aria-current={i === index ? "true" : undefined}
+                                title={slide.title}
+                            >
+                                {getSlideItems(slide).map((media, j) => (
+                                    <MediaThumbnail key={j} media={media} />
+                                ))}
+                            </button>
+                        ))}
+                    </div>
+
+
                 </div>
-
-
+                <button onClick={next} className="media-strip__arrow">
+                    <ChevronRight />
+                </button>
             </div>
-            <button onClick={next} className="media-strip__arrow">
-                <ChevronRight />
-            </button>
+
 
         </div>
     )

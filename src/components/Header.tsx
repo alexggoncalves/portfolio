@@ -2,6 +2,7 @@ import { Link } from "react-router";
 import { useRef, useState } from "react";
 import useSceneStore from "../stores/sceneStore";
 import { BurgerIcon, CloseIcon } from "./interface/Icons";
+import useUIStore from "../stores/UIStore";
 
 interface IndicatorState {
     left: number;
@@ -17,6 +18,8 @@ function Nav() {
 
     const [animate, setAnimate] = useState<boolean>(false);
     const [isOpen, setIsOpen] = useState(false);
+
+    const interfaceHidden = useUIStore((s) => s.interfaceHidden);
 
     // Hover indicator
     const [indicator, setIndicator] = useState<IndicatorState>({
@@ -69,11 +72,12 @@ function Nav() {
                     onClick={() => setIsOpen(false)}
                 />
             )}
-            <header>
+            <header >
                 <span id="logo">Alex</span>
                 <nav
-                    className={`nav ${isOpen ? "open" : ""}`}
+                    className={`nav ${isOpen ? "open" : ""} ${interfaceHidden ? "ui-hidden" : ""}`}
                     onMouseLeave={handleMouseLeave}
+                    inert={interfaceHidden}
                 >
 
                     <Link

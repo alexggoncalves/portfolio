@@ -1,6 +1,6 @@
-import "./styles/index.scss";
-import "./components/interface/buttons.scss"
-import "./components/general.scss"
+import "./styles/index.scss"
+import "./styles/general.scss"
+import "./styles/buttons.scss"
 import "./components/interface/window.scss"
 
 import ReactDOM from "react-dom/client";

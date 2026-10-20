@@ -1,18 +1,22 @@
 .media-stage {
-  --stage-top: 100px;
-  --stage-bottom: calc(70px + 20px + var(--main-padding));
+  --stage-padding: calc( var(--main-padding)/2);
+  --stage-top: calc( var(--nav-height) - 10px);
+  --stage-bottom: calc( var(--main-padding)/2);
   position: absolute;
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  background-color: rgb(59, 73, 57);
 }
 
 .media-slide {
+  background-color: rgb(30, 30, 30);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 8v8M8 12h8' stroke='white' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E");
+  background-size: 24px 24px;
   position: absolute;
   inset: 0;
   opacity: 0;
   overflow: hidden;
+  pointer-events: none;
   z-index: 0;
   transition: opacity 0s linear 0.5s;
 }
@@ -29,7 +33,7 @@
   height: 100%;
   display: flex;
   gap: 12px;
-  padding: var(--stage-top) var(--main-padding) var(--stage-bottom);
+  padding: var(--stage-top) var(--stage-padding) var(--stage-padding) var(--stage-padding);
 }
 
 .media-slide--single {
@@ -64,14 +68,14 @@ video.media:fullscreen {
 }
 
 .media-strip {
-  height: 100%;
-  max-width: 40%;
-  background-color: rgba(30, 30, 30, 0.9);
+  background-color: rgba(30, 30, 30, 0.8);
   backdrop-filter: blur(10px);
   border-radius: 12px;
+  height: 70px;
+  max-width: 40%;
   display: flex;
   align-items: center;
-  padding: 10px;
+  padding: 8px;
 }
 
 .media-strip__arrow {
@@ -80,15 +84,21 @@ video.media:fullscreen {
 }
 .media-strip__arrow:first-child {
   padding-right: 5px;
+  margin-right: 4px;
 }
 .media-strip__arrow:last-child {
   padding-left: 5px;
+  margin-left: 4px;
 }
 
 .media-strip__scroller {
+  --fade: 6px;
   flex-grow: 1;
+  min-width: 0;
   height: 100%;
   overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black var(--fade), black calc(100% - var(--fade)), transparent);
+  mask-image: linear-gradient(to right, transparent, black var(--fade), black calc(100% - var(--fade)), transparent);
 }
 
 .media-strip__track {
@@ -98,7 +108,7 @@ video.media:fullscreen {
   gap: 6px;
   width: max-content;
   will-change: transform;
-  padding: 0 6px;
+  padding: 0 var(--fade);
 }
 
 .media-strip__slide {

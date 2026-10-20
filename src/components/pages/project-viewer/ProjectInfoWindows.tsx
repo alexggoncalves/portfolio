@@ -11,9 +11,10 @@ export type Panel = "tools" | "team" | null;
 type ProjectInfoWindowsProps = {
     project: Project | null;
     setMinimized: (value: boolean) => void;
+    inert?: boolean;
 }
 
-function ProjectInfoWindows({ project, setMinimized }: ProjectInfoWindowsProps) {
+function ProjectInfoWindows({ project, setMinimized, inert }: ProjectInfoWindowsProps) {
     const [panel, setPanel] = useState<Panel>(null);
 
     const togglePanel = (target: Exclude<Panel, null>) =>
@@ -29,7 +30,7 @@ function ProjectInfoWindows({ project, setMinimized }: ProjectInfoWindowsProps) 
     if (!project) return;
 
     return (
-        <div className="project-viewer__windows">
+        <div className="project-viewer__windows" inert={inert}>
             <Window
                 title="Project info"
                 header={<>

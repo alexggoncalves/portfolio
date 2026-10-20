@@ -709,35 +709,49 @@
                 }
             },
             {
-                "type": "column",
-                "title": "Print Magazine Spread Examples",
-                "items": [
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_1.webp",
-                        "alt": "Alta & Baixa - Spread 1"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_2.webp",
-                        "alt": "Alta & Baixa - Spread 2"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_3.webp",
-                        "alt": "Alta & Baixa - Spread 3"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_4.webp",
-                        "alt": "Alta & Baixa - Spread 4"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_5.webp",
-                        "alt": "Alta & Baixa - Spread 5"
-                    }
-                ]
+                "type": "single",
+                "title": "Magazine Spread",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_1.webp",
+                    "alt": "Alta & Baixa - Spread 1"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Magazine Spread",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_2.webp",
+                    "alt": "Alta & Baixa - Spread 2"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Magazine Spread",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_3.webp",
+                    "alt": "Alta & Baixa - Spread 3"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Magazine Spread",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_4.webp",
+                    "alt": "Alta & Baixa - Spread 4"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Magazine Spread",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/alta_e_baixa/alta_e_baixa_5.webp",
+                    "alt": "Alta & Baixa - Spread 5"
+                }
             }
         ]
     },
@@ -836,45 +850,67 @@
                 }
             },
             {
-                "type": "column",
-                "title": "Stills",
-                "items": [
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/undone/undone_still1.webp",
-                        "alt": "Undone - Still 1"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/undone/undone_still2.webp",
-                        "alt": "Undone - Still 2"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/undone/undone_still3.webp",
-                        "alt": "Undone - Still 3"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/undone/undone_still4.webp",
-                        "alt": "Undone - Still 4"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/undone/undone_still5.webp",
-                        "alt": "Undone - Still 5"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/undone/undone_still6.webp",
-                        "alt": "Undone - Still 6"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/undone/undone_still7.webp",
-                        "alt": "Undone - Still 7"
-                    }
-                ]
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/undone/undone_still1.webp",
+                    "alt": "Undone - Still 1"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/undone/undone_still2.webp",
+                    "alt": "Undone - Still 2"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/undone/undone_still3.webp",
+                    "alt": "Undone - Still 3"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/undone/undone_still4.webp",
+                    "alt": "Undone - Still 4"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/undone/undone_still5.webp",
+                    "alt": "Undone - Still 5"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/undone/undone_still6.webp",
+                    "alt": "Undone - Still 6"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/undone/undone_still7.webp",
+                    "alt": "Undone - Still 7"
+                }
             }
         ]
     },
@@ -1070,23 +1106,6 @@
             },
             {
                 "type": "row",
-                "items": [
-                    {
-                        "type": "image",
-                        "title": "Interaction Diagram",
-                        "src": "https://cloud.alexgg.com/samar/samar_lines_interaction_diagram.webp",
-                        "alt": "Samar - Interaction Diagram"
-                    },
-                    {
-                        "type": "image",
-                        "title": "Installation Layout",
-                        "src": "https://cloud.alexgg.com/samar/samar_lines_interaction_layout.webp",
-                        "alt": "Samar - Installation Layout"
-                    }
-                ]
-            },
-            {
-                "type": "row",
                 "title": "Promotional Posters",
                 "items": [
                     {
@@ -1118,40 +1137,58 @@
                 ]
             },
             {
-                "type": "column",
-                "title": "Exhibition Rooms",
-                "items": [
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/samar/samar_room1.webp",
-                        "alt": "Samar - Exhibition Room 1"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/samar/samar_room2.webp",
-                        "alt": "Samar - Exhibition Room 2"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/samar/samar_room3.webp",
-                        "alt": "Samar - Exhibition Room 3"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/samar/samar_room4.webp",
-                        "alt": "Samar - Exhibition Room 4"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/samar/samar_room5.webp",
-                        "alt": "Samar - Exhibition Room 5"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/samar/samar_room6.webp",
-                        "alt": "Samar - Exhibition Room 6"
-                    }
-                ]
+                "type": "single",
+                "title": "Exhibition Room 1",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/samar/samar_room1.webp",
+                    "alt": "Samar - Exhibition Room 1"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Exhibition Room 2",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/samar/samar_room2.webp",
+                    "alt": "Samar - Exhibition Room 2"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Exhibition Room 3",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/samar/samar_room3.webp",
+                    "alt": "Samar - Exhibition Room 3"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Exhibition Room 4",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/samar/samar_room4.webp",
+                    "alt": "Samar - Exhibition Room 4"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Exhibition Room 5",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/samar/samar_room5.webp",
+                    "alt": "Samar - Exhibition Room 5"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Exhibition Room 6",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/samar/samar_room6.webp",
+                    "alt": "Samar - Exhibition Room 6"
+                }
             },
             {
                 "type": "row",
@@ -1202,57 +1239,67 @@
                 }
             },
             {
-                "type": "row",
+                "type": "single",
                 "title": "Text Visualizer",
-                "items": [
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/visualizers/visualizers_text1.webp",
-                        "alt": "Music Visualizers - Text Visualizer 1"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/visualizers/visualizers_text2.webp",
-                        "alt": "Music Visualizers - Text Visualizer 2"
-                    }
-                ]
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/visualizers/visualizers_text1.webp",
+                    "alt": "Music Visualizers - Text Visualizer 1"
+                }
             },
             {
-                "type": "column",
+                "type": "single",
+                "title": "Text Visualizer",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/visualizers/visualizers_text2.webp",
+                    "alt": "Music Visualizers - Text Visualizer 2"
+                }
+            },
+            {
+                "type": "single",
                 "title": "Branch Visualizer",
-                "items": [
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/visualizers/visualizers_branch1.webp",
-                        "alt": "Music Visualizers - Branch Visualizer 1"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/visualizers/visualizers_branch2.webp",
-                        "alt": "Music Visualizers - Branch Visualizer 2"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/visualizers/visualizers_branch3.webp",
-                        "alt": "Music Visualizers - Branch Visualizer 3"
-                    }
-                ]
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/visualizers/visualizers_branch1.webp",
+                    "alt": "Music Visualizers - Branch Visualizer 1"
+                }
             },
             {
-                "type": "row",
+                "type": "single",
+                "title": "Branch Visualizer",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/visualizers/visualizers_branch2.webp",
+                    "alt": "Music Visualizers - Branch Visualizer 2"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Branch Visualizer",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/visualizers/visualizers_branch3.webp",
+                    "alt": "Music Visualizers - Branch Visualizer 3"
+                }
+            },
+            {
+                "type": "single",
                 "title": "Tunnel Visualizer",
-                "items": [
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/visualizers/visualizers_tunnel1.webp",
-                        "alt": "Music Visualizers - Tunnel Visualizer 1"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/visualizers/visualizers_tunnel2.webp",
-                        "alt": "Music Visualizers - Tunnel Visualizer 2"
-                    }
-                ]
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/visualizers/visualizers_tunnel1.webp",
+                    "alt": "Music Visualizers - Tunnel Visualizer 1"
+                }
+            },
+            {
+                "type": "single",
+                "title": "Tunnel Visualizer",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/visualizers/visualizers_tunnel2.webp",
+                    "alt": "Music Visualizers - Tunnel Visualizer 2"
+                }
             }
         ]
     },
@@ -1392,40 +1439,58 @@
                 }
             },
             {
-                "type": "column",
-                "title": "Screenshots",
-                "items": [
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/criminals_interactive/criminals_1.webp",
-                        "alt": "Crimes Exemplares - 1"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/criminals_interactive/criminals_2.webp",
-                        "alt": "Crimes Exemplares - 2"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/criminals_interactive/criminals_3.webp",
-                        "alt": "Crimes Exemplares - 3"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/criminals_interactive/criminals_4.webp",
-                        "alt": "Crimes Exemplares - 4"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/criminals_interactive/criminals_5.webp",
-                        "alt": "Crimes Exemplares - 5"
-                    },
-                    {
-                        "type": "image",
-                        "src": "https://cloud.alexgg.com/criminals_interactive/criminals_6.webp",
-                        "alt": "Crimes Exemplares - 6"
-                    }
-                ]
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/criminals_interactive/criminals_1.webp",
+                    "alt": "Crimes Exemplares - 1"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/criminals_interactive/criminals_2.webp",
+                    "alt": "Crimes Exemplares - 2"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/criminals_interactive/criminals_3.webp",
+                    "alt": "Crimes Exemplares - 3"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/criminals_interactive/criminals_4.webp",
+                    "alt": "Crimes Exemplares - 4"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/criminals_interactive/criminals_5.webp",
+                    "alt": "Crimes Exemplares - 5"
+                }
+            },
+            {
+                "type": "single",
+                "title": "",
+                "media": {
+                    "type": "image",
+                    "src": "https://cloud.alexgg.com/criminals_interactive/criminals_6.webp",
+                    "alt": "Crimes Exemplares - 6"
+                }
             }
         ]
     }

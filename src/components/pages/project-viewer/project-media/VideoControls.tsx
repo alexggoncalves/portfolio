@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type RefObject } from "react";
-import { MaximizeIcon, MutedIcon, PauseIcon, PlayIcon, VolumeIcon } from "../../../interface/Icons";
+import { MutedIcon, PauseIcon, PlayIcon, VolumeIcon } from "../../../interface/Icons";
 
 const formatTime = (seconds: number) => {
     if (!Number.isFinite(seconds)) return "0:00";
@@ -43,7 +43,7 @@ function VideoControls({ videoRef }: { videoRef: RefObject<HTMLVideoElement | nu
         // Keep progress bar updated
         let raf = 0;
         const tick = () => {
-            if(progressRef.current && video.duration){
+            if (progressRef.current && video.duration) {
                 progressRef.current.style.transform = `scaleX(${video.currentTime / video.duration})`
             }
             raf = requestAnimationFrame(tick);
@@ -101,19 +101,10 @@ function VideoControls({ videoRef }: { videoRef: RefObject<HTMLVideoElement | nu
         if (video) video.muted = !video.muted;
     }
 
-    const maximize = () => {
-        const video = videoRef.current as
-            | (HTMLVideoElement & { webkitEnterFullscreen?: () => void })
-            | null;
-        if (!video) return;
-        
-        if (video.requestFullscreen) video.requestFullscreen();
-        else video.webkitEnterFullscreen?.();
-    }
 
     return (
-        <div className="video-controls">
-            <button className="video-controls__button" onClick={togglePlay} aria-label={isPlaying ? "Pause" : "Play"}>
+        <>
+            <button className="media-controls__button" onClick={togglePlay} aria-label={isPlaying ? "Pause" : "Play"}>
                 {isPlaying ? <PauseIcon /> : <PlayIcon />}
             </button>
 
@@ -137,15 +128,11 @@ function VideoControls({ videoRef }: { videoRef: RefObject<HTMLVideoElement | nu
                 {formatTime(currentTime)} / {formatTime(duration)}
             </span>
 
-            <button className="video-controls__button" onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
+            <button className="media-controls__button" onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
                 {isMuted ? <MutedIcon /> : <VolumeIcon />}
             </button>
+        </>
 
-            <button className="video-controls__button" onClick={maximize} aria-label="Fullscreen">
-                <MaximizeIcon />
-            </button>
-
-        </div>
     )
 }
 

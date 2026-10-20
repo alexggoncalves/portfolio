@@ -2,7 +2,7 @@ import { type Project } from "../../../../data/content";
 
 import ProjectDescription from "./ProjectDescription";
 import ProjectTags from "./ProjectTags";
-import { ExternalLinkIcon, GithubIcon, PreviewIcon, TeamIcon, ToolsIcon } from "../../../interface/Icons";
+import { GithubIcon, PreviewIcon, TeamIcon, ToolsIcon } from "../../../interface/Icons";
 import { ExternalLink, PanelToggle } from "../../../interface/Buttons";
 import type { Panel } from "../ProjectInfoWindows";
 

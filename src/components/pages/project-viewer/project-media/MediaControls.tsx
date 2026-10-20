@@ -1,0 +1,61 @@
+import { useEffect, useState, type RefObject } from "react";
+import { CoverMediaIcon, FitMediaIcon, MaximizeMediaIcon, MinimizeMediaIcon} from "../../../interface/Icons";
+import VideoControls from "./VideoControls";
+
+export type Fit = "cover" | "contain";
+
+type Props = {
+    videoRef: RefObject<HTMLVideoElement | null>;
+    fullscreenRef: RefObject<HTMLElement | null>;
+    isVideo: boolean;
+    slideKey: number; 
+    fit: Fit;
+    onToggleFit: () => void;
+};
+
+function MediaControls({ videoRef, fullscreenRef, isVideo, slideKey, fit, onToggleFit }: Props) {
+    const [isFullscreen, setIsFullscreen] = useState(false);
+
+    // Keep the icon in sync, including when the user exits with Esc
+    useEffect(() => {
+        const onChange = () => setIsFullscreen(document.fullscreenElement === fullscreenRef.current);
+        document.addEventListener("fullscreenchange", onChange);
+        return () => document.removeEventListener("fullscreenchange", onChange);
+    }, [fullscreenRef]);
+
+    const toggleFullscreen = () => {
+        const container = fullscreenRef.current;
+        const video = videoRef.current as (HTMLVideoElement & { webkitEnterFullscreen?: () => void }) | null;
+
+        if (document.fullscreenElement) document.exitFullscreen();
+        else if (container?.requestFullscreen) container.requestFullscreen();
+        else if (isVideo) video?.webkitEnterFullscreen?.(); // iPhone fallback
+    };
+
+    return (
+        <div className="media-controls">
+            {isVideo && <VideoControls key={slideKey} videoRef={videoRef} />}
+
+            <button
+                className="media-controls__button"
+                onClick={onToggleFit}
+                aria-pressed={fit === "contain"}
+                aria-label={fit === "cover" ? "Show full frame" : "Fill screen"}
+                title={fit === "cover" ? "Show full frame" : "Fill screen"}
+            >
+                {fit === "cover" ? <FitMediaIcon /> : <CoverMediaIcon />}
+            </button>
+
+            <button
+                className="media-controls__button"
+                onClick={toggleFullscreen}
+                aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+                title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+            >
+                {isFullscreen ? <MinimizeMediaIcon /> : <MaximizeMediaIcon />}
+            </button>
+        </div>
+    );
+}
+
+export default MediaControls;

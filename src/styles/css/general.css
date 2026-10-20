@@ -9,39 +9,52 @@ main {
 
 header {
   position: fixed;
-  padding: 36px;
   width: 100%;
+  height: var(--nav-height);
+  padding: 0 var(--main-padding);
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 120;
+  pointer-events: none;
+}
+header > * {
+  pointer-events: all;
 }
 
 #logo {
-  font-size: 4.5rem;
-  line-height: 0;
+  font-size: calc(var(--nav-height) - 30px);
+  height: 100%;
+  line-height: 1.4;
   font-family: "Zilla Slab", serif;
   font-weight: 700;
   letter-spacing: 2px;
+  filter: drop-shadow(1px 1px 4px var(--background-color));
 }
 
 nav {
+  background-color: rgba(30, 30, 30, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 4px;
-  border-radius: 20px;
-  background-color: rgba(30, 30, 30, 0.9);
-  backdrop-filter: blur(10px);
+  transition: opacity 0.3s ease;
+}
+nav.ui-hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 nav > a {
+  font-family: "Inter";
+  font-weight: 500;
   margin-left: 15px;
   color: white;
   pointer-events: all;
-  background-color: none;
-  padding: 0 12px 2px 12px;
-  border-radius: 15px;
+  padding: 2px 12px;
+  border-radius: 8px;
   user-select: none;
   -webkit-user-select: none;
   -ms-user-select: none;

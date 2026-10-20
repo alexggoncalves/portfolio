@@ -2,8 +2,8 @@ import { Link, useLocation } from "react-router";
 
 
 import { useMemo } from "react";
-import { CloseIcon } from "../../interface/Icons";
 import useSceneStore from "../../../stores/sceneStore";
+import { ReturnIcon } from "../../interface/Icons";
 
 function ReturnButton() {
     const isMobile = useSceneStore((s) => s.isMobile);
@@ -24,14 +24,12 @@ function ReturnButton() {
 
     return (
         <>
-            {isMobile && (
-                <Link
-                    to={backPath}
-                    className={`button button--icon project-close ${!open ? "open" : ""}`}
-                >
-                    <CloseIcon />
-                </Link>
-            )}
+            <Link
+                to={backPath}
+                className={`project-viewer__return button--glass`}
+            >
+                <ReturnIcon/> RETURN
+            </Link>
         </>
     );
 }

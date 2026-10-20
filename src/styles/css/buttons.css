@@ -1,4 +1,5 @@
-button {
+button, a {
+  width: fit-content;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,7 +12,7 @@ button {
   border-radius: 4px;
   transition: background-color 0.2s ease, color 0.2s ease, opacity 0.4s ease;
 }
-button:hover {
+button:hover, a:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -40,47 +41,19 @@ a {
   color: rgb(27, 27, 27);
 }
 
-.button--icon {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  width: 34px;
-  height: 34px;
-  padding: 6px;
-  border-radius: 8px;
-}
-.button--icon svg {
-  width: 100%;
-  height: 100%;
-}
-.button--icon:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-}
-
-.button--icon-text {
-  display: inline-flex;
-  align-items: center;
+.button--glass {
+  background-color: rgba(30, 30, 30, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  font-family: "Space Mono", monospace;
+  font-size: 1rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
   gap: 10px;
+  padding: 6px 12px 7px 12px;
 }
-.button--icon-text span {
-  padding-bottom: 3px;
-}
-
-.button--icon-sm {
-  width: 30px;
-  height: 30px;
-  padding: 0;
-  border-radius: 25px;
-}
-.button--icon-sm svg {
-  width: 58%;
-  height: 58%;
-}
-
-.button--sm {
-  padding: 3px 10px;
-  font-size: 1.5rem;
+.button--glass:hover {
+  background-color: rgba(30, 30, 30, 0.5);
 }
 
 .toggle {
