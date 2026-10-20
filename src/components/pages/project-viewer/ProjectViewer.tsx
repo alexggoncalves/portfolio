@@ -7,7 +7,6 @@ import { useEffect, useMemo, useState } from "react";
 import ProjectInfoWindows from "./ProjectInfoWindows";
 import ReturnButton from "./ReturnButton";
 import MediaStrip from "./project-media/MediaStrip";
-import MediaLabel from "./project-media/MediaLabel";
 import ProjectHeading from "./ProjectHeading";
 import { EyeClosedIcon, EyeIcon } from "../../interface/Icons";
 import useUIStore from "../../../stores/UIStore";

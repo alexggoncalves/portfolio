@@ -2,11 +2,11 @@ import { Link, useLocation } from "react-router";
 
 
 import { useMemo } from "react";
-import useSceneStore from "../../../stores/sceneStore";
+// import useSceneStore from "../../../stores/sceneStore";
 import { ReturnIcon } from "../../interface/Icons";
 
 function ReturnButton() {
-    const isMobile = useSceneStore((s) => s.isMobile);
+    // const isMobile = useSceneStore((s) => s.isMobile);
 
     // Back path
     const location = useLocation();

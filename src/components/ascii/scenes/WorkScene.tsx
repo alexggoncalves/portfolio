@@ -1,11 +1,11 @@
-import { useMemo} from "react";
-import { createASCIITitle } from "../general/asciiFonts";
+// import { useMemo} from "react";
+// import { createASCIITitle } from "../general/asciiFonts";
 // import AsciiBlock from "../general/AsciiBlock";
 
 function WorkScene() {
-    const ascii = useMemo(() => {
-        return createASCIITitle(" MY WORK ");
-    }, []);
+    // const ascii = useMemo(() => {
+    //     return createASCIITitle(" MY WORK ");
+    // }, []);
 
     return (
         <>
