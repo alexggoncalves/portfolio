@@ -36,7 +36,7 @@ function MediaControls({ videoRef, fullscreenRef, isVideo, slideKey, fit, onTogg
         <div className="media-controls">
             {isVideo && <VideoControls key={slideKey} videoRef={videoRef} />}
 
-            {onToggleFit && !(isVideo && isFullscreen) && (
+            {onToggleFit && !isFullscreen && (
                 <button
                     type="button"
                     className="media-controls__button"
