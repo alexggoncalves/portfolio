@@ -16,11 +16,12 @@ function Window({ title, header, children, actionType = undefined, onAction, cla
     const actionLabel = actionType === "close" ? "Close" : "Minimize";
 
     return (
-        <div className={`window ${className}`} aria-label={`${title} window`}>
+        <section className={`window ${className}`} aria-label={title}>
             <div className="window__header">
                 {header}
                 {actionType &&
                     <button
+                        type="button"
                         onClick={onAction}
                         className="window__control"
                         aria-label={`${actionLabel} ${title} window`}
@@ -33,7 +34,7 @@ function Window({ title, header, children, actionType = undefined, onAction, cla
             <div className="window__content">
                 {children}
             </div>
-        </div>
+        </section>
     );
 }
 

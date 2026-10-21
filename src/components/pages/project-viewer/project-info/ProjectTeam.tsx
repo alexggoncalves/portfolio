@@ -17,9 +17,9 @@ function ProjectTeam({ team }: { team: TeamMember[] | undefined }) {
                                     {teamMember.roles?.map((role, j) => {
                                         if (!teamMember.roles) return;
                                         const isLast = j >= teamMember.roles.length - 1;
-                                        return (<span key={`person.name-${j}`}>
-                                            <span>{role} </span>
-                                            <span>{!isLast && " • "}</span>
+                                        return (<span key={`${person.name}-${j}`}>
+                                            <span aria-hidden="true">{role} </span>
+                                            <span aria-hidden="true">{!isLast && " • "}</span>
                                         </span>
 
                                         )

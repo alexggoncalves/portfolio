@@ -88,22 +88,23 @@
 
     &__wrap {
         position: relative;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        margin-left: calc(-1 * var(--main-padding));
-        padding-left: var(--main-padding);
-        margin-right: calc(-1 * var(--main-padding));
-        padding-right: var(--main-padding);
+        // full-bleed: reach the screen edges
+        margin-inline: calc(-1 * var(--main-padding));
     }
 
     &__scroller {
+        overflow-x: auto;
+        scrollbar-width: none;
         cursor: grab;
-        touch-action: pan-y pinch-zoom;
 
-        &.is-dragging {
+        &::-webkit-scrollbar { display: none; }
+
+        &.dragging {
             cursor: grabbing;
             user-select: none;
         }
+
+        a, img { -webkit-user-drag: none; }
     }
 
     &__track {
@@ -111,7 +112,8 @@
         flex-wrap: nowrap;
         gap: 16px;
         width: max-content;
-        will-change: transform;
+        // padding lives inside the scroll area, so cards scroll under the gradients
+        padding: 10px var(--main-padding);
     }
 }
 

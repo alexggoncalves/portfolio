@@ -17,8 +17,8 @@ function ProjectInfo({ project, panel, onTogglePanel }: ProjectInfoProps) {
     return (
         <>
             <ProjectTags tagIds={project.tags} />
-            <h1>{project.title}</h1>
-            <h2>{project.subtitle.toUpperCase()}</h2>
+            <p className="project-info__title">{project.title}</p>
+            <p className="project-info__subtitle">{project.subtitle}</p>
             <ProjectDescription description={project.description} />
 
             <div className="project-info__actions">

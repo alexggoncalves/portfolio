@@ -13,9 +13,9 @@ function RichText({ text }: { text: string }) {
 function ProjectDescription({ description }: { description: string[] }) {
     if (description)
         return (
-            <div className="project-window__description">
+            <div className="project-info__description">
                 {description.map((paragraph, i) => {
-                    return <p key={i}><RichText text={paragraph}></RichText></p>;
+                    return <p className="project-info__description-paragraph" key={i}><RichText text={paragraph}></RichText></p>;
                 })}
             </div>
         );

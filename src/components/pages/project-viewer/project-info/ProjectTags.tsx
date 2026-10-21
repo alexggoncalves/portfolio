@@ -7,7 +7,7 @@ function ProjectTags({ tagIds }: { tagIds: string[] }) {
 
     if (tags)
         return (
-            <div className="project-window__tags">
+            <div className="project-info__tags">
                 {tags.map((tag, i) => {
                     return (
                         <div

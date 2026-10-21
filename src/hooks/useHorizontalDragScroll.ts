@@ -1,291 +1,122 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
+const DRAG_THRESHOLD = 5;
 const INERTIA_DECAY = 0.92;
 const INERTIA_STOP = 0.5;
-const DRAG_THRESHOLD = 14;
-const HORIZONTAL_SCROLL_THRESHOLD = 10;
 
-function clampPan(
-    viewport: HTMLDivElement,
-    track: HTMLDivElement,
-    pan: number,
-): number {
-    const maxScroll = Math.max(0, track.offsetWidth - viewport.clientWidth);
-    return Math.max(-maxScroll, Math.min(0, pan));
-}
-
-function applyPan(track: HTMLDivElement, pan: number) {
-    track.style.transform = `translateX(${pan}px)`;
-}
-
-function useHorizontalDragScroll({
-    onDragStateChange,
-}: {
-    onDragStateChange?: (dragging: boolean) => void;
-} = {}) {
+function useHorizontalDragScroll() {
     const viewportRef = useRef<HTMLDivElement | null>(null);
     const trackRef = useRef<HTMLDivElement | null>(null);
     const indicatorRef = useRef<HTMLDivElement | null>(null);
-
     const rafId = useRef<number | null>(null);
-    const unbindPointerRef = useRef<(() => void) | null>(null);
 
-    const panRef = useRef(0);
-    const velocityRef = useRef(0);
+    const stopInertia = () => {
+        if (rafId.current != null) cancelAnimationFrame(rafId.current);
+        rafId.current = null;
+    };
 
-    const layoutRef = useRef({
-        containerWidth: 0,
-        thumbWidth: 0,
-        maxX: 0,
-        maxScroll: 0,
-    });
+    useEffect(() => {
+        const viewport = viewportRef.current;
+        if (!viewport) return;
 
-    const cancelInertia = useCallback(() => {
-        if (rafId.current != null) {
-            cancelAnimationFrame(rafId.current);
-            rafId.current = null;
-        }
-        velocityRef.current = 0;
+        // keep scroll indicator, sized to how much of the track is visible
+        const update = () => {
+            const el = indicatorRef.current;
+            const bar = el?.parentElement;
+            if (!el || !bar) return;
+
+            const barWidth = bar.clientWidth;
+            const { scrollLeft, scrollWidth, clientWidth } = viewport;
+            const thumb = Math.max(barWidth * (clientWidth / scrollWidth), 10);
+            const maxScroll = scrollWidth - clientWidth;
+            const progress = maxScroll > 0 ? scrollLeft / maxScroll : 0;
+
+            el.style.width = `${thumb}px`;
+            el.style.transform = `translateX(${progress * (barWidth - thumb)}px)`;
+        };
+
+        update();
+        viewport.addEventListener("scroll", update, { passive: true });
+        const observer = new ResizeObserver(update);
+        observer.observe(viewport);
+        if (trackRef.current) observer.observe(trackRef.current);
+
+        return () => {
+            viewport.removeEventListener("scroll", update);
+            observer.disconnect();
+            stopInertia();
+        };
     }, []);
 
-    useEffect(() => {
-        return () => {
-            cancelInertia();
-            unbindPointerRef.current?.();
+    const onPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+        if (e.pointerType !== "mouse" || e.button !== 0) return;
+
+        const viewport = viewportRef.current;
+        if (!viewport) return;
+
+        stopInertia();
+
+        const startX = e.clientX;
+        const startScroll = viewport.scrollLeft;
+        let lastX = e.clientX;
+        let velocity = 0;
+        let dragging = false;
+
+        const onMove = (ev: PointerEvent) => {
+            if (!dragging) {
+                if (Math.abs(ev.clientX - startX) < DRAG_THRESHOLD) return;
+                dragging = true;
+                viewport.classList.add("dragging");
+            }
+
+            velocity = ev.clientX - lastX;
+            lastX = ev.clientX;
+            viewport.scrollLeft = startScroll - (ev.clientX - startX);
         };
-    }, [cancelInertia]);
 
-    // resize indicator
-    useEffect(() => {
-        const resizeIndicator = () => {
-            const viewport = viewportRef.current;
-            const track = trackRef.current;
-            const el = indicatorRef.current;
+        const onUp = () => {
+            window.removeEventListener("pointermove", onMove);
+            window.removeEventListener("pointerup", onUp);
+            window.removeEventListener("pointercancel", onUp);
 
-            if (!viewport || !track || !el) return;
+            if (!dragging) return;
+            viewport.classList.remove("dragging");
 
-            const containerWidth = 100;
-
-            const ratio = viewport.clientWidth / track.offsetWidth;
-            const thumbWidth = Math.max(containerWidth * ratio, 10);
-
-            const maxX = containerWidth - thumbWidth;
-            const maxScroll = Math.max(
+            // Block the click that fires after a drag
+            // Removed right after in case the drag ended outside and no click fires
+            const swallow = (ce: MouseEvent) => {
+                ce.preventDefault();
+                ce.stopPropagation();
+            };
+            window.addEventListener("click", swallow, {
+                capture: true,
+                once: true,
+            });
+            setTimeout(
+                () => window.removeEventListener("click", swallow, true),
                 0,
-                track.offsetWidth - viewport.clientWidth,
             );
 
-            layoutRef.current = {
-                containerWidth,
-                thumbWidth,
-                maxX,
-                maxScroll,
-            };
-
-            el.style.width = `${thumbWidth}px`;
-        };
-
-        resizeIndicator();
-        window.addEventListener("resize", resizeIndicator);
-        return () => window.removeEventListener("resize", resizeIndicator);
-    }, []);
-
-    function updateIndicator(pan: number) {
-        const el = indicatorRef.current;
-        if (!el) return;
-
-        const { maxScroll, maxX } = layoutRef.current;
-        const progress = maxScroll === 0 ? 0 : Math.abs(pan) / maxScroll;
-        const x = progress * maxX;
-
-        el.style.transform = `translate(${x}px,0)`;
-    }
-
-    const onPointerDown = useCallback(
-        (e: React.PointerEvent<HTMLDivElement>) => {
-            if (e.button !== 0) return;
-            const viewport = viewportRef.current;
-            const track = trackRef.current;
-
-            if (!viewport?.contains(e.target as Node) || !track) return;
-
-            unbindPointerRef.current?.();
-            cancelInertia();
-
-            const pointerId = e.pointerId;
-
-            const startX = e.clientX;
-            const startY = e.clientY;
-
-            let lastX = e.clientX;
-            let dragPx = 0;
-
-            let committed = false;
-
-            let scrollLockEl: HTMLElement | null = null;
-            let savedOverflowY = "";
-
-            const lockVerticalScroll = () => {
-                if (scrollLockEl) return;
-                const mainEl = viewport.closest("main");
-                if (!mainEl) return;
-
-                scrollLockEl = mainEl;
-                savedOverflowY = mainEl.style.overflowY;
-                mainEl.style.overflowY = "hidden";
-            };
-
-            const unlockVerticalScroll = () => {
-                if (!scrollLockEl) return;
-                scrollLockEl.style.overflowY = savedOverflowY;
-                scrollLockEl = null;
-            };
-
-            const onMove = (ev: PointerEvent) => {
-                if (ev.pointerId !== pointerId) return;
-
-                const v = viewportRef.current;
-                const t = trackRef.current;
-                if (!v || !t) return;
-
-                const dxTotal = ev.clientX - startX;
-                const dyTotal = ev.clientY - startY;
-
-                if (!committed) {
-                    const horizontalIntent =
-                        Math.abs(dxTotal) >= HORIZONTAL_SCROLL_THRESHOLD &&
-                        Math.abs(dxTotal) > Math.abs(dyTotal);
-
-                    if (!horizontalIntent) {
-                        lastX = ev.clientX;
-                        return;
-                    }
-
-                    committed = true;
-                    onDragStateChange?.(true);
-                    lockVerticalScroll();
-                    viewport.classList.add("dragging");
-
-                    try {
-                        viewport.setPointerCapture(pointerId);
-                    } catch {}
-
-                    ev.preventDefault();
-                }
-
-                const dx = ev.clientX - lastX;
-                lastX = ev.clientX;
-
-                dragPx += Math.abs(dx);
-
-                const nextPan = clampPan(v, t, panRef.current + dx);
-
-                panRef.current = nextPan;
-                applyPan(t, nextPan);
-                updateIndicator(nextPan);
-
-                velocityRef.current = dx;
-
-                ev.preventDefault();
-            };
-
-            const onUp = (ev: PointerEvent) => {
-                if (ev.pointerId !== pointerId) return;
-
-                onDragStateChange?.(false);
-
-                try {
-                    if (viewport.hasPointerCapture(pointerId)) {
-                        viewport.releasePointerCapture(pointerId);
-                    }
-                } catch {}
-
-                document.removeEventListener("pointermove", onMove);
-                document.removeEventListener("pointerup", onUp);
-                document.removeEventListener("pointercancel", onUp);
-
-                unbindPointerRef.current = null;
-
-                unlockVerticalScroll();
-                viewport.classList.remove("dragging");
-
-                if (dragPx >= DRAG_THRESHOLD) {
-                    const swallow = (ce: MouseEvent) => {
-                        if (!viewport.contains(ce.target as Node)) return;
-                        ce.preventDefault();
-                        ce.stopPropagation();
-                    };
-
-                    document.addEventListener("click", swallow, {
-                        capture: true,
-                        once: true,
-                    });
-                }
-
-                const vp = viewportRef.current;
-                const tr = trackRef.current;
-
-                if (!vp || !tr || Math.abs(velocityRef.current) < INERTIA_STOP)
+            // Let track glide a bit after release
+            const step = () => {
+                velocity *= INERTIA_DECAY;
+                if (Math.abs(velocity) < INERTIA_STOP) {
+                    rafId.current = null;
                     return;
-
-                const step = () => {
-                    const vpp = viewportRef.current;
-                    const trr = trackRef.current;
-
-                    if (!vpp || !trr) {
-                        rafId.current = null;
-                        return;
-                    }
-
-                    const velocity = velocityRef.current;
-
-                    if (Math.abs(velocity) < INERTIA_STOP) {
-                        rafId.current = null;
-                        velocityRef.current = 0;
-                        return;
-                    }
-
-                    let pan = panRef.current + velocity;
-                    pan = clampPan(vpp, trr, pan);
-
-                    panRef.current = pan;
-                    velocityRef.current *= INERTIA_DECAY;
-
-                    applyPan(trr, pan);
-                    updateIndicator(pan);
-
-                    rafId.current = requestAnimationFrame(step);
-                };
-
+                }
+                viewport.scrollLeft -= velocity;
                 rafId.current = requestAnimationFrame(step);
             };
+            rafId.current = requestAnimationFrame(step);
+        };
 
-            unbindPointerRef.current = () => {
-                try {
-                    if (viewport.hasPointerCapture(pointerId)) {
-                        viewport.releasePointerCapture(pointerId);
-                    }
-                } catch {}
+        // Add events to window so the drag keeps working if the mouse leaves container
+        window.addEventListener("pointermove", onMove);
+        window.addEventListener("pointerup", onUp);
+        window.addEventListener("pointercancel", onUp);
+    };
 
-                unlockVerticalScroll();
-                onDragStateChange?.(false);
-                viewport.classList.remove("dragging");
-
-                document.removeEventListener("pointermove", onMove);
-                document.removeEventListener("pointerup", onUp);
-                document.removeEventListener("pointercancel", onUp);
-            };
-
-            document.addEventListener("pointermove", onMove, {
-                passive: false,
-            });
-            document.addEventListener("pointerup", onUp);
-            document.addEventListener("pointercancel", onUp);
-        },
-        [cancelInertia],
-    );
-
-    return { viewportRef, trackRef, onPointerDown, indicatorRef };
+    return { viewportRef, trackRef, indicatorRef, onPointerDown };
 }
 
 export default useHorizontalDragScroll;

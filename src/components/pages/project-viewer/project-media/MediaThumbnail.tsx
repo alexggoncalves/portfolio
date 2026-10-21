@@ -31,7 +31,7 @@ function MediaThumbnail({ media }: { media: Media }) {
                     playsInline
                     preload="metadata"
                     tabIndex={-1}
-                    onLoadedData={onLoad} // fires once the frame at #t=2 is ready
+                    onLoadedData={onLoad}
                 />
                 <PlayIcon className="media-thumbnail__play" />
             </span>

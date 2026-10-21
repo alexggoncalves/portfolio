@@ -6,7 +6,7 @@ import HomePage from "./homepage/HomePage";
 import type { Page } from "../../stores/sceneStore";
 import useSceneStore from "../../stores/sceneStore";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import AsciiStage from "../ascii/AsciiStage";
+// import AsciiStage from "../ascii/AsciiStage";
 import ProjectViewer from "./project-viewer/ProjectViewer";
 
 const PAGES = ["work", "contact"] as Page[];
@@ -86,7 +86,7 @@ function LayoutRoot() {
     return (
         <>
             <Header />
-            <AsciiStage />
+            {/* <AsciiStage /> */}
 
             {isLoaded && (
                 <main ref={mainRef}>

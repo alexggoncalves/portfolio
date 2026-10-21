@@ -18,21 +18,23 @@ function MediaItem({ item, active, near, videoRef }: Props) {
         if (!active) video.pause();
     }, [active]);
 
+    const readImageRatio = (img: HTMLImageElement | null) => {
+        if (img?.complete && img.naturalWidth) {
+            setRatio(img.naturalWidth / img.naturalHeight);
+        }
+    };
+
     const renderMedia = () => {
         switch (item.type) {
             case "image":
                 return (
                     <img
+                        ref={readImageRatio}
                         src={item.src}
                         className="media"
                         alt={item.alt}
                         draggable={false}
-                        onLoad={(e) =>
-                            setRatio(
-                                e.currentTarget.naturalWidth /
-                                e.currentTarget.naturalHeight,
-                            )
-                        }
+                        onLoad={(e) => readImageRatio(e.currentTarget)}
                     />
                 );
 
@@ -52,6 +54,7 @@ function MediaItem({ item, active, near, videoRef }: Props) {
                         onLoadedMetadata={(e) =>
                             setRatio(e.currentTarget.videoWidth / e.currentTarget.videoHeight)
                         }
+                        aria-label={item.alt}
                     />
                 );
 

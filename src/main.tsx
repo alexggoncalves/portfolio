@@ -1,5 +1,4 @@
 import "./styles/index.scss"
-import "./styles/general.scss"
 import "./styles/buttons.scss"
 import "./components/interface/window.scss"
 

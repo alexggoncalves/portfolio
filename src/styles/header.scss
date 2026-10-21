@@ -1,23 +1,11 @@
 @use "./mixins.scss" as *;
 
-main {
-    flex: 1 1 0;
-    padding-left: var(--main-padding);
-    padding-right: var(--main-padding);
-    overflow-y: auto;
-    overflow-x: hidden;
-    scroll-behavior: smooth;
-}
-
-// =============
-// Header
-// =============
 header {
     position: fixed;
     width: 100%;
     height: var(--nav-height);
     padding: 0 var(--main-padding);
-    
+
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -25,23 +13,36 @@ header {
     z-index: 120;
     pointer-events: none;
 
-    >* {
+    > * {
         pointer-events: all;
     }
 }
 
 #logo {
-    font-size: calc(var(--nav-height) - 30px);
-    height: 100%;
-    line-height: 1.4;
-    font-family: "Zilla Slab", serif;
-    font-weight: 700;
-    letter-spacing: 2px;
+    width: var(--logo-width);
+    height: auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     filter: drop-shadow(1px 1px 4px var(--background-color));
+    transition: scale 0.2s ease;
+    
+    svg {
+        height: auto;
+        width: 100%;
+    }
+
+    &:hover {
+        background: none;
+        scale: 1.05;
+    }
 }
 
-nav {
+header nav {
     @include glass-panel;
+    position: relative;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -55,7 +56,7 @@ nav {
     }
 }
 
-nav > a {
+header nav > a {
     font-family: "Inter";
     font-weight: 500;
     margin-left: 15px;
@@ -63,6 +64,7 @@ nav > a {
     pointer-events: all;
     padding: 2px 12px;
     border-radius: 8px;
+    z-index: 4;
 
     user-select: none;
     -webkit-user-select: none;
@@ -72,6 +74,7 @@ nav > a {
 
     &:hover {
         color: white;
+        background: none;
     }
 
     &.active {
@@ -81,33 +84,15 @@ nav > a {
 
     &:first-child {
         margin-left: 0;
-    }
+    }    
 }
 
-// ==============
-// LOADING SCREEN
-// ==============
-.backdrop {
-    background-color: var(--background-color);
-    opacity: 0.4;
+.nav__indicator {
     position: absolute;
-    inset: 0;
-    z-index: 14;
-    pointer-events: auto;
-
-    transition: opacity 0.25s ease;
-
-    &.closed {
-        opacity: 0;
-        pointer-events: none;
-    }
-}
-
-.loading-screen {
-    .button {
-        position: absolute;
-        margin-top: 80px;
-    }
+    border: 1px solid white;
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 3;
 }
 
 @media (max-width: 700px) {

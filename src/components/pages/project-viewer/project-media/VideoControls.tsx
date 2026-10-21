@@ -74,8 +74,14 @@ function VideoControls({ videoRef }: { videoRef: RefObject<HTMLVideoElement | nu
         const video = videoRef.current;
         if (!video) return;
 
-        if (e.key === "ArrowRight") video.currentTime = Math.min(video.currentTime + TIME_SKIP, video.duration);
-        if (e.key === "ArrowLeft") video.currentTime = Math.max(video.currentTime - TIME_SKIP, 0);
+        if (e.key === "ArrowRight") {
+            e.preventDefault();
+            video.currentTime = Math.min(video.currentTime + TIME_SKIP, video.duration);
+        }
+        if (e.key === "ArrowLeft") {
+            e.preventDefault();
+            video.currentTime = Math.max(video.currentTime - TIME_SKIP, 0);
+        }
     }
 
     // Video seeking on click or drag
@@ -104,7 +110,12 @@ function VideoControls({ videoRef }: { videoRef: RefObject<HTMLVideoElement | nu
 
     return (
         <>
-            <button className="media-controls__button" onClick={togglePlay} aria-label={isPlaying ? "Pause" : "Play"}>
+            <button
+                type="button"
+                className="media-controls__button"
+                onClick={togglePlay}
+                aria-label={isPlaying ? "Pause" : "Play"}
+            >
                 {isPlaying ? <PauseIcon /> : <PlayIcon />}
             </button>
 
@@ -112,6 +123,7 @@ function VideoControls({ videoRef }: { videoRef: RefObject<HTMLVideoElement | nu
                 ref={barRef}
                 className="video-controls__progress-bar"
                 role="slider"
+                tabIndex={0}
                 aria-label="Seek"
                 aria-valuemin={0}
                 aria-valuemax={Math.round(duration)}
@@ -128,7 +140,12 @@ function VideoControls({ videoRef }: { videoRef: RefObject<HTMLVideoElement | nu
                 {formatTime(currentTime)} / {formatTime(duration)}
             </span>
 
-            <button className="media-controls__button" onClick={toggleMute} aria-label={isMuted ? "Unmute" : "Mute"}>
+            <button
+                type="button"
+                className="media-controls__button"
+                onClick={toggleMute}
+                aria-label={isMuted ? "Unmute" : "Mute"}
+            >
                 {isMuted ? <MutedIcon /> : <VolumeIcon />}
             </button>
         </>

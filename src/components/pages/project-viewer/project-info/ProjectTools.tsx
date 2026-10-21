@@ -11,7 +11,7 @@ function ProjectTools({ tools }: { tools: string[] }) {
                             return (
                                 <div key={i} className="project-tools__tool">
                                     <span>{icon.title}</span>
-                                    <img src={icon.src} alt={icon.title} />
+                                    <img src={icon.src}/>
                                 </div>
                             )
                     })}

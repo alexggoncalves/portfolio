@@ -33,7 +33,7 @@ header > * {
 }
 
 nav {
-  background-color: rgba(30, 30, 30, 0.8);
+  background-color: rgba(30, 30, 30, 0.9);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   display: flex;

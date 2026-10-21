@@ -1,10 +1,5 @@
 @use "./mixins.scss" as *;
 
-@import url("https://fonts.googleapis.com/css2?family=Zilla+Slab:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap");
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-
 * {
     box-sizing: border-box;
 }
@@ -14,6 +9,7 @@
     --main-padding: 2vw;
     --background-color: rgb(30, 30, 30);
     --nav-height: 100px;
+    --logo-width: 160px;
 
     font-family: "Space Grotesk", sans-serif;
     font-optical-sizing: auto;
@@ -48,6 +44,15 @@ body {
     overflow: hidden;
 }
 
+main {
+    flex: 1 1 0;
+    padding-left: var(--main-padding);
+    padding-right: var(--main-padding);
+    overflow-y: auto;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
 #root {
     flex: 1 1 0;
     display: flex;
@@ -71,6 +76,32 @@ body {
 .ascii-canvas-layer * {
     pointer-events: none;
     z-index: 100;
+}
+
+// ==============
+// LOADING SCREEN
+// ==============
+.backdrop {
+    background-color: var(--background-color);
+    opacity: 0.4;
+    position: absolute;
+    inset: 0;
+    z-index: 14;
+    pointer-events: auto;
+
+    transition: opacity 0.25s ease;
+
+    &.closed {
+        opacity: 0;
+        pointer-events: none;
+    }
+}
+
+.loading-screen {
+    .button {
+        position: absolute;
+        margin-top: 80px;
+    }
 }
 
 @media (max-width: 700px) {

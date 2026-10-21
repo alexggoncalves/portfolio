@@ -9,10 +9,16 @@ type ProjectHeadingProps = {
 
 function ProjectHeading({ title, subtitle, maximizeWindows, inert }: ProjectHeadingProps) {
     return (
-        <button onClick={maximizeWindows} className="project-viewer__heading" inert={inert}>
+        <button
+            type="button"
+            onClick={maximizeWindows}
+            className="project-viewer__heading"
+            inert={inert}
+            aria-label={`Show project info: ${title}`}
+        >
             <div>
                 <span className="project-viewer__heading-title">{title}</span>
-                <span className="project-viewer__heading-subtitle">{subtitle.toUpperCase()}</span>
+                <span className="project-viewer__heading-subtitle">{subtitle}</span>
             </div>
 
             <ChevronUp />

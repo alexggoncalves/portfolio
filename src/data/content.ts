@@ -6,28 +6,28 @@ import TOOLS from "./tools.json";
 // Media types
 export type ImageAsset = {
     type: "image";
-    title?: string;
-    alt?: string;
     src: string;
-    id?: string;
+    title?: string;
     thumb?: string;
+    alt?: string;
+    id?: string;
 };
 
 export type VideoAsset = {
     type: "video";
-    title?: string;
-    alt?: string;
     src: string;
-    id?: string;
+    title?: string;
     thumb?: string;
+    alt?: string;
+    id?: string;  
 };
 
 export type ModelAsset = {
     type: "model";
-    title?: string;
     src: string;
-    id?: string;
+    title?: string;
     thumb?: string;
+    id?: string;
 };
 
 export type Media = ImageAsset | VideoAsset | ModelAsset;
@@ -36,32 +36,27 @@ export type Media = ImageAsset | VideoAsset | ModelAsset;
 export type SingleMediaSlide = {
     type: "single";
     title?: string;
+    contain?: boolean;
     media: Media;
 };
 
 export type RowMediaSlide = {
     type: "row";
     title?: string;
+    contain?: boolean;
     items: Media[];
-};
-
-export type StackedMediaSlide = {
-    type: "stacked";
-    title?: string;
-    main: Media;
-    row: Media[];
 };
 
 export type ColumnMediaSlide = {
     type: "column";
     title?: string;
+    contain?: boolean;
     items: Media[];
 };
 
 export type MediaSlide =
     | SingleMediaSlide
     | RowMediaSlide
-    | StackedMediaSlide
     | ColumnMediaSlide;
 
 // Person types

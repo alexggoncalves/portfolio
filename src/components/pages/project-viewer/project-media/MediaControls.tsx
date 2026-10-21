@@ -1,5 +1,5 @@
 import { useEffect, useState, type RefObject } from "react";
-import { CoverMediaIcon, FitMediaIcon, MaximizeMediaIcon, MinimizeMediaIcon} from "../../../interface/Icons";
+import { CoverMediaIcon, FitMediaIcon, MaximizeMediaIcon, MinimizeMediaIcon } from "../../../interface/Icons";
 import VideoControls from "./VideoControls";
 
 export type Fit = "cover" | "contain";
@@ -8,9 +8,9 @@ type Props = {
     videoRef: RefObject<HTMLVideoElement | null>;
     fullscreenRef: RefObject<HTMLElement | null>;
     isVideo: boolean;
-    slideKey: number; 
+    slideKey: number;
     fit: Fit;
-    onToggleFit: () => void;
+    onToggleFit?: () => void;
 };
 
 function MediaControls({ videoRef, fullscreenRef, isVideo, slideKey, fit, onToggleFit }: Props) {
@@ -36,17 +36,20 @@ function MediaControls({ videoRef, fullscreenRef, isVideo, slideKey, fit, onTogg
         <div className="media-controls">
             {isVideo && <VideoControls key={slideKey} videoRef={videoRef} />}
 
-            <button
-                className="media-controls__button"
-                onClick={onToggleFit}
-                aria-pressed={fit === "contain"}
-                aria-label={fit === "cover" ? "Show full frame" : "Fill screen"}
-                title={fit === "cover" ? "Show full frame" : "Fill screen"}
-            >
-                {fit === "cover" ? <FitMediaIcon /> : <CoverMediaIcon />}
-            </button>
+            {onToggleFit && !(isVideo && isFullscreen) && (
+                <button
+                    type="button"
+                    className="media-controls__button"
+                    onClick={onToggleFit}
+                    aria-label={fit === "cover" ? "Show full frame" : "Fill screen"}
+                    title={fit === "cover" ? "Show full frame" : "Fill screen"}
+                >
+                    {fit === "cover" ? <FitMediaIcon /> : <CoverMediaIcon />}
+                </button>
+            )}
 
             <button
+                type="button"
                 className="media-controls__button"
                 onClick={toggleFullscreen}
                 aria-label={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
