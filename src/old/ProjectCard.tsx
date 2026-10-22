@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { getTagsById, type Project } from "../../data/content";
+import { getTagsById, type Project } from "../../../data/content";
 import "./projectCard.scss"
 
 function ProjectCard({

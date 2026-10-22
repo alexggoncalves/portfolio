@@ -679,7 +679,7 @@
     {
         "id": "alta-baixa",
         "title": "Alta & Baixa",
-        "subtitle": "Typography Magazine – Digital and Print",
+        "subtitle": "Typography Magazine",
         "tags": ["print", "graphic-design", "frontend"],
         "year": "2023",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/alta-e-baixa-thumbnail.webp",
@@ -1062,7 +1062,7 @@
     {
         "id": "samar",
         "title": "Samar Maakaroun",
-        "subtitle": "Exhibition and Interactive Installation",
+        "subtitle": "Interactive Installation",
         "tags": ["interaction-design", "generative", "graphic-design"],
         "year": "2022",
         "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/samar-thumbnail.webp",

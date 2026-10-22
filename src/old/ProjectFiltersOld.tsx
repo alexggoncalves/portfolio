@@ -1,9 +1,9 @@
 import "./projectsGrid.scss";
-import { tags } from "../../../data/content";
+import { tags } from "../data/content";
 import { useState } from "react";
-import { ArrowIcon, CheckboxIcon, FilterIcon } from "../../interface/Icons";
+import { ArrowIcon, CheckboxIcon, FilterIcon } from "../components/interface/Icons";
 
-function ProjectFilters({
+function ProjectFiltersOld({
     onApply,
     appliedFilters,
 }: {
@@ -35,7 +35,7 @@ function ProjectFilters({
     return (
         <>
             {/* Toggle */}
-            <button
+            {/* <button
                 className="button button--icon toggle toggle-right-btm filters-toggle"
                 onClick={() => setIsOpen((prev) => !prev)}
             >
@@ -43,21 +43,20 @@ function ProjectFilters({
                 {appliedFilters.length > 0 && (
                     <div className="filter-count">{appliedFilters.length}</div>
                 )}
-            </button>
+            </button> */}
 
             {/* Backdrop */}
-            <div
+            {/* <div
                 className={`backdrop ${!isOpen ? "closed" : ""}`}
                 style={{ zIndex: 10 }}
                 onClick={() => {
                     setIsOpen(false);
                 }}
-            />
+            /> */}
 
             {/* Main container */}
-            <div className={`projects-grid__filters ${isOpen ? "open" : ""}`}>
+            <div className={`projects-grid__filters open`}>
                 <div className="projects-grid__filters-container">
-                    <span>FILTERS</span>
 
                     {tags.map((tag) => {
                         const isActive = selectedFilters.includes(tag.id);
@@ -67,20 +66,18 @@ function ProjectFilters({
                                 key={tag.id}
                                 onClick={() => toggleFilter(tag.id)}
                                 className={`filter ${isActive ? "active" : ""}`}
-                                style={{
-                                    backgroundColor: isActive
-                                        ? tag.color
-                                        : "rgba(255, 255, 255, 0.05)",
-                                    color: isActive ? tag.textColor : "white",
-                                }}
                             >
-                                <span>{tag.name.toUpperCase()}</span>
-                                <CheckboxIcon active={isActive} />
+                                <div>
+                                    <CheckboxIcon style={{color:tag.color}} active={isActive} />
+                                    <span>{tag.name.toUpperCase()}</span>
+                                </div>
+                                <span>1</span>
+
                             </div>
                         );
                     })}
                 </div>
-                
+
                 <div className="projects-grid__filters-buttons">
                     <div onClick={clearFilters}>clear</div>
                     <div onClick={applyFilters}>APPLY</div>
@@ -90,4 +87,4 @@ function ProjectFilters({
     );
 }
 
-export default ProjectFilters;
+export default ProjectFiltersOld;

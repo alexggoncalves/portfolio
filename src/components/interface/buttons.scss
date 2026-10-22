@@ -1,4 +1,4 @@
-@use "./mixins.scss" as *;
+@use "./../../styles/mixins.scss" as *;
 
 button,
 a {
@@ -74,6 +74,19 @@ a {
     height: auto;
     padding: 6px;
     border-radius: 8px;
+
+    svg{
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.button--action {
+    aspect-ratio: 1;
+    width: 24px;
+    height: auto;
+    padding: 4px;
+    transform: translateX(8px);
 
     svg{
         width: 100%;

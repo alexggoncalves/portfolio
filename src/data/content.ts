@@ -97,13 +97,7 @@ export type Tag = {
 };
 
 // Icon type
-export type Icon = {
-    id: string;
-    src: string;
-    aspect: number;
-};
-
-export type ToolIcon = {
+export type Tool = {
     id: string;
     src: string;
     title: string;
@@ -112,7 +106,7 @@ export type ToolIcon = {
 export const projects = PROJECTS as Project[];
 export const people = PEOPLE as Person[];
 export const tags = TAGS as Tag[];
-export const tools = TOOLS as ToolIcon[];
+export const tools = TOOLS as Tool[];
 
 // Images to Preload
 const thumbnailUrls = projects.map((project) => project.thumbnailSrc);
@@ -133,7 +127,7 @@ export function getTagById(id: string): Tag | null {
     const tag = tags.find((tag) => tag.id === id);
     return tag || null;
 }
-export function getToolById(id: string): ToolIcon | null {
+export function getToolById(id: string): Tool | null {
     const tool = tools.find((tool) => tool.id === id);
     return tool || null;
 }

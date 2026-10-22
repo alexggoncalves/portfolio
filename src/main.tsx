@@ -1,5 +1,5 @@
 import "./styles/index.scss"
-import "./styles/buttons.scss"
+import "./components/interface/buttons.scss"
 import "./components/interface/window.scss"
 
 import ReactDOM from "react-dom/client";

@@ -8,9 +8,9 @@ type PanelToggle = {
     onClick?: () => void;
 }
 
-export const PanelToggle = ({icon, label, count, active = false, onClick  }: PanelToggle) => {
+export const PanelToggle = ({ icon, label, count, active = false, onClick }: PanelToggle) => {
     return (
-         <button
+        <button
             type="button"
             className={`button--pill ${active ? "active" : ""}`}
             onClick={onClick}
@@ -49,4 +49,21 @@ export const ExternalLink = ({ children, href, label }: ExternalLinkProps) => {
             {children}
         </a>
     );
+}
+
+type WindowActionButtonProps = {
+    children: ReactNode;
+    onAction: () => void;
+    label: string;
+}
+
+export const WindowActionButton = ({ children, onAction, label }: WindowActionButtonProps) => {
+    return (<button
+        type="button"
+        onClick={onAction}
+        className="button--action"
+        aria-label={label}
+    >
+        {children}
+    </button>)
 }

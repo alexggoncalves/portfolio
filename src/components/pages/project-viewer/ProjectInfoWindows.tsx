@@ -5,6 +5,8 @@ import ProjectTeam from "./project-info/ProjectTeam";
 import Window from "../../interface/Window";
 import ProjectInfo from "./project-info/ProjectInfo";
 import { useState } from "react";
+import { CloseIcon, MinimizeIcon } from "../../interface/Icons";
+import { WindowActionButton } from "../../interface/Buttons";
 
 export type Panel = "tools" | "team" | null;
 
@@ -33,25 +35,30 @@ function ProjectInfoWindows({ project, setMinimized, inert }: ProjectInfoWindows
         <div className="project-viewer__windows" inert={inert}>
             <Window
                 title="Project info"
-                header={<>
-                    <span>PROJECT</span>
-                    <span>•</span>
+                className="project-info__window"
+                headerLeft={<>
+                    <span>Project</span>
+                    <span aria-hidden={true}>•</span>
                     <span>{project.year}</span>
                 </>}
-                actionType="minimize"
-                onAction={minimize}
-                className="project-info__window"
+                headerRight={
+                    <WindowActionButton onAction={minimize} label={`Close project info window${panel ? "s" : ""}`}>
+                        <MinimizeIcon />
+                    </WindowActionButton>
+                }
             >
                 <ProjectInfo project={project} panel={panel} onTogglePanel={togglePanel}></ProjectInfo>
             </Window>
 
             {panel === "tools" && (
-                < Window
+                <Window
                     title="Tools"
-                    header={<span>TOOLS</span>}
-                    actionType="close"
-                    onAction={closePanel}
-                    className="project-team__window"
+                    headerLeft={<span>Tools</span>}
+                    headerRight={
+                        <WindowActionButton onAction={closePanel} label="Close tools panel">
+                            <CloseIcon />
+                        </WindowActionButton>
+                    }
                 >
                     <ProjectTools tools={project.tools} />
                 </Window>
@@ -60,10 +67,13 @@ function ProjectInfoWindows({ project, setMinimized, inert }: ProjectInfoWindows
             {panel === "team" && project.team && (
                 <Window
                     title="Team"
-                    header={<span>TEAM</span>}
-                    actionType="close"
-                    onAction={closePanel}
                     className="project-team__window"
+                    headerLeft={<span>Team</span>}
+                    headerRight={
+                       <WindowActionButton onAction={closePanel} label="Close team panel">
+                            <CloseIcon />
+                        </WindowActionButton>
+                    }
                 >
                     <ProjectTeam team={project.team} />
                 </Window>

@@ -35,7 +35,7 @@
 // MEDIA SLIDES
 // =============
 .media-slide {
-    @include cross-bg;
+    @include star-bg;
 
     position: absolute;
     inset: 0;
