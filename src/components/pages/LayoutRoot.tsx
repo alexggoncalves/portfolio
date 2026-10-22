@@ -1,15 +1,20 @@
 import { matchPath, useLocation } from "react-router-dom";
+// import type { Page } from "../../stores/sceneStore";
+// import useSceneStore from "../../stores/sceneStore";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+
+import ProjectViewer from "./project-viewer/ProjectViewer";
 import Header from "../Header";
 import ProjectsGridPage from "./projects-grid/ProjectsGridPage";
 import ContactPage from "./contact/ContactPage";
 import HomePage from "./homepage/HomePage";
-import type { Page } from "../../stores/sceneStore";
-import useSceneStore from "../../stores/sceneStore";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-// import AsciiStage from "../ascii/AsciiStage";
-import ProjectViewer from "./project-viewer/ProjectViewer";
+import useImagePreloader from "../../hooks/useImagePreloader";
+import { imagesToPreload } from "../../data/content";
+import LoadingScreen from "../LoadingScreen";
 
-const PAGES = ["work", "contact"] as Page[];
+export type Page = "home" | "work" | "contact";
+
+const BASE_PATHS = ["work", "contact"];
 
 const getActivePage = (pathname: string): Page => {
     if (pathname.startsWith("/work")) return "work";
@@ -22,73 +27,48 @@ const getActiveProjectId = (pathname: string): string | null => {
         matchPath("/:projectId", pathname) ||
         matchPath("/work/:projectId", pathname);
 
-    const id = match?.params?.projectId;
+    const id = match?.params.projectId;
 
-    // Exclude "/contacts" and "/projects" as project ids
-    const isBasePath = PAGES.includes(id as Page);
-
-    return id && !isBasePath ? id : null;
+    // "/work" and "/contact" aren't project ids
+    return id && !BASE_PATHS.includes(id) ? id : null;
 };
 
 function LayoutRoot() {
     const { pathname } = useLocation();
+    const page = getActivePage(pathname);
+    const projectId = getActiveProjectId(pathname);
+
+    const { loaded, progress } = useImagePreloader(imagesToPreload);
+
     const mainRef = useRef<HTMLElement>(null);
-    const setRoute = useSceneStore((s) => s.setRoute);
-    const isLoaded = useSceneStore((s) => s.isLoaded);
 
     const activePage = getActivePage(pathname);
     const activeProjectId = getActiveProjectId(pathname);
 
     const [visibleProject, setVisibleProject] = useState<string | null>(null);
 
-    // Keep scene store in sync with the URL before paint so AsciiScene never
-    // renders one frame of the wrong page (avoids ASCII / logo glitches).
-    useLayoutEffect(() => {
-        setRoute(activePage, activeProjectId);
-    }, [activePage, activeProjectId, setRoute]);
-
     // Project window open + delayed close
     useEffect(() => {
-        if (activeProjectId) {
-            setVisibleProject(activeProjectId);
-        } else {
-            const timeout = setTimeout(() => {
-                setVisibleProject(null);
-            }, 400);
-
-            return () => clearTimeout(timeout);
+        if (projectId) {
+            setVisibleProject(projectId);
+            return;
         }
-    }, [activeProjectId]);
+
+        const timeout = setTimeout(() => setVisibleProject(null), 400);
+        return () => clearTimeout(timeout);
+    }, [projectId]);
 
     // Reset scroll of main on page change
     useLayoutEffect(() => {
-        const el = mainRef.current;
-        if (!el) return;
-
-        el.scrollTop = 0;
-    }, [activePage, isLoaded]);
-
-    // Mobile check
-    const setIsMobile = useSceneStore((s) => s.setIsMobile);
-    const setIsTouch = useSceneStore((s) => s.setIsTouch);
-
-    useEffect(() => {
-    const check = () => {
-        const { mobileSize } = useSceneStore.getState();
-        setIsMobile(window.innerWidth <= mobileSize);
-        setIsTouch(window.matchMedia("(pointer: coarse)").matches);
-    };
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-}, [setIsMobile, setIsTouch]);
+        if (mainRef.current) mainRef.current.scrollTop = 0;
+    }, [page, loaded]);
 
     return (
         <>
+            <LoadingScreen progress={progress} />
             <Header />
-            {/* <AsciiStage /> */}
 
-            {isLoaded && (
+            {loaded && (
                 <main ref={mainRef}>
                     {activePage === "home" && <HomePage />}
                     {activePage === "work" && <ProjectsGridPage />}

@@ -9,7 +9,7 @@ import { TrashIcon } from "../../interface/Icons";
 
 function ProjectsGridPage() {
     const [categoryFilters, setCategoryFilters] = useState<string[]>([]);
-    const [toolFilters, setToolFilters] = useState<string[]>([]);
+    // const [toolFilters, setToolFilters] = useState<string[]>([]);
 
     const filteredProjects = useMemo(() => {
         if (categoryFilters.length === 0) return projects;

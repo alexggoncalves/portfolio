@@ -11,7 +11,7 @@ type FiltersProps = {
 }
 
 function Filters({ filters, title, onApply, appliedFilters }: FiltersProps) {
-    const [isOpen, setIsOpen] = useState(false);
+
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
     const toggleFilter = (tagId: string) => {
@@ -22,15 +22,14 @@ function Filters({ filters, title, onApply, appliedFilters }: FiltersProps) {
         );
     };
 
-    const clearFilters = () => {
-        setSelectedFilters([]);
-        onApply([]);
-        setIsOpen(false);
-    };
+    // const clearFilters = () => {
+    //     setSelectedFilters([]);
+    //     onApply([]);
+    // };
 
     const applyFilters = () => {
+        appliedFilters;
         onApply(selectedFilters);
-        setIsOpen(false);
     };
 
     return (
@@ -60,10 +59,9 @@ function Filters({ filters, title, onApply, appliedFilters }: FiltersProps) {
                 })}
             </div>
 
-            {/* <div className="projects-grid__filters-buttons">
-                    <div onClick={clearFilters}>clear</div>
+            <div className="projects-grid__filters-buttons">
                     <div onClick={applyFilters}>APPLY</div>
-                </div> */}
+                </div>
         </>
     );
 }
