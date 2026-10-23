@@ -1,6 +1,6 @@
 import { Outlet, useLocation, useParams } from "react-router";
 import { useEffect, useLayoutEffect, useState } from "react";
-import { PerspectiveCamera, View } from "@react-three/drei";
+import { View } from "@react-three/drei";
 
 import useImagePreloader from "../hooks/useImagePreloader";
 import { imagesToPreload } from "../data/content";
