@@ -1,0 +1,118 @@
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: var(--nav-height);
+  padding: 0 var(--main-padding);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 120;
+  pointer-events: none;
+}
+header > * {
+  pointer-events: all;
+}
+
+#logo {
+  width: var(--logo-width);
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(1px 1px 4px var(--background-color));
+  transition: scale 0.2s ease;
+}
+#logo svg {
+  height: auto;
+  width: 100%;
+}
+#logo:hover {
+  background: none;
+  scale: 1.05;
+}
+
+header nav {
+  background-color: rgba(30, 30, 30, 0.9);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 4px;
+  transition: opacity 0.3s ease;
+}
+header nav.ui-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+header nav > a {
+  font-family: "Inter";
+  font-weight: 500;
+  margin-left: 15px;
+  color: white;
+  pointer-events: all;
+  padding: 2px 12px;
+  border-radius: 8px;
+  z-index: 4;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  transition: 300ms ease;
+}
+header nav > a:hover {
+  color: white;
+  background: none;
+}
+header nav > a.active {
+  background-color: white;
+  color: var(--background-color);
+}
+header nav > a:first-child {
+  margin-left: 0;
+}
+
+.nav__indicator {
+  position: absolute;
+  border: 1px solid white;
+  border-radius: 8px;
+  pointer-events: none;
+  z-index: 3;
+}
+
+@media (max-width: 700px) {
+  .nav {
+    position: fixed;
+    width: 150px;
+    top: 85px;
+    right: 20px;
+    margin: 0;
+    padding: 25px 15px;
+    background: var(--background-color);
+    border: 1px solid white;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 0.25s ease;
+    pointer-events: none;
+  }
+  .nav a {
+    margin: 0;
+    pointer-events: none;
+  }
+  .nav.open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .nav.open a {
+    pointer-events: auto;
+  }
+}/*# sourceMappingURL=header.css.map */

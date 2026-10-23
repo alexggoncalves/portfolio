@@ -2,6 +2,7 @@
 
 header {
     position: fixed;
+    top: 0;
     width: 100%;
     height: var(--nav-height);
     padding: 0 var(--main-padding);
@@ -28,7 +29,7 @@ header {
 
     filter: drop-shadow(1px 1px 4px var(--background-color));
     transition: scale 0.2s ease;
-    
+
     svg {
         height: auto;
         width: 100%;
@@ -84,7 +85,7 @@ header nav > a {
 
     &:first-child {
         margin-left: 0;
-    }    
+    }
 }
 
 .nav__indicator {

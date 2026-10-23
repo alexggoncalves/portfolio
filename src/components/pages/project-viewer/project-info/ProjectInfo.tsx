@@ -2,8 +2,8 @@ import { type Project } from "../../../../data/content";
 
 import ProjectDescription from "./ProjectDescription";
 import ProjectTags from "./ProjectTags";
-import { GithubIcon, PreviewIcon, TeamIcon, ToolsIcon } from "../../../interface/Icons";
-import { ExternalLink, PanelToggle } from "../../../interface/Buttons";
+import { GithubIcon, PreviewIcon, TeamIcon, ToolsIcon } from "../../../general/Icons";
+import { ExternalLink, PanelToggle } from "../../../general/Buttons";
 import type { Panel } from "../ProjectInfoWindows";
 
 type ProjectInfoProps = {

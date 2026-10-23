@@ -26,9 +26,19 @@
     span {
         margin-right: 8px;
     }
+
+    &-left{
+        margin-right: 20px;
+    }
 }
 
 .window__content {
     padding: 20px;
     flex-grow: 1;
+}
+
+.window-header__icon{
+    display: flex;
+    align-items: center;
+
 }

@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import useUIStore from "../stores/UIStore";
 import useMediaQuery from "../utils/useMediaQuery";
 
-import { BurgerIcon, CloseIcon, Logo } from "./interface/Icons";
+import { BurgerIcon, CloseIcon, Logo } from "./general/Icons";
 
 const LINKS = [
     { to: "/", label: "INDEX" },

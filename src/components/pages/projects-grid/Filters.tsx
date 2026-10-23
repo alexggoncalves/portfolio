@@ -1,6 +1,6 @@
 import "./projectsGrid.scss";
 import { useState } from "react";
-import { CheckboxIcon } from "../../interface/Icons";
+import { CheckboxIcon } from "../../general/Icons";
 import type { Tag } from "../../../data/content";
 
 type FiltersProps = {
@@ -18,7 +18,7 @@ function Filters({ filters, title, onApply, appliedFilters }: FiltersProps) {
         setSelectedFilters((prev) =>
             prev.includes(tagId)
                 ? prev.filter((t) => t !== tagId)
-                : [...prev, tagId],
+                : [...prev, tagId], 
         );
     };
 

@@ -1,4 +1,5 @@
-button, a {
+button,
+a {
   width: fit-content;
   display: flex;
   align-items: center;
@@ -12,7 +13,8 @@ button, a {
   border-radius: 4px;
   transition: background-color 0.2s ease, color 0.2s ease, opacity 0.4s ease;
 }
-button:hover, a:hover {
+button:hover,
+a:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -54,6 +56,33 @@ a {
 }
 .button--glass:hover {
   background-color: rgba(30, 30, 30, 0.5);
+}
+
+.button--icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  width: 34px;
+  height: auto;
+  padding: 6px;
+  border-radius: 8px;
+}
+.button--icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.button--action {
+  aspect-ratio: 1;
+  width: 24px;
+  height: auto;
+  padding: 4px;
+  transform: translateX(8px);
+}
+.button--action svg {
+  width: 100%;
+  height: 100%;
 }
 
 .toggle {

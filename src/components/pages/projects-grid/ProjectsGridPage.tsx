@@ -1,11 +1,11 @@
 import "./projectsGrid.scss";
 import { projects, tags } from "../../../data/content";
-import ProjectCard from "./ProjectCard";
+import ProjectCard from "../../general/ProjectCard";
 import { useMemo, useState } from "react";
 import Filters from "./Filters";
-import Window from "../../interface/Window";
-import { WindowActionButton } from "../../interface/Buttons";
-import { TrashIcon } from "../../interface/Icons";
+import Window from "../../general/Window";
+import { WindowActionButton } from "../../general/Buttons";
+import { TrashIcon } from "../../general/Icons";
 
 function ProjectsGridPage() {
     const [categoryFilters, setCategoryFilters] = useState<string[]>([]);
@@ -65,7 +65,6 @@ function ProjectsGridPage() {
                             key={project.id}
                             project={project}
                             route={`/work/${project.id}`}
-                            displayTags
                         />
                     ))}
                 </div>

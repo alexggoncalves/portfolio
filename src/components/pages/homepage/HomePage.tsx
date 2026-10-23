@@ -1,16 +1,14 @@
+import AboutMe from "./AboutMe";
 import Hero from "./Hero";
 import "./homepage.scss";
-import ProjectsRow from "./ProjectsRow";
+import SelectedProjects from "./SelectedProjects";
 
 function HomePage() {
     return (
         <>
-            <Hero/>
-            <ProjectsRow/>
-            <section
-                className="cat"
-                id={"cat-section"}
-            />
+            <Hero />
+            <SelectedProjects />
+            <AboutMe />
         </>
     );
 }

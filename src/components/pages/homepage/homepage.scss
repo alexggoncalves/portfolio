@@ -1,166 +1,196 @@
-.hero {
-    padding-top: calc(var(--nav-height) / 2 + 25px);
-    width: 100%;
-    height: calc(100vh - 280px - var(--main-padding) / 2);
+@use "./../../../styles/mixins.scss" as *;
+
+// ===========
+// HERO
+// ===========
+#hero {
+    position: relative;
+    height: 100svh;
+}
+
+.hero__scene {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+
+.hero__window {
+    position: absolute;
+    left: var(--main-padding);
+    bottom: var(--main-padding);
+    max-width: 400px;
+
+    .window__header {
+        padding: 10px 14px 10px 20px;
+    }
+
+    .window__content {
+        padding: 16px 20px 24px 20px;
+    }
+
+    .hero__greeting {
+        display: block;
+        font-size: 1.8rem;
+        margin-bottom: 6px;
+        font-weight: 700;
+    }
+
+    .hero__description {
+        display: block;
+        color: rgb(200, 200, 200);
+    }
+}
+
+.hero__scroll-tag {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    gap: 2px;
+    color: rgb(200, 200, 200);
 
-    font-family: "Space Grotesk", sans-serif;
+    svg {
+        height: auto;
+        width: 20px;
+    }
 
     > span {
-        display: block;
-        font-family: "Source Code Pro", monospace;
-        font-size: 1.2rem;
-    }
-
-    #greeting {
-        font-size: 1.5rem;
-    }
-
-    #name {
-        font-size: 2.6rem;
-        font-weight: 800;
-        color: white;
-    }
-
-    #role {
-        text-align: center;
+        @include mono-label;
+        font-weight: 700;
+        user-select: none;
+        text-transform: uppercase;
     }
 }
 
-// --- HEADER ---
-.projects-row__header {
+// ===================
+// SELECTED PROJECTS
+// ===================
+.selected-projects__window {
+    margin: 0 var(--main-padding);
+
+    .window__content {
+        padding: 0;
+    }
+}
+
+.selected-projects__track > .project-card {
+    height: 100%;
+}
+
+.selected-projects__scroller {
+    height: 100%;
+    padding: 12px;
+    height: 300px;
+    overflow-x: auto;
+
+    // cursor: grab;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.selected-projects__track {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0px;
-    height: 50px;
-
-    &-left {
-        display: flex;
-        align-items: center;
-        gap: 20px;
-    }
-
-    .projects-row__title {
-        font-size: 2rem;
-        margin: 0;
-        font-family: "Space Grotesk", sans-serif;
-    }
-
-    .projects-row__grid-link {
-        height: 1.8rem;
-    }
-
-    .projects-row__grid-link svg {
-        height: 100%;
-    }
-}
-
-// --- SCROLL INDICATOR ---
-.projects-row__scroll-indicator {
-    border: 1px solid white;
-    width: 100px;
-    height: 10px;
-    border-radius: 10px;
-    position: relative;
-
-    &-thumb {
-        height: 100%;
-        background-color: white;
-        border-radius: 10px;
-    }
-}
-
-// --- ROW ---
-.projects-row {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+    height: 100%;
+    flex-wrap: nowrap;
+    gap: 12px;
+    width: max-content;
 
     .project-card {
         flex: 0 0 auto;
         height: 210px;
         aspect-ratio: 4/3;
     }
+}
 
-    &__wrap {
+.selected-projects__scroll-indicator {
+    width: 100%;
+    padding: 0 12px 12px 12px;
+
+    &-track {
+        background-color: rgb(200, 200, 200, 0.1);
+        width: 100%;
+        height: 8px;
+        border-radius: 4px;
         position: relative;
-        // full-bleed: reach the screen edges
-        margin-inline: calc(-1 * var(--main-padding));
     }
 
-    &__scroller {
-        overflow-x: auto;
-        scrollbar-width: none;
-        cursor: grab;
-
-        &::-webkit-scrollbar { display: none; }
-
-        &.dragging {
-            cursor: grabbing;
-            user-select: none;
-        }
-
-        a, img { -webkit-user-drag: none; }
+    &-thumb {
+        height: 100%;
+        background-color: rgb(200, 200, 200);
+        border-radius: 4px;
     }
+}
 
-    &__track {
+// ==========
+// ABOUT ME
+// ==========
+
+.about-me__window {
+    width: fit-content;
+    margin: var(--main-padding) auto 0 var(--main-padding);
+
+    .window__content {
         display: flex;
-        flex-wrap: nowrap;
-        gap: 16px;
-        width: max-content;
-        // padding lives inside the scroll area, so cards scroll under the gradients
-        padding: 10px var(--main-padding);
+        flex-direction: row;
+        gap: 20px;
+    }
+
+    .window__header {
+        padding: 10px 14px 10px 20px;
     }
 }
 
-// --- ROW GRADIENTS ---
-.projects-row__gradient {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    width: var(--main-padding);
-    z-index: 2;
-    pointer-events: none;
+.about-me__photo {
+    aspect-ratio: 3/4;
+    width: 300px;
+    background-color: rgba(127, 255, 212, 0.219);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
 
-    &--left {
-        left: 0;
-        background: linear-gradient(
-            to right,
-            rgb(25, 25, 25) 0%,
-            transparent 100%
-        );
-    }
-
-    &--right {
-        right: 0;
-        background: linear-gradient(
-            to left,
-            rgb(25, 25, 25) 0%,
-            transparent 100%
-        );
+    img {
+        width: 100%;
+        object-fit: cover;
     }
 }
 
-// ---- CAT SECTION ----
-.cat {
-    margin-top: 20px;
-    height: 70vh;
+.about-me {
+    display: flex;
+    flex-direction: column;
+
+    &__greeting {
+        font-size: 2.5rem;
+        font-weight: 600;
+    }
+
+    &__roles {
+        font-family: "Space Mono";
+        text-transform: uppercase;
+        display: flex;
+        gap: 8px;
+        color: rgb(200, 200, 200);
+    }
+
+    &__description {
+        margin: 20px 0;
+        max-width: 600px;
+    }
+
+    p {
+        margin: 0;
+        margin-bottom: 15px;
+    }
 }
 
 @media (max-width: 700px) {
-    .projects-row__header-left {
-        justify-content: space-between;
-    }
-
-    .projects-row__scroll-indicator {
+    .selected-project__scroll-indicator {
         display: none;
-    }
-
-    .cat {
-        height: 100vh;
     }
 }

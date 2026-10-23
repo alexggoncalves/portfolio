@@ -1,0 +1,64 @@
+.loading-screen {
+  background-color: rgb(30, 30, 30);
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.loading-screen button {
+  font-family: "Space Mono";
+  padding: 6px 20px;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 12px;
+  background-color: rgb(30, 30, 30);
+}
+.loading-screen button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.loading-screen__logo-stack {
+  display: grid;
+  width: 300px;
+  margin-bottom: 12px;
+}
+.loading-screen__logo-stack > * {
+  grid-area: 1/1;
+}
+.loading-screen__logo-stack .loading-screen__logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0;
+}
+
+.loading-screen__logo-fill {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 1s ease;
+}
+
+.loading-screen__logo--empty {
+  color: rgba(255, 255, 255, 0.025);
+}
+.loading-screen__logo--empty path {
+  stroke: rgba(255, 255, 255, 0.3);
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
+}
+
+.loading-screen__logo--full {
+  color: #fff;
+}
+
+.loading-screen__logo-label {
+  font-family: "Space Mono";
+  font-size: 16px;
+  letter-spacing: 4px;
+  color: white;
+  margin-bottom: 20px;
+}/*# sourceMappingURL=loadingScreen.css.map */

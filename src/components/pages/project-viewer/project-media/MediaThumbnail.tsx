@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Media } from "../../../../data/content";
-import { PlayIcon } from "../../../interface/Icons";
+import { PlayIcon } from "../../../general/Icons";
 
 function MediaThumbnail({ media }: { media: Media }) {
     const [loaded, setLoaded] = useState(false);

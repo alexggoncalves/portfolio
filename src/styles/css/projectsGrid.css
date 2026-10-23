@@ -1,128 +1,86 @@
-.projects-grid {
-  padding: 10px;
-  padding-top: calc(var(--nav-height) + 20px);
-  margin-bottom: var(--main-padding);
-  min-width: 0;
-  margin: 0 10vw;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+.projects-grid__page {
+  width: 100vw;
+  height: 100svh;
+  padding: calc(var(--nav-height) + 5px) var(--main-padding) var(--main-padding);
+  display: flex;
   gap: 20px;
 }
 
-.projects-grid .project-card {
-  width: 100%;
-  aspect-ratio: 4/3;
-}
-
-.projects-grid__filters {
-  position: fixed;
-  bottom: 100px;
-  right: 40px;
-  padding: 15px;
-  z-index: 11;
-  background-color: var(--background-color);
-  border: 1px solid white;
-  border-radius: 23px;
+.projects-grid__window {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-  opacity: 0;
-  transform: translateY(10px);
-  transition: 0.25s ease;
-  pointer-events: none;
+}
+.projects-grid__window .window__content {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  --fade: 12px;
+  padding: var(--fade);
+  overflow-y: scroll;
+  overflow-x: visible;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black var(--fade), black calc(100% - var(--fade)), transparent);
+  mask-image: linear-gradient(to bottom, transparent, black var(--fade), black calc(100% - var(--fade)), transparent);
 }
 
-.filter-count {
-  position: absolute;
-  top: -20%;
-  right: -20%;
-  background-color: var(--background-color);
-  border: 1px solid white;
-  width: 25px;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  padding: 1px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-family: "Space Grotesk", sans-serif;
+.projects-grid {
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
 }
 
-.projects-grid__filters-container {
+.filters__window {
+  flex-grow: 0;
+  min-width: 260px;
+  align-self: flex-start;
+}
+.filters__window .window__content {
+  padding: 12px 10px 12px 10px;
+}
+
+.filter-section {
   display: flex;
   flex-direction: column;
   gap: 6px;
   align-items: center;
+  margin-top: 4px;
 }
-.projects-grid__filters-container > span {
-  font-family: "Space Grotesk", sans-serif;
-  font-weight: 700;
-  margin-bottom: 8px;
+.filter-section__title {
+  width: 100%;
+  margin-left: 20px;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  color: rgb(200, 200, 200);
 }
 
 .filter {
-  padding: 3px 10px 3px 12px;
-  border-radius: 25px;
-  cursor: pointer;
-  border: 1px solid transparent;
+  padding: 8px 10px 8px 10px;
+  border-radius: 8px;
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.616);
-  text-align: center;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
-  font-family: "Avenir", sans-serif;
+  font-family: "Space Mono", monospace;
   font-size: 0.85rem;
+  text-align: left;
 }
-.filter svg {
-  height: 16px;
-  width: auto;
-  aspect-ratio: 1;
-  flex-shrink: 0;
-}
-.filter:hover {
-  border: 1px solid white;
-}
-
-.projects-grid__filters-buttons {
+.filter .filter__label {
   display: flex;
-  margin-top: 10px;
-  width: 100%;
   gap: 8px;
+  align-items: center;
+  margin-right: 20px;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
-.projects-grid__filters-buttons div {
-  cursor: pointer;
-  border-radius: 25px;
-  text-align: center;
+.filter .filter__label svg {
+  height: 20px;
+  width: auto;
 }
-.projects-grid__filters-buttons div:first-child {
-  padding: 1px 10px;
-  height: 30px;
-}
-.projects-grid__filters-buttons div:first-child:hover {
-  background-color: rgba(151, 15, 15, 0.493);
-}
-.projects-grid__filters-buttons div:nth-child(2) {
-  padding-top: 2px;
-  border-radius: 25px;
-  flex-grow: 1;
-  font-weight: 600;
-  background-color: rgb(187, 187, 187);
-  color: var(--background-color);
-}
-.projects-grid__filters-buttons div:nth-child(2):hover {
-  background-color: rgb(255, 255, 255);
-  color: var(--background-color);
-}
-
-.projects-grid__filters.open {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
+.filter .filter__count {
+  margin-right: 2px;
+  color: rgb(200, 200, 200);
 }
 
 @media (max-width: 700px) {

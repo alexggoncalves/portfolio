@@ -208,6 +208,21 @@ export const TrashIcon = (props: IconProps) => (
     </StrokeIcon>
 );
 
+export const SmileIcon = (props: IconProps) => (
+    <StrokeIcon {...props}>
+        <path d="M15 10V9M16.472 15a6 6 0 0 1-8.943 0M9 10V9"></path>
+        <circle cx="12" cy="12" r="10"></circle>
+    </StrokeIcon>
+);
+
+export const PersonIcon = (props: IconProps) => (
+    <StrokeIcon {...props}>
+        <path d="M17.925 20.056a6 6 0 0 0-11.851.001"></path>
+        <circle cx="12" cy="11" r="4"></circle>
+        <circle cx="12" cy="12" r="10"></circle>
+    </StrokeIcon>
+);
+
 // ======================
 // TO CHANGE
 // ======================

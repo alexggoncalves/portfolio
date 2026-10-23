@@ -1,7 +1,7 @@
 import { useEffect, useRef, type CSSProperties, type Dispatch, type SetStateAction } from "react";
 import type { Media, MediaSlide } from "../../../../data/content";
 import useHorizontalDragScroll from "../../../../hooks/useHorizontalDragScroll";
-import { ChevronLeft, ChevronRight } from "../../../interface/Icons";
+import { ChevronLeft, ChevronRight } from "../../../general/Icons";
 import MediaThumbnail from "./MediaThumbnail";
 
 export function getSlideItems(slide: MediaSlide): Media[] {

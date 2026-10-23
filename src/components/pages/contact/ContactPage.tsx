@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { CopyIcon, GithubIcon, LinkedInIcon } from "../../interface/Icons";
+import { CopyIcon, GithubIcon, LinkedInIcon } from "../../general/Icons";
 import "./contact.scss";
 
 function ContactPage() {

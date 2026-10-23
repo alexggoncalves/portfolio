@@ -142,3 +142,5 @@ export function getTagsById(tagIds: string[]): Tag[] {
 
     return output;
 }
+
+export const projectExists = (id?: string) => !!id && projects.some((p) => p.id === id);

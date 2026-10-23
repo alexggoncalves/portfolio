@@ -1,11 +1,13 @@
+import "./../styles/loadingScreen.scss"
+
 import { useLayoutEffect, useRef, useState } from "react";
-import { Logo } from "./interface/Icons";
+import { Logo } from "./general/Icons";
 
 const FADE_OUT_TIMER = 1000;
 const BOOT_OVERLAY_ID = "html-boot-overlay";
 
 function LoadingScreen({ progress }: { progress: number }) {
-    const progressRef = useRef<HTMLDivElement>(null);
+    const logoFillRef = useRef<HTMLDivElement>(null);
     const [fadeOut, setFadeOut] = useState(false);
     const [visible, setVisible] = useState(true);
 
@@ -21,9 +23,9 @@ function LoadingScreen({ progress }: { progress: number }) {
     };
 
     useLayoutEffect(() => {
-        if (!progressRef.current) return;
-        const value = Math.min(Math.max(progress, 0), 100) / 100;
-        progressRef.current.style.transform = `scaleX(${value})`;
+        if (!logoFillRef.current) return;
+        const value = Math.min(Math.max(progress, 0), 100);
+        logoFillRef.current.style.clipPath = `inset(0 ${100 - value}% 0 0)`;
     }, [progress]);
 
 
@@ -39,16 +41,16 @@ function LoadingScreen({ progress }: { progress: number }) {
                     pointerEvents: fadeOut ? "none" : "auto",
                 }}
             >
-                <div className="loading-screen__logo-container">
-                    <Logo className="loading-screen__logo"/>
-                    <span className="loading-screen__logo-label">
-                        CREATIVE DEVELOPER
-                    </span>
+                <div className="loading-screen__logo-stack">
+                    <Logo className="loading-screen__logo loading-screen__logo--empty" />
+                    <div ref={logoFillRef} className="loading-screen__logo-fill">
+                        <Logo className="loading-screen__logo loading-screen__logo--full" />
+                    </div>
                 </div>
 
-                <div className="loading-screen__progress-bar">
-                    <div ref={progressRef} className="loading-screen__progress-fill"/>
-                </div>
+                <span className="loading-screen__logo-label">
+                    CREATIVE DEVELOPER
+                </span>
 
                 <button
                     className={"button--pill"}

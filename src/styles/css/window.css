@@ -5,7 +5,8 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-width: 170px;
+  min-width: 200px;
+  overflow: hidden;
 }
 
 .window__header {
@@ -13,26 +14,30 @@
   font-size: 0.8rem;
   font-weight: 400;
   font-variant-numeric: tabular-nums;
+  min-height: 50px;
   letter-spacing: 0.5px;
   position: relative;
   display: flex;
-  padding: 16px 20px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
   border-bottom: 1px solid rgb(100, 100, 100);
   color: rgb(221, 221, 221);
+  text-transform: uppercase;
 }
 .window__header span {
   margin-right: 8px;
 }
-.window__header > .window__control {
-  position: absolute;
-  right: 14px;
-  padding: 0 4px;
-  top: 50%;
-  transform: translateY(-50%);
-  height: 50%;
-  cursor: pointer;
+.window__header-left {
+  margin-right: 20px;
 }
 
 .window__content {
-  margin: 16px 20px;
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.window-header__icon {
+  display: flex;
+  align-items: center;
 }/*# sourceMappingURL=window.css.map */
