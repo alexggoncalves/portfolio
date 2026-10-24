@@ -3,8 +3,9 @@ import ProjectCard from "../../general/ProjectCard";
 import useHorizontalDragScroll from "../../../hooks/useHorizontalDragScroll";
 import Window from "../../general/Window";
 import { Link } from "react-router";
+import { ChevronRight } from "../../general/Icons";
 
-const SELECTED_PROJECTS_IDS = ["endless", "muse","malleus-vr","endless-purrs","crimes-exemplares-digital", "mirage",,"undone", "frogger-vr"]
+const SELECTED_PROJECTS_IDS = ["endless", "muse", "malleus-vr", "endless-purrs", "crimes-exemplares-digital", "mirage", "undone", "frogger-vr"]
 
 function SelectedProjects() {
     const { viewportRef, trackRef, onPointerDown, indicatorRef } =
@@ -15,12 +16,19 @@ function SelectedProjects() {
         .filter((p): p is Project => !!p);
 
     const leftHeader = <>
-        <span>Selected projects</span>
+        <span>Selected work</span>
+        <span aria-hidden={true}>•</span>
+        <span>{selectedProjects.length}</span>
     </>;
 
-    const rightHeader = <Link to={"/work"}>
-        See all
-    </Link>
+    const rightHeader = <>
+        <Link className="button--action-text" to={"/work"}>
+            <span>All work</span>
+            <ChevronRight/>
+        </Link>
+    </>
+
+
 
     return (
         <Window

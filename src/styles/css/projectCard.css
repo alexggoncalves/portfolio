@@ -19,6 +19,7 @@
 .project-card.project-card--thumbnail .project-card__image {
   aspect-ratio: auto;
   height: 100%;
+  border-radius: 6px;
 }
 
 .project-card__text {

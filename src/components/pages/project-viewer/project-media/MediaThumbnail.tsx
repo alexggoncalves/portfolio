@@ -33,7 +33,10 @@ function MediaThumbnail({ media }: { media: Media }) {
                     tabIndex={-1}
                     onLoadedData={onLoad}
                 />
-                <PlayIcon className="media-thumbnail__play" />
+                <div className="media-thumbnail__play">
+                    <PlayIcon />
+                </div>
+
             </span>
         );
     }

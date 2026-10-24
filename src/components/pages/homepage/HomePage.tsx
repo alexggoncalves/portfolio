@@ -5,11 +5,11 @@ import SelectedProjects from "./SelectedProjects";
 
 function HomePage() {
     return (
-        <>
+        <div className="homepage">
             <Hero />
             <SelectedProjects />
             <AboutMe />
-        </>
+        </div>
     );
 }
 

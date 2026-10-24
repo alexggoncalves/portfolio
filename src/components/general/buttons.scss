@@ -38,8 +38,11 @@ a {
 // VARIANTS
 .button--pill {
     border: 1px solid rgb(158, 158, 158);
-    border-radius: 25px;
-    padding: 8px 14px 9px 14px;
+    border-radius: 8px;
+    padding: 6px 14px 6px 14px;
+    font-size: 0.9rem;
+    font-family: "Space Mono";
+    text-transform: uppercase;
 
     > svg {
         width: 16px;
@@ -50,7 +53,8 @@ a {
     &.active {
         background-color: rgb(226, 226, 226);
         border-color: rgb(226, 226, 226);
-        color: rgb(27, 27, 27);
+        color: rgb(80, 80, 80);
+        font-weight: 600;
     }
 }
 
@@ -81,16 +85,35 @@ a {
     }
 }
 
-.button--action {
+.button--action-text{
+    display: flex;
+    padding: 10px 8px 10px 16px;
+    transform: translateX(10px);
+    background-color: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    
+    span{
+        padding-bottom: 1px;
+    }
+
+    svg{
+        width: 18px;
+        height: auto;
+    }
+}
+
+.button--action-icon {
     aspect-ratio: 1;
-    width: 24px;
+    width: 30px;
     height: auto;
-    padding: 4px;
-    transform: translateX(8px);
+    padding: 6px;
+    transform: translateX(10px);
+    background-color: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.08);
 
     svg{
         width: 100%;
-        height: 100%;
+        height: auto;
     }
 }
 

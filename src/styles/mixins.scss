@@ -1,6 +1,6 @@
 @mixin glass-panel {
-    background-color: rgba(30, 30, 30, 0.9);
-    backdrop-filter: blur(10px);
+    background-color: rgba(30, 30, 30, 0.8);
+    backdrop-filter: blur(8px);
     border-radius: 12px;
 }
 
@@ -20,33 +20,4 @@
     font-size: $size;
     font-weight: $weight;
     font-variant-numeric: tabular-nums;
-}
-
-@mixin cross-bg {
-    background-color: rgb(30, 30, 30);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 8v8M8 12h8' stroke='white' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E");
-    background-size: 24px 24px;
-}
-
-@mixin star-bg(
-    $tile: 34,
-    $size: 5,
-    $thickness: 0.2,
-    $opacity: 0.1,
-    $star-color: white,
-    $bg: rgb(20, 20, 20)
-) {
-    $c: $tile * 0.5;
-    $t: $thickness;
-
-    $path: "M#{$c} #{$c - $size}" +
-        "Q#{$c + $t} #{$c - $t} #{$c + $size} #{$c}" +
-        "Q#{$c + $t} #{$c + $t} #{$c} #{$c + $size}" +
-        "Q#{$c - $t} #{$c + $t} #{$c - $size} #{$c}" +
-        "Q#{$c - $t} #{$c - $t} #{$c} #{$c - $size}Z";
-
-    background-position: center;
-    background-color: $bg;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='#{$tile}' height='#{$tile}'%3E%3Cpath d='#{$path}' fill='#{$star-color}' fill-opacity='#{$opacity}'/%3E%3C/svg%3E");
-    background-size: #{$tile}px #{$tile}px;
 }

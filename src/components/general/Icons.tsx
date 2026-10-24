@@ -215,24 +215,62 @@ export const SmileIcon = (props: IconProps) => (
     </StrokeIcon>
 );
 
-export const PersonIcon = (props: IconProps) => (
+export const StarIcon = (props: IconProps) => (
     <StrokeIcon {...props}>
-        <path d="M17.925 20.056a6 6 0 0 0-11.851.001"></path>
-        <circle cx="12" cy="11" r="4"></circle>
+        <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z"></path>
+    </StrokeIcon>
+);
+
+export const AtIcon = (props: IconProps) => (
+    <StrokeIcon {...props}>
+        <circle cx="12" cy="12" r="4"></circle>
+        <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-4 8"></path>
+    </StrokeIcon>
+);
+
+export const ArrowUpRightIcon = (props: IconProps) => (
+    <StrokeIcon {...props}>
+        <path d="M7 7h10v10M7 17 17 7"></path>
+    </StrokeIcon>
+);
+
+export const DownloadIcon = (props: IconProps) => (
+    <StrokeIcon {...props}>
+        <path d="M12 15V3M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <path d="m7 10 5 5 5-5"></path>
+    </StrokeIcon>
+);
+
+export const CurriculumIcon = (props: IconProps) => (
+    <StrokeIcon {...props}>
+        <path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"></path>
+        <path d="M14 2v5a1 1 0 0 0 1 1h5M16 22a4 4 0 0 0-8 0"></path>
+        <circle cx="12" cy="15" r="3"></circle>
+    </StrokeIcon>
+);
+
+export const PinIcon = (props: IconProps) => (
+    <StrokeIcon {...props}>
+        <path d="M12 17v5M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"></path>
+    </StrokeIcon>
+);
+
+export const ClockIcon = (props: IconProps) => (
+    <StrokeIcon {...props}>
         <circle cx="12" cy="12" r="10"></circle>
+        <path d="M12 6v6l4 2"></path>
+    </StrokeIcon>
+);
+
+export const PhoneIcon = (props: IconProps) => (
+    <StrokeIcon {...props}>
+        <path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"></path>
     </StrokeIcon>
 );
 
 // ======================
 // TO CHANGE
 // ======================
-
-export const FilterIcon = (props: IconProps) => (
-    <FillIcon {...props}>
-        <path d="M86.2,17.12v4.52c0,.6-.23,1.17-.64,1.61l-26.09,27.86c-.51.54-1.22.85-1.96.86l-8.51.1-8.51-.1c-.74,0-1.45-.32-1.96-.86L12.44,23.25c-.41-.44-.64-1.01-.64-1.61v-4.52c0-1.05.85-1.9,1.9-1.9l35.29.11,35.29-.11c1.05,0,1.9.85,1.9,1.9Z" />
-        <path d="M40.55,55.63h16.96c.9,0,1.63.73,1.63,1.63v34.3c0,.93-1.01,1.51-1.81,1.05l-16.98-9.76c-.88-.51-1.42-1.44-1.42-2.46v-23.14c0-.9.73-1.63,1.63-1.63Z" />
-    </FillIcon>
-);
 
 export const ArrowIcon = (props: IconProps) => (
     <FillIcon {...props}>

@@ -49,9 +49,10 @@ function ProjectViewer({ projectId, isOpen }: ProjectViewerProps) {
     return (
         <div className={`project-viewer ${open ? "open" : ""} ${interfaceHidden ? "ui-hidden" : ""}`}>
             <MediaPlayer project={project} enabled={open}/>
-
+            <ReturnButton enabled={open}/>
+            <ToggleInterfaceButton />
             <div className="project-viewer__overlay">
-                <ReturnButton enabled={open}/>
+                
 
                 {windowsMinimized ?
                     <ProjectHeading
@@ -68,8 +69,6 @@ function ProjectViewer({ projectId, isOpen }: ProjectViewerProps) {
                     />
                 }
             </div>
-
-            <ToggleInterfaceButton />
         </div>
     );
 }

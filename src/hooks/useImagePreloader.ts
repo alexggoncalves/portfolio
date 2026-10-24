@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 function preloadImage(src: string) {
     return new Promise((resolve) => {
         const img = new Image();
-        img.crossOrigin = "anonymous";
+        // img.crossOrigin = "anonymous";
         img.onload = resolve;
         img.onerror = resolve;
         img.src = src;

@@ -8,20 +8,25 @@ import { WindowActionButton } from "../../general/Buttons";
 import { TrashIcon } from "../../general/Icons";
 
 function ProjectsGridPage() {
-    const [categoryFilters, setCategoryFilters] = useState<string[]>([]);
-    // const [toolFilters, setToolFilters] = useState<string[]>([]);
+    const [appliedFilters, setAppliedFilters] = useState<string[]>([]);
+    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
     const filteredProjects = useMemo(() => {
-        if (categoryFilters.length === 0) return projects;
+        if (appliedFilters.length === 0) return projects;
 
         return projects.filter((project) =>
-            categoryFilters.some((tag) => project.tags.includes(tag)),
+            appliedFilters.some((tag) => project.tags.includes(tag)),
         );
-    }, [categoryFilters, projects]);
+    }, [appliedFilters, projects]);
 
     const clearFilters = () => {
+        setSelectedFilters([]);
+        setAppliedFilters([]);
+    };
 
-    }
+    const applyFilters = () => {
+        setAppliedFilters(selectedFilters);
+    };
 
     return (
         <div className="projects-grid__page">
@@ -36,17 +41,18 @@ function ProjectsGridPage() {
                 className="filters__window"
             >
                 <Filters
+                    projects={projects}
                     filters={tags}
-                    title="Category"
-                    onApply={setCategoryFilters}
-                    appliedFilters={categoryFilters}
+                    selectedFilters={selectedFilters}
+                    setSelectedFilters={setSelectedFilters}
                 />
-                {/* <Filters
-                    filters={tools}
-                    onApply={setFilters}
-                    appliedFilters={filters}
-                /> */}
-
+                <button
+                    type="button"
+                    onClick={applyFilters}
+                    className="button--pill filters__apply-button"
+                >
+                    APPLY
+                </button>
             </Window>
 
             <Window

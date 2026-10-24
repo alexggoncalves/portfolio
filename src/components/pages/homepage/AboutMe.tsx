@@ -1,4 +1,4 @@
-import { PersonIcon } from "../../general/Icons";
+import { StarIcon } from "../../general/Icons";
 import Window from "../../general/Window";
 
 function AboutMe() {
@@ -7,7 +7,7 @@ function AboutMe() {
     </>;
 
     const rightHeader = <>
-        <PersonIcon className='window-header__icon' width={20} height={20}/>
+        <StarIcon className='window-header__icon' width={20} height={20}/>
     </>
 
     return (
@@ -21,14 +21,14 @@ function AboutMe() {
                 <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSWfAPb_7obVf5aEVeQPKFHBVBg8LA95wVGmdJ8-KmO3XQhDXIPgofoX0&s=10" alt="" />
             </div>
             <div className="about-me">
-                <span className="about-me__greeting">Hi! I'm Alex.</span>
+                <span className="about-me__greeting">Alexandre Gonçalves</span>
                 <div className="about-me__roles">
                     <span>Developer</span>
-                    <span aria-hidden={true}> • </span>
+                    <span aria-hidden={true}>•</span>
                     <span>Designer</span>
-                    <span aria-hidden={true}> • </span>
+                    <span aria-hidden={true}>•</span>
                     <span>3D Artist</span>
-                    <span aria-hidden={true}> • </span>
+                    <span aria-hidden={true}>•</span>
                     <span>Front-End</span>
                 </div>
                 <div className="about-me__description">

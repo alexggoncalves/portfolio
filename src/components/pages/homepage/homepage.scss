@@ -1,5 +1,12 @@
 @use "./../../../styles/mixins.scss" as *;
 
+.homepage {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--main-padding) * 2);
+    padding-bottom: calc(var(--main-padding) * 2);
+}
+
 // ===========
 // HERO
 // ===========
@@ -20,8 +27,8 @@
     bottom: var(--main-padding);
     max-width: 400px;
 
-    .window__header {
-        padding: 10px 14px 10px 20px;
+    .at-icon svg {
+        transform: translateY(1px);
     }
 
     .window__content {
@@ -41,9 +48,10 @@
     }
 }
 
-.hero__scroll-tag {
+.hero__scroll-cue {
     position: absolute;
-    bottom: 16px;
+    bottom: calc(var(--main-padding) / 2);
+    padding: 8px 12px 6px 12px;
     left: 50%;
     transform: translateX(-50%);
 
@@ -52,6 +60,11 @@
     align-items: center;
     gap: 2px;
     color: rgb(200, 200, 200);
+
+    opacity: 1;
+    transition: opacity 0.4s ease;
+
+    pointer-events: auto;
 
     svg {
         height: auto;
@@ -66,64 +79,74 @@
     }
 }
 
+.hero__scroll-cue--hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
 // ===================
 // SELECTED PROJECTS
 // ===================
 .selected-projects__window {
-    margin: 0 var(--main-padding);
+    margin-inline: var(--main-padding);
 
     .window__content {
         padding: 0;
     }
 }
 
-.selected-projects__track > .project-card {
-    height: 100%;
-}
-
 .selected-projects__scroller {
-    height: 100%;
-    padding: 12px;
+    --fade: 10px;
+    margin: 4px 10px 5px 10px;
+    
+    padding: 15px;
     height: 300px;
     overflow-x: auto;
 
-    // cursor: grab;
     scrollbar-width: none;
-
     &::-webkit-scrollbar {
         display: none;
     }
+
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent,
+        black var(--fade),
+        black calc(100% - var(--fade)),
+        transparent
+    );
+    mask-image: linear-gradient(
+        to right,
+        transparent,
+        black var(--fade),
+        black calc(100% - var(--fade)),
+        transparent
+    );
 }
 
 .selected-projects__track {
     display: flex;
     height: 100%;
     flex-wrap: nowrap;
-    gap: 12px;
+    gap: 20px;
     width: max-content;
-
-    .project-card {
-        flex: 0 0 auto;
-        height: 210px;
-        aspect-ratio: 4/3;
-    }
 }
 
 .selected-projects__scroll-indicator {
     width: 100%;
-    padding: 0 12px 12px 12px;
+    padding: 0 18px 16px 18px;
 
     &-track {
         background-color: rgb(200, 200, 200, 0.1);
         width: 100%;
-        height: 8px;
+        height: 6px;
         border-radius: 4px;
         position: relative;
     }
 
     &-thumb {
         height: 100%;
-        background-color: rgb(200, 200, 200);
+        background-color: rgba(200, 200, 200, 0.486);
         border-radius: 4px;
     }
 }
@@ -134,16 +157,12 @@
 
 .about-me__window {
     width: fit-content;
-    margin: var(--main-padding) auto 0 var(--main-padding);
+    margin: var(--main-padding) auto;
 
     .window__content {
         display: flex;
         flex-direction: row;
         gap: 20px;
-    }
-
-    .window__header {
-        padding: 10px 14px 10px 20px;
     }
 }
 

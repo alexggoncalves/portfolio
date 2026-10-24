@@ -4,8 +4,7 @@ header {
     position: fixed;
     top: 0;
     width: 100%;
-    height: var(--nav-height);
-    padding: 0 var(--main-padding);
+    padding: 24px;
 
     display: flex;
     justify-content: space-between;
@@ -15,7 +14,7 @@ header {
     pointer-events: none;
 
     > * {
-        pointer-events: all;
+        pointer-events: auto;
     }
 }
 
@@ -47,7 +46,9 @@ header nav {
     display: flex;
     flex-direction: row;
     align-items: center;
-    padding: 4px;
+
+    padding: 4px 5px;
+    margin-right: 14px;
 
     transition: opacity 0.3s ease;
 
@@ -58,14 +59,14 @@ header nav {
 }
 
 header nav > a {
-    font-family: "Inter";
     font-weight: 500;
-    margin-left: 15px;
+    margin-left: 8px;
     color: white;
-    pointer-events: all;
-    padding: 2px 12px;
+    pointer-events: auto;
+    padding: 4px 12px 3.5px 12px;
     border-radius: 8px;
     z-index: 4;
+    letter-spacing: 0.3px;
 
     user-select: none;
     -webkit-user-select: none;
@@ -79,8 +80,9 @@ header nav > a {
     }
 
     &.active {
-        background-color: white;
+        background-color: rgba(255, 255, 255, 0.9);
         color: var(--background-color);
+        font-weight: 800;
     }
 
     &:first-child {
@@ -90,8 +92,8 @@ header nav > a {
 
 .nav__indicator {
     position: absolute;
-    border: 1px solid white;
-    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    border-radius: 9px;
     pointer-events: none;
     z-index: 3;
 }

@@ -1,46 +1,34 @@
 import "./projectsGrid.scss";
-import { useState } from "react";
+import { type Dispatch, type SetStateAction } from "react";
 import { CheckboxIcon } from "../../general/Icons";
-import type { Tag } from "../../../data/content";
+import type { Project, Tag } from "../../../data/content";
 
 type FiltersProps = {
+    projects: Project[];
     filters: Tag[];
-    title: string;
-    onApply: (tags: string[]) => void;
-    appliedFilters: string[];
+    title?: string;
+    selectedFilters: string[];
+    setSelectedFilters: Dispatch<SetStateAction<string[]>>;
 }
 
-function Filters({ filters, title, onApply, appliedFilters }: FiltersProps) {
-
-    const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+function Filters({ projects, filters, title, selectedFilters, setSelectedFilters }: FiltersProps) {
 
     const toggleFilter = (tagId: string) => {
         setSelectedFilters((prev) =>
             prev.includes(tagId)
                 ? prev.filter((t) => t !== tagId)
-                : [...prev, tagId], 
+                : [...prev, tagId],
         );
-    };
-
-    // const clearFilters = () => {
-    //     setSelectedFilters([]);
-    //     onApply([]);
-    // };
-
-    const applyFilters = () => {
-        appliedFilters;
-        onApply(selectedFilters);
     };
 
     return (
         <>
-            {/* Main container */}
             <div className="filter-section">
-                <span className="filter-section__title">{title}</span>
+                {title && <span className="filter-section__title">{title}</span>}
 
                 {filters.map((filter) => {
                     const isActive = selectedFilters.includes(filter.id);
-
+                    const count = projects.filter((p) => p.tags.includes(filter.id)).length;
                     return (
                         <button
                             type="button"
@@ -52,16 +40,12 @@ function Filters({ filters, title, onApply, appliedFilters }: FiltersProps) {
                                 <CheckboxIcon style={{ color: filter.color }} active={isActive} />
                                 <span>{filter.name}</span>
                             </div>
-                            <span className="filter__count">1</span>
+                            <span className="filter__count">{count}</span>
 
                         </button>
                     );
                 })}
             </div>
-
-            <div className="projects-grid__filters-buttons">
-                    <div onClick={applyFilters}>APPLY</div>
-                </div>
         </>
     );
 }

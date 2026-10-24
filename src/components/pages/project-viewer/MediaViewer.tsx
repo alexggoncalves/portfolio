@@ -4,6 +4,8 @@ import type { MediaSlide, Project } from "../../../data/content";
 import MediaRenderer from "./project-media/MediaRenderer";
 import MediaLabel from "./project-media/MediaLabel";
 import MediaStrip from "./project-media/MediaStrip";
+import { PlayIcon } from "../../general/Icons";
+import useVideoPaused from "../../../hooks/useVideoPaused";
 
 const isVideoSlide = (b?: MediaSlide) => b?.type === "single" && b.media.type === "video";
 
@@ -28,19 +30,37 @@ const MediaViewer = ({ project, enabled }: MediaViewerProps) => {
         setIndex(0);
     }, [project])
 
+    const playVideo = () => {
+        videoRef.current?.play().catch(() => { });
+    };
+
+    const togglePlay = () => {
+        const video = videoRef.current;
+        if (!video) return;
+        if (video.paused) video.play().catch(() => { });
+        else video.pause();
+    };
+
     const slides = project.media;
     const currentSlide = slides[index];
     const fitLocked = !!currentSlide?.contain;
+    const isVideo = isVideoSlide(currentSlide);
+    const paused = useVideoPaused(videoRef, index);
+    const showPlayButton = isVideo && paused;
 
     return (
         <div ref={viewerRef} className="media-viewer">
             <div className="media-stage">
                 {slides.map((slide, i) => {
+                    const active = i === index;
+                    const clickable = active && isVideoSlide(slide);
+
                     return (
                         <div
                             key={i}
                             className={`media-slide media-slide--${getFit(slide)} ${i === index ? "active" : ""}`}
                             inert={i !== index}
+                            onClick={clickable ? togglePlay : undefined}
                         >
                             <MediaRenderer
                                 slide={slide}
@@ -54,7 +74,7 @@ const MediaViewer = ({ project, enabled }: MediaViewerProps) => {
                 }
             </div>
             <div className="media-dock">
-                <MediaStrip slides={slides} index={index} setIndex={setIndex} enabled={enabled}/>
+                <MediaStrip slides={slides} index={index} setIndex={setIndex} enabled={enabled} />
 
                 <div className="media-dock__panel">
                     <MediaLabel index={index} total={slides.length} title={currentSlide?.title} />
@@ -70,6 +90,15 @@ const MediaViewer = ({ project, enabled }: MediaViewerProps) => {
 
             </div>
 
+            <button
+                type="button"
+                className={`video__play-button ${showPlayButton ? "visible" : ""}`}
+                onClick={playVideo}
+                aria-label="Play video"
+                inert={!showPlayButton}
+            >
+                <PlayIcon />
+            </button>
         </div>
     );
 }

@@ -58,7 +58,7 @@
 }
 
 .selected-projects__window {
-  margin: 0 var(--main-padding);
+  margin: var(--main-padding) var(--main-padding) 0 var(--main-padding);
 }
 .selected-projects__window .window__content {
   padding: 0;
@@ -111,7 +111,7 @@
 
 .about-me__window {
   width: fit-content;
-  margin: var(--main-padding) auto 0 var(--main-padding);
+  margin: calc(var(--main-padding) * 2) auto;
 }
 .about-me__window .window__content {
   display: flex;

@@ -9,7 +9,7 @@
 :root {
     // VARS
     --main-padding: 2vw;
-    --background-color: rgb(30, 30, 30);
+    --background-color: rgb(20, 20, 20);
     --nav-height: 100px;
     --logo-width: 160px;
 
@@ -32,7 +32,8 @@ body {
 }
 
 body::before {
-    @include star-bg;
+    // @include star-bg;
+    background-color: rgb(20, 20, 20);
     content: "";
     position: fixed;
     inset: 0;
@@ -52,28 +53,41 @@ main {
     flex: 1;
     flex-direction: column;
     z-index: 1;
-    // padding-bottom: (var(--main-padding));
 }
 
 footer {
-    padding: var(--main-padding) var(--main-padding) calc(var(--main-padding) / 2) var(--main-padding) ;
+    @include glass-panel;
+    padding: 8px calc(var(--main-padding) / 2) 12px calc(var(--main-padding) / 2);
+    backdrop-filter: blur(0px);
+
     display: flex;
     justify-content: space-between;
-    font-family: "Space Mono";
     z-index: 1;
-    color: rgb(200,200,200);
 
-    div{
+    font-family: "Space Mono";
+    font-size: 0.8rem;
+    color: rgb(255, 255, 255);
+    
+    opacity: 0.6;
+
+    border-radius: 12px 12px 0 0 ;
+    
+
+    div {
         display: flex;
         align-items: center;
         gap: 8px;
     }
 
-    .button--icon{
-        width: 30px;
+    .button--icon {
+        box-sizing: content-box;
+        width: 1rem;
         height: auto;
-        transform: translateY(1px);
-        margin-left: -5px;
+        transform: translateY(-1px);
+
+        // account for padding
+        margin-left: -4px;
+        margin-right: -4px;
     }
 }
 
@@ -90,6 +104,8 @@ canvas,
     inset: 0;
     pointer-events: none;
     z-index: 0;
+    width: 100vw;
+    height: 100svh;
 }
 
 .backdrop {
@@ -107,10 +123,10 @@ canvas,
     }
 }
 
-.starry-sky__scene{
+.starry-sky__scene {
     position: fixed;
     width: 100vw;
-    height: 100vh;
+    height: 100svh;
     inset: 0;
     z-index: 0;
 }

@@ -61,7 +61,7 @@ export const WindowActionButton = ({ children, onAction, label }: WindowActionBu
     return (<button
         type="button"
         onClick={onAction}
-        className="button--action"
+        className="button--action-icon"
         aria-label={label}
     >
         {children}
