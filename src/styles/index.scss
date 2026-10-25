@@ -6,6 +6,11 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    overscroll-behavior-y: none;
+}
+
 :root {
     // VARS
     --main-padding: 2vw;
@@ -57,8 +62,11 @@ main {
 
 footer {
     @include glass-panel;
-    padding: 8px calc(var(--main-padding) / 2) 12px calc(var(--main-padding) / 2);
     backdrop-filter: blur(0px);
+    border-radius: 12px 12px 0 0;
+
+    padding: 8px calc(var(--main-padding) / 2) 12px
+        calc(var(--main-padding) / 2);
 
     display: flex;
     justify-content: space-between;
@@ -67,11 +75,8 @@ footer {
     font-family: "Space Mono";
     font-size: 0.8rem;
     color: rgb(255, 255, 255);
-    
-    opacity: 0.6;
 
-    border-radius: 12px 12px 0 0 ;
-    
+    opacity: 0.6;
 
     div {
         display: flex;
@@ -91,6 +96,21 @@ footer {
     }
 }
 
+// Reveal transition
+header,
+main,
+footer {
+    transition: opacity 1s ease;
+}
+
+body:not(.revealed) {
+    header,
+    main,
+    footer {
+        opacity: 0;
+    }
+}
+
 header,
 button,
 canvas,
@@ -101,11 +121,12 @@ canvas,
 
 .app-canvas {
     position: fixed !important;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100% !important;
+    height: var(--canvas-height, 100lvh) !important;
     pointer-events: none;
     z-index: 0;
-    width: 100vw;
-    height: 100svh;
 }
 
 .backdrop {
@@ -125,14 +146,49 @@ canvas,
 
 .starry-sky__scene {
     position: fixed;
-    width: 100vw;
-    height: 100svh;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--canvas-height, 100lvh);
     z-index: 0;
+}
+
+.reveal {
+    opacity: 0;
+    transform: scale(0.95);
+    transition:
+        opacity 0.6s ease,
+        transform 0.6s ease;
+
+    &--visible {
+        opacity: 1;
+        transform: none;
+    }
 }
 
 @media (max-width: 700px) {
     :root {
         --main-padding: 4vw;
+    }
+
+    footer {
+        background: none;
+        backdrop-filter: none;
+        border-radius: 0;
+        opacity: 0.5;
+
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        padding: 24px var(--main-padding)
+            calc(24px + env(safe-area-inset-bottom));
+        text-align: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal {
+        transform: none;
+        transition: opacity 0.3s ease;
     }
 }

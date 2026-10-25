@@ -15,6 +15,7 @@
     align-items: stretch;
     justify-content: center;
     gap: 16px;
+    padding-inline: var(--main-padding);
 }
 
 .contacts__window {
@@ -79,9 +80,9 @@
     align-items: center;
     gap: 8px;
 
-    >span {
+    > span {
         font-weight: 500;
-        font-size: 2rem;
+        font-size: 1.7rem;
         cursor: text;
         letter-spacing: 1px;
     }
@@ -220,4 +221,49 @@ time {
 
 .location__map {
     padding: 0px 0px 14px 4px;
+}
+
+@media (max-width: 700px) {
+    .contacts-page {
+        align-items: flex-start;
+        padding: calc(var(--nav-height) + 8px) var(--main-padding)
+            var(--main-padding);
+        justify-content: center;
+    }
+    .contacts-page__windows {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .contacts__window {
+        max-width: none;
+    }
+
+    .location__window {
+        min-width: 0;
+    }
+
+    .contact-page__text-container {
+        margin-bottom: 28px;
+
+        h1 {
+            font-size: 2rem;
+        }
+    }
+
+    .contact-page__email {
+        flex-wrap: wrap;
+
+        > span {
+            font-size: 1.3rem;
+            letter-spacing: 0;
+            overflow-wrap: anywhere;
+        }
+    }
+
+    .copy-msg {
+        left: 0;
+        top: calc(100% + 6px); // below the email instead of far to the right
+    }
 }

@@ -69,26 +69,6 @@ function Nav() {
 
     return (
         <>
-            {isMobile && (
-                <button
-                    type="button"
-                    className="button button--icon toggle nav-toggle toggle-right-top"
-                    onClick={() => setIsOpen((prev) => !prev)}
-                    aria-label={isOpen ? "Close menu" : "Open menu"}
-                    aria-expanded={isOpen}
-                    aria-controls="main-nav"
-                >
-                    {isOpen ? <CloseIcon /> : <BurgerIcon />}
-                </button>
-            )}
-
-            {isMobile && (
-                <div
-                    className={`backdrop ${!isOpen ? "closed" : ""}`}
-                    onClick={() => setIsOpen(false)}
-                    aria-hidden="true"
-                />
-            )}
 
             <header >
                 <Link to="/" id="logo" aria-label="Alex, home">
@@ -131,6 +111,28 @@ function Nav() {
                             }}
                         />
                     )}
+
+                    {isMobile && (
+                        <button
+                            type="button"
+                            className="button button--icon toggle nav-toggle toggle-right-top"
+                            onClick={() => setIsOpen((prev) => !prev)}
+                            aria-label={isOpen ? "Close menu" : "Open menu"}
+                            aria-expanded={isOpen}
+                            aria-controls="main-nav"
+                        >
+                            {isOpen ? <CloseIcon /> : <BurgerIcon />}
+                        </button>
+                    )}
+
+                    {isMobile && (
+                        <div
+                            className={`backdrop ${!isOpen ? "closed" : ""}`}
+                            onClick={() => setIsOpen(false)}
+                            aria-hidden="true"
+                        />
+                    )}
+
                 </nav>
 
             </header>

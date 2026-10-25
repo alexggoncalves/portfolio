@@ -12,7 +12,7 @@
 // ===========
 #hero {
     position: relative;
-    height: 100svh;
+    height: var(--hero-height, 100svh);
 }
 
 .hero__scene {
@@ -98,7 +98,7 @@
 .selected-projects__scroller {
     --fade: 10px;
     margin: 4px 10px 5px 10px;
-    
+
     padding: 15px;
     height: 300px;
     overflow-x: auto;
@@ -156,9 +156,8 @@
 // ==========
 
 .about-me__window {
-    width: fit-content;
     margin: var(--main-padding) auto;
-
+    width: fit-content;
     .window__content {
         display: flex;
         flex-direction: row;
@@ -166,35 +165,44 @@
     }
 }
 
-.about-me__photo {
-    aspect-ratio: 3/4;
-    width: 300px;
-    background-color: rgba(127, 255, 212, 0.219);
-    border-radius: 8px;
-    overflow: hidden;
-    display: flex;
-
-    img {
-        width: 100%;
-        object-fit: cover;
-    }
-}
-
 .about-me {
     display: flex;
     flex-direction: column;
+    gap: 10px;
+
+    &__photo {
+        aspect-ratio: 3/4;
+        width: 300px;
+        background-color: rgba(127, 255, 212, 0.219);
+        border-radius: 8px;
+        overflow: hidden;
+        display: flex;
+
+        img {
+            width: 100%;
+            object-fit: cover;
+        }
+    }
 
     &__greeting {
         font-size: 2.5rem;
         font-weight: 600;
+        line-height: 1;
     }
 
     &__roles {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+
         font-family: "Space Mono";
         text-transform: uppercase;
-        display: flex;
-        gap: 8px;
         color: rgb(200, 200, 200);
+
+        span {
+            white-space: nowrap;
+            line-height: 1;
+        }
     }
 
     &__description {
@@ -209,7 +217,33 @@
 }
 
 @media (max-width: 700px) {
-    .selected-project__scroll-indicator {
+    .hero__window {
+        left: auto;
+        bottom: var(--main-padding);
+        margin-inline: var(--main-padding);
+    }
+
+    .hero__scroll-cue {
         display: none;
+    }
+
+    .selected-projects__scroller {
+        height: 200px;
+    }
+
+    // ABOUT ME
+    .about-me__window {
+        margin: var(--main-padding) var(--main-padding);
+        min-width: none;
+        .window__content {
+            flex-direction: column;
+        }
+    }
+
+    .about-me {
+        &__photo {
+            width: 70%;
+            // align-self: center;
+        }
     }
 }
