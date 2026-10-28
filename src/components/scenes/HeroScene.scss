@@ -1,0 +1,50 @@
+.hero__scene {
+    $fade: linear-gradient(
+        to bottom,
+        black 85%,
+        rgba(0, 0, 0, 0.95) 87.5%,
+        rgba(0, 0, 0, 0.83) 89.5%,
+        rgba(0, 0, 0, 0.65) 91.5%,
+        rgba(0, 0, 0, 0.45) 93.3%,
+        rgba(0, 0, 0, 0.26) 95%,
+        rgba(0, 0, 0, 0.1) 97%,
+        rgba(0, 0, 0, 0.02) 98.7%,
+        transparent 100%
+    );
+    -webkit-mask-image: $fade;
+    mask-image: $fade;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: calc(var(--hero-height, 100svh) + var(--main-padding));
+    z-index: 0;
+    // bottom: calc(
+    //     -1 * calc(var(--section-gap) / 2)
+    // ); // reaches the top of selected projects window
+
+    //transition
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        opacity 0.25s ease,
+        visibility 0s linear 0.25s;
+
+    &--visible {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.5s ease;
+    }
+
+    // Off the home page: taken out of the page so it can't add scroll height
+    &--parked {
+        position: fixed;
+    }
+}
+
+// Fades out together with the windows when you leave the home page
+.page-leaving .hero__scene {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}

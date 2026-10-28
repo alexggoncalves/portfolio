@@ -1,6 +1,6 @@
 import "./styles/index.scss"
-import "./components/general/buttons.scss"
-import "./components/general/window.scss"
+import "./components/ui/Buttons.scss"
+import "./components/ui/Window.scss"
 
 import ReactDOM from "react-dom/client";
 import { StrictMode } from "react";
@@ -16,6 +16,8 @@ import ContactsPage from "./components/pages/contacts/ContactsPage.tsx";
 // Redirect invalid project ids to the page they were opened from
 const validateProject = (fallback: string) =>
     ({ params }: LoaderFunctionArgs) => projectExists(params.projectId) ? null : redirect(fallback);
+
+history.scrollRestoration = "manual";
 
 const router = createBrowserRouter([
     {

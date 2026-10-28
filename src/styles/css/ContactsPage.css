@@ -1,0 +1,232 @@
+.contacts-page {
+  width: 100%;
+  inset: 0;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: text;
+}
+
+.contacts-page__windows {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  gap: 16px;
+  padding-inline: var(--main-padding);
+}
+
+.contacts__window {
+  max-width: 550px;
+}
+.contacts__window .window__content {
+  padding-bottom: 12px;
+}
+
+.contact-page__column {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex-grow: 1;
+}
+
+.contact-page__text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 15px;
+  user-select: none;
+}
+.contact-page__text-container h1 {
+  font-size: 2.5rem;
+  line-height: 1;
+  margin: 0;
+}
+.contact-page__text-container p {
+  font-size: 1.3rem;
+  color: rgb(220, 220, 220);
+  margin: 0;
+}
+.contact-page__text-container {
+  margin-bottom: 42px;
+}
+
+.contact-page__email-section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+.contact-page__email-section > span {
+  font-family: "Space Mono";
+  color: rgb(200, 200, 200);
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  font-weight: 100;
+}
+
+.contact-page__email {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.contact-page__email > span {
+  font-weight: 400;
+  font-size: 1.6rem;
+  cursor: text;
+}
+
+.copy-msg {
+  position: absolute;
+  left: 130%;
+  user-select: none;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  font-size: 0.7rem !important;
+  transition: opacity 0.2s ease;
+  color: #fa75af;
+}
+
+.copy-msg.show {
+  opacity: 1;
+}
+
+.contact-page__links {
+  position: relative;
+  display: flex;
+  gap: 8px;
+  flex-direction: column;
+  margin-inline: -8px;
+}
+.contact-page__links a {
+  position: relative;
+  width: 100%;
+  padding: 14px 12px;
+  font-size: 1.1rem;
+  line-height: 1;
+  font-weight: 400;
+  text-decoration: none;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.contact-page__links a::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: -4.5px;
+  border-bottom: 1px solid rgba(200, 200, 200, 0.4);
+}
+.contact-page__links a:last-child::after {
+  display: none;
+}
+.contact-page__links a svg {
+  height: 24px;
+  width: auto;
+}
+.contact-page__links .link__label {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+time {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.time__clock {
+  font-size: 2.8rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.time__date {
+  text-transform: uppercase;
+  color: rgb(200, 200, 200);
+}
+.time__date span {
+  padding-right: 6px;
+}
+
+.location__window {
+  flex-grow: 1;
+  min-width: 270px;
+}
+
+.location {
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  gap: 6px;
+}
+.location span:last-child {
+  font-family: "Space Mono";
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: rgb(200, 200, 200);
+}
+
+.location__place {
+  font-size: 1.6rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.location__coordinates {
+  color: rgb(200, 200, 200);
+  font-family: "Space Mono";
+  line-height: 2;
+}
+.location__coordinates span {
+  padding-right: 6px;
+}
+
+.location__map {
+  padding: 0px 0px 14px 4px;
+}
+
+@media (max-width: 700px) {
+  .contacts-page {
+    align-items: flex-start;
+    padding: calc(var(--nav-height) + 8px) var(--main-padding) var(--main-padding);
+    justify-content: center;
+  }
+  .contacts-page__windows {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    padding: 0;
+    margin-bottom: var(--main-padding);
+  }
+  .contacts__window {
+    max-width: none;
+  }
+  .location__window {
+    min-width: 0;
+  }
+  .contact-page__text-container {
+    margin-bottom: 28px;
+  }
+  .contact-page__text-container h1 {
+    font-size: 2rem;
+  }
+  .contact-page__email {
+    flex-wrap: wrap;
+  }
+  .contact-page__email > span {
+    font-size: 1.3rem;
+    letter-spacing: 0;
+    overflow-wrap: anywhere;
+  }
+  .copy-msg {
+    left: 0;
+    top: calc(100% + 6px);
+  }
+}/*# sourceMappingURL=ContactsPage.css.map */

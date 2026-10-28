@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type RefObject } from "react";
-import { MutedIcon, PauseIcon, PlayIcon, VolumeIcon } from "../../../general/Icons";
+import { MutedIcon, PauseIcon, PlayIcon, VolumeIcon } from "../../../ui/Icons";
 
 const formatTime = (seconds: number) => {
     if (!Number.isFinite(seconds)) return "0:00";

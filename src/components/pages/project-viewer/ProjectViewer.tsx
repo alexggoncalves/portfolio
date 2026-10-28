@@ -1,5 +1,5 @@
-import "./mediaViewer.scss"
-import "./projectViewer.scss";
+import "./MediaViewer.scss"
+import "./ProjectViewer.scss";
 
 import { getProjectById, type Project } from "../../../data/content";
 import { useEffect, useMemo, useState } from "react";
@@ -10,6 +10,8 @@ import ProjectHeading from "./ProjectHeading";
 import useUIStore from "../../../stores/UIStore";
 import MediaPlayer from "./MediaViewer";
 import ToggleInterfaceButton from "./ToggleInterfaceButton"
+import useMediaQuery from "../../../utils/useMediaQuery";
+import ProjectInfoDrawer from "./ProjectInfoDrawer";
 
 type ProjectViewerProps = {
     projectId: string | null,
@@ -17,6 +19,7 @@ type ProjectViewerProps = {
 };
 
 function ProjectViewer({ projectId, isOpen }: ProjectViewerProps) {
+    const isMobile = useMediaQuery("(max-width: 700px)");
     const [open, setOpen] = useState(false);
     const [windowsMinimized, setWindowsMinimized] = useState(false);
 
@@ -48,27 +51,30 @@ function ProjectViewer({ projectId, isOpen }: ProjectViewerProps) {
 
     return (
         <div className={`project-viewer ${open ? "open" : ""} ${interfaceHidden ? "ui-hidden" : ""}`}>
-            <MediaPlayer project={project} enabled={open}/>
-            <ReturnButton enabled={open}/>
+            <MediaPlayer project={project} enabled={open} />
+            <ReturnButton enabled={open} />
             <ToggleInterfaceButton />
-            <div className="project-viewer__overlay">
-                
 
-                {windowsMinimized ?
-                    <ProjectHeading
-                        title={project.title}
-                        subtitle={project.subtitle}
-                        maximizeWindows={() => setWindowsMinimized(false)}
-                        inert={interfaceHidden}
-                    />
-                    :
-                    <ProjectInfoWindows
-                        project={project}
-                        setMinimized={setWindowsMinimized}
-                        inert={interfaceHidden}
-                    />
-                }
-            </div>
+            {isMobile ?
+                <ProjectInfoDrawer project={project}/>
+                :
+                <div className="project-viewer__overlay">
+                    {windowsMinimized ?
+                        <ProjectHeading
+                            title={project.title}
+                            subtitle={project.subtitle}
+                            maximizeWindows={() => setWindowsMinimized(false)}
+                            inert={interfaceHidden}
+                        />
+                        :
+                        <ProjectInfoWindows
+                            project={project}
+                            setMinimized={setWindowsMinimized}
+                            inert={interfaceHidden}
+                        />
+                    }
+                </div>}
+
         </div>
     );
 }

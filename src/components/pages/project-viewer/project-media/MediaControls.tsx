@@ -1,5 +1,5 @@
 import { useEffect, useState, type RefObject } from "react";
-import { CoverMediaIcon, FitMediaIcon, MaximizeMediaIcon, MinimizeMediaIcon } from "../../../general/Icons";
+import { CoverMediaIcon, FitMediaIcon, MaximizeMediaIcon, MinimizeMediaIcon } from "../../../ui/Icons";
 import VideoControls from "./VideoControls";
 
 export type Fit = "cover" | "contain";

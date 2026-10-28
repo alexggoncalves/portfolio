@@ -6,6 +6,10 @@
     box-sizing: border-box;
 }
 
+html {
+    scrollbar-gutter: stable;
+}
+
 html,
 body {
     overscroll-behavior-y: none;
@@ -15,8 +19,9 @@ body {
     // VARS
     --main-padding: 2vw;
     --background-color: rgb(20, 20, 20);
-    --nav-height: 100px;
-    --logo-width: 160px;
+    --nav-height: 88px;
+    --logo-width: 150px;
+    --menu-button-size: 44px;
 
     font-family: "Space Grotesk", sans-serif;
     font-optical-sizing: auto;
@@ -27,6 +32,9 @@ body {
     background-color: var(--background-color);
     scroll-behavior: smooth;
     scroll-padding-top: var(--nav-height);
+
+    color-scheme: dark;
+    scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
 }
 
 body {
@@ -58,41 +66,9 @@ main {
     flex: 1;
     flex-direction: column;
     z-index: 1;
-}
 
-footer {
-    @include glass-panel;
-    backdrop-filter: blur(0px);
-    border-radius: 12px 12px 0 0;
-
-    padding: 8px calc(var(--main-padding) / 2) 12px
-        calc(var(--main-padding) / 2);
-
-    display: flex;
-    justify-content: space-between;
-    z-index: 1;
-
-    font-family: "Space Mono";
-    font-size: 0.8rem;
-    color: rgb(255, 255, 255);
-
-    opacity: 0.6;
-
-    div {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    .button--icon {
-        box-sizing: content-box;
-        width: 1rem;
-        height: auto;
-        transform: translateY(-1px);
-
-        // account for padding
-        margin-left: -4px;
-        margin-right: -4px;
+    &:focus {
+        outline: none;
     }
 }
 
@@ -106,7 +82,8 @@ footer {
 body:not(.revealed) {
     header,
     main,
-    footer {
+    footer,
+    .hero__scene {
         opacity: 0;
     }
 }
@@ -119,6 +96,9 @@ canvas,
     -webkit-user-select: none;
 }
 
+// ================
+// CANVAS + SCENES
+// ================
 .app-canvas {
     position: fixed !important;
     top: 0;
@@ -129,31 +109,18 @@ canvas,
     z-index: 0;
 }
 
-.backdrop {
-    background-color: var(--background-color);
-    opacity: 0.4;
-    position: fixed;
-    inset: 0;
-    z-index: 14;
-    pointer-events: auto;
-    transition: opacity 0.25s ease;
-
-    &.closed {
-        opacity: 0;
-        pointer-events: none;
-    }
-}
-
 .starry-sky__scene {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: var(--canvas-height, 100lvh);
+    height: var(--canvas-height, 120lvh);
     z-index: 0;
 }
 
 .reveal {
+    position: relative;
+    z-index: 1;
     opacity: 0;
     transform: scale(0.95);
     transition:
@@ -166,9 +133,63 @@ canvas,
     }
 }
 
+// Fully hide text visually but keep it readable for screen readers
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.app-content {
+    display: contents;
+}
+
+.page {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+// ====================
+// PAGE SWAP TRANSITION
+// ====================
+
+// Fade out: each block fades by itself, so the glass keeps its blur
+.page-leaving .page :is(.window, footer) {
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+.page-leaving .page {
+    pointer-events: none;
+}
+
+// Fade in: blocks of the new page animate in when they mount
+@keyframes page-in {
+    from {
+        opacity: 0;
+    }
+}
+
+.page :is(.window, footer) {
+    animation: page-in 0.35s ease;
+}
+
+.page-pop .page :is(.window, footer) {
+    animation: none;
+}
+
 @media (max-width: 700px) {
     :root {
-        --main-padding: 4vw;
+        --main-padding: 3vw;
+        --nav-height: 72px;
+        --logo-width: 140px;
     }
 
     footer {

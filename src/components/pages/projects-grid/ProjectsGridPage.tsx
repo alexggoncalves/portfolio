@@ -1,15 +1,20 @@
-import "./projectsGrid.scss";
-import { projects, tags } from "../../../data/content";
-import ProjectCard from "../../general/ProjectCard";
+import "./ProjectsGrid.scss";
 import { useMemo, useState } from "react";
+
+import ProjectCard from "./ProjectCard";
 import Filters from "./Filters";
-import Window from "../../general/Window";
-import { WindowActionButton } from "../../general/Buttons";
-import { TrashIcon } from "../../general/Icons";
+import Window from "../../ui/Window";
+
+import { projects, tags } from "../../../data/content";
+import { WindowActionButton } from "../../ui/Buttons";
+import { TrashIcon } from "../../ui/Icons";
+import useMediaQuery from "../../../utils/useMediaQuery";
 
 function ProjectsGridPage() {
     const [appliedFilters, setAppliedFilters] = useState<string[]>([]);
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+
+    const isMobile = useMediaQuery("(max-width: 700px)");
 
     const filteredProjects = useMemo(() => {
         if (appliedFilters.length === 0) return projects;
@@ -30,30 +35,32 @@ function ProjectsGridPage() {
 
     return (
         <div className="projects-grid__page">
-            <Window
-                title="filters"
-                headerLeft={<>Filters</>}
-                headerRight={
-                    <WindowActionButton onAction={clearFilters} label="Clear filters">
-                        <TrashIcon style={{ color: "rgb(197, 86, 119)" }} />
-                    </WindowActionButton>
-                }
-                className="filters__window"
-            >
-                <Filters
-                    projects={projects}
-                    filters={tags}
-                    selectedFilters={selectedFilters}
-                    setSelectedFilters={setSelectedFilters}
-                />
-                <button
-                    type="button"
-                    onClick={applyFilters}
-                    className="button--pill filters__apply-button"
+            {!isMobile &&
+                <Window
+                    title="filters"
+                    headerLeft={<>Filters</>}
+                    headerRight={
+                        <WindowActionButton onAction={clearFilters} label="Clear filters">
+                            <TrashIcon style={{ color: "rgb(197, 86, 119)" }} />
+                        </WindowActionButton>
+                    }
+                    className="filters__window"
                 >
-                    APPLY
-                </button>
-            </Window>
+                    <Filters
+                        projects={projects}
+                        filters={tags}
+                        selectedFilters={selectedFilters}
+                        setSelectedFilters={setSelectedFilters}
+                    />
+                    <button
+                        type="button"
+                        onClick={applyFilters}
+                        className="button--pill filters__apply-button"
+                    >
+                        APPLY
+                    </button>
+                </Window>
+            }
 
             <Window
                 title="projects"

@@ -2,11 +2,11 @@ import { type Project } from "../../../data/content";
 
 import ProjectTools from "./project-info/ProjectTools";
 import ProjectTeam from "./project-info/ProjectTeam";
-import Window from "../../general/Window";
+import Window from "../../ui/Window";
 import ProjectInfo from "./project-info/ProjectInfo";
 import { useState } from "react";
-import { CloseIcon, MinimizeIcon } from "../../general/Icons";
-import { WindowActionButton } from "../../general/Buttons";
+import { CloseIcon, MinimizeIcon } from "../../ui/Icons";
+import { WindowActionButton } from "../../ui/Buttons";
 
 export type Panel = "tools" | "team" | null;
 

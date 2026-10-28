@@ -1,6 +1,6 @@
 import useReveal from "../../../hooks/useReveal";
-import { StarIcon } from "../../general/Icons";
-import Window from "../../general/Window";
+import { StarIcon } from "../../ui/Icons";
+import Window from "../../ui/Window";
 
 function AboutMe() {
     const { ref, revealed } = useReveal<HTMLDivElement>();

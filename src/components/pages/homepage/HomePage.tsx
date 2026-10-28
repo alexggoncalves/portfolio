@@ -1,6 +1,6 @@
 import AboutMe from "./AboutMe";
 import Hero from "./Hero";
-import "./homepage.scss";
+import "./Homepage.scss";
 import SelectedProjects from "./SelectedProjects";
 
 function HomePage() {

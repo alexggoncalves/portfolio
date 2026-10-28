@@ -1,4 +1,4 @@
-import { EyeClosedIcon, EyeIcon } from "../../general/Icons";
+import { EyeClosedIcon, EyeIcon } from "../../ui/Icons";
 import useUIStore from "../../../stores/UIStore";
 
 

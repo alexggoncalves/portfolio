@@ -4,7 +4,7 @@ import type { MediaSlide, Project } from "../../../data/content";
 import MediaRenderer from "./project-media/MediaRenderer";
 import MediaLabel from "./project-media/MediaLabel";
 import MediaStrip from "./project-media/MediaStrip";
-import { PlayIcon } from "../../general/Icons";
+import { PlayIcon } from "../../ui/Icons";
 import useVideoPaused from "../../../hooks/useVideoPaused";
 
 const isVideoSlide = (b?: MediaSlide) => b?.type === "single" && b.media.type === "video";

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { ArrowIcon, AtIcon, SmileIcon } from '../../general/Icons';
-import Window from '../../general/Window';
-import HeroScene from './HeroScene';
+import { AtIcon, ChevronDown, SmileIcon } from '../../ui/Icons';
+import Window from '../../ui/Window';
 
 function Hero() {
     const heroRef = useRef<HTMLElement>(null);
@@ -35,7 +34,6 @@ function Hero() {
     return (
         <>
             <section ref={heroRef} id="hero">
-                <HeroScene />
 
                 <Window
                     title="hello"
@@ -53,7 +51,7 @@ function Hero() {
                     onClick={scrollToNextSection}
                 >
                     <span>Scroll</span>
-                    <ArrowIcon />
+                    <ChevronDown />
                 </button>
             </section>
         </>

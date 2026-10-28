@@ -1,6 +1,8 @@
-import "./projectsGrid.scss";
+import "./ProjectsGrid.scss";
+
 import { type Dispatch, type SetStateAction } from "react";
-import { CheckboxIcon } from "../../general/Icons";
+
+import { CheckboxIcon } from "../../ui/Icons";
 import type { Project, Tag } from "../../../data/content";
 
 type FiltersProps = {

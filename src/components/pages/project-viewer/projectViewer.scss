@@ -27,6 +27,12 @@
     transform: translateY(0);
 }
 
+// Lock the page behind the viewer while it's open
+html:has(.project-viewer.open),
+html:has(.project-viewer.open) body {
+    overflow: hidden;
+}
+
 .project-viewer__overlay {
     height: 100%;
     width: 100%;

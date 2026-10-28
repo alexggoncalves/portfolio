@@ -1,4 +1,4 @@
-import { ChevronUp } from "../../general/Icons";
+import { ChevronUp } from "../../ui/Icons";
 
 type ProjectHeadingProps = {
     title: string;

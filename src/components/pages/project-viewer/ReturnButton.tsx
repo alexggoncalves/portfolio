@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from "react-router";
 
 import { useEffect} from "react";
-import { ReturnIcon } from "../../general/Icons";
+import { ReturnIcon } from "../../ui/Icons";
 
 function ReturnButton({ enabled }: { enabled: boolean }) {
     const location = useLocation();
