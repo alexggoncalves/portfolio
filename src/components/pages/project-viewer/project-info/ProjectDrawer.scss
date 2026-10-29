@@ -66,8 +66,9 @@
     padding: 0 var(--drawer-padding) var(--drawer-padding) var(--drawer-padding);
 
     .project-info__tags {
+        margin-top: 4px;
         margin-left: -2px;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
 
         > div {
             font-weight: 600;
@@ -115,6 +116,12 @@
     font-size: 1rem;
     text-transform: uppercase;
     color: rgb(200, 200, 200);
+}
+
+.project-drawer__links{
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
 }
 
 .project-drawer__body {

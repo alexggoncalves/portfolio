@@ -20,20 +20,17 @@ function TeamMemberInfo({ person, roles }: TeamMemberInfoProps) {
                             const isLast = i >= roles.length - 1;
                             return (
                                 <span key={`${person.name}-role${i}`}>
-                                    <span aria-hidden="true">{role} </span>
-                                    <span aria-hidden="true">{!isLast && " • "}</span>
+                                    {role}
+                                    {!isLast && <span aria-hidden="true"> • </span>}
                                 </span>
                             )
                         })}
                     </div>
                 </div>
                 {
-                    person.link && <a
-                        href={person.link}
-                        className="team-member__link"
-                    >
-                        <ArrowUpRightIcon />
-                    </a>
+                    person.link && (
+                        <ArrowUpRightIcon className="team-member__link" />
+                    )
                 }
             </>
         )

@@ -7,6 +7,7 @@ import MediaStrip from "./MediaStrip";
 import { PlayIcon } from "../../../ui/Icons";
 import useVideoPaused from "../../../../hooks/useVideoPaused";
 import useMediaQuery, { MOBILE_QUERY } from "../../../../utils/useMediaQuery";
+import MediaCarousel from "./MediaCarousel";
 
 const isVideoSlide = (s?: MediaSlide) => s?.type === "single" && s.media.type === "video";
 
@@ -48,29 +49,39 @@ const MediaViewer = ({ project, enabled }: MediaViewerProps) => {
     };
     return (
         <div ref={viewerRef} className="media-viewer">
-            <div className="media-stage">
-                {slides.map((slide, i) => {
-                    const active = i === index;
-                    const clickable = active && isVideoSlide(slide);
+            {isMobile ? <MediaCarousel
+                slides={slides}
+                index={index}
+                setIndex={setIndex}
+                videoRef={videoRef}
+                onTogglePlay={togglePlay}
+            />
+                :
+                <div className="media-stage">
+                    {slides.map((slide, i) => {
+                        const active = i === index;
+                        const clickable = active && isVideoSlide(slide);
 
-                    return (
-                        <div
-                            key={i}
-                            className={`media-slide media-slide--${getFit(slide)} ${i === index ? "active" : ""}`}
-                            inert={i !== index}
-                            onClick={clickable ? togglePlay : undefined}
-                        >
-                            <MediaRenderer
-                                slide={slide}
-                                active={i === index}
-                                near={Math.abs(i - index) === 1} // Preload adjacent media slides
-                                videoRef={i === index ? videoRef : undefined}
-                            />
-                        </div>
-                    )
-                })
-                }
-            </div>
+                        return (
+                            <div
+                                key={i}
+                                className={`media-slide media-slide--${getFit(slide)} ${i === index ? "active" : ""}`}
+                                inert={i !== index}
+                                onClick={clickable ? togglePlay : undefined}
+                            >
+                                <MediaRenderer
+                                    slide={slide}
+                                    active={i === index}
+                                    near={Math.abs(i - index) === 1} // Preload adjacent media slides
+                                    videoRef={i === index ? videoRef : undefined}
+                                />
+                            </div>
+                        )
+                    })
+                    }
+                </div>
+            }
+
             <div className="media-dock">
                 <MediaStrip slides={slides} index={index} setIndex={setIndex} enabled={enabled} />
 

@@ -107,6 +107,31 @@
   aspect-ratio: var(--ratio, 1);
 }
 
+.media-carousel {
+  position: absolute;
+  inset: 0;
+  background-color: var(--background-color);
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.media-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.media-carousel__slide {
+  flex: 0 0 100%;
+  min-width: 0;
+  height: 100%;
+  padding-bottom: var(--peek-height);
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
 .media-item {
   position: relative;
   min-width: 0;
@@ -207,7 +232,7 @@ video.media:fullscreen {
   gap: 2px;
   height: 100%;
   padding: 2px;
-  border: 1.5px solid transparent;
+  border: 1px solid transparent;
   background: none;
   border-radius: 9.5px;
   background: none;
@@ -225,7 +250,7 @@ video.media:fullscreen {
   background: none;
 }
 .media-strip__slide:hover:not(.active) {
-  border: 1.5px solid rgba(255, 255, 255, 0.336);
+  border: 1px solid rgba(255, 255, 255, 0.336);
   background: none;
 }
 
@@ -253,7 +278,7 @@ video.media:fullscreen {
 .media-thumbnail--video {
   aspect-ratio: 16/9;
 }
-.media-thumbnail--video video {
+.media-thumbnail--video :is(video, img) {
   position: absolute;
   inset: 0;
   display: block;
@@ -344,12 +369,11 @@ video.media:fullscreen {
   position: absolute;
   left: 0;
   right: 0;
-  border-radius: 10px;
   top: calc(50% - 2px);
   height: 4px;
+  border-radius: 10px;
   background: white;
-  transform: scaleX(0);
-  transform-origin: left;
+  clip-path: inset(0 100% 0 0 round 10px);
 }
 
 .video-controls__time {
@@ -448,5 +472,9 @@ video.media:fullscreen {
   }
   .video__play-button {
     translate: 0 calc(-1 * var(--peek-height) / 2);
+  }
+  .video__play-button,
+  .video__play-button.visible {
+    pointer-events: none;
   }
 }/*# sourceMappingURL=MediaViewer.css.map */

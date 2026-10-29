@@ -42,17 +42,37 @@ function VideoControls({ videoRef }: { videoRef: RefObject<HTMLVideoElement | nu
 
         // Keep progress bar updated
         let raf = 0;
-        const tick = () => {
+        const draw = () => {
             if (progressRef.current && video.duration) {
-                progressRef.current.style.transform = `scaleX(${video.currentTime / video.duration})`
+                const hidden = 100 - (video.currentTime / video.duration) * 100;
+                progressRef.current.style.clipPath = `inset(0 ${hidden}% 0 0 round 10px)`;
             }
+        }
+        const tick = () => {
+            draw();
             raf = requestAnimationFrame(tick);
         }
-        raf = requestAnimationFrame(tick);
+        const startLoop = () => {
+            cancelAnimationFrame(raf);
+            raf = requestAnimationFrame(tick);
+        }
+        const stopLoop = () => {
+            cancelAnimationFrame(raf);
+            draw();
+        }
+        video.addEventListener("play", startLoop);
+        video.addEventListener("pause", stopLoop);
+        video.addEventListener("ended", stopLoop);
+        video.addEventListener("seeked", draw);
+        if (video.paused) draw(); else startLoop();
 
         return () => {
             events.forEach((e) => video.removeEventListener(e, sync));
             video.removeEventListener("timeupdate", onTimeUpdate)
+            video.removeEventListener("play", startLoop);
+            video.removeEventListener("pause", stopLoop);
+            video.removeEventListener("ended", stopLoop);
+            video.removeEventListener("seeked", draw);
             cancelAnimationFrame(raf);
         }
     }, [videoRef])

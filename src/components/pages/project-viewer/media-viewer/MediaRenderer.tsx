@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import { memo, type RefObject } from "react";
 import type { MediaSlide } from "../../../../data/content";
 import MediaItem from "./MediaItem";
 
@@ -39,4 +39,4 @@ function MediaRenderer({ slide, active, near, videoRef }: Props) {
     }
 }
 
-export default MediaRenderer;
+export default memo(MediaRenderer);

@@ -1,4 +1,5 @@
 .project-viewer {
+  --page-slide-duration: 0.4s;
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -13,7 +14,7 @@
   align-content: flex-start;
   overflow: hidden;
   transform: translateY(100vh);
-  transition: transform 0.4s ease-in-out;
+  transition: transform var(--page-slide-duration) ease-in-out;
   --media-strip-height: 70px;
 }
 
@@ -140,6 +141,11 @@ html:has(.project-viewer.open) body {
   pointer-events: none;
 }
 
+html:has(.project-viewer.open) body.revealed :is(.page main > :not(.project-viewer), .hero__scene, .app-canvas) {
+  visibility: hidden;
+  transition: visibility 0s linear var(--page-slide-duration);
+}
+
 @media (max-width: 700px) {
   html:has(.project-viewer.open) .menu-button {
     opacity: 0;
@@ -153,4 +159,4 @@ html:has(.project-viewer.open) body {
     left: auto;
     translate: 0 var(--menu-button-nudge-mobile);
   }
-}/*# sourceMappingURL=ProjectViewer.css.map */
+}/*# sourceMappingURL=projectViewer.css.map */

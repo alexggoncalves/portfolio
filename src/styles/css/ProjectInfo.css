@@ -138,6 +138,7 @@
 
 .team-member__link {
   margin: 0 8px 0 12px;
+  flex-shrink: 0;
 }
 .team-member__link svg {
   width: 25px;

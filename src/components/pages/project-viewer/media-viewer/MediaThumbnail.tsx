@@ -1,24 +1,41 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import type { Media } from "../../../../data/content";
 import { PlayIcon } from "../../../ui/Icons";
 
+const toThumbSrc = (src: string) => src.replace(/\.[^./]+$/, "-thumbnail.webp");
+
 function MediaThumbnail({ media }: { media: Media }) {
     const [loaded, setLoaded] = useState(false);
-    const onLoad = () => setLoaded(true);
+    const [thumbMissing, setThumbMissing] = useState(false);
     const loadedClass = loaded ? "loaded" : "";
 
-    const imageSrc = media.thumb ?? (media.type === "image" ? media.src : null);
+    const imageSrc = !thumbMissing
+        ? media.thumbSrc ?? toThumbSrc(media.src)
+        : media.type === "image" ? media.src : null;
 
     if (imageSrc) {
-        return (
+        const image = (
             <img
-                className={`media-thumbnail ${loadedClass}`}
+                key={imageSrc}
+                className={media.type === "video" ? undefined : `media-thumbnail ${loadedClass}`}
                 src={imageSrc}
                 alt=""
                 draggable={false}
                 decoding="async"
-                onLoad={onLoad}
+                onLoad={() => setLoaded(true)}
+                onError={() => setThumbMissing(true)}
             />
+        );
+
+        if (media.type !== "video") return image;
+
+        return (
+            <span className={`media-thumbnail media-thumbnail--video ${loadedClass}`}>
+                {image}
+                <div className="media-thumbnail__play">
+                    <PlayIcon />
+                </div>
+            </span>
         );
     }
 
@@ -31,12 +48,11 @@ function MediaThumbnail({ media }: { media: Media }) {
                     playsInline
                     preload="metadata"
                     tabIndex={-1}
-                    onLoadedData={onLoad}
+                    onLoadedData={() => setLoaded(true)}
                 />
                 <div className="media-thumbnail__play">
                     <PlayIcon />
                 </div>
-
             </span>
         );
     }
@@ -44,4 +60,4 @@ function MediaThumbnail({ media }: { media: Media }) {
     return <span className="media-thumbnail media-thumbnail--empty" />;
 }
 
-export default MediaThumbnail;
+export default memo(MediaThumbnail);

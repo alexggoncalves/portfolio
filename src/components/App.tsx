@@ -84,12 +84,13 @@ const App = () => {
                 className="app-canvas"
                 aria-hidden="true"
                 eventSource={document.getElementById("root")!}
+                frameloop={projectId && revealed ? "never" : "always"}
             >
                 <View.Port />
             </Canvas>
 
             <StarrySkyScene />
-            <HeroScene active={section === "home"} />
+            <HeroScene active={section === "home"} paused={!!projectId}/>
 
             <div className="app-content" inert={!revealed}>
                 <Header />

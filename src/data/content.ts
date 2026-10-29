@@ -8,7 +8,7 @@ export type ImageAsset = {
     type: "image";
     src: string;
     title?: string;
-    thumb?: string;
+    thumbSrc?: string;
     alt?: string;
     id?: string;
 };
@@ -17,7 +17,7 @@ export type VideoAsset = {
     type: "video";
     src: string;
     title?: string;
-    thumb?: string;
+    thumbSrc?: string;
     alt?: string;
     id?: string;  
 };
@@ -26,7 +26,7 @@ export type ModelAsset = {
     type: "model";
     src: string;
     title?: string;
-    thumb?: string;
+    thumbSrc?: string;
     id?: string;
 };
 

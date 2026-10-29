@@ -134,7 +134,7 @@
         "media": [
             {
                 "type": "single",
-                "title": "Model Sheet",
+                "title": "Gary",
                 "media": {
                     "type": "image",
                     "src": "https://cloud.alexgg.com/gary/gary_model-sheet.webp",
@@ -161,7 +161,7 @@
             },
             {
                 "type": "single",
-                "title": "Sketch",
+                "title": "Model Sheet",
                 "media": {
                     "type": "image",
                     "src": "https://cloud.alexgg.com/gary/gary_sketch.webp",
@@ -170,6 +170,7 @@
             },
             {
                 "type": "row",
+                "title": "Blockout / Sculpt",
                 "items": [
                     {
                         "type": "image",
@@ -203,6 +204,7 @@
             },
             {
                 "type": "row",
+                "title": "Clothes / UV Unwrap",
                 "items": [
                     {
                         "type": "image",
@@ -220,6 +222,7 @@
             },
             {
                 "type": "row",
+                "title": "Base Color / Texturing",
                 "items": [
                     {
                         "type": "image",
@@ -237,7 +240,7 @@
             },
             {
                 "type": "row",
-                "title": "Rigging",
+                "title": "Rig",
                 "items": [
                     {
                         "type": "image",
@@ -1335,7 +1338,7 @@
     },
     {
         "id": "crimes-exemplares-print",
-        "title": "Crimes Exemplares – Print",
+        "title": "Crimes Exemplares",
         "subtitle": "Poster Puzzle",
         "tags": ["print", "graphic-design"],
         "year": "2022",
@@ -1441,7 +1444,7 @@
 
     {
         "id": "crimes-exemplares-digital",
-        "title": "Crimes Exemplares - Digital",
+        "title": "Crimes Exemplares",
         "subtitle": "Interactive Narrative",
         "tags": ["interaction-design", "game-dev", "3d"],
         "year": "2022",

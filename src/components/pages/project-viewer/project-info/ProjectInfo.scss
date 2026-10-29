@@ -169,7 +169,7 @@
 
 .team-member__link {
     margin: 0 8px 0 12px;
-
+    flex-shrink: 0;
     svg {
         width: 25px;
         height: auto;

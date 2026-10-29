@@ -26,7 +26,7 @@ function Room() {
     return <primitive object={scene} />
 }
 
-function HeroScene({ active }: { active: boolean }) {
+function HeroScene({ active, paused = false }: { active: boolean; paused?: boolean }) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [inView, setInView] = useState(true);
 
@@ -42,11 +42,11 @@ function HeroScene({ active }: { active: boolean }) {
         <div
             ref={containerRef}
             aria-hidden="true"
-            className={`hero__scene${active ? " hero__scene--visible" : ""}${active ? "" : " hero__scene--parked"}`}   
+            className={`hero__scene${active ? " hero__scene--visible" : ""}${active ? "" : " hero__scene--parked"}`}
         >
             <Canvas
                 dpr={[1, 1.5]}
-                frameloop={active && inView ? "always" : "never"}
+                frameloop={active && inView && !paused ? "always" : "never"}
             >
                 <SceneCamera />
                 <ambientLight intensity={1} />

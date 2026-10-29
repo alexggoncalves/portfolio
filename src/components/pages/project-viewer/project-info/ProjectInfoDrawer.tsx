@@ -128,11 +128,11 @@ const ProjectInfoDrawer = ({ project }: ProjectInfoDrawerProps) => {
                     type="button"
                     className="project-drawer__handle"
                 />
-                <div className="project-drawer__meta">
+                {/* <div className="project-drawer__meta">
                     <span>Project</span>
                     <span aria-hidden={true}>•</span>
                     <span>{project.year}</span>
-                </div>
+                </div> */}
                 <ProjectTags tagIds={project.tags} />
                 <div className="project-drawer__heading">
                     <div className="project-drawer__title-group">
@@ -145,13 +145,11 @@ const ProjectInfoDrawer = ({ project }: ProjectInfoDrawerProps) => {
                                 <GithubIcon />
                             </ExternalLink>
                         }
-
                         {project.link &&
                             <ExternalLink href={project.link} label={`Open ${project.title}`}>
                                 <PreviewIcon />
                             </ExternalLink>
                         }
-
                     </div>
                 </div>
             </div>

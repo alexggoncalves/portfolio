@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
 import type { Media } from "../../../../data/content";
 
+const toMobileSrc = (src: string) => src.replace(/\.[^./]+$/, "-mobile.webp");
+
 type Props = {
     item: Media;
     active: boolean;
@@ -9,6 +11,7 @@ type Props = {
 };
 
 function MediaItem({ item, active, near, videoRef }: Props) {
+    const [mobileMissing, setMobileMissing] = useState(false);
     const [ratio, setRatio] = useState<number>();
     const localVideo = useRef<HTMLVideoElement | null>(null);
 
@@ -29,12 +32,17 @@ function MediaItem({ item, active, near, videoRef }: Props) {
             case "image":
                 return (
                     <img
+                        key={mobileMissing ? "full" : "responsive"}
                         ref={readImageRatio}
                         src={item.src}
+                        srcSet={mobileMissing ? undefined : `${toMobileSrc(item.src)} 1280w, ${item.src} 2560w`}
+                        sizes="100vw"
                         className="media"
-                        alt={item.alt}
+                        decoding="async"
+                        alt={""}
                         draggable={false}
                         onLoad={(e) => readImageRatio(e.currentTarget)}
+                        onError={() => setMobileMissing(true)}
                     />
                 );
 
@@ -45,7 +53,7 @@ function MediaItem({ item, active, near, videoRef }: Props) {
                             localVideo.current = el;
                             if (videoRef) videoRef.current = el;
                         }}
-                        src={item.src}
+                        src={`${item.src}#t=0.001`}
                         className="media"
                         preload={near ? "auto" : "metadata"}
                         controls={false}
