@@ -1,12 +1,12 @@
-import { type Project } from "../../../data/content";
+import { type Project } from "../../../../data/content";
 
-import ProjectTools from "./project-info/ProjectTools";
-import ProjectTeam from "./project-info/ProjectTeam";
-import Window from "../../ui/Window";
-import ProjectInfo from "./project-info/ProjectInfo";
+import ProjectTools from "./ProjectTools";
+import ProjectTeam from "./ProjectTeam";
+import Window from "../../../ui/Window";
+import ProjectInfo from "./ProjectInfo";
 import { useState } from "react";
-import { CloseIcon, MinimizeIcon } from "../../ui/Icons";
-import { WindowActionButton } from "../../ui/Buttons";
+import { CloseIcon, MinimizeIcon } from "../../../ui/Icons";
+import { WindowActionButton } from "../../../ui/Buttons";
 
 export type Panel = "tools" | "team" | null;
 
@@ -53,6 +53,7 @@ function ProjectInfoWindows({ project, setMinimized, inert }: ProjectInfoWindows
             {panel === "tools" && (
                 <Window
                     title="Tools"
+                    className="project-tools__window"
                     headerLeft={<span>Tools</span>}
                     headerRight={
                         <WindowActionButton onAction={closePanel} label="Close tools panel">

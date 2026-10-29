@@ -29,7 +29,7 @@ function Hero() {
         <span>Madeira, PT</span>
     </>
 
-    const headerRight = <SmileIcon className='window-header__icon' width={20} height={20} />
+    const headerRight = <SmileIcon className='window-header__icon'/>
 
     return (
         <>

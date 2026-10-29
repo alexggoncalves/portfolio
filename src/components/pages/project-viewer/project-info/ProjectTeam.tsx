@@ -1,7 +1,6 @@
-import {
-    getPersonById,
-    type TeamMember,
-} from "../../../../data/content";
+import { getPersonById, type TeamMember } from "../../../../data/content";
+import TeamMemberInfo from "./TeamMemberInfo";
+
 
 function ProjectTeam({ team }: { team: TeamMember[] | undefined }) {
     if (team)
@@ -10,23 +9,25 @@ function ProjectTeam({ team }: { team: TeamMember[] | undefined }) {
                 <div className="project-team">
                     {team.map((teamMember, i) => {
                         const person = getPersonById(teamMember.id);
-                        if (person) return (
-                            <div key={i} className="project-team__member">
-                                <div className="project-team__name">{person.name}</div>
-                                <div className="project-team__roles">
-                                    {teamMember.roles?.map((role, j) => {
-                                        if (!teamMember.roles) return;
-                                        const isLast = j >= teamMember.roles.length - 1;
-                                        return (<span key={`${person.name}-${j}`}>
-                                            <span aria-hidden="true">{role} </span>
-                                            <span aria-hidden="true">{!isLast && " • "}</span>
-                                        </span>
+                        const isLast = i >= team.length - 1
 
-                                        )
-                                    })}
+                        if (person) return <>
+                            {person?.link ?
+                                <a
+                                    href={person.link}
+                                    target="_blank"
+                                    key={i}
+                                    className="team-member"
+                                >
+                                    <TeamMemberInfo person={person} roles={teamMember.roles} />
+                                </a>
+                                :
+                                <div key={i} className="team-member">
+                                    <TeamMemberInfo person={person} roles={teamMember.roles} />
                                 </div>
-                            </div>
-                        );
+                            }
+                            {!isLast && <span className="list-separator" aria-hidden={true}/>}
+                        </>
                     })}
                 </div>
             </>

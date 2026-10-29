@@ -1,13 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-import MediaControls from "./project-media/MediaControls";
-import type { MediaSlide, Project } from "../../../data/content";
-import MediaRenderer from "./project-media/MediaRenderer";
-import MediaLabel from "./project-media/MediaLabel";
-import MediaStrip from "./project-media/MediaStrip";
-import { PlayIcon } from "../../ui/Icons";
-import useVideoPaused from "../../../hooks/useVideoPaused";
+import { useRef, useState } from "react";
+import MediaControls from "./MediaControls";
+import type { MediaSlide, Project } from "../../../../data/content";
+import MediaRenderer from "./MediaRenderer";
+import MediaLabel from "./MediaLabel";
+import MediaStrip from "./MediaStrip";
+import { PlayIcon } from "../../../ui/Icons";
+import useVideoPaused from "../../../../hooks/useVideoPaused";
+import useMediaQuery, { MOBILE_QUERY } from "../../../../utils/useMediaQuery";
 
-const isVideoSlide = (b?: MediaSlide) => b?.type === "single" && b.media.type === "video";
+const isVideoSlide = (s?: MediaSlide) => s?.type === "single" && s.media.type === "video";
 
 export type Fit = "cover" | "contain";
 
@@ -17,18 +18,23 @@ type MediaViewerProps = {
 }
 
 const MediaViewer = ({ project, enabled }: MediaViewerProps) => {
+    const isMobile = useMediaQuery(MOBILE_QUERY)
+
     const viewerRef = useRef<HTMLDivElement>(null);
     const videoRef = useRef<HTMLVideoElement | null>(null);
 
     const [index, setIndex] = useState(0);
+
+    const slides = project.media;
+    const currentSlide = slides[index];
+    const fitLocked = !!currentSlide?.contain;
+    const isVideo = isVideoSlide(currentSlide);
+    const paused = useVideoPaused(videoRef, index);
+    const showPlayButton = isVideo && paused;
+
     const [fit, setFit] = useState<Fit>("cover");
     const toggleFit = () => setFit((f) => (f === "cover" ? "contain" : "cover"));
-    const getFit = (slide?: MediaSlide): Fit => (slide?.contain ? "contain" : fit);
-
-    // Go back to first slide when another project opens
-    useEffect(() => {
-        setIndex(0);
-    }, [project])
+    const getFit = (slide?: MediaSlide): Fit => (slide?.contain || isMobile ? "contain" : fit);
 
     const playVideo = () => {
         videoRef.current?.play().catch(() => { });
@@ -40,14 +46,6 @@ const MediaViewer = ({ project, enabled }: MediaViewerProps) => {
         if (video.paused) video.play().catch(() => { });
         else video.pause();
     };
-
-    const slides = project.media;
-    const currentSlide = slides[index];
-    const fitLocked = !!currentSlide?.contain;
-    const isVideo = isVideoSlide(currentSlide);
-    const paused = useVideoPaused(videoRef, index);
-    const showPlayButton = isVideo && paused;
-
     return (
         <div ref={viewerRef} className="media-viewer">
             <div className="media-stage">

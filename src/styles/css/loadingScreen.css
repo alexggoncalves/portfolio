@@ -79,4 +79,4 @@
 html:has(.loading-screen:not(.loading-screen--exiting)),
 html:has(.loading-screen:not(.loading-screen--exiting)) body {
   overflow: hidden;
-}/*# sourceMappingURL=loadingScreen.css.map */
+}/*# sourceMappingURL=LoadingScreen.css.map */

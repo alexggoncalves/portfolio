@@ -15,9 +15,9 @@ import StarrySkyScene from "./scenes/StarrySkyScene";
 import HeroScene from "./scenes/HeroScene";
 
 const SECTION_TITLES = {
-    home: "Alex — Creative Developer",
-    work: "Work — Alex",
-    contact: "Contact — Alex",
+    home: "Alex - Creative Developer",
+    work: "Alex - Work",
+    contact: "Alex - Contacts",
 }
 
 const App = () => {

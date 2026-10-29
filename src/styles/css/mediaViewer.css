@@ -150,7 +150,7 @@ video.media:fullscreen {
   background-color: rgba(30, 30, 30, 0.72);
   backdrop-filter: blur(14px);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   height: var(--media-strip-height);
   max-width: 40%;
   display: flex;
@@ -250,7 +250,12 @@ video.media:fullscreen {
   pointer-events: none;
 }
 
+.media-thumbnail--video {
+  aspect-ratio: 16/9;
+}
 .media-thumbnail--video video {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
@@ -284,7 +289,7 @@ video.media:fullscreen {
   background-color: rgba(30, 30, 30, 0.72);
   backdrop-filter: blur(14px);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   height: 42px;
   padding: 4px 6px;
   margin-left: auto;
@@ -325,13 +330,13 @@ video.media:fullscreen {
   touch-action: none;
 }
 .video-controls__progress-bar::before {
-  content: "";
+  content: " ";
   position: absolute;
   left: 0;
   right: 0;
   top: calc(50% - 2px);
   height: 4px;
-  border-radius: 2px;
+  border-radius: 20px;
   background: rgb(100, 100, 100);
 }
 
@@ -339,7 +344,7 @@ video.media:fullscreen {
   position: absolute;
   left: 0;
   right: 0;
-  border-radius: 2px;
+  border-radius: 10px;
   top: calc(50% - 2px);
   height: 4px;
   background: white;
@@ -395,16 +400,53 @@ video.media:fullscreen {
   background-color: rgba(30, 30, 30, 0.72);
   backdrop-filter: blur(14px);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   font-family: "Space Mono", monospace;
   font-size: 0.8rem;
   font-weight: 400;
   font-variant-numeric: tabular-nums;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
   padding: 6px 12px 7px 12px;
 }
 .media-label__counter {
   font-weight: 600;
+  font-size: 0.9rem;
 }
 .media-label__title {
   font-weight: 300;
+  font-family: "Space Grotesk";
+}
+
+@media (max-width: 700px) {
+  .media-slide {
+    padding-bottom: var(--peek-height);
+  }
+  .media-dock {
+    bottom: var(--peek-height);
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+  .media-dock .media-strip {
+    max-width: 100%;
+    width: 100%;
+  }
+  .media-dock .media-dock__panel {
+    width: 100%;
+  }
+  .media-dock .media-controls {
+    max-width: 100%;
+  }
+  .media-label {
+    position: fixed;
+    flex-direction: row-reverse;
+    left: var(--main-padding);
+    top: calc(var(--nav-height) + 4px);
+    border-radius: 10px;
+  }
+  .video__play-button {
+    translate: 0 calc(-1 * var(--peek-height) / 2);
+  }
 }/*# sourceMappingURL=MediaViewer.css.map */

@@ -51,7 +51,6 @@ a {
   border-radius: 12px;
   padding: 8px 14px 8px 14px;
   font-size: 0.9rem;
-  font-family: "Space Mono";
   text-transform: uppercase;
 }
 .button--pill > svg {
@@ -62,8 +61,8 @@ a {
 .button--pill.active {
   background-color: rgb(226, 226, 226);
   border-color: rgb(226, 226, 226);
-  color: rgb(80, 80, 80);
-  font-weight: 600;
+  color: rgb(30, 30, 30);
+  font-weight: 500;
 }
 
 .button--glass {
@@ -80,8 +79,12 @@ a {
 }
 @media (hover: hover) {
   .button--glass:hover {
-    background-color: rgba(30, 30, 30, 0.5);
+    background-color: rgba(50, 50, 50, 0.72);
   }
+}
+.button--glass:active {
+  background-color: rgba(50, 50, 50, 0.72);
+  scale: 0.98;
 }
 
 .button--icon {
@@ -132,4 +135,4 @@ a {
   .button--action-icon {
     width: 40px;
   }
-}/*# sourceMappingURL=buttons.css.map */
+}/*# sourceMappingURL=Buttons.css.map */

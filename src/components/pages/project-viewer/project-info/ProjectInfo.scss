@@ -1,0 +1,177 @@
+@use "./../../../../styles/mixins.scss" as *;
+
+// ====================
+// PROJECT INFO WINDOW
+// ====================
+.project-info__window {
+    width: 500px;
+    max-width: 45%;
+}
+
+.project-info {
+    &__tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 8px;
+        color: var(--background-color);
+        div {
+            @include flex-center;
+            border-radius: 8px;
+            padding: 3px 10px 3px 10px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1px;
+            font-family: "Inter", sans-serif;
+        }
+    }
+
+    &__title {
+        font-family: "Space Grotesk", sans-serif;
+        font-weight: 700;
+        font-size: 2.2rem;
+        margin: 0 0 2px 0;
+    }
+
+    &__subtitle {
+        font-family: "Space Mono", monospace;
+        font-weight: 400;
+        font-size: 1rem;
+        color: rgb(200, 200, 200);
+        margin: 0;
+        text-transform: uppercase;
+    }
+
+    &__description {
+        margin: 18px 0 24px 0;
+
+        &-paragraph {
+            font-size: 1rem;
+            line-height: 1.3;
+            margin: 0;
+            margin-bottom: 14px;
+            font-weight: 400;
+
+            &:last-child{
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    &__actions {
+        display: flex;
+        justify-content: space-between;
+        > div {
+            display: flex;
+            gap: 8px;
+        }
+    }
+}
+
+.list-separator {
+    background-color: rgba(255, 255, 255, 0.2);
+    margin: 0;
+    width: 100%;
+    height: 1px;
+    border-radius: 1px;
+}
+
+// =============
+// TOOLS
+// =============
+
+.project-tools {
+    display: flex;
+    flex-direction: column;
+    word-break: break-all;
+
+    gap: 4px;
+}
+
+.project-tools__tool {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+
+    border-bottom: 1px solid rgb(80, 80, 80);
+
+    img {
+        height: 20px;
+    }
+
+    span {
+        padding-bottom: 2px;
+        font-weight: 600;
+        font-size: 0.9;
+        margin-right: 16px;
+    }
+
+    &:first-child {
+        padding-top: 0px;
+    }
+
+    &:last-child {
+        border-bottom: none;
+        padding-bottom: 0px;
+    }
+}
+
+// =============
+// TEAM
+// =============
+.project-team__window {
+    max-width: 340px;
+
+    .window__content {
+        padding: 12px;
+    }
+}
+
+.project-team {
+    display: flex;
+    flex-direction: column;
+}
+
+.team-member {
+    width: 100%;
+    padding: 9px 10px 11px 14px;
+    display: flex;
+    justify-content: space-between;
+
+    margin-top: 8px;
+    margin-bottom: 8px;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.team-member__info {
+    .team-member__name {
+        margin-bottom: 4px;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .team-member__roles {
+        font-family: "Space Mono", monospace;
+        font-size: 0.8rem;
+        font-weight: 200;
+        line-height: 1.3;
+        color: rgb(200, 200, 200);
+    }
+}
+
+.team-member__link {
+    margin: 0 8px 0 12px;
+
+    svg {
+        width: 25px;
+        height: auto;
+    }
+}

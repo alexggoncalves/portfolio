@@ -1,6 +1,7 @@
 import { useEffect, useState, type RefObject } from "react";
 import { CoverMediaIcon, FitMediaIcon, MaximizeMediaIcon, MinimizeMediaIcon } from "../../../ui/Icons";
 import VideoControls from "./VideoControls";
+import useMediaQuery, { MOBILE_QUERY } from "../../../../utils/useMediaQuery";
 
 export type Fit = "cover" | "contain";
 
@@ -15,6 +16,7 @@ type Props = {
 
 function MediaControls({ videoRef, fullscreenRef, isVideo, slideKey, fit, onToggleFit }: Props) {
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const isMobile = useMediaQuery(MOBILE_QUERY);
 
     // Keep the icon in sync, including when the user exits with Esc
     useEffect(() => {
@@ -32,11 +34,14 @@ function MediaControls({ videoRef, fullscreenRef, isVideo, slideKey, fit, onTogg
         else if (isVideo) video?.webkitEnterFullscreen?.(); // iPhone fallback
     };
 
+    if(isVideo || !isMobile)
     return (
+        
         <div className="media-controls">
             {isVideo && <VideoControls key={slideKey} videoRef={videoRef} />}
+            
 
-            {onToggleFit && !isFullscreen && (
+            {onToggleFit && !isFullscreen && !isMobile && (
                 <button
                     type="button"
                     className="media-controls__button"
@@ -47,7 +52,7 @@ function MediaControls({ videoRef, fullscreenRef, isVideo, slideKey, fit, onTogg
                     {fit === "cover" ? <FitMediaIcon /> : <CoverMediaIcon />}
                 </button>
             )}
-
+            
             <button
                 type="button"
                 className="media-controls__button"

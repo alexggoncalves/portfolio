@@ -13,7 +13,8 @@ function MediaLabel({ index, total, title }: Props) {
             aria-live="polite"
             aria-atomic="true"
         >
-            {title && <span className="media-label__title">{title} - </span>}
+            {title && <span className="media-label__title">{title}</span>}
+            {title && <span>-</span>}
             <span className="media-label__counter">
                 {padNumber(index + 1)}/{padNumber(total)}
             </span>

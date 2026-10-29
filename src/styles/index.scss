@@ -15,14 +15,18 @@ body {
     overscroll-behavior-y: none;
 }
 
+// VARS
 :root {
-    // VARS
     --main-padding: 2vw;
     --background-color: rgb(20, 20, 20);
     --nav-height: 88px;
     --logo-width: 150px;
     --menu-button-size: 44px;
+    --menu-button-nudge: 3px;
+    --menu-button-nudge-mobile: 6px;
+}
 
+:root {
     font-family: "Space Grotesk", sans-serif;
     font-optical-sizing: auto;
     line-height: 1.2;

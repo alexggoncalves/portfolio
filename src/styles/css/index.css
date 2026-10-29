@@ -19,6 +19,11 @@ body {
   --nav-height: 88px;
   --logo-width: 150px;
   --menu-button-size: 44px;
+  --menu-button-nudge: 3px;
+  --menu-button-nudge-mobile: 6px;
+}
+
+:root {
   font-family: "Space Grotesk", sans-serif;
   font-optical-sizing: auto;
   line-height: 1.2;

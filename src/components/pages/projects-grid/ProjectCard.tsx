@@ -2,7 +2,7 @@ import "./ProjectCard.scss"
 
 import { Link } from "react-router";
 import { type Project } from "../../../data/content";
-import useMediaQuery from "../../../utils/useMediaQuery";
+import useMediaQuery, { MOBILE_QUERY } from "../../../utils/useMediaQuery";
 import ProjectCardTags from "./ProjectCardTags";
 
 type ProjectCardProps = {
@@ -12,7 +12,7 @@ type ProjectCardProps = {
 };
 
 function ProjectCard({ project, route, variant = "full" }: ProjectCardProps) {
-    const isMobile = useMediaQuery("(max-width: 700px)");
+    const isMobile = useMediaQuery(MOBILE_QUERY);
 
     return (
         <Link

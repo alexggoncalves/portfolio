@@ -13,7 +13,7 @@ import usePageNavigate from "../../hooks/usePageNavigate";
 import PageLink from "../ui/PageLink";
 
 const LINKS = [
-    { to: "/", label: "INDEX" },
+    { to: "/", label: "HOME" },
     { to: "/work", label: "WORK" },
     { to: "/contact", label: "CONTACT" },
 ];

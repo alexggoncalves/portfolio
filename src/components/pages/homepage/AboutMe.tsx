@@ -10,7 +10,7 @@ function AboutMe() {
     </>;
 
     const rightHeader = <>
-        <StarIcon className='window-header__icon' width={20} height={20} />
+        <StarIcon className='window-header__icon'/>
     </>
 
     return (

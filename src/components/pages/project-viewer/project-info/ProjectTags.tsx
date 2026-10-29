@@ -14,7 +14,7 @@ function ProjectTags({ tagIds }: { tagIds: string[] }) {
                             key={i}
                             style={{
                                 backgroundColor: tag.color,
-                                color: tag.textColor,
+                                // color: tag.textColor,
                             }}
                         >
                             <span>{tag.name.toUpperCase()}</span>

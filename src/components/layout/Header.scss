@@ -44,33 +44,29 @@ header {
 .menu-button {
     height: var(--menu-button-size);
     padding-left: 18px;
-    gap: 16px;
-   translate: 0 5px;
+    gap: 13px;
+    translate: 0 var(--menu-button-nudge);
 
     span {
         text-transform: uppercase;
-        font-size: 0.9rem;
-        // color: rgb(200, 200, 200);
-        font-weight: 500;
+        font-size: 0.94rem;
+        font-weight: 100;
         letter-spacing: 0.5px;
+        font-family: "Space Grotesk";
     }
 
     svg {
         width: 16px;
         height: 16px;
         pointer-events: none;
+        margin-right: 1px;
     }
 
     &.hide {
-        opacity: 0;
-        background-color: transparent;
+        color: transparent;
+        background-color: rgb(30, 30, 30, 0);
+        border-color: transparent;
     }
-
-    // @media (hover: hover) {
-    //     &:hover {
-    //         background-color: rgba(255, 255, 255, 0.1);
-    //     }
-    // }
 }
 
 .menu__window {
@@ -263,5 +259,9 @@ html:has(.menu__window--open) body {
         left: var(--main-padding);
         right: var(--main-padding);
         width: auto;
+    }
+
+    .menu-button {
+        translate: 0 var(--menu-button-nudge-mobile);
     }
 }

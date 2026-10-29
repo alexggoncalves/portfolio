@@ -1,13 +1,15 @@
 import { Link, useLocation, useNavigate } from "react-router";
 
-import { useEffect} from "react";
-import { ReturnIcon } from "../../ui/Icons";
+import { useEffect } from "react";
+import { CloseIcon } from "../../ui/Icons";
 
 function ReturnButton({ enabled }: { enabled: boolean }) {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const backPath = location.pathname.startsWith("/work/") ? "/work" : "/";
+    const backLabel = location.pathname.startsWith("/work/") ? "Work" : "Home";
+    const backPath = backLabel === "Work" ? "/work" : "/";
+
 
     useEffect(() => {
         if (!enabled) return;
@@ -31,8 +33,8 @@ function ReturnButton({ enabled }: { enabled: boolean }) {
                 to={backPath}
                 className={`project-viewer__return button--glass`}
             >
-                <ReturnIcon /> 
-                Return
+                <span>Close</span>
+                <CloseIcon/>
             </Link>
         </>
     );

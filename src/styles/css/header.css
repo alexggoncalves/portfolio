@@ -35,23 +35,26 @@ header > * {
 .menu-button {
   height: var(--menu-button-size);
   padding-left: 18px;
-  gap: 16px;
-  translate: 0 5px;
+  gap: 13px;
+  translate: 0 var(--menu-button-nudge);
 }
 .menu-button span {
   text-transform: uppercase;
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 0.94rem;
+  font-weight: 100;
   letter-spacing: 0.5px;
+  font-family: "Space Grotesk";
 }
 .menu-button svg {
   width: 16px;
   height: 16px;
   pointer-events: none;
+  margin-right: 1px;
 }
 .menu-button.hide {
-  opacity: 0;
-  background-color: transparent;
+  color: transparent;
+  background-color: rgba(30, 30, 30, 0);
+  border-color: transparent;
 }
 
 .menu__window {
@@ -215,4 +218,7 @@ html:has(.menu__window--open) body {
     right: var(--main-padding);
     width: auto;
   }
-}/*# sourceMappingURL=header.css.map */
+  .menu-button {
+    translate: 0 var(--menu-button-nudge-mobile);
+  }
+}/*# sourceMappingURL=Header.css.map */

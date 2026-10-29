@@ -1,17 +1,18 @@
-import "./MediaViewer.scss"
 import "./ProjectViewer.scss";
+import "./media-viewer/MediaViewer.scss"
+import "./project-info/ProjectInfo.scss"
 
 import { getProjectById, type Project } from "../../../data/content";
 import { useEffect, useMemo, useState } from "react";
 
-import ProjectInfoWindows from "./ProjectInfoWindows";
+import ProjectInfoWindows from "./project-info/ProjectInfoWindows";
 import ReturnButton from "./ReturnButton";
 import ProjectHeading from "./ProjectHeading";
 import useUIStore from "../../../stores/UIStore";
-import MediaPlayer from "./MediaViewer";
+import MediaPlayer from "./media-viewer/MediaViewer";
 import ToggleInterfaceButton from "./ToggleInterfaceButton"
-import useMediaQuery from "../../../utils/useMediaQuery";
-import ProjectInfoDrawer from "./ProjectInfoDrawer";
+import useMediaQuery, { MOBILE_QUERY } from "../../../utils/useMediaQuery";
+import ProjectInfoDrawer from "./project-info/ProjectInfoDrawer";
 
 type ProjectViewerProps = {
     projectId: string | null,
@@ -19,7 +20,8 @@ type ProjectViewerProps = {
 };
 
 function ProjectViewer({ projectId, isOpen }: ProjectViewerProps) {
-    const isMobile = useMediaQuery("(max-width: 700px)");
+    const isMobile = useMediaQuery(MOBILE_QUERY);
+    
     const [open, setOpen] = useState(false);
     const [windowsMinimized, setWindowsMinimized] = useState(false);
 
@@ -51,9 +53,9 @@ function ProjectViewer({ projectId, isOpen }: ProjectViewerProps) {
 
     return (
         <div className={`project-viewer ${open ? "open" : ""} ${interfaceHidden ? "ui-hidden" : ""}`}>
-            <MediaPlayer project={project} enabled={open} />
+            <MediaPlayer key={project.id} project={project} enabled={open} />
             <ReturnButton enabled={open} />
-            <ToggleInterfaceButton />
+            {!isMobile && <ToggleInterfaceButton />}
 
             {isMobile ?
                 <ProjectInfoDrawer project={project}/>

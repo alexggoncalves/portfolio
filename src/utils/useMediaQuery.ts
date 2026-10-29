@@ -1,5 +1,7 @@
 import { useCallback, useSyncExternalStore } from "react";
 
+export const MOBILE_QUERY = "(max-width: 700px)"
+
 const useMediaQuery = (query: string) => {
     const subscribe = useCallback(
         (onChange: () => void) => {

@@ -4,12 +4,12 @@ import ProjectDescription from "./ProjectDescription";
 import ProjectTags from "./ProjectTags";
 import { GithubIcon, PreviewIcon, TeamIcon, ToolsIcon } from "../../../ui/Icons";
 import { ExternalLink, PanelToggle } from "../../../ui/Buttons";
-import type { Panel } from "../ProjectInfoWindows";
+import type { Panel } from "./ProjectInfoWindows";
 
 type ProjectInfoProps = {
     project: Project;
-    panel: Panel;
-    onTogglePanel: (panel: "tools" | "team") => void;
+    panel?: Panel;
+    onTogglePanel?: (panel: "tools" | "team") => void;
 }
 
 function ProjectInfo({ project, panel, onTogglePanel }: ProjectInfoProps) {
@@ -22,24 +22,26 @@ function ProjectInfo({ project, panel, onTogglePanel }: ProjectInfoProps) {
             <ProjectDescription description={project.description} />
 
             <div className="project-info__actions">
-                <div>
-                    <PanelToggle
-                        icon={<ToolsIcon />}
-                        label="Tools"
-                        count={project.tools.length}
-                        active={panel === "tools"}
-                        onClick={() => onTogglePanel("tools")}
-                    />
-                    {project.team?.length ? (
+                {onTogglePanel &&
+                    <div>
                         <PanelToggle
-                            icon={<TeamIcon />}
-                            label="Team"
-                            count={project.team?.length}
-                            active={panel === "team"}
-                            onClick={() => onTogglePanel("team")}
+                            icon={<ToolsIcon />}
+                            label="Tools"
+                            count={project.tools.length}
+                            active={panel === "tools"}
+                            onClick={() => onTogglePanel("tools")}
                         />
-                    ) : null}
-                </div>
+                        {project.team?.length ? (
+                            <PanelToggle
+                                icon={<TeamIcon />}
+                                label="Team"
+                                count={project.team?.length}
+                                active={panel === "team"}
+                                onClick={() => onTogglePanel("team")}
+                            />
+                        ) : null}
+                    </div>}
+
                 <div>
                     {project.git &&
                         <ExternalLink href={project.git} label="Source code on Github">
