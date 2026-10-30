@@ -1,9 +1,11 @@
+@use "./../../../styles/mixins.scss" as *;
+
 .projects-grid__page {
     position: relative;
     width: 100%;
     height: 100svh;
     padding-bottom: calc(var(--main-padding));
-    padding-inline: var(--main-padding);
+    padding-inline: var(--side-padding);
     padding-top: calc(var(--nav-height) + 5px);
 
     display: flex;
@@ -129,7 +131,7 @@
     width: 50%;
 }
 
-@media (max-width: 700px) {
+@include mobile {
     .projects-grid__window {
         .window__content {
             padding: 0;
@@ -145,7 +147,6 @@
     // ==============
     // FILTERS DRAWER
     // ==============
-
     .filters-drawer {
         height: auto;
         max-height: calc(100dvh - var(--drawer-top));
@@ -162,7 +163,7 @@
             button {
                 margin-right: 2px;
 
-                svg{
+                svg {
                     width: 20px;
                     height: auto;
                 }
@@ -178,17 +179,37 @@
         }
 
         .filter {
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
     }
 
     .filters-drawer__title {
         font-family: "Space Mono", monospace;
-        color: rgb(200, 200, 200);
-        font-size: 1.15rem;
+        // color: rgb(200, 200, 200);
+        font-size: 1.4rem;
         line-height: 1;
         margin-left: 4px;
+        margin-top: 1px;
         font-weight: 600;
-        text-transform: uppercase;
+        // text-transform: uppercase;
+    }
+
+    .drawer--side.filters-drawer {
+        margin-inline: 0;
+        max-height: none;
+
+        .drawer__body{
+            padding-right: calc(var(--side-padding) + 12px);
+        }
+
+        .drawer__header{
+            padding-right: calc(var(--side-padding) * 1.3);
+        }
+    }
+}
+
+@media (max-height: 500px) {
+    .projects-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }

@@ -5,13 +5,14 @@ header {
     top: 0;
     height: var(--nav-height);
     width: 100%;
-    padding: 0 var(--main-padding);
+    padding: 0 var(--side-padding);
 
     display: flex;
     justify-content: space-between;
     align-items: center;
 
     z-index: 3;
+    transition: opacity 1s ease, z-index 0s linear 0.5s;
     pointer-events: none;
 
     > * {
@@ -71,7 +72,7 @@ header {
 
 .menu__window {
     position: absolute;
-    right: var(--main-padding);
+    right: var(--side-padding);
     top: calc((var(--nav-height) - var(--menu-button-size)) / 2);
     width: 400px;
 
@@ -253,15 +254,38 @@ html:has(.menu__window--open) body {
     overflow: hidden;
 }
 
-@media (max-width: 700px) {
+@include mobile {
     .menu__window {
         top: var(--nav-height);
-        left: var(--main-padding);
-        right: var(--main-padding);
+        left: var(--side-padding);
+        right: var(--side-padding);
         width: auto;
     }
 
     .menu-button {
         translate: 0 var(--menu-button-nudge-mobile);
     }
+}
+
+@media (max-height: 500px) {
+    .menu__window {
+        max-height: calc(100dvh - var(--nav-height) - var(--main-padding));
+        overflow-y: auto; // safety net for even shorter screens
+
+        .window__content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    .menu__nav {
+        border-bottom: 0;
+        border-right: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+// While the filters drawer is open, let it and its backdrop cover the header
+html:has(.filters-drawer.drawer--expanded) header {
+    z-index: 0;
+    transition-delay: 0s;
 }

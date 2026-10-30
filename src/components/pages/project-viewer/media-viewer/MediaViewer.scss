@@ -150,10 +150,12 @@
     flex: 0 0 100%;
     min-width: 0;
     height: 100%;
-    padding-bottom: var(--peek-height);
+    padding-bottom: var(--peek-height, 0px);
 
     scroll-snap-align: center;
     scroll-snap-stop: always;
+
+    padding-inline: env(safe-area-inset-left) env(safe-area-inset-right);
 }
 
 // =============
@@ -189,7 +191,7 @@ video.media:fullscreen {
     position: absolute;
     bottom: 0;
     left: 0;
-    padding: 0 var(--main-padding) var(--main-padding) var(--main-padding);
+    padding: 0 var(--side-padding) var(--main-padding) var(--side-padding);
 
     display: flex;
     justify-content: space-between;
@@ -291,7 +293,6 @@ video.media:fullscreen {
     border: 1px solid transparent;
     background: none;
     border-radius: 9.5px;
-    background: none;
     opacity: 0.55;
     cursor: pointer;
     transition:
@@ -310,8 +311,7 @@ video.media:fullscreen {
     }
 
     &:hover:not(.active) {
-        border: 1px solid rgba(255, 255, 255, 0.336);
-        background: none;
+        border-color: rgba(255, 255, 255, 0.336);
     }
 }
 
@@ -320,7 +320,7 @@ video.media:fullscreen {
 
     .media-thumbnail {
         height: calc(
-            (var(--media-strip-height) - 23px - 2px * (var(--count) - 1)) /
+            (var(--media-strip-height) - 24px - 2px * (var(--count) - 1)) /
                 var(--count)
         );
         width: 100%;
@@ -329,8 +329,7 @@ video.media:fullscreen {
 }
 
 .media-thumbnail {
-    // strip height − strip padding (2×8) − slide padding (2×2) − slide border (2×1.5)
-    height: calc(var(--media-strip-height) - 23px);
+    height: calc(var(--media-strip-height) - 24px);
     width: auto;
 
     position: relative;
@@ -527,13 +526,13 @@ video.media:fullscreen {
     }
 }
 
-@media (max-width: 700px) {
+@include mobile{
     .media-slide {
-        padding-bottom: var(--peek-height);
+        padding-bottom: var(--peek-height, 0px);
     }
 
     .media-dock {
-        bottom: var(--peek-height);
+        bottom: var(--peek-height, 0px);
         flex-direction: column-reverse;
         gap: 8px;
 
@@ -554,8 +553,14 @@ video.media:fullscreen {
     .media-label {
         position: fixed;
         flex-direction: row-reverse;
-        left: var(--main-padding);
+        left: var(--side-padding);
         top: calc(var(--nav-height) + 4px);
         border-radius: 10px;
+    }
+}
+
+@media (max-height: 500px) {
+    .media-dock .media-strip {
+        display: none;
     }
 }

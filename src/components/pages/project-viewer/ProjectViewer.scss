@@ -38,7 +38,7 @@ html:has(.project-viewer.open) body {
 .project-viewer__overlay {
     height: 100%;
     width: 100%;
-    padding: 100px var(--main-padding) var(--main-padding) var(--main-padding);
+    padding: 100px var(--side-padding) var(--main-padding) var(--side-padding);
     z-index: 1;
     display: flex;
     flex-direction: column;
@@ -63,7 +63,7 @@ html:has(.project-viewer.open) body {
 .project-viewer__return {
     position: absolute;
     top: var(--nav-height);
-    left: var(--main-padding);
+    left: var(--side-padding);
     margin-bottom: auto;
     padding-right: 10px;
     padding-left: 14px;
@@ -83,6 +83,14 @@ html:has(.project-viewer.open) body {
         pointer-events: none;
         margin-right: 1px;
     }
+}
+
+.project-viewer__info-button {
+    position: absolute;
+    left: var(--side-padding);
+    bottom: var(--main-padding);
+    height: var(--menu-button-size);
+    z-index: 2;
 }
 
 // =============
@@ -175,7 +183,7 @@ html:has(.project-viewer.open) body.revealed :is(.page main > :not(.project-view
     transition: visibility 0s linear var(--page-slide-duration); // waits for the 0.4s slide-in
 }
 
-@media (max-width: 700px) {
+@include mobile {
     html:has(.project-viewer.open) .menu-button {
         opacity: 0;
         pointer-events: none;
@@ -187,7 +195,7 @@ html:has(.project-viewer.open) body.revealed :is(.page main > :not(.project-view
 
         // Position it exactly like the menu button
         top: calc((var(--nav-height) - var(--menu-button-size)) / 2);
-        right: var(--main-padding);
+        right: var(--side-padding);
         left: auto;
         translate: 0 var(--menu-button-nudge-mobile);
     }

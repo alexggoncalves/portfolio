@@ -11,9 +11,12 @@ import Drawer from "../../../ui/Drawer";
 
 type ProjectInfoDrawerProps = {
     project: Project;
+    peek?: boolean;
+    open?: boolean;
+    onOpenChange?: (open: boolean) => void;
 }
 
-const ProjectInfoDrawer = ({ project }: ProjectInfoDrawerProps) => {
+const ProjectInfoDrawer = ({ project, peek, open, onOpenChange }: ProjectInfoDrawerProps) => {
     const header = <>
         
         <div className="project-drawer__heading">
@@ -38,7 +41,7 @@ const ProjectInfoDrawer = ({ project }: ProjectInfoDrawerProps) => {
     </>
 
     return (
-        <Drawer header={header} className="project-drawer">
+        <Drawer header={header} className="project-drawer" peek={peek} open={open} onOpenChange={onOpenChange}>
             <ProjectDescription description={project.description} />
             <Window
                 title="Tools"

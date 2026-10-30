@@ -2,6 +2,11 @@
 
 .drawer {
     --drawer-padding: calc(var(--main-padding) * 1.5);
+    --drawer-side-padding: max(
+        var(--drawer-padding),
+        env(safe-area-inset-left),
+        env(safe-area-inset-right)
+    );
     --drawer-top: calc(var(--nav-height) + 4px);
 
     @include glass-panel;
@@ -38,6 +43,7 @@
     }
 }
 
+
 .drawer__handle {
     position: absolute;
     left: 0;
@@ -65,8 +71,8 @@
 }
 
 .drawer__header {
-    padding: 20px var(--drawer-padding) var(--drawer-padding)
-        var(--drawer-padding);
+    padding: 20px var(--drawer-side-padding) var(--drawer-padding)
+        var(--drawer-side-padding);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -75,8 +81,8 @@
     min-height: 0;
     overflow-y: auto;
     overscroll-behavior: contain;
-    padding-inline: var(--drawer-padding);
-    padding-bottom: calc(var(--drawer-padding) * 1);
+    padding-inline: var(--drawer-side-padding);
+    padding-bottom: calc(var(--drawer-padding) + env(safe-area-inset-bottom));
     gap: calc(var(--drawer-padding) * 1.5);
 
     display: flex;
@@ -97,4 +103,40 @@
         opacity: 1;
         pointer-events: auto;
     }
+}
+
+
+// Short screens (phone landscape): a side panel instead of a bottom sheet
+.drawer--side {
+    --drawer-padding: 16px;
+
+    top: 0;
+    bottom: 0;
+    left: auto;
+    right: 0;
+    width: min(440px, 60vw);
+    height: auto;
+    max-height: none;
+
+    border-radius: 24px 0 0 24px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-right: 0;
+
+    transform: translateX(100%);
+    .drawer__handle {
+        display: none;
+    }
+
+    .drawer__header {
+        padding-top: calc(var(--drawer-padding) - 10px);
+        padding-inline: var(--main-padding);
+    }
+
+    .drawer__body {
+        padding-inline: var(--main-padding);
+    }
+}
+
+.drawer--side.drawer--expanded {
+    transform: translateX(0);
 }

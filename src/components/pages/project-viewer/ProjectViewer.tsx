@@ -21,7 +21,9 @@ type ProjectViewerProps = {
 
 function ProjectViewer({ projectId, isOpen }: ProjectViewerProps) {
     const isMobile = useMediaQuery(MOBILE_QUERY);
-    
+    const isShort = useMediaQuery("(max-height: 500px)");
+
+    const [infoOpen, setInfoOpen] = useState(false);
     const [open, setOpen] = useState(false);
     const [windowsMinimized, setWindowsMinimized] = useState(false);
 
@@ -56,9 +58,23 @@ function ProjectViewer({ projectId, isOpen }: ProjectViewerProps) {
             <MediaPlayer key={project.id} project={project} enabled={open} />
             <ReturnButton enabled={open} />
             {!isMobile && <ToggleInterfaceButton />}
-
+            {isShort && (
+                <button
+                    type="button"
+                    className="button--glass project-viewer__info-button"
+                    onClick={() => setInfoOpen(true)}
+                    aria-expanded={infoOpen}
+                >
+                    + INFO
+                </button>
+            )}
             {isMobile ?
-                <ProjectInfoDrawer project={project}/>
+                <ProjectInfoDrawer
+                    project={project}
+                    peek={!isShort}
+                    open={isShort ? infoOpen : undefined}
+                    onOpenChange={setInfoOpen}
+                />
                 :
                 <div className="project-viewer__overlay">
                     {windowsMinimized ?

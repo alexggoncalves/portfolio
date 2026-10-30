@@ -1,3 +1,5 @@
+@use "./../../../styles/mixins.scss" as *;
+
 .contacts-page {
     width: 100%;
     inset: 0;
@@ -15,7 +17,7 @@
     align-items: stretch;
     justify-content: center;
     gap: 16px;
-    padding-inline: var(--main-padding);
+    padding-inline: var(--side-padding);
 }
 
 .contacts__window {
@@ -263,10 +265,10 @@ time {
     padding: 0px 0px 14px 4px;
 }
 
-@media (max-width: 700px) {
+@include mobile {
     .contacts-page {
         align-items: flex-start;
-        padding: calc(var(--nav-height) + 8px) var(--main-padding)
+        padding: calc(var(--nav-height) + 8px) var(--side-padding)
             var(--main-padding);
         justify-content: center;
     }

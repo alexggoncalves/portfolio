@@ -1,6 +1,7 @@
 import "./Drawer.scss"
 
 import { useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
+import useMediaQuery from "../../utils/useMediaQuery";
 
 const DRAG_THRESHOLD = 6; // px a press has to move before it counts as a drag
 const SNAP_DISTANCE = 60; // px dragged before letting go switches state
@@ -33,6 +34,8 @@ type DrawerProps = {
 }
 
 const Drawer = ({ children, header, className = "", open, onOpenChange, peek = true }: DrawerProps) => {
+    const isSide = useMediaQuery("(max-height: 500px)"); // Open from the side for short screens
+    
     const [innerOpen, setInnerOpen] = useState(false);
     const expanded = open ?? innerOpen;
 
@@ -55,13 +58,13 @@ const Drawer = ({ children, header, className = "", open, onOpenChange, peek = t
     };
 
     const handleClick = (e: React.MouseEvent) => {
-        if (isControl(e.target)) return;
+        if (isSide || isControl(e.target)) return;
         setOpen(!expanded);
     }
 
     const handlePointerDown = (e: PointerEvent<HTMLDivElement>) => {
         const drawer = drawerRef.current;
-        if (!drawer || e.button !== 0 || isControl(e.target)) return;
+        if (!drawer || isSide || e.button !== 0 || isControl(e.target)) return;
 
         const maxOffset = peek
             ? drawer.offsetHeight - e.currentTarget.offsetHeight
@@ -135,7 +138,7 @@ const Drawer = ({ children, header, className = "", open, onOpenChange, peek = t
         )}
         <div
             ref={drawerRef}
-            className={`drawer ${peek ? "" : "drawer--hidden"} ${expanded ? "drawer--expanded" : ""} ${className}`}
+            className={`drawer ${peek ? "" : "drawer--hidden"} ${isSide ? "drawer--side" : ""} ${expanded ? "drawer--expanded" : ""} ${className}`}
             inert={!peek && !expanded} // hidden drawer can't be tabbed into
         >
             <div

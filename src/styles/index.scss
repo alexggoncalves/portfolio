@@ -18,6 +18,11 @@ body {
 // VARS
 :root {
     --main-padding: 2vw;
+    --side-padding: max(
+        var(--main-padding),
+        env(safe-area-inset-left),
+        env(safe-area-inset-right)
+    );
     --background-color: rgb(20, 20, 20);
     --nav-height: 88px;
     --logo-width: 150px;
@@ -189,7 +194,7 @@ canvas,
     animation: none;
 }
 
-@media (max-width: 700px) {
+@include mobile {
     :root {
         --main-padding: 3vw;
         --nav-height: 72px;
@@ -205,9 +210,17 @@ canvas,
         flex-direction: column;
         align-items: center;
         gap: 6px;
-        padding: 24px var(--main-padding)
+        padding: 24px var(--side-padding)
             calc(24px + env(safe-area-inset-bottom));
         text-align: center;
+    }
+}
+
+@media (max-height: 500px) {
+    :root {
+        --nav-height: 56px;
+        --logo-width: 100px;
+        --menu-button-size: 36px;
     }
 }
 

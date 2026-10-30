@@ -41,6 +41,8 @@ a {
     -webkit-tap-highlight-color: transparent;
     -webkit-touch-callout: none;
     -webkit-user-drag: none;
+    appearance: none;
+    -webkit-appearance: none;
 }
 
 button:disabled,
@@ -142,7 +144,7 @@ a {
     }
 }
 
-@media (max-width: 700px) {
+@include mobile {
     .button--action-icon {
         width: 40px;
     }

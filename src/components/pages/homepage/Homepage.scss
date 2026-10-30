@@ -19,7 +19,7 @@
 
 .hero__window {
     position: absolute;
-    left: var(--main-padding);
+    left: var(--side-padding);
     bottom: var(--main-padding);
     max-width: 400px;
 
@@ -84,7 +84,7 @@
 // SELECTED PROJECTS
 // ===================
 .selected-projects__window {
-    margin-inline: var(--main-padding);
+    margin-inline: var(--side-padding);
 
     .window__content {
         padding: 0;
@@ -212,11 +212,11 @@
     }
 }
 
-@media (max-width: 700px) {
+@include mobile {
     .hero__window {
         left: auto;
-        bottom: var(--main-padding);
-        margin-inline: var(--main-padding);
+        bottom: calc(var(--main-padding) * 1.3);
+        margin-inline: var(--side-padding);
     }
 
     .hero__scroll-cue {
@@ -229,7 +229,7 @@
 
     // ABOUT ME
     .about-me__window {
-        margin: var(--main-padding) var(--main-padding);
+        margin: var(--main-padding) var(--side-padding);
         min-width: none;
         .window__content {
             flex-direction: column;

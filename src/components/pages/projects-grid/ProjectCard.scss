@@ -192,7 +192,7 @@
     }
 }
 
-@media (max-width: 700px) {
+@include mobile {
     .project-card__text {
         display: none;
         // margin: 8px 0px 2px 6px;
@@ -201,5 +201,14 @@
 
     .project-card {
         padding: 10px;
+    }
+}
+
+@media (max-height: 500px) {
+    .project-card__tags {
+        right: 8px;
+        flex-wrap: wrap;
+        height: 22px;
+        overflow: hidden;
     }
 }

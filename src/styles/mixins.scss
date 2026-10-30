@@ -17,3 +17,9 @@
     font-weight: $weight;
     font-variant-numeric: tabular-nums;
 }
+
+@mixin mobile {
+    @media (max-width: 700px), (max-height: 500px) {
+        @content;
+    }
+}
