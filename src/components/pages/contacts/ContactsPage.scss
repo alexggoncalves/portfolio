@@ -154,6 +154,47 @@
     }
 }
 
+.contacts__status {
+    --status-color: rgb(140, 214, 140);
+
+    margin-right: -12px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+
+    font-family: "Space Mono";
+    font-size: 0.8rem;
+    font-weight: 100;
+    text-transform: uppercase;
+    color: var(--status-color);
+
+    &-dot {
+        position: relative;
+        width: 16px;
+        height: 16px;
+        background-color: color-mix(
+            in srgb,
+            var(--status-color) 35%,
+            transparent
+        );
+        border-radius: 50%;
+
+        &::after {
+            content: " ";
+            background-color: var(--status-color);
+            aspect-ratio: 1;
+            width: 50%;
+            height: auto;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    }
+}
+
 // =======
 // TIME
 // =======

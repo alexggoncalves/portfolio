@@ -7,14 +7,16 @@ import Window from "../../ui/Window";
 
 import { projects, tags } from "../../../data/content";
 import { WindowActionButton } from "../../ui/Buttons";
-import { TrashIcon } from "../../ui/Icons";
-import useMediaQuery from "../../../utils/useMediaQuery";
+import { BrushIcon, FilterIcon } from "../../ui/Icons";
+import useMediaQuery, { MOBILE_QUERY } from "../../../utils/useMediaQuery";
+import Drawer from "../../ui/Drawer";
 
 function ProjectsGridPage() {
+    const [filtersOpen, setFiltersOpen] = useState(false);
     const [appliedFilters, setAppliedFilters] = useState<string[]>([]);
     const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
-    const isMobile = useMediaQuery("(max-width: 700px)");
+    const isMobile = useMediaQuery(MOBILE_QUERY);
 
     const filteredProjects = useMemo(() => {
         if (appliedFilters.length === 0) return projects;
@@ -33,15 +35,49 @@ function ProjectsGridPage() {
         setAppliedFilters(selectedFilters);
     };
 
+    const windowRightHeader = <>
+        {isMobile && <button
+            type="button"
+            className="button--action-text"
+            onClick={() => setFiltersOpen(true)}
+            aria-expanded={filtersOpen}
+        >
+            <span>Filters</span>
+            <FilterIcon />
+        </button>}
+    </>
+
+    const drawerHeader = <>
+        <span className="filters-drawer__title">Filters</span>
+        <WindowActionButton onAction={clearFilters} label="Clear filters">
+            <BrushIcon style={{ color: "rgb(197, 86, 119)" }} />
+        </WindowActionButton>
+    </>
+
     return (
         <div className="projects-grid__page">
-            {!isMobile &&
+            {isMobile ? (
+                <Drawer
+                    className="filters-drawer"
+                    header={drawerHeader}
+                    peek={false}
+                    open={filtersOpen}
+                    onOpenChange={setFiltersOpen}
+                >
+                    <Filters
+                        projects={projects}
+                        filters={tags}
+                        selectedFilters={appliedFilters}
+                        setSelectedFilters={setAppliedFilters}
+                    />
+                </Drawer>)
+                :
                 <Window
                     title="filters"
                     headerLeft={<>Filters</>}
                     headerRight={
                         <WindowActionButton onAction={clearFilters} label="Clear filters">
-                            <TrashIcon style={{ color: "rgb(197, 86, 119)" }} />
+                            <BrushIcon style={{ color: "rgb(197, 86, 119)" }} />
                         </WindowActionButton>
                     }
                     className="filters__window"
@@ -67,9 +103,9 @@ function ProjectsGridPage() {
                 headerLeft={<>
                     <span>Work</span>
                     <span aria-hidden={true}>•</span>
-                    <span>{filteredProjects.length} projects</span>
+                    <span>{filteredProjects.length}{appliedFilters.length > 0 && ` / ${projects.length}`}</span>
                 </>}
-                headerRight={<></>}
+                headerRight={windowRightHeader}
                 className="projects-grid__window"
             >
                 <div className="projects-grid">
@@ -83,7 +119,7 @@ function ProjectsGridPage() {
                 </div>
             </Window>
 
-        </div>
+        </div >
     );
 }
 

@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import ProjectInfoWindows from "./project-info/ProjectInfoWindows";
 import ReturnButton from "./ReturnButton";
-import ProjectHeading from "./ProjectHeading";
+import ProjectHeading from "./project-info/ProjectHeading";
 import useUIStore from "../../../stores/UIStore";
 import MediaPlayer from "./media-viewer/MediaViewer";
 import ToggleInterfaceButton from "./ToggleInterfaceButton"

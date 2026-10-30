@@ -20,7 +20,7 @@ const LocationWindow = () => {
         <Window
             title="Location"
             headerLeft={<span>Based in</span>}
-            headerRight={<PinIcon className='window-header__icon' width={20} height={20} />}
+            headerRight={<PinIcon className='window-header__icon'/>}
             className="location__window"
         >
             <div className="location">

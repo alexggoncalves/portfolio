@@ -48,7 +48,7 @@ const TimeWindow = () => {
         <Window
             title="Local time"
             headerLeft={<span>Local time</span>}
-            headerRight={<ClockIcon className='window-header__icon' width={20} height={20} />}
+            headerRight={<ClockIcon className='window-header__icon'/>}
             className="time__window"
         >
             <time dateTime={date.toISOString()} aria-label={`Lisbon time: ${longFormatter.format(date)}`}>

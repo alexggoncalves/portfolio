@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import Window from "../../ui/Window";
-import { ArrowUpRightIcon, CopyIcon, CurriculumIcon, DownloadIcon, GithubIcon, LinkedInIcon, PhoneIcon } from "../../ui/Icons";
+import { ArrowUpRightIcon, CopyIcon, CurriculumIcon, DownloadIcon, GithubIcon, LinkedInIcon } from "../../ui/Icons";
 
 const ContactsWindow = () => {
     const [copied, setCopied] = useState(false);
@@ -20,7 +20,11 @@ const ContactsWindow = () => {
         <Window
             title="Contacts"
             headerLeft={<span>Contact</span>}
-            headerRight={<PhoneIcon className='window-header__icon' width={20} height={20} />}
+            headerRight={<div className="contacts__status">
+                ONLINE
+                <span className="contacts__status-dot" />
+            </div>
+            }
             className="contacts__window"
         >
             <div className="contact-page__text-container">

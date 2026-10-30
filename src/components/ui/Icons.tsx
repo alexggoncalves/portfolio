@@ -145,8 +145,11 @@ export const TeamIcon = (props: IconProps) => (
 
 export const CheckboxIcon = ({ active, ...props }: IconProps & { active: boolean }) => (
     <StrokeIcon {...props}>
-        <rect width="18" height="18" x="3" y="3" rx="2" />
-        {active && <path d="m15 9-6 6M9 9l6 6" />}
+        <rect
+            width="20" height="20" x="2" y="2" rx="4"
+            fill="currentColor"
+            fillOpacity={active ? 1 : 0}
+        />
     </StrokeIcon>
 );
 
@@ -202,9 +205,10 @@ export const GithubIcon = (props: IconProps) => (
     </FillIcon>
 );
 
-export const TrashIcon = (props: IconProps) => (
+export const BrushIcon = (props: IconProps) => (
     <StrokeIcon {...props}>
-        <path d="M10 11v6M14 11v6M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <path d="m16 22-1-4M19 14a1 1 0 0 0 1-1v-1a2 2 0 0 0-2-2h-3a1 1 0 0 1-1-1V4a2 2 0 0 0-4 0v5a1 1 0 0 1-1 1H6a2 2 0 0 0-2 2v1a1 1 0 0 0 1 1"></path>
+        <path d="M19 14H5l-1.973 6.767A1 1 0 0 0 4 22h16a1 1 0 0 0 .973-1.233zM8 22l1-4"></path>
     </StrokeIcon>
 );
 
@@ -276,9 +280,8 @@ export const MenuIcon = (props: IconProps) => (
     </StrokeIcon>
 );
 
-// export const MenuIcon = (props: IconProps) => (
-//     <StrokeIcon {...props}>
-//         <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-//         <path d="M7 8h10M7 12h10M7 16h10"></path>
-//     </StrokeIcon>
-// );
+export const FilterIcon = (props: IconProps) => (
+    <StrokeIcon {...props}>
+        <path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"></path>
+    </StrokeIcon>
+);

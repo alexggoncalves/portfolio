@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type RefObject } from "react";
 import type { Media } from "../../../../data/content";
+import { PlayIcon } from "../../../ui/Icons";
 
 const toMobileSrc = (src: string) => src.replace(/\.[^./]+$/, "-mobile.webp");
 
@@ -11,15 +12,22 @@ type Props = {
 };
 
 function MediaItem({ item, active, near, videoRef }: Props) {
+    const localVideo = useRef<HTMLVideoElement | null>(null);
+
     const [mobileMissing, setMobileMissing] = useState(false);
     const [ratio, setRatio] = useState<number>();
-    const localVideo = useRef<HTMLVideoElement | null>(null);
+    const [paused, setPaused] = useState(true);
 
     useEffect(() => {
         const video = localVideo.current;
         if (!video) return;
         if (!active) video.pause();
     }, [active]);
+
+    const playVideo = (e: MouseEvent) => {
+        e.stopPropagation();
+        localVideo.current?.play().catch(() => { });
+    };
 
     const readImageRatio = (img: HTMLImageElement | null) => {
         if (img?.complete && img.naturalWidth) {
@@ -62,6 +70,8 @@ function MediaItem({ item, active, near, videoRef }: Props) {
                         onLoadedMetadata={(e) =>
                             setRatio(e.currentTarget.videoWidth / e.currentTarget.videoHeight)
                         }
+                        onPlay={() => setPaused(false)}
+                        onPause={() => setPaused(true)}
                         aria-label={item.alt}
                     />
                 );
@@ -77,6 +87,17 @@ function MediaItem({ item, active, near, videoRef }: Props) {
     return (
         <div className="media-item" style={{ "--ratio": ratio } as CSSProperties}>
             {renderMedia()}
+            {item.type === "video" && (
+                <button
+                    type="button"
+                    className={`video__play-button ${paused ? "visible" : ""}`}
+                    onClick={playVideo}
+                    aria-label="Play video"
+                    inert={!paused}
+                >
+                    <PlayIcon />
+                </button>
+            )}
         </div>
     );
 }

@@ -5,7 +5,7 @@
         "subtitle": "Game Prototype",
         "tags": ["game-dev", "3d", "generative"],
         "year": "2023/2026",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/endless-purrs-thumbnail.webp",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/endless-purrs-card.webp",
         "description": [
             "In Endless Purrs, you step into the boots of a forest wizard who's lost his most treasured companions, his cats. Guided by meows, you journey through an ever-changing forest in search of them.",
             "The game's environment is generated using a real-time implementation of the Wave Function Collapse algorithm, ensuring that every playthrough is a unique experience.",
@@ -110,8 +110,8 @@
         "title": "Gary – The Wizard",
         "subtitle": "Character Design and Animation",
         "tags": ["game-dev", "3d", "animation"],
-        "year": "2023",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/gary-thumbnail.webp",
+        "year": "2024",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/gary-card.webp",
         "description": [
             "Gary is a wizard who lives alone in a magical forest, caring for his only companions: his cats. Made for an animation course, he was my chance to take a character through the full 3D pipeline.",
             "I sculpted, retopologized, rigged, and animated Gary in Blender and textured him in Substance 3D Painter. Then I brought him into Unity, where I built a simple animation controller and a C# player controller."
@@ -271,8 +271,8 @@
         "title": "Frogger VR",
         "subtitle": "VR Game Demo",
         "tags": ["game-dev", "3d", "vr", "interaction-design"],
-        "year": "2023",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/frogger-vr-thumbnail.webp",
+        "year": "2025",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/frogger-vr-card.webp",
         "description": [
             "A VR reimagining of Konami’s 1981 arcade classic, made for a virtual reality course. Running late for work, the frog must reach the train station in time, crossing a busy road, railway tracks, and a polluted river along the way.",
             "Built in Unity with OpenXR and the XR Interaction Toolkit, with locomotion, obstacles, interactions, and the game loop coded in C#. The level was designed and partly modeled in Blender, combined with external assets."
@@ -391,7 +391,7 @@
         "subtitle": "3D Environment and Scale Model",
         "tags": ["3d"],
         "year": "2023",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/mirage-thumbnail.webp",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/mirage-card.webp",
         "description": [
             "A small 3D environment of a sandstone island village, inspired by Michiel Schrijver’s paintings and the cliffside architecture of Positano and the Amalfi Coast. Made for a modeling and materialization course, it’s built around verticality and repetition, with stacked buildings rising toward a central tower, stairways winding between them, and a hidden passage waiting to be explored.",
             "I blocked out the shapes in Blender, refined the model in Rhino for precision, and then brought it into the physical world as a scale model built from laser-cut MDF panels."
@@ -428,6 +428,7 @@
             {
                 "type": "row",
                 "title": "Back Top Views",
+                "contain": true,
                 "items": [
                     {
                         "type": "image",
@@ -454,6 +455,7 @@
             {
                 "type": "row",
                 "title": "Materialization",
+                "contain": true,
                 "items": [
                     {
                         "type": "image",
@@ -470,6 +472,7 @@
             {
                 "type": "single",
                 "title": "Wood Blocks",
+                "contain": true,
                 "media": {
                     "type": "image",
                     "src": "https://cloud.alexgg.com/mirage/mirage_pieces.webp",
@@ -479,6 +482,7 @@
             {
                 "type": "row",
                 "title": "Materialization Process",
+                "contain": true,
                 "items": [
                     {
                         "type": "image",
@@ -499,8 +503,8 @@
         "title": "FeelsLab.",
         "subtitle": "AI Medicine Generator",
         "tags": ["frontend", "backend", "generative"],
-        "year": "2023",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/feels-lab-thumbnail.webp",
+        "year": "2025",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/feels-lab-card.webp",
         "description": [
             "A web app that turns emotions into fictional medicines that amplify feelings instead of suppressing them. Made for a computational creativity course, it lets users pick an emotion from a valence wheel and generates a complete medicine with a name, effects, and side effects, plus a forecast of how their day would go under its influence.",
             "Each medicine is generated step by step through a chain of prompts to the OpenAI API, running on a Node.js and Express backend with a React frontend."
@@ -576,8 +580,8 @@
         "title": "Endless",
         "subtitle": "Interactive Music Explorer",
         "tags": ["frontend", "backend", "interaction-design"],
-        "year": "2023",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/endless-thumbnail.webp",
+        "year": "2026",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/endless-card.webp",
         "description": [
             "An infinite canvas for exploring Spotify playlists in a different way. Tracks from the selected playlist are tiled endlessly across the space, and you drift through them, hearing a preview of each song as you hover over it. Clicking a track opens a page with more about the song, and you can swap to any public playlist at any time.",
             "The frontend was built in React and React Three Fiber, with a Node.js and Express backend that handles Spotify authentication and fetches the track previews."
@@ -663,7 +667,7 @@
         "subtitle": "Art Collection Explorer",
         "tags": ["frontend"],
         "year": "2023",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/muse-thumbnail.webp",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/muse-card.webp",
         "description": [
             "A search platform for exploring the art collection of the Art Institute of Chicago. Users can search the collection, filter by material and technique, sort results, and browse artworks in a grid. Clicking an artwork opens its page on the museum’s website.",
             "Built in React and deployed on Vercel, with a serverless function that proxies and caches artwork images from the museum’s API."
@@ -685,7 +689,7 @@
         "subtitle": "Typography Magazine",
         "tags": ["print", "graphic-design", "frontend"],
         "year": "2023",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/alta-e-baixa-thumbnail.webp",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/alta-e-baixa-card.webp",
         "description": [
             "A typography magazine created for an editorial design course, in both print and digital form. Its name plays on Coimbra’s upper and lower town and on uppercase and lowercase letters, and the issue explores typography from its history to recent innovations, with bold, type-driven layouts throughout.",
             "The print edition was designed in InDesign, and the digital version was built as a web magazine in React."
@@ -781,8 +785,8 @@
         "title": "Malleus VR",
         "subtitle": "A Serendipitous Instrument",
         "tags": ["vr", "game-dev", "3d", "interaction-design"],
-        "year": "2026",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/malleus-thumbnail.webp",
+        "year": "2022/2026",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/malleus-card.webp",
         "description": [
             "A hand-tracked VR instrument for discovering sound combinations through experimentation and serendipity. It started as a 2D university prototype made with a team, using webcam hand tracking. I later rebuilt it on my own for VR with the Meta XR SDK, refining the sound synthesis to make each pin combination more distinct.",
             "You start in front of a blackboard, surrounded by theater curtains. Using only hand movements and gestures, you spawn pins of three waveform types, attach them to the board, and connect them with strings that you strum like a real string instrument. The pin pairing shapes the sound’s character, the distance between the pins sets its pitch, and a switch toggles between free frequency and chromatic snapping."
@@ -825,7 +829,7 @@
         "subtitle": "A Short Movie",
         "tags": ["film"],
         "year": "2021",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/undone-thumbnail.webp",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/undone-card.webp",
         "description": [
             "A short movie made around the concept of the triptych. A man wakes up on the floor of his house, sensing that something isn’t right. When he hears a knock at the door and follows it, he finds himself trapped in a fragmented loop of the same moment, slowly realizing he’s far from reality.",
             "Developed by a team of four and filmed during the COVID quarantine, the film went through the full production process, from script and storyboard to filming and editing."
@@ -940,8 +944,8 @@
         "title": "Waver",
         "subtitle": "Interactive Music Device",
         "tags": ["interaction-design", "generative"],
-        "year": "2022",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/waver-thumbnail.webp",
+        "year": "2024",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/waver-card.webp",
         "description": [
             "An interactive device designed to help children aged 9 to 12 learn musical scales. Made for an interface technologies course, it plays notes based on the proximity of the user’s hand to its ultrasonic sensor, while an RGB LED changes color with each note. Two knobs switch between three instruments (piano, violin, and oboe) and three scales. Once plugged into a computer, an on-screen interface shows each note’s position in the scale, its sound wave, and its frequencies.",
             "The housing was modeled in Blender around an Arduino board, then 3D printed and painted. The interface was built in Processing, synthesizing each instrument’s sound in real time."
@@ -1067,8 +1071,8 @@
         "title": "Samar Maakaroun",
         "subtitle": "Interactive Installation",
         "tags": ["interaction-design", "generative" ],
-        "year": "2022",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/samar-thumbnail.webp",
+        "year": "2024",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/samar-card.webp",
         "description": [
             "An exhibition concept and visual identity built around the work of the Lebanese designer Samar Maakaroun. The identity is based on a kit of modular shapes that combine into letters and flowing lines, which carry through the posters, the exhibition space, and an interactive installation.",
             "My role was developing the interactive installation and modeling the 3D versions of the modular letters in Blender. The installation unfolds across two moments of the exhibition. In the first, visitors see a projected section of a larger canvas and use their hands, tracked by a webcam, to steer a line that grows from the identity’s modular shapes. At the end of the exhibition, a second projection shows the full canvas in real time, revealing the path everyone has drawn together."
@@ -1246,8 +1250,8 @@
         "title": "Music Visualizers",
         "subtitle": "Audio-Reactive Experiments",
         "tags": ["generative", "animation"],
-        "year": "2022",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/visualizers-thumbnail.webp",
+        "year": "2019",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/visualizers-card.webp",
         "description": [
             "Three audio-reactive visualizers built in Processing, each turning a song's rhythm and frequencies into a different visual in real time.",
             "The Text visualizer builds a typographic wall from the song's title and artist that rotates to the beat, with synced lyrics on top.",
@@ -1341,8 +1345,8 @@
         "title": "Crimes Exemplares",
         "subtitle": "Poster Puzzle",
         "tags": ["print", "graphic-design"],
-        "year": "2022",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/crimes-exemplares-poster-thumbnail.webp",
+        "year": "2021",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/crimes-exemplares-poster-card.webp",
         "description": [
             "A poster puzzle based on Max Aub’s book *Crimes Exemplares*. Each A3 poster tells one of the book’s short stories, with visuals built around that story. Lines in three colors run across all of the posters, and when they’re joined together they form “the face of the killer”.",
             "Fully assembled, the puzzle measures 1.28 × 1.48 m. The posters are held together with plastic snap fasteners."
@@ -1447,8 +1451,8 @@
         "title": "Crimes Exemplares",
         "subtitle": "Interactive Narrative",
         "tags": ["interaction-design", "game-dev", "3d"],
-        "year": "2022",
-        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/crimes-exemplares-interactive-thumbnail.webp",
+        "year": "2022/2026",
+        "thumbnailSrc": "https://cloud.alexgg.com/thumbnails/crimes-exemplares-interactive-card.webp",
         "description": [
             "An interactive exploration of Max Aub’s book *Crimes Exemplares*, where each story becomes its own crime scene. You control a sphere of shifting threads in three colors that leaves a trail as it moves, and you follow a line of crime scene tape from one story to the next. At each scene, the story is told in text boxes marked with numbered evidence markers.",
             "Developed in Unity, the project is set on an enclosed island modeled in Blender and filled with monochrome hand-drawn illustrations placed in 3D space."

@@ -13,7 +13,8 @@ type ProjectCardProps = {
 
 function ProjectCard({ project, route, variant = "full" }: ProjectCardProps) {
     const isMobile = useMediaQuery(MOBILE_QUERY);
-
+    const maxTags = isMobile ? 3 : 2;
+    
     return (
         <Link
             to={route}
@@ -28,7 +29,7 @@ function ProjectCard({ project, route, variant = "full" }: ProjectCardProps) {
                     alt=""
                 />
                 <div className="project-card__year">{project.year}</div>
-                {isMobile && variant === "full" && <ProjectCardTags tagIds={project.tags} maxTags={3} />}
+                { variant === "full" && <ProjectCardTags tagIds={project.tags} maxTags={maxTags} />}
             </div>
 
             {variant === "full" &&
@@ -37,8 +38,6 @@ function ProjectCard({ project, route, variant = "full" }: ProjectCardProps) {
                         <h3 className="project-card__title">{project.title}</h3>
                         <p className="project-card__subtitle">{project.subtitle}</p>
                     </div>
-
-                    {!isMobile && <ProjectCardTags tagIds={project.tags} maxTags={2} />}
                 </>
             }
         </Link>

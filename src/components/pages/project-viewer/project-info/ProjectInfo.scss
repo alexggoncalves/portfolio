@@ -52,7 +52,7 @@
             margin-bottom: 14px;
             font-weight: 400;
 
-            &:last-child{
+            &:last-child {
                 margin-bottom: 0;
             }
         }
@@ -174,4 +174,85 @@
         width: 25px;
         height: auto;
     }
+}
+
+// ====================
+// PROJECT INFO DRAWER
+// ====================
+.project-drawer {
+    .drawer__header .project-info__tags {
+        margin-top: 10px;
+        margin-left: -2px;
+        margin-bottom: 0px;
+        gap: 6px;
+
+        > div {
+            font-weight: 600;
+        }
+    }
+
+    .drawer__body .project-info__description {
+        margin-top: var(--drawer-padding);
+        margin-bottom: 0;
+    }
+
+    .project-tools__window {
+        flex-shrink: 0;
+        min-width: 65%;
+        margin-bottom: 8px;
+    }
+
+    .project-team__window {
+        flex-shrink: 0;
+        max-width: 100%;
+    }
+}
+
+.project-drawer__meta {
+    @include mono-label;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    color: rgb(200, 200, 200);
+    margin-bottom: 15px;
+
+    span {
+        margin-right: 8px;
+    }
+}
+
+.project-drawer__heading {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 8px;
+    
+}
+
+.project-drawer__title-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.project-drawer__title {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    line-height: 1;
+}
+
+.project-drawer__subtitle {
+    font-family: "Space Mono", monospace;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: rgb(200, 200, 200);
+}
+
+.project-drawer__links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }

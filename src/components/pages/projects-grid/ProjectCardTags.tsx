@@ -18,7 +18,10 @@ function ProjectCardTags({ tagIds, maxTags = 2 }: ProjectCardTagsProps) {
                 <span
                     key={tag.id}
                     className="project-card__tag"
-                    style={{ backgroundColor: tag.color, color:tag.textColor}}
+                    style={{
+                        backgroundColor: tag.color,
+                        color: "rgb(30,30,30)"
+                    }}
                 >
                     {tag.name}
                 </span>

@@ -4,8 +4,6 @@ import type { MediaSlide, Project } from "../../../../data/content";
 import MediaRenderer from "./MediaRenderer";
 import MediaLabel from "./MediaLabel";
 import MediaStrip from "./MediaStrip";
-import { PlayIcon } from "../../../ui/Icons";
-import useVideoPaused from "../../../../hooks/useVideoPaused";
 import useMediaQuery, { MOBILE_QUERY } from "../../../../utils/useMediaQuery";
 import MediaCarousel from "./MediaCarousel";
 
@@ -29,17 +27,10 @@ const MediaViewer = ({ project, enabled }: MediaViewerProps) => {
     const slides = project.media;
     const currentSlide = slides[index];
     const fitLocked = !!currentSlide?.contain;
-    const isVideo = isVideoSlide(currentSlide);
-    const paused = useVideoPaused(videoRef, index);
-    const showPlayButton = isVideo && paused;
 
     const [fit, setFit] = useState<Fit>("cover");
     const toggleFit = () => setFit((f) => (f === "cover" ? "contain" : "cover"));
     const getFit = (slide?: MediaSlide): Fit => (slide?.contain || isMobile ? "contain" : fit);
-
-    const playVideo = () => {
-        videoRef.current?.play().catch(() => { });
-    };
 
     const togglePlay = () => {
         const video = videoRef.current;
@@ -96,18 +87,7 @@ const MediaViewer = ({ project, enabled }: MediaViewerProps) => {
                         onToggleFit={fitLocked ? undefined : toggleFit}
                     />
                 </div>
-
             </div>
-
-            <button
-                type="button"
-                className={`video__play-button ${showPlayButton ? "visible" : ""}`}
-                onClick={playVideo}
-                aria-label="Play video"
-                inert={!showPlayButton}
-            >
-                <PlayIcon />
-            </button>
         </div>
     );
 }
