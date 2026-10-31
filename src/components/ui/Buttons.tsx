@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactNode, RefObject } from "react";
 
 type PanelToggle = {
     icon: ReactNode;
@@ -66,4 +66,34 @@ export const WindowActionButton = ({ children, onAction, label }: WindowActionBu
     >
         {children}
     </button>)
+}
+
+type SplitButtonProps = {
+    label: string;
+    icon: ReactNode;
+    ref?: RefObject<HTMLButtonElement | null> | undefined;
+    onAction: () => void;
+    className?: string;
+    active?: boolean;
+    ariaLabel?: string;
+    ariaControls?: string;
+}
+
+export const SplitButton = ({ label, icon, ref, onAction, className = "", active, ariaLabel, ariaControls }: SplitButtonProps) => {
+    return <button
+        ref={ref}
+        type="button"
+        className={`button--split ${className}`}
+        onClick={onAction}
+        aria-label={ariaLabel}
+        aria-expanded={active}
+        aria-controls={ariaControls}
+    >
+        <div className="button--split__label">
+            {label}
+        </div>
+        <div className="button--split__icon">
+            {icon}
+        </div>
+    </button>
 }

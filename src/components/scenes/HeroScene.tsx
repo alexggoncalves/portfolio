@@ -5,16 +5,20 @@ import { Canvas } from "@react-three/fiber";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Euler, Vector3 } from "three";
 import { degToRad, radToDeg } from "three/src/math/MathUtils.js";
+import useMediaQuery, { MOBILE_QUERY } from "../../utils/useMediaQuery";
 
 useGLTF.preload('/hero_scene_blockout.glb');
 
-const focal = 50     // Blender focal length
+let focal = 50     // Blender focal length
+const focalMobile = 25;
 const sensor = 36 // Blender's sensor width
 const aspect = 16 / 9
 const cameraPos = new Vector3(0, 1.14, 6);
 const cameraRot = new Euler(degToRad(-2), 0, 0);
 
 export function SceneCamera() {
+    const isMobile = useMediaQuery(MOBILE_QUERY);
+    if(isMobile) focal = focalMobile;
     const hFov = 2 * Math.atan(sensor / 2 / focal)
     const fov = radToDeg(2 * Math.atan(Math.tan(hFov / 2) / aspect));
 
@@ -27,6 +31,8 @@ function Room() {
 }
 
 function HeroScene({ active, paused = false }: { active: boolean; paused?: boolean }) {
+    
+    
     const containerRef = useRef<HTMLDivElement>(null);
     const [inView, setInView] = useState(true);
 

@@ -215,8 +215,35 @@
 @include mobile {
     .hero__window {
         left: auto;
+        // max-width: 350px;
         bottom: calc(var(--main-padding) * 1.3);
         margin-inline: var(--side-padding);
+
+        .window__header {
+            font-size: 0.8rem;
+            min-height: 46px;
+            .window-header__icon{
+                height: auto;
+                width: 18px;
+            }
+        }
+
+        .window__content {
+            padding: 14px 20px 20px 20px;
+        }
+
+        .hero__greeting {
+            display: block;
+            font-size: 1.3rem;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .hero__description {
+            font-size: 0.9rem;
+            display: block;
+            color: rgb(200, 200, 200);
+        }
     }
 
     .hero__scroll-cue {

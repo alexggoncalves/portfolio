@@ -26,9 +26,11 @@ body {
     --background-color: rgb(20, 20, 20);
     --nav-height: 88px;
     --logo-width: 150px;
-    --menu-button-size: 44px;
+    --menu-button-size: 38px;
     --menu-button-nudge: 3px;
     --menu-button-nudge-mobile: 6px;
+    --page-slide-duration: 0.6s;
+    --media-strip-height: 70px;
 }
 
 :root {
@@ -82,15 +84,16 @@ main {
 }
 
 // Reveal transition
-header,
-main,
+.page .window,
 footer {
     transition: opacity 1s ease;
 }
 
 body:not(.revealed) {
-    header,
-    main,
+    #logo,
+    .menu-button,
+    .page .window,
+    .hero__scroll-cue,
     footer,
     .hero__scene {
         opacity: 0;
@@ -130,15 +133,20 @@ canvas,
 .reveal {
     position: relative;
     z-index: 1;
-    opacity: 0;
     transform: scale(0.95);
-    transition:
-        opacity 0.6s ease,
-        transform 0.6s ease;
+    transition: transform 0.6s ease;
+
+    > .window {
+        opacity: 0;
+        transition: opacity 0.6s ease;
+    }
 
     &--visible {
-        opacity: 1;
         transform: none;
+
+        > .window {
+            opacity: 1;
+        }
     }
 }
 
@@ -172,7 +180,7 @@ canvas,
 // Fade out: each block fades by itself, so the glass keeps its blur
 .page-leaving .page :is(.window, footer) {
     opacity: 0;
-    transition: opacity 0.15s ease;
+    transition: opacity 0.22s ease;
 }
 
 .page-leaving .page {
@@ -187,11 +195,7 @@ canvas,
 }
 
 .page :is(.window, footer) {
-    animation: page-in 0.35s ease;
-}
-
-.page-pop .page :is(.window, footer) {
-    animation: none;
+    animation: page-in 0.4s ease;
 }
 
 @include mobile {
@@ -227,6 +231,9 @@ canvas,
 @media (prefers-reduced-motion: reduce) {
     .reveal {
         transform: none;
-        transition: opacity 0.3s ease;
+
+        > .window {
+            transition: opacity 0.3s ease;
+        }
     }
 }

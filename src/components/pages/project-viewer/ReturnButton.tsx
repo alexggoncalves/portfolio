@@ -31,10 +31,9 @@ function ReturnButton({ enabled }: { enabled: boolean }) {
         <>
             <Link
                 to={backPath}
-                className={`project-viewer__return button--glass`}
+                className={`project-viewer__return`}
             >
-                <span>Close</span>
-                <CloseIcon/>
+                <CloseIcon />
             </Link>
         </>
     );

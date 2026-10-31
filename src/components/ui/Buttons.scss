@@ -144,6 +144,49 @@ a {
     }
 }
 
+.button--split {
+    @include glass-panel;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    // border: none;
+    height: var(--menu-button-size);
+    padding: 0;
+    gap: 0;
+    border-radius: 12px;
+    overflow: hidden;
+    align-self: center;
+    font-family: "Space Grotesk";
+
+    div {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        
+    }
+
+    &__label {
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        background-color: rgba(30, 30, 30, 0.6);
+        color: white;
+        padding-inline: 16px;
+    }
+
+    &__icon {
+        background-color: rgb(255, 255, 255,0.9);
+        color: var(--background-color);
+        
+        padding-inline: 9px 10px;
+        svg {
+            width: 16px;
+            height: 16px;
+            pointer-events: none;
+            stroke-width: 2.8;
+        }
+    }
+}
+
 @include mobile {
     .button--action-icon {
         width: 40px;

@@ -12,7 +12,9 @@ header {
     align-items: center;
 
     z-index: 3;
-    transition: opacity 1s ease, z-index 0s linear 0.5s;
+    transition:
+        opacity 1s ease,
+        z-index 0s linear 0.5s;
     pointer-events: none;
 
     > * {
@@ -28,7 +30,9 @@ header {
     z-index: 15;
 
     filter: drop-shadow(1px 1px 4px rgb(0, 0, 0, 0.4));
-    transition: scale 0.2s ease;
+    transition:
+        scale 0.2s ease,
+        opacity 1s ease;
 
     svg {
         display: block;
@@ -43,31 +47,13 @@ header {
 }
 
 .menu-button {
-    height: var(--menu-button-size);
-    padding-left: 18px;
-    gap: 13px;
     translate: 0 var(--menu-button-nudge);
 
-    span {
-        text-transform: uppercase;
-        font-size: 0.94rem;
-        font-weight: 100;
-        letter-spacing: 0.5px;
-        font-family: "Space Grotesk";
-    }
-
-    svg {
-        width: 16px;
-        height: 16px;
-        pointer-events: none;
-        margin-right: 1px;
-    }
-
-    &.hide {
-        color: transparent;
-        background-color: rgb(30, 30, 30, 0);
-        border-color: transparent;
-    }
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        scale 0.2s ease,
+        opacity 0 ease 0.4s;
 }
 
 .menu__window {

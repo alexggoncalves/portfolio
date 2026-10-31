@@ -3,6 +3,7 @@
 .project-card {
     display: block;
     position: relative;
+    width: auto;
 
     user-select: none;
     -webkit-user-drag: none;
@@ -84,7 +85,7 @@
     aspect-ratio: 16 / 10;
     border-radius: 8px;
     
-    background: rgb(40, 40, 40);
+    background: rgb(104, 104, 104);
 
     img {
         display: block;
@@ -128,10 +129,6 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
-
-    
-
-    
     
     opacity: 0.9;
     color: var(--background-color);

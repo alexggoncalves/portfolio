@@ -42,7 +42,7 @@ function Hero() {
                     className="hero__window"
                 >
                     <span className='hero__greeting'>Hi, I'm Alexandre.</span>
-                    <span className='hero__description'>Designer and developer... I make games, web experiences and everything in between.</span>
+                    <span className='hero__description'>Designer and developer. I make games, web experiences and everything in between.</span>
                 </Window>
 
                 <button

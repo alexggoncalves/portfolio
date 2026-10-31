@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router";
 
-export const PAGE_FADE_MS = 150;
+export const PAGE_FADE_MS = 260;
 
 export default function usePageNavigate() {
     const navigate = useNavigate();

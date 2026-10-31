@@ -7,7 +7,7 @@ import useUIStore from "../../stores/UIStore";
 
 import { MenuIcon, CloseIcon, Logo, ArrowUpRightIcon, GithubIcon, LinkedInIcon, DownloadIcon } from "../ui/Icons";
 import Window from "../ui/Window";
-import { WindowActionButton } from "../ui/Buttons";
+import { SplitButton, WindowActionButton } from "../ui/Buttons";
 import { padNumber } from "../../utils/stringUtils";
 import usePageNavigate from "../../hooks/usePageNavigate";
 import PageLink from "../ui/PageLink";
@@ -21,9 +21,12 @@ const LINKS = [
 function Nav() {
     const interfaceHidden = useUIStore((s) => s.interfaceHidden);
     const pageNavigate = usePageNavigate();
+    // const { pathname } = useLocation();
 
     const toggleRef = useRef<HTMLButtonElement>(null);
     const [isOpen, setIsOpen] = useState(false);
+
+    // const currentLink = LINKS.find((link) => link.to !== "/" && pathname.startsWith(link.to)) ?? LINKS[0];
 
     useEffect(() => {
         if (!isOpen) return;
@@ -55,18 +58,17 @@ function Nav() {
                 <Logo />
             </PageLink>
 
-            <button
+            <SplitButton
+                // label={currentLink.label}
+                label="Menu"
+                icon={<MenuIcon />}
                 ref={toggleRef}
-                type="button"
-                className={`menu-button button--glass ${isOpen ? "hide" : ""}`}
-                onClick={() => setIsOpen(true)}
-                aria-label={"Open menu"}
-                aria-expanded={isOpen}
-                aria-controls="main-nav"
-            >
-                <span>Menu</span>
-                <MenuIcon />
-            </button>
+                onAction={() => setIsOpen(true)}
+                className="menu-button"
+                active={isOpen}
+                ariaLabel="Open menu"
+                ariaControls="main-nav"
+            />
 
             <Window
                 title="Menu"

@@ -2,6 +2,7 @@ import { useEffect, useState, type RefObject } from "react";
 import { CoverMediaIcon, FitMediaIcon, MaximizeMediaIcon, MinimizeMediaIcon } from "../../../ui/Icons";
 import VideoControls from "./VideoControls";
 import useMediaQuery, { MOBILE_QUERY } from "../../../../utils/useMediaQuery";
+import ToggleInterfaceButton from "../ToggleInterfaceButton";
 
 export type Fit = "cover" | "contain";
 
@@ -40,6 +41,7 @@ function MediaControls({ videoRef, fullscreenRef, isVideo, slideKey, fit, onTogg
         <div className="media-controls">
             {isVideo && <VideoControls key={slideKey} videoRef={videoRef} />}
             
+            {!isFullscreen && !isMobile && <ToggleInterfaceButton />}
 
             {onToggleFit && !isFullscreen && !isMobile && (
                 <button

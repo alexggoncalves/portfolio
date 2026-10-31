@@ -1,4 +1,4 @@
-import { Outlet, useLocation, useNavigationType, useParams } from "react-router";
+import { Outlet, useLocation, useParams } from "react-router";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { View } from "@react-three/drei";
 
@@ -27,7 +27,6 @@ const App = () => {
 
     const { pathname } = useLocation();
     const { projectId } = useParams();
-    const navigationType = useNavigationType();
 
     const { loaded, progress } = useImagePreloader(imagesToPreload);
     useStableCanvasSizes();
@@ -43,7 +42,7 @@ const App = () => {
             setVisibleProject(projectId);
             return;
         }
-        const timeout = setTimeout(() => setVisibleProject(null), 400);
+        const timeout = setTimeout(() => setVisibleProject(null), 500);
         return () => clearTimeout(timeout);
     }, [projectId]);
 
@@ -69,13 +68,6 @@ const App = () => {
         document.documentElement.classList.remove("page-leaving");
     }, [pathname]);
 
-    // Disable transition when navigating with browser's back and forward
-    useLayoutEffect(() => {
-        const html = document.documentElement;
-        html.classList.remove("page-leaving");
-        html.classList.toggle("page-pop", navigationType === "POP");
-    }, [pathname, navigationType]);
-
     return (
         <>
             <LoadingScreen progress={progress} onReveal={() => setRevealed(true)} />
@@ -84,13 +76,12 @@ const App = () => {
                 className="app-canvas"
                 aria-hidden="true"
                 eventSource={document.getElementById("root")!}
-                frameloop={projectId && revealed ? "never" : "always"}
             >
                 <View.Port />
             </Canvas>
 
             <StarrySkyScene />
-            <HeroScene active={section === "home"} paused={!!projectId}/>
+            <HeroScene active={section === "home"} paused={!!projectId} />
 
             <div className="app-content" inert={!revealed}>
                 <Header />

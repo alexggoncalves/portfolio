@@ -38,8 +38,20 @@ const MediaViewer = ({ project, enabled }: MediaViewerProps) => {
         if (video.paused) video.play().catch(() => { });
         else video.pause();
     };
+
+    const toggleFullscreen = () => {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else viewerRef.current?.requestFullscreen?.();
+    };
+
+    // Double-click on the media toggles fullscreen, but not on the controls, strip or other buttons
+    const onDoubleClick = (e: React.MouseEvent) => {
+        if ((e.target as Element).closest("button, a, .media-dock")) return;
+        toggleFullscreen();
+    };
+
     return (
-        <div ref={viewerRef} className="media-viewer">
+        <div ref={viewerRef} className="media-viewer" onDoubleClick={onDoubleClick}>
             {isMobile ? <MediaCarousel
                 slides={slides}
                 index={index}

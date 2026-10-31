@@ -274,9 +274,7 @@ export const PhoneIcon = (props: IconProps) => (
 
 export const MenuIcon = (props: IconProps) => (
     <StrokeIcon {...props}>
-        <path d="M4 5h16" />
-        <path d="M4 12h16" />
-        <path d="M4 19h16" />
+       <path d="M3 5h18M3 12h18M3 19h18"></path>
     </StrokeIcon>
 );
 
