@@ -80,6 +80,35 @@
     pointer-events: none;
 }
 
+.view-control-buttons {
+    position: absolute;
+    bottom: var(--main-padding);
+    right: var(--side-padding);
+    display: flex;
+    gap: 10px;
+    z-index: 0;
+
+    .button--glass{
+        width: 50px;
+        height: 50px;
+
+        svg {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    .back-button{
+        width: auto;
+        text-transform: uppercase;
+
+        svg {
+            width: 16px;
+            height: auto;
+        }
+    }
+}
+
 // ===================
 // SELECTED PROJECTS
 // ===================

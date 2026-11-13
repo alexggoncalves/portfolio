@@ -274,12 +274,28 @@ export const PhoneIcon = (props: IconProps) => (
 
 export const MenuIcon = (props: IconProps) => (
     <StrokeIcon {...props}>
-       <path d="M3 5h18M3 12h18M3 19h18"></path>
+        <path d="M3 5h18M3 12h18M3 19h18"></path>
     </StrokeIcon>
 );
 
 export const FilterIcon = (props: IconProps) => (
     <StrokeIcon {...props}>
         <path d="M10 20a1 1 0 0 0 .553.895l2 1A1 1 0 0 0 14 21v-7a2 2 0 0 1 .517-1.341L21.74 4.67A1 1 0 0 0 21 3H3a1 1 0 0 0-.742 1.67l7.225 7.989A2 2 0 0 1 10 14z"></path>
+    </StrokeIcon>
+);
+
+export const CameraIcon = (props: IconProps) => (
+    <StrokeIcon {...props}>
+        <path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"></path>
+        <circle cx="12" cy="13" r="3"></circle>
+    </StrokeIcon>
+);
+
+export const VinylIcon = (props: IconProps) => (
+    <StrokeIcon {...props}>
+        <circle cx="12" cy="12" r="10"></circle>
+        <path d="M6 12c0-1.7.7-3.2 1.8-4.2"></path>
+        <circle cx="12" cy="12" r="2"></circle>
+        <path d="M18 12c0 1.7-.7 3.2-1.8 4.2"></path>
     </StrokeIcon>
 );

@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
-import { AtIcon, ChevronDown, SmileIcon } from '../../ui/Icons';
+import { AtIcon, CameraIcon, ChevronDown, ReturnIcon, SmileIcon, VinylIcon } from '../../ui/Icons';
 import Window from '../../ui/Window';
+import useSceneStore from '../../../stores/sceneStore';
 
 function Hero() {
     const heroRef = useRef<HTMLElement>(null);
     const [scrolled, setScrolled] = useState(false);
+    const view = useSceneStore((s) => s.view)
+    const setView = useSceneStore((s) => s.setView)
 
     useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 10)
@@ -29,7 +32,7 @@ function Hero() {
         <span>Madeira, PT</span>
     </>
 
-    const headerRight = <SmileIcon className='window-header__icon'/>
+    const headerRight = <SmileIcon className='window-header__icon' />
 
     return (
         <>
@@ -53,6 +56,35 @@ function Hero() {
                     <span>Scroll</span>
                     <ChevronDown />
                 </button>
+
+                <div className={`view-control-buttons`}>
+                    {view === "Center" ? (<>
+                        <button
+                            type="button"
+                            className={`button--glass`}
+                            onClick={() => setView('Left')}
+                        >
+                            <CameraIcon/>
+                        </button>
+
+                        <button
+                            type="button"
+                            className={`button--glass`}
+                            onClick={() => setView('Right')}
+                        >
+                           <VinylIcon/>
+                        </button>
+
+                    </>) : <button
+                        type="button"
+                        className={`button--glass back-button`}
+                        onClick={() => setView('Center')}
+                    >
+                        <ReturnIcon/>
+                        <span>Back</span>
+                    </button>}
+                </div>
+
             </section>
         </>
     );

@@ -1,7 +1,6 @@
-import { PerspectiveCamera, View } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
-import { AdditiveBlending, ShaderMaterial, Vector3, type ColorRepresentation } from "three";
+import { AdditiveBlending, Points, ShaderMaterial, Vector3, type ColorRepresentation } from "three";
 
 const vertexShader = /* glsl */ `
     attribute float aSeed;
@@ -30,10 +29,11 @@ const fragmentShader = /* glsl */ `
         gl_FragColor = vec4(vec3(1.0), alpha);
     }
 `
-type StarsProps = { 
-    count?: number; 
-    radius?: number; 
-    size?: number };
+type StarsProps = {
+    count?: number;
+    radius?: number;
+    size?: number
+};
 
 const Stars = ({ count = 3500, radius = 100, size = 1 }: StarsProps) => {
     const dpr = useThree((s) => s.viewport.dpr);
@@ -70,7 +70,14 @@ const Stars = ({ count = 3500, radius = 100, size = 1 }: StarsProps) => {
     })
 
     return (
-        <points>
+        <points
+            frustumCulled={false}
+            onBeforeRender={function (this: Points, _r, _s, camera) {
+                this.position.copy(camera.position)
+                this.updateMatrixWorld()
+            }}
+        >
+            <color attach="material-color" args={['#ffffff' as ColorRepresentation]} />
             <bufferGeometry>
                 <bufferAttribute attach="attributes-position" args={[positions, 3]} />
                 <bufferAttribute attach="attributes-aSeed" args={[seeds, 1]} />
@@ -89,15 +96,4 @@ const Stars = ({ count = 3500, radius = 100, size = 1 }: StarsProps) => {
     );
 }
 
-type StarySkyProps = { count?: number; radius?: number ; backgroundColor?: ColorRepresentation};
-const StarrySkyScene = ({count = 3500, radius = 100, backgroundColor}: StarySkyProps) => {
-    return (
-        <View className="starry-sky__scene" aria-hidden="true">
-            {backgroundColor && <color attach="background" args={[backgroundColor]} />}
-            <PerspectiveCamera makeDefault position={[0, 0, 1]} />
-            <Stars count={count} radius={radius} size={1} />
-        </View>
-    );
-}
-
-export default StarrySkyScene;
+export default Stars;

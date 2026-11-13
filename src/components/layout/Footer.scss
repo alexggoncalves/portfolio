@@ -1,7 +1,7 @@
 @use "./../../styles/mixins.scss" as *;
 
 footer {
-    @include glass-panel;
+    background-color: var(--background-color);
     backdrop-filter: blur(0px);
     border-radius: 0;
     margin: 0 -1px 0 -1px;
@@ -17,7 +17,7 @@ footer {
     font-size: 0.8rem;
     color: rgb(255, 255, 255);
 
-    opacity: 0.6;
+    // opacity: 0.6;
     
     div {
         display: flex;

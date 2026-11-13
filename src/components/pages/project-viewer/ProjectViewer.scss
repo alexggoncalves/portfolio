@@ -218,7 +218,7 @@ html:has(.project-viewer.open) main::before {
 // Once covered, hide the page so nothing shows through the bars and the scenes stop drawing
 html:has(.project-viewer.open)
     body.revealed
-    :is(.page main > :not(.project-viewer), .hero__scene, .app-canvas) {
+    :is(.page main > :not(.project-viewer), .room__scene, .app-canvas) {
     visibility: hidden;
     transition: visibility 0s linear var(--page-slide-duration);
 }

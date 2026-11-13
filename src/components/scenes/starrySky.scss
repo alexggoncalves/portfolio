@@ -1,0 +1,35 @@
+// Covers the whole page (#root is the positioned parent) and scrolls natively with it
+.starry-sky {
+    position: absolute;
+    inset: 0;
+    z-index: -1; // above body::before background, below everything else
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.starry-sky__layer {
+    position: absolute;
+    inset: 0;
+    background-repeat: repeat;
+    background-position: 0 var(--star-shift, 0px);
+    animation: starry-swap 3s ease-in-out infinite alternate;
+}
+
+// Frame B runs mirrored, so A fades out while B fades in
+.starry-sky__layer--b {
+    animation-direction: alternate-reverse;
+}
+
+@keyframes starry-swap {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .starry-sky__layer {
+        animation: none;
+    }
+    .starry-sky__layer--b {
+        opacity: 0;
+    }
+}

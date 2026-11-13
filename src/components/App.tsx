@@ -11,8 +11,8 @@ import LoadingScreen from "./layout/LoadingScreen";
 import ProjectViewer from "./pages/project-viewer/ProjectViewer";
 import Footer from "./layout/Footer";
 import { Canvas } from "@react-three/fiber";
-import StarrySkyScene from "./scenes/StarrySkyScene";
-import HeroScene from "./scenes/HeroScene";
+import RoomScene from "./scenes/RoomScene";
+import StarrySky from "./scenes/StarrySky";
 
 const SECTION_TITLES = {
     home: "Alex - Creative Developer",
@@ -46,10 +46,25 @@ const App = () => {
         return () => clearTimeout(timeout);
     }, [projectId]);
 
-    // Scroll to top when the page changes
+    // Last scroll position before a page change (scrollY can already be clamped by the new, shorter page)
+    const lastScrollY = useRef(0);
+    useEffect(() => {
+        const onScroll = () => { lastScrollY.current = window.scrollY; };
+        window.addEventListener("scroll", onScroll, { passive: true });
+        return () => window.removeEventListener("scroll", onScroll);
+    }, []);
+
+    // Scroll to top when the page changes (and offset the stars so they don't jump)
     const section = pathname.startsWith("/work") ? "work" : pathname === "/contact" ? "contact" : "home";
     useLayoutEffect(() => {
+        const y = lastScrollY.current;
+        if (y) {
+            const root = document.documentElement.style;
+            const prev = parseFloat(root.getPropertyValue("--star-shift")) || 0;
+            root.setProperty("--star-shift", `${prev - y}px`);
+        }
         window.scrollTo({ top: 0, behavior: "instant" });
+        lastScrollY.current = 0;
     }, [section, loaded]);
 
     // Set page title for screen readers
@@ -80,8 +95,8 @@ const App = () => {
                 <View.Port />
             </Canvas>
 
-            <StarrySkyScene />
-            <HeroScene active={section === "home"} paused={!!projectId} />
+            <StarrySky />
+            <RoomScene active={section === "home"} paused={!!projectId} />
 
             <div className="app-content" inert={!revealed}>
                 <Header />
