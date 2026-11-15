@@ -106,7 +106,7 @@ const Room = () => {
         </mesh>
 
         <Moon from={nodes.Cam_Center.position} target={nodes.Moon_Target.position} />
-        <Ocean moonPos={nodes.Moon_Target.position} level={-2} tilt={0.07} size={160} />
+        <Ocean moonDir={nodes.Moon_Target.position.clone().sub(nodes.Cam_Center.position).normalize()} level={-2} tilt={0.07} size={160} />
     </>
 }
 export default Room;

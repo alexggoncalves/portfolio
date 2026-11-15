@@ -22,7 +22,7 @@ const fragmentShader = /* glsl */ `
         vec2 uv = gl_PointCoord * 2.0 - 1.0;
         float d = length(uv);
         float rays = 0.04 / (abs(uv.x * uv.y) + 0.04);
-        float core = smoothstep(0.35, 0.0, d);
+        float core = 1.0 - smoothstep(0.0, 0.35, d);
         float star = max(rays * clamp(1.0 - d, 0.0, 1.0), core);
         float alpha = star * vTwinkle;
         if (alpha < 0.01) discard;
@@ -35,7 +35,7 @@ type StarsProps = {
     size?: number
 };
 
-const Stars = ({ count = 3500, radius = 100, size = 1 }: StarsProps) => {
+const Stars = ({ count = 5000, radius = 100, size = 1 }: StarsProps) => {
     const dpr = useThree((s) => s.viewport.dpr);
 
     const uniforms = useMemo(

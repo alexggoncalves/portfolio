@@ -52,12 +52,12 @@ void main() {
   float v = (f - 0.5) / 0.22;                      // bar thickness
 
   // capsule distance (rounded ends)
-  float cap = 1.0;                                 // how much of each end is rounded
+  float cap = 0.3;                                 // how much of each end is rounded
   float dx  = max(abs(u) - (1.0 - cap), 0.0) / cap;
   float d   = length(vec2(dx, v));
 
   // defined capsule with a soft, pixel-aware edge
-  float aa   = fwidth(d) * 1.5;
+  float aa = max(fwidth(row) / 0.22, fwidth(side) / w) * 1.5;
   float dash = (1.0 - smoothstep(0.75 - aa, 1.0 + aa, d)) * step(0.0, ahead);
 
   // fade out far rows once they get thinner than a pixel (stops flicker)
@@ -74,7 +74,7 @@ void main() {
 `
 
 type OceanProps = {
-  moonPos: Vector3   // world position of the moon (e.g. Moon_Target)
+  moonDir: Vector3   // world position of the moon (e.g. Moon_Target)
   level?: number
   tilt?: number
   size?: number
@@ -82,7 +82,7 @@ type OceanProps = {
 
 const _fwd = new Vector3()
 
-const Ocean = ({ moonPos, level = -2, tilt = 0.1, size = 160 }: OceanProps) => {
+const Ocean = ({ moonDir, level = -2, tilt = 0.1, size = 160 }: OceanProps) => {
   const mat = useRef<ShaderMaterial>(null!)
 
   const uniforms = useMemo(() => ({
@@ -97,6 +97,7 @@ const Ocean = ({ moonPos, level = -2, tilt = 0.1, size = 160 }: OceanProps) => {
 
   useFrame(({ clock }) => {
     mat.current.uniforms.uTime.value = clock.elapsedTime
+
   })
 
   const followCamera = (mesh: Mesh, camera: Camera) => {
@@ -110,7 +111,7 @@ const Ocean = ({ moonPos, level = -2, tilt = 0.1, size = 160 }: OceanProps) => {
     mesh.updateMatrixWorld()
 
     // reflection always points at the real moon from the current camera
-    mat.current.uniforms.uMoonDir.value.copy(moonPos).sub(camera.position).normalize()
+    mat.current.uniforms.uMoonDir.value.copy(moonDir)
   }
 
   return (

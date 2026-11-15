@@ -11,7 +11,7 @@ export default defineConfig({
             output: {
                 manualChunks(id) {
                     if (!id.includes("node_modules")) return;
-                    if (/three|@react-three/.test(id)) return "three";
+                    if (/node_modules\/three\//.test(id)) return "three";
                     return "vendor";
                 },
             },
