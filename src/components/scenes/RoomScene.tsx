@@ -6,6 +6,14 @@ import Room from "./Room";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import CameraRig from "./CameraRig";
 import Stars from "./Stars";
+import { Preload } from "@react-three/drei";
+import useSceneStore from "../../stores/sceneStore";
+
+const SceneReady = () => {
+    const setReady = useSceneStore(s => s.setReady)
+    useEffect(() => { setReady() }, [])
+    return null
+}
 
 function RoomScene({ active, paused = false }: { active: boolean; paused?: boolean }) {
     const containerRef = useRef<HTMLDivElement>(null);
@@ -26,7 +34,7 @@ function RoomScene({ active, paused = false }: { active: boolean; paused?: boole
             className={`room__scene${active ? " room__scene--visible" : ""}${active ? "" : " room__scene--parked"}`}
         >
             <Canvas
-                dpr={[1, 2]}
+                dpr={[1,2]}
                 frameloop={active && inView && !paused ? "always" : "never"}
                 flat
             >
@@ -34,16 +42,18 @@ function RoomScene({ active, paused = false }: { active: boolean; paused?: boole
                 <Suspense fallback={null}>
                     <Room />
                     <CameraRig />
-                    <Stars/>
+                    <Stars />
+                    <Preload all />
+                    <SceneReady />
                 </Suspense>
 
-                <EffectComposer>
+                <EffectComposer multisampling={0}>
                     <Bloom mipmapBlur
                         luminanceThreshold={1.1}
                         luminanceSmoothing={0.1}
                         intensity={0.5}
                         radius={0.4}
-                        levels={8}
+                        levels={4}
                     />
                 </EffectComposer>
 

@@ -110,3 +110,6 @@ const Room = () => {
     </>
 }
 export default Room;
+
+useGLTF.preload('/room/room.glb')
+useTexture.preload([...textureNames.map(n => `/room/textures/${n}.webp`), '/room/textures/moon.webp'])

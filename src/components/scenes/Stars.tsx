@@ -35,7 +35,7 @@ type StarsProps = {
     size?: number
 };
 
-const Stars = ({ count = 5000, radius = 100, size = 1 }: StarsProps) => {
+const Stars = ({ count = 3000, radius = 100, size = 1 }: StarsProps) => {
     const dpr = useThree((s) => s.viewport.dpr);
 
     const uniforms = useMemo(

@@ -1,42 +1,31 @@
-import { Outlet, useLocation, useParams } from "react-router";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { View } from "@react-three/drei";
+import { Outlet, useParams } from "react-router";
+import { useEffect, useRef, useState } from "react";
 
-import useImagePreloader from "../hooks/useImagePreloader";
 import useStableCanvasSizes from "../hooks/useStableCanvasSizes";
-import { imagesToPreload } from "../data/content";
 
 import Header from "./layout/Header";
 import LoadingScreen from "./layout/LoadingScreen";
 import ProjectViewer from "./pages/project-viewer/ProjectViewer";
 import Footer from "./layout/Footer";
-import { Canvas } from "@react-three/fiber";
 import RoomScene from "./scenes/RoomScene";
 import StarrySky from "./scenes/StarrySky";
-
-const SECTION_TITLES = {
-    home: "Alex - Creative Developer",
-    work: "Alex - Work",
-    contact: "Alex - Contacts",
-}
+import useScrollReset from "../hooks/useScrollReset";
+import useSection from "../hooks/useSection";
+import useLoadingProgress from "../hooks/useLoadingProgress";
 
 const App = () => {
     const [revealed, setRevealed] = useState(false);
     const [visibleProject, setVisibleProject] = useState<string | null>(null);
     const mainRef = useRef<HTMLElement>(null);
 
-    const { pathname } = useLocation();
-    const { projectId } = useParams();
+    const { loaded, progress } = useLoadingProgress()
+    const section = useSection()
 
-    const { loaded, progress } = useImagePreloader(imagesToPreload);
     useStableCanvasSizes();
-
-    // Reveal (fade in) website body
-    useEffect(() => {
-        document.body.classList.toggle("revealed", revealed);
-    }, [revealed]);
+    useScrollReset(section, loaded)
 
     // Open project viewer page
+    const { projectId } = useParams();
     useEffect(() => {
         if (projectId) {
             setVisibleProject(projectId);
@@ -46,31 +35,11 @@ const App = () => {
         return () => clearTimeout(timeout);
     }, [projectId]);
 
-    // Last scroll position before a page change (scrollY can already be clamped by the new, shorter page)
-    const lastScrollY = useRef(0);
+    // Reveal (fade in) website body
     useEffect(() => {
-        const onScroll = () => { lastScrollY.current = window.scrollY; };
-        window.addEventListener("scroll", onScroll, { passive: true });
-        return () => window.removeEventListener("scroll", onScroll);
-    }, []);
+        document.body.classList.toggle("revealed", revealed);
+    }, [revealed]);
 
-    // Scroll to top when the page changes (and offset the stars so they don't jump)
-    const section = pathname.startsWith("/work") ? "work" : pathname === "/contact" ? "contact" : "home";
-    useLayoutEffect(() => {
-        const y = lastScrollY.current;
-        if (y) {
-            const root = document.documentElement.style;
-            const prev = parseFloat(root.getPropertyValue("--star-shift")) || 0;
-            root.setProperty("--star-shift", `${prev - y}px`);
-        }
-        window.scrollTo({ top: 0, behavior: "instant" });
-        lastScrollY.current = 0;
-    }, [section, loaded]);
-
-    // Set page title for screen readers
-    useEffect(() => {
-        document.title = SECTION_TITLES[section];
-    }, [section]);
 
     // Move focus into the page on reveal and page changes for screen readers
     useEffect(() => {
@@ -78,24 +47,11 @@ const App = () => {
         mainRef.current?.focus({ preventScroll: true });
     }, [revealed, section]);
 
-    // Fade the new page in once it has rendered
-    useLayoutEffect(() => {
-        document.documentElement.classList.remove("page-leaving");
-    }, [pathname]);
-
     return (
         <>
             <LoadingScreen progress={progress} onReveal={() => setRevealed(true)} />
-
-            <Canvas
-                className="app-canvas"
-                aria-hidden="true"
-                eventSource={document.getElementById("root")!}
-            >
-                <View.Port />
-            </Canvas>
-
             <StarrySky />
+
             <RoomScene active={section === "home"} paused={!!projectId} />
 
             <div className="app-content" inert={!revealed}>

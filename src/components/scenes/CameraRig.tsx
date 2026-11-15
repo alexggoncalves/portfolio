@@ -8,7 +8,7 @@ import useSceneStore from "../../stores/sceneStore";
 
 const SENSOR = 36 // Blender's sensor width
 const LANDSCAPE_FOCAL = 50
-const PORTRAIT_FOCAL = 50
+const PORTRAIT_FOCAL = 56
 
 const CameraRig = () => {
     const isMobile = useMediaQuery(MOBILE_QUERY)
