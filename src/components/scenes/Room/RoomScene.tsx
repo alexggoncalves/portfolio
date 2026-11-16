@@ -7,7 +7,7 @@ import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import CameraRig from "./CameraRig";
 import Stars from "./Stars";
 import { Preload } from "@react-three/drei";
-import useSceneStore from "../../stores/sceneStore";
+import useSceneStore from "../../../stores/sceneStore";
 
 const SceneReady = () => {
     const setReady = useSceneStore(s => s.setReady)

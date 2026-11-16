@@ -110,7 +110,7 @@ const Drawer = ({ children, header, className = "", open, onOpenChange, peek = t
         if (!expanded && dy < -SNAP_DISTANCE) setOpen(true);
         if (expanded && dy > SNAP_DISTANCE) setOpen(false);
     };
-
+    
     // Set header peek height so the media viewer can sit on top of it
     useEffect(() => {
         if (!peek) return;

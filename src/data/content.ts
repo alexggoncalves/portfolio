@@ -2,6 +2,7 @@ import PROJECTS from "./projects.json";
 import PEOPLE from "./people.json";
 import TAGS from "./tags.json";
 import TOOLS from "./tools.json";
+import RECORDS from "./records.json";
 
 // Media types
 export type ImageAsset = {
@@ -103,10 +104,20 @@ export type Tool = {
     title: string;
 };
 
+export type Record = {
+    album: string;
+    artist: string;
+    year: String;
+    track: string;
+    trackUrl: string;
+}
+
+
 export const projects = PROJECTS as Project[];
 export const people = PEOPLE as Person[];
 export const tags = TAGS as Tag[];
 export const tools = TOOLS as Tool[];
+export const records = RECORDS as Record[];
 
 // Images to Preload
 const thumbnailUrls = projects.map((project) => project.thumbnailSrc);

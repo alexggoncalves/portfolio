@@ -1,10 +1,10 @@
-import useMediaQuery, { MOBILE_QUERY } from "../../utils/useMediaQuery";
+import useMediaQuery, { MOBILE_QUERY } from "../../../utils/useMediaQuery";
 import { MathUtils, Object3D, PerspectiveCamera, Vector3 } from "three";
 import { CameraControls, useGLTF } from "@react-three/drei";
 import { useEffect, useRef } from "react";
 import { useThree } from "@react-three/fiber";
-import type { View } from "../../stores/sceneStore";
-import useSceneStore from "../../stores/sceneStore";
+import type { View } from "../../../stores/sceneStore";
+import useSceneStore from "../../../stores/sceneStore";
 
 const SENSOR = 36 // Blender's sensor width
 const LANDSCAPE_FOCAL = 50

@@ -4,6 +4,8 @@ import { Object3D, SRGBColorSpace, type Mesh } from "three"
 import type { GLTF } from "three/examples/jsm/Addons.js"
 import Moon from "./Moon"
 import Ocean from "./Ocean"
+import VinylStand from "./VinylStand"
+import PhotoCamera from "./PhotoCamera"
 
 type RoomGLTF = GLTF & {
     nodes: {
@@ -14,7 +16,6 @@ type RoomGLTF = GLTF & {
         PhysicalMedia: Mesh
         Furniture: Mesh
         Props: Mesh
-        VinylStand: Mesh
 
         // Dynamic
         CandleFire1: Mesh
@@ -22,11 +23,6 @@ type RoomGLTF = GLTF & {
         FairyLights: Mesh
         MonitorScreen: Mesh
         NintendoScreens: Mesh
-        ToneArm: Mesh
-        // PhotoCam: THREE.Group
-
-        // Transparent
-        VinylLid: Mesh
 
         // Helpers
         Moon_Target: Object3D
@@ -34,7 +30,7 @@ type RoomGLTF = GLTF & {
     }
 }
 
-const textureNames = ['shell', 'plants', 'art', 'bookshelf', 'physical_media', 'furniture', 'vinyl_stand', 'props', 'nintendo_screens']
+const textureNames = ['shell', 'plants', 'art', 'bookshelf', 'physical_media', 'furniture', 'props', 'nintendo_screens']
 
 const Room = () => {
     const { nodes } = useGLTF('/room/room.glb') as unknown as RoomGLTF
@@ -70,9 +66,7 @@ const Room = () => {
         <mesh geometry={nodes.Props.geometry}>
             <meshBasicMaterial map={textures.props} />
         </mesh>
-        <mesh geometry={nodes.VinylStand.geometry}>
-            <meshBasicMaterial map={textures.vinyl_stand} />
-        </mesh>
+        
 
 
         {/* LIGHTS */}
@@ -95,18 +89,11 @@ const Room = () => {
             <meshBasicMaterial map={textures.nintendo_screens} color={[1.2, 1.2, 1.2]} toneMapped={false} />
         </mesh>
 
-        {/* Transparent */}
-        <mesh geometry={nodes.VinylLid.geometry} position={nodes.VinylLid.position} rotation={nodes.VinylLid.rotation}>
-            <meshBasicMaterial
-                color="#1f1f1f"
-                transparent
-                opacity={0.6}
-                depthWrite={false}
-            />
-        </mesh>
 
+        <PhotoCamera/>
+        <VinylStand/>
         <Moon from={nodes.Cam_Center.position} target={nodes.Moon_Target.position} />
-        <Ocean moonDir={nodes.Moon_Target.position.clone().sub(nodes.Cam_Center.position).normalize()} level={-2} tilt={0.07} size={160} />
+        <Ocean moonDir={nodes.Moon_Target.position.clone().sub(nodes.Cam_Center.position).normalize()} level={-2} tilt={0.04} size={160} />
     </>
 }
 export default Room;
