@@ -56,8 +56,6 @@ const PhotoCameraScreen = ({ buttonMaterial, active }: PhotoCameraScreenProps) =
                     roughness={1}
                     toneMapped={false}
                 />
-
-                This giv
             </mesh>
 
             {/* Buttons */}

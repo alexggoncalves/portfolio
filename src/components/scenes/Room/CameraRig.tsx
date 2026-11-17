@@ -19,6 +19,8 @@ const CameraRig = () => {
     const view = useSceneStore((s) => s.view)
 
     const controls = useRef<CameraControls>(null!)
+    useEffect(() => { controls.current.disconnect() }, [])
+    
     const prev = useRef<View>('Center')
 
     // Blender-matched fov on the Canvas's own camera

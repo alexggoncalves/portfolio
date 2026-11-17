@@ -110,6 +110,7 @@
     display: flex;
     gap: 10px;
     z-index: 0;
+    pointer-events: auto;
 
     .button--glass {
         width: 50px;
@@ -130,6 +131,16 @@
             height: auto;
         }
     }
+}
+
+// Allow pointer events in everything but the hero so interactions with the canvas are possible.
+main:has(.homepage),
+.homepage,
+#hero {
+    pointer-events: none;
+}
+.homepage > :not(#hero) {
+    pointer-events: auto;
 }
 
 // ===================

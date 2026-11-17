@@ -9,6 +9,7 @@ import Stars from "./Dynamic/Stars";
 import { Preload } from "@react-three/drei";
 import useSceneStore from "../../../stores/sceneStore";
 import FocusDepthOfField from "./FocusDepthOfField";
+import useMediaQuery, { MOBILE_QUERY } from "../../../utils/useMediaQuery";
 
 const SceneReady = () => {
     const setReady = useSceneStore(s => s.setReady)
@@ -17,6 +18,8 @@ const SceneReady = () => {
 }
 
 function RoomScene({ active, paused = false }: { active: boolean; paused?: boolean }) {
+    const isMobile = useMediaQuery(MOBILE_QUERY);
+
     const containerRef = useRef<HTMLDivElement>(null);
     const [inView, setInView] = useState(true);
 
@@ -38,8 +41,6 @@ function RoomScene({ active, paused = false }: { active: boolean; paused?: boole
                 dpr={[1, 2]}
                 frameloop={active && inView && !paused ? "always" : "never"}
                 flat
-                eventSource={document.getElementById("root")!}
-                eventPrefix="client"
             >
                 <color attach="background" args={['#141414']} />
 
@@ -50,8 +51,8 @@ function RoomScene({ active, paused = false }: { active: boolean; paused?: boole
                     <Preload all />
                     <SceneReady />
                 </Suspense>
-
-                <EffectComposer multisampling={0} autoClear={false}>
+                
+                {!isMobile && <EffectComposer multisampling={0} autoClear={false}>
                     <Bloom
                         mipmapBlur
                         luminanceThreshold={1.1}
@@ -60,9 +61,9 @@ function RoomScene({ active, paused = false }: { active: boolean; paused?: boole
                         radius={0.4}
                         levels={4}
                     />
-                    <FocusDepthOfField/>
+                    <FocusDepthOfField />
                 </EffectComposer>
-
+                }
             </Canvas>
         </div>
     );

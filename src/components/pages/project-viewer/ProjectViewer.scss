@@ -20,6 +20,8 @@
     transform: translateY(120lvh);
     transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
     box-shadow: 0 50lvh 0 0 var(--background-color);
+
+    pointer-events: auto;
 }
 
 .project-viewer.open {
