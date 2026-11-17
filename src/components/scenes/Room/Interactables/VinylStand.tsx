@@ -2,9 +2,9 @@ import { useEnvironment, useGLTF, useTexture } from "@react-three/drei"
 import { useEffect, useMemo, useRef } from "react"
 import { MeshBasicMaterial, MeshPhysicalMaterial, NoColorSpace, SRGBColorSpace, type Mesh, type Object3D } from "three"
 import type { GLTF } from "three/examples/jsm/Addons.js"
-import { padNumber } from "../../../utils/stringUtils"
+import { padNumber } from "../../../../utils/stringUtils"
 
-import { records } from "../../../data/content"
+import { records } from "../../../../data/content"
 
 type VinylStandGLTF = GLTF & {
     nodes: {

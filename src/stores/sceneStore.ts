@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type View = "Center" | "Left" | "Right";
+export type View = "Center" | "Camera" | "Music";
 
 type sceneStoreState = {
     view: View;

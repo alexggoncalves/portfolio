@@ -3,6 +3,7 @@ import PEOPLE from "./people.json";
 import TAGS from "./tags.json";
 import TOOLS from "./tools.json";
 import RECORDS from "./records.json";
+import PHOTOS from "./photos.json"
 
 // Media types
 export type ImageAsset = {
@@ -112,12 +113,17 @@ export type Record = {
     trackUrl: string;
 }
 
+export type Photo = {
+    url: string;
+    date: string;
+}
 
 export const projects = PROJECTS as Project[];
 export const people = PEOPLE as Person[];
 export const tags = TAGS as Tag[];
 export const tools = TOOLS as Tool[];
 export const records = RECORDS as Record[];
+export const photos = PHOTOS as Photo[]
 
 // Images to Preload
 const thumbnailUrls = projects.map((project) => project.thumbnailSrc);

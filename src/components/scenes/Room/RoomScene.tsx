@@ -5,9 +5,10 @@ import { Suspense, useEffect, useRef, useState } from "react";
 import Room from "./Room";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import CameraRig from "./CameraRig";
-import Stars from "./Stars";
+import Stars from "./Dynamic/Stars";
 import { Preload } from "@react-three/drei";
 import useSceneStore from "../../../stores/sceneStore";
+import FocusDepthOfField from "./FocusDepthOfField";
 
 const SceneReady = () => {
     const setReady = useSceneStore(s => s.setReady)
@@ -34,11 +35,14 @@ function RoomScene({ active, paused = false }: { active: boolean; paused?: boole
             className={`room__scene${active ? " room__scene--visible" : ""}${active ? "" : " room__scene--parked"}`}
         >
             <Canvas
-                dpr={[1,2]}
+                dpr={[1, 2]}
                 frameloop={active && inView && !paused ? "always" : "never"}
                 flat
+                eventSource={document.getElementById("root")!}
+                eventPrefix="client"
             >
                 <color attach="background" args={['#141414']} />
+
                 <Suspense fallback={null}>
                     <Room />
                     <CameraRig />
@@ -47,14 +51,16 @@ function RoomScene({ active, paused = false }: { active: boolean; paused?: boole
                     <SceneReady />
                 </Suspense>
 
-                <EffectComposer multisampling={0}>
-                    <Bloom mipmapBlur
+                <EffectComposer multisampling={0} autoClear={false}>
+                    <Bloom
+                        mipmapBlur
                         luminanceThreshold={1.1}
                         luminanceSmoothing={0.1}
                         intensity={0.5}
                         radius={0.4}
                         levels={4}
                     />
+                    <FocusDepthOfField/>
                 </EffectComposer>
 
             </Canvas>

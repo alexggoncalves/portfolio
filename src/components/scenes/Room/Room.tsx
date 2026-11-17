@@ -1,11 +1,11 @@
 import { useGLTF, useTexture } from "@react-three/drei"
-import { useEffect } from "react"
 import { Object3D, SRGBColorSpace, type Mesh } from "three"
 import type { GLTF } from "three/examples/jsm/Addons.js"
-import Moon from "./Moon"
-import Ocean from "./Ocean"
-import VinylStand from "./VinylStand"
-import PhotoCamera from "./PhotoCamera"
+import Moon from "./Dynamic/Moon"
+import Ocean from "./Dynamic/Ocean"
+import VinylStand from "./Interactables/VinylStand"
+import PhotoCamera from "./Interactables/PhotoCamera"
+import CandleFlame from "./Dynamic/CandleFlame"
 
 type RoomGLTF = GLTF & {
     nodes: {
@@ -39,10 +39,6 @@ const Room = () => {
     const textures = useTexture(Object.fromEntries(textureNames.map(n => [n, `/room/textures/${n}.webp`])))
     Object.values(textures).forEach(t => { t.flipY = false; t.colorSpace = SRGBColorSpace })
 
-    useEffect(() => {
-        console.log(nodes);
-    }, [nodes])
-
     return <>
         {/* <primitive object={scene} /> */}
         <mesh geometry={nodes.Shell.geometry}>
@@ -70,12 +66,8 @@ const Room = () => {
 
 
         {/* LIGHTS */}
-        <mesh geometry={nodes.CandleFire1.geometry} position={nodes.CandleFire1.position} rotation={nodes.CandleFire1.rotation}>
-            <meshBasicMaterial color={[5, 3, 1.25]} toneMapped={false} />
-        </mesh>
-        <mesh geometry={nodes.CandleFire2.geometry} position={nodes.CandleFire2.position} rotation={nodes.CandleFire2.rotation}>
-            <meshBasicMaterial color={[5, 3, 1.25]} toneMapped={false} />
-        </mesh>
+        <CandleFlame node={nodes.CandleFire1}/>
+        <CandleFlame node={nodes.CandleFire2} seed={1}/>
         <mesh geometry={nodes.FairyLights.geometry} position={nodes.FairyLights.position} rotation={nodes.FairyLights.rotation}>
             <meshBasicMaterial color={[4, 4, 4]} toneMapped={false} />
         </mesh>

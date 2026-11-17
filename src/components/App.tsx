@@ -8,7 +8,7 @@ import LoadingScreen from "./layout/LoadingScreen";
 import ProjectViewer from "./pages/project-viewer/ProjectViewer";
 import Footer from "./layout/Footer";
 import RoomScene from "./scenes/Room/RoomScene";
-import StarrySky from "./scenes/StarrySky";
+import StarrySky from "./pages/background/StarrySky";
 import useScrollReset from "../hooks/useScrollReset";
 import useSection from "../hooks/useSection";
 import useLoadingProgress from "../hooks/useLoadingProgress";

@@ -1,7 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
-import { AtIcon, CameraIcon, ChevronDown, ReturnIcon, SmileIcon, VinylIcon } from '../../ui/Icons';
-import Window from '../../ui/Window';
+import { CameraIcon, ChevronDown, ReturnIcon, VinylIcon } from '../../ui/Icons';
 import useSceneStore from '../../../stores/sceneStore';
+
+import HeroWindow from './HeroWindow';
+import PhotosWindow from './PhotosWindow';
+import MusicWindow from './MusicWindow';
+
+const windows = [
+    { view: 'Center', Component: HeroWindow },
+    { view: 'Camera', Component: PhotosWindow },
+    { view: 'Music', Component: MusicWindow },
+] as const;
 
 function Hero() {
     const heroRef = useRef<HTMLElement>(null);
@@ -25,28 +34,27 @@ function Hero() {
         heroRef.current.nextElementSibling?.scrollIntoView({ behavior: "smooth" })
     }
 
-    const headerLeft = <>
-        <span>Hello</span>
-        <span aria-hidden>•</span>
-        <span className='at-icon' aria-label='Based in '><AtIcon /></span>
-        <span>Madeira, PT</span>
-    </>
 
-    const headerRight = <SmileIcon className='window-header__icon' />
 
     return (
         <>
             <section ref={heroRef} id="hero">
 
-                <Window
-                    title="hello"
-                    headerLeft={headerLeft}
-                    headerRight={headerRight}
-                    className="hero__window"
-                >
-                    <span className='hero__greeting'>Hi, I'm Alexandre.</span>
-                    <span className='hero__description'>Designer and developer. I make games, web experiences and everything in between.</span>
-                </Window>
+                <div className="hero__window-stack">
+                    {windows.map(({ view: key, Component }) => {
+                        const active = view === key;
+                        return (
+                            <div
+                                key={key}
+                                className={`hero__window-slot ${active ? 'hero__window-slot--active' : ''}`}
+                                aria-hidden={!active}
+                                inert={!active}
+                            >
+                                <Component />
+                            </div>
+                        );
+                    })}
+                </div>
 
                 <button
                     type="button"
@@ -62,17 +70,17 @@ function Hero() {
                         <button
                             type="button"
                             className={`button--glass`}
-                            onClick={() => setView('Left')}
+                            onClick={() => setView('Camera')}
                         >
-                            <CameraIcon/>
+                            <CameraIcon />
                         </button>
 
                         <button
                             type="button"
                             className={`button--glass`}
-                            onClick={() => setView('Right')}
+                            onClick={() => setView('Music')}
                         >
-                           <VinylIcon/>
+                            <VinylIcon />
                         </button>
 
                     </>) : <button
@@ -80,7 +88,7 @@ function Hero() {
                         className={`button--glass back-button`}
                         onClick={() => setView('Center')}
                     >
-                        <ReturnIcon/>
+                        <ReturnIcon />
                         <span>Back</span>
                     </button>}
                 </div>
