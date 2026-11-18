@@ -86,7 +86,7 @@ main {
 
 // Reveal transition
 .page .window,
-.view-control-buttons,
+.scene-control-buttons,
 footer {
     transition: opacity 1s ease;
 }
@@ -96,7 +96,7 @@ body:not(.revealed) {
     .menu-button,
     .page .window,
     .hero__scroll-cue,
-    .view-control-buttons,
+    .scene-control-buttons,
     footer,
     .room__scene {
         opacity: 0;

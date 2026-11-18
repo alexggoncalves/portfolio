@@ -106,7 +106,7 @@
     pointer-events: none;
 }
 
-.view-control-buttons {
+.scene-control-buttons {
     display: flex;
     gap: 10px;
     z-index: 0;
@@ -131,6 +131,11 @@
             height: auto;
         }
     }
+}
+
+.photo-controls {
+    display: flex;
+    gap: 0.5rem;
 }
 
 // Allow pointer events in everything but the hero so interactions with the canvas are possible.
@@ -312,10 +317,28 @@ main:has(.homepage),
         }
     }
 
-    .view-control-buttons {
+    .scene-control-buttons {
         display: flex;
-        width: 100%;
         justify-content: space-between;
+        left: 1rem;
+        right: 1rem;
+        width: 100%;
+    }
+
+    .scene-control-buttons--bar {
+        width: auto;
+        position: fixed;
+        left: 1rem;
+        right: 1rem;
+        bottom: calc(1rem + env(safe-area-inset-bottom));
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .photo-controls {
+        display: flex;
+        gap: 0.5rem;
     }
 
     .hero__scroll-cue {

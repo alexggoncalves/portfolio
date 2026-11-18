@@ -54,3 +54,36 @@
     opacity: 0;
     transition: opacity 0.25s ease;
 }
+
+.room-scene__cta {
+    display: flex;
+    gap: 8px;
+    bottom: 2px;
+    left: 8px;
+    
+    opacity: 1;
+    transition: opacity 0.4s ease;
+    user-select: none;
+    filter: drop-shadow(2px 2px 1px rgb(22, 34, 34));
+
+    &-arrow {
+        width: 50px;
+        user-select: none;
+        -webkit-user-drag: none;
+    }
+
+    &-text {
+        width: 100px;
+        font-family: "Space Mono";
+        text-transform: uppercase;
+        font-weight: 700;
+        line-height: 1;
+        font-size: 0.8rem;
+        transform: translateY(-25%);     
+        
+    }
+
+    &--hidden {
+        opacity: 0;
+    }
+}
