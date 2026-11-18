@@ -1,3 +1,5 @@
+@use "./../../../styles/mixins.scss" as *;
+
 .room__scene {
     $start: var(--hero-height, 100svh);
 
@@ -60,9 +62,9 @@
     gap: 8px;
     bottom: 2px;
     left: 8px;
-    
+
     opacity: 1;
-    transition: opacity 0.4s ease;
+    transition: opacity 1s 0.8s ease;
     user-select: none;
     filter: drop-shadow(2px 2px 1px rgb(22, 34, 34));
 
@@ -79,11 +81,38 @@
         font-weight: 700;
         line-height: 1;
         font-size: 0.8rem;
-        transform: translateY(-25%);     
-        
+        transform: translateY(-25%);
+    }
+
+    &.inverted {
+        translate: -100%;
+
+        .room-scene__cta-arrow{
+            transform: scaleX(-1);
+        }
+
+        .room-scene__cta-text{
+            text-align: end;
+        }
     }
 
     &--hidden {
         opacity: 0;
+        transition: opacity 0.6s 0s ease;
+    }
+}
+
+@include mobile {
+    .room-scene__cta {
+        left: -4px;
+
+        &-arrow {
+            width: 25px;
+        }
+
+        &-text {
+            width: 60px;
+            font-size: 0.6rem;
+        }
     }
 }

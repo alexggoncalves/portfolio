@@ -6,6 +6,8 @@ import Ocean from "./Dynamic/Ocean"
 import VinylStand from "./Interactables/VinylStand"
 import PhotoCamera from "./Interactables/PhotoCamera"
 import CandleFlame from "./Dynamic/CandleFlame"
+import useMediaQuery, { MOBILE_QUERY } from "../../../utils/useMediaQuery"
+import { useMemo } from "react"
 
 type RoomGLTF = GLTF & {
     nodes: {
@@ -26,6 +28,7 @@ type RoomGLTF = GLTF & {
 
         // Helpers
         Moon_Target: Object3D
+        Moon_Target_Mobile: Object3D
         Cam_Center: Object3D
     }
 }
@@ -33,11 +36,14 @@ type RoomGLTF = GLTF & {
 const textureNames = ['shell', 'plants', 'art', 'bookshelf', 'physical_media', 'furniture', 'props', 'nintendo_screens']
 
 const Room = () => {
+    const isMobile = useMediaQuery(MOBILE_QUERY);
     const { nodes } = useGLTF('/room/room.glb') as unknown as RoomGLTF
 
     // Load textures
     const textures = useTexture(Object.fromEntries(textureNames.map(n => [n, `/room/textures/${n}.webp`])))
     Object.values(textures).forEach(t => { t.flipY = false; t.colorSpace = SRGBColorSpace })
+
+    const moonTargetPosition = useMemo(() => (isMobile ? nodes.Moon_Target_Mobile.position : nodes.Moon_Target.position), [isMobile, nodes])
 
     return <>
         {/* <primitive object={scene} /> */}
@@ -62,12 +68,12 @@ const Room = () => {
         <mesh geometry={nodes.Props.geometry}>
             <meshBasicMaterial map={textures.props} />
         </mesh>
-        
+
 
 
         {/* LIGHTS */}
-        <CandleFlame node={nodes.CandleFire1}/>
-        <CandleFlame node={nodes.CandleFire2} seed={1}/>
+        <CandleFlame node={nodes.CandleFire1} />
+        <CandleFlame node={nodes.CandleFire2} seed={1} />
         <mesh geometry={nodes.FairyLights.geometry} position={nodes.FairyLights.position} rotation={nodes.FairyLights.rotation}>
             <meshBasicMaterial color={[4, 4, 4]} toneMapped={false} />
         </mesh>
@@ -82,10 +88,10 @@ const Room = () => {
         </mesh>
 
 
-        <PhotoCamera/>
-        <VinylStand/>
-        <Moon from={nodes.Cam_Center.position} target={nodes.Moon_Target.position} />
-        <Ocean moonDir={nodes.Moon_Target.position.clone().sub(nodes.Cam_Center.position).normalize()} level={-2} tilt={0.04} size={160} />
+        <PhotoCamera />
+        <VinylStand />
+        <Moon from={nodes.Cam_Center.position} target={moonTargetPosition} />
+        <Ocean moonDir={moonTargetPosition.clone().sub(nodes.Cam_Center.position).normalize()} level={-2} tilt={0.04} size={160} />
     </>
 }
 export default Room;

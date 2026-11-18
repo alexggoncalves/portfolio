@@ -110,11 +110,13 @@
     display: flex;
     gap: 10px;
     z-index: 0;
-    pointer-events: auto;
+    pointer-events: none;
 
     .button--glass {
         width: 50px;
         height: 50px;
+
+        pointer-events: auto;
 
         svg {
             width: 100%;
@@ -123,8 +125,11 @@
     }
 
     .back-button {
+        margin-left: auto;
         width: auto;
         text-transform: uppercase;
+
+        pointer-events: auto;
 
         svg {
             width: 16px;
@@ -327,7 +332,7 @@ main:has(.homepage),
 
     .scene-control-buttons--bar {
         width: auto;
-        position: fixed;
+        position: absolute;
         left: 1rem;
         right: 1rem;
         bottom: calc(1rem + env(safe-area-inset-bottom));

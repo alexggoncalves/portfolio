@@ -39,6 +39,7 @@ function RoomScene({ active, paused = false }: { active: boolean; paused?: boole
         >
             <Canvas
                 dpr={[1, 2]}
+                camera={{near: 0.01, far:200}}
                 frameloop={active && inView && !paused ? "always" : "never"}
                 flat
             >
@@ -48,6 +49,7 @@ function RoomScene({ active, paused = false }: { active: boolean; paused?: boole
                     <Room />
                     <CameraRig />
                     <Stars />
+
                     <Preload all />
                     <SceneReady />
                 </Suspense>

@@ -1,30 +1,26 @@
 import { useEnvironment, useGLTF, useTexture } from "@react-three/drei"
-import { useEffect, useMemo, useRef } from "react"
-import { MeshBasicMaterial, MeshPhysicalMaterial, NoColorSpace, SRGBColorSpace, type Mesh, type Object3D } from "three"
+import { useEffect, useMemo } from "react"
+import { MeshBasicMaterial, MeshPhysicalMaterial, NoColorSpace, SRGBColorSpace, Vector2, type Mesh } from "three"
 import type { GLTF } from "three/examples/jsm/Addons.js"
-import { padNumber } from "../../../../utils/stringUtils"
 
 import { records } from "../../../../data/content"
+import Record from "./Record"
+import VinylPlayer from "./VinylPlayer"
 
 type VinylStandGLTF = GLTF & {
     nodes: {
         VinylLid: Mesh
         ToneArm: Mesh
         VinylStand: Mesh
-    } & {
-        [K: `Record_${string}_Sleeve` | `Record_${string}_Disc`]: Mesh
-    } & {
-        [K: `Record_${string}`]: Object3D
     }
 }
 
-const LIGHTMAP_NEUTRAL = Math.PI
-const REST_SHADE = 0.8
+const LIGHTMAP_NEUTRAL = Math.PI;
+const REST_SHADE = 0.8;
 
 const VinylStand = () => {
     const { nodes } = useGLTF('/room/room.glb') as unknown as VinylStandGLTF
-    const env = useEnvironment({ preset: 'apartment' })
-    // const env = useEnvironment({ files: '/room/env/turntable.hdr' })
+    const env = useEnvironment({ files: '/room/environments/vynilStand.hdr' })
 
     // Colour textures
     const color = useTexture({
@@ -42,9 +38,9 @@ const VinylStand = () => {
     useMemo(() => {
         Object.values(color).forEach(t => { t.flipY = false; t.colorSpace = SRGBColorSpace })
         Object.values(data).forEach(t => { t.flipY = false; t.colorSpace = NoColorSpace })
-        color.sleeveLight.channel = 1
-        data.grooveNormal.channel = 1
-        data.grooveAniso.channel = 1
+        color.sleeveLight.channel = 0
+        data.grooveNormal.channel = 0
+        data.grooveAniso.channel = 0
     }, [color, data])
 
     const sleeveMats = useMemo(() => records.map(() => new MeshBasicMaterial({
@@ -54,15 +50,17 @@ const VinylStand = () => {
     })), [color])
 
     const discMat = useMemo(() => new MeshPhysicalMaterial({
-        map: color.albums,
-        roughness: 0.35,
-        metalness: 0,
+        color: "#131313",
+        roughness: 0.3,
+        metalness: 0.5,
         normalMap: data.grooveNormal,
+        normalScale: new Vector2(1, 1),
         anisotropy: 1,
         anisotropyMap: data.grooveAniso,
         envMap: env,
-        envMapIntensity: 1,
+        envMapIntensity: 0.5,
     }), [color, data, env])
+
 
     useEffect(() => {
         return () => {
@@ -73,60 +71,21 @@ const VinylStand = () => {
 
     return (
         <>
-            {/* Lid */}
-            <mesh geometry={nodes.VinylLid.geometry} position={nodes.VinylLid.position} rotation={nodes.VinylLid.rotation}>
-                <meshBasicMaterial
-                    color="#1f1f1f"
-                    transparent
-                    opacity={0.6}
-                    depthWrite={false}
-                />
-            </mesh>
+            <VinylPlayer standTex={color.vinyl_stand} />
 
-            {/* Stand + Vinyl PLayer */}
+            {/* Stand */}
             <mesh geometry={nodes.VinylStand.geometry}>
                 <meshBasicMaterial map={color.vinyl_stand} />
             </mesh>
 
             {/* Records */}
             {records.map((r, i) => (
-                <Record key={r.album} slot={i + 1} nodes={nodes} sleeveMat={sleeveMats[i]} discMat={discMat} />
+                <Record key={r.album} slot={i + 1} sleeveMat={sleeveMats[i]} discMat={discMat} />
             ))}
-
-            {/* Tone Arm */}
-            <mesh geometry={nodes.ToneArm.geometry} position={nodes.ToneArm.position} rotation={nodes.ToneArm.rotation}>
-                <meshBasicMaterial map={color.vinyl_stand} />
-            </mesh>
         </>
     )
 }
 
-type RecordProps = {
-    slot: number
-    nodes: VinylStandGLTF['nodes']
-    sleeveMat: MeshBasicMaterial
-    discMat: MeshPhysicalMaterial
-}
 
-
-function Record({ slot, nodes, sleeveMat, discMat }: RecordProps) {
-    const id = padNumber(slot)
-
-    const root = nodes[`Record_${id}`]
-    const sleeve = nodes[`Record_${id}_Sleeve`]
-    const disc = nodes[`Record_${id}_Disc`]
-
-    const sleeveRef = useRef(null)
-    const discRef = useRef(null)
-
-    return (
-        <group position={root.position} rotation={root.rotation} scale={root.scale}>
-            <mesh ref={sleeveRef} geometry={sleeve.geometry} material={sleeveMat}
-                position={sleeve.position} rotation={sleeve.rotation} />
-            <mesh ref={discRef} geometry={disc.geometry} material={discMat}
-                position={disc.position} rotation={disc.rotation} />
-        </group>
-    )
-}
 
 export default VinylStand

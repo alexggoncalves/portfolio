@@ -6,7 +6,7 @@ import { DepthOfField } from "@react-three/postprocessing"
 import useSceneStore from "../../../stores/sceneStore"
 import { photoCamFocus } from "./Interactables/PhotoCamera"
 
-const BLUR = 4
+const BLUR = 6
 const FOCUS_RANGE = 7 // world units of depth that stay sharp
 
 const FocusDepthOfField = () => {

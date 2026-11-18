@@ -28,9 +28,9 @@ type PhotoCameraGLTF = GLTF & {
 const CAM_W = 0.211; // Model width
 const CAM_H = 0.14; // Model height
 const FILL = 0.65; // Percentage of screen to fill 
-const MOBILE_FILL = 1;
+const MOBILE_FILL = 0.9;
 
-const HOVER_INTENSITY = 0.04; // Emission intensity on hover
+const HOVER_INTENSITY = 0.01; // Emission intensity on hover
 
 // Move and turn animation
 const ANIMATION_SPEED = 1.8;
@@ -171,7 +171,7 @@ const PhotoCamera = () => {
 
     return (
         <>
-            <Html position={ctaPos} className={`room-scene__cta ${view !== "Center" ? "room-scene__cta--hidden" : ""}`}>
+            <Html aria-disabled position={ctaPos} className={`room-scene__cta ${view !== "Center" ? "room-scene__cta--hidden" : ""}`}>
                 <img src="/ArrowLeft.svg" alt="" className="room-scene__cta-arrow" draggable="false" />
                 <div className={`room-scene__cta-text`}>
                     Press here for photos
@@ -188,14 +188,32 @@ const PhotoCamera = () => {
                         material={camMat}
                         position={nodes.PhotoCam_Body.position}
                         rotation={nodes.PhotoCam_Body.rotation}
+                    />
+                    {/* Camera Collider */}
+                    <mesh
+                        position={nodes.PhotoCam_Body.position}
+                        rotation={nodes.PhotoCam_Body.rotation}
                         onPointerOver={(e) => { e.stopPropagation(); setHovered(true) }}
                         onPointerOut={() => setHovered(false)}
                         onClick={() => setView('Camera')}
-                    />
+                    >
+                        <boxGeometry args={[CAM_W + 0.02, CAM_H + 0.03, 0.01]}></boxGeometry>
+                        <meshBasicMaterial transparent opacity={0}></meshBasicMaterial>
+                    </mesh>
 
                     {/* Lens Glass */}
-                    <mesh geometry={nodes.PhotoCam_LensGlass.geometry} position={nodes.PhotoCam_LensGlass.position} rotation={nodes.PhotoCam_LensGlass.rotation}>
-                        <meshPhysicalMaterial color="#111" roughness={0.3} envMap={env} envMapIntensity={1} transparent opacity={0.2} />
+                    <mesh
+                        geometry={nodes.PhotoCam_LensGlass.geometry}
+                        position={nodes.PhotoCam_LensGlass.position}
+                        rotation={nodes.PhotoCam_LensGlass.rotation}
+                    >
+                        <meshPhysicalMaterial
+                            color="#111"
+                            roughness={0.3}
+                            envMap={env}
+                            envMapIntensity={1}
+                            transparent
+                            opacity={0.5} />
                     </mesh>
 
                     {/* Screen */}
