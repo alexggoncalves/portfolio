@@ -5,6 +5,7 @@ import useSceneStore from '../../../stores/sceneStore';
 import HeroWindow from './HeroWindow';
 import MusicWindow from './MusicWindow';
 import HeroControls from './HeroControls';
+import { getScrollContainer } from '../../../utils/scrollContainer';
 
 const windows = [
     { view: 'Center', Component: HeroWindow },
@@ -17,13 +18,16 @@ function Hero() {
     const view = useSceneStore((s) => s.view)
 
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 10)
+        const scrollContainer = getScrollContainer();
+        if(!scrollContainer) return;
 
-        window.addEventListener("scroll", onScroll)
+        const onScroll = () => {setScrolled(scrollContainer.scrollTop > 10)}
+
+        scrollContainer.addEventListener("scroll", onScroll)
         onScroll();
 
         return () => {
-            window.removeEventListener("scroll", onScroll)
+            scrollContainer.removeEventListener("scroll", onScroll)
         }
     }, [])
 
@@ -35,7 +39,6 @@ function Hero() {
     return (
         <>
             <section ref={heroRef} id="hero">
-
                 <div className="hero__window-stack">
                     {windows.map(({ view: key, Component }) => {
                         const active = view === key;

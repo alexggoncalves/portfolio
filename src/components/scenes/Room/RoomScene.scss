@@ -1,7 +1,7 @@
 @use "./../../../styles/mixins.scss" as *;
 
 .room__scene {
-    $start: var(--hero-height, 100svh);
+    $start: 100svh;
 
     @function fade-at($t) {
         @return calc(#{$start} + (100% - #{$start}) * #{$t});
@@ -26,12 +26,9 @@
     top: 0;
     left: 0;
     right: 0;
-    height: calc(var(--hero-height, 100svh) + var(--main-padding));
+    height: calc(100svh + var(--main-padding));
     z-index: 0;
-    // bottom: calc(
-    //     -1 * calc(var(--section-gap) / 2)
-    // ); // reaches the top of selected projects window
-
+    
     //transition
     opacity: 0;
     visibility: hidden;

@@ -1,17 +1,18 @@
 import { Outlet, useParams } from "react-router";
 import { useEffect, useRef, useState } from "react";
 
-import useStableCanvasSizes from "../hooks/useStableCanvasSizes";
-
-import Header from "./layout/Header";
 import LoadingScreen from "./layout/LoadingScreen";
-import ProjectViewer from "./pages/project-viewer/ProjectViewer";
+import StarrySky from "./layout/StarrySky";
+import Header from "./layout/Header";
 import Footer from "./layout/Footer";
+
+import ProjectViewer from "./pages/project-viewer/ProjectViewer";
 import RoomScene from "./scenes/Room/RoomScene";
-import StarrySky from "./pages/background/StarrySky";
+
 import useScrollReset from "../hooks/useScrollReset";
 import useSection from "../hooks/useSection";
 import useLoadingProgress from "../hooks/useLoadingProgress";
+import { prefetchAllProjects } from "../utils/prefetchMedia";
 
 const App = () => {
     const [revealed, setRevealed] = useState(false);
@@ -21,8 +22,11 @@ const App = () => {
     const { loaded, progress } = useLoadingProgress()
     const section = useSection()
 
-    useStableCanvasSizes();
     useScrollReset(section, loaded)
+
+    useEffect(() => {
+        if (revealed) prefetchAllProjects();
+    }, [revealed]);
 
     // Open project viewer page
     const { projectId } = useParams();
@@ -47,30 +51,44 @@ const App = () => {
         mainRef.current?.focus({ preventScroll: true });
     }, [revealed, section]);
 
+    const showFooter = section !== "work" && !projectId;
+
     return (
         <>
             <LoadingScreen progress={progress} onReveal={() => setRevealed(true)} />
-            <StarrySky />
 
-            <RoomScene active={section === "home"} paused={!!projectId} />
+            <div id="scroll-container" className="scroll-container">
+                <div className="scroll-container__content">
+                    {/* Starry background */}
+                    <StarrySky />
 
-            <div className="app-content" inert={!revealed}>
-                <Header />
+                    {/* Hero scene */}
+                    <RoomScene active={section === "home"} paused={!!projectId} />
 
-                <div className="page">
-                    {loaded && (
-                        <main id="main" ref={mainRef} tabIndex={-1}>
-                            <Outlet />
-                            {visibleProject && (
-                                <ProjectViewer projectId={visibleProject} isOpen={!!projectId} />
+                    {/* App Content */}
+                    <div className="app-content" inert={!revealed}>
+                        <Header />
+
+                        <div className="page">
+                            {loaded && (
+                                <main id="main" ref={mainRef} tabIndex={-1}>
+                                    {/* App pages */}
+                                    <Outlet />
+
+                                    {/* Project Sliding Overlay */}
+                                    {visibleProject && (
+                                        <ProjectViewer projectId={visibleProject} isOpen={!!projectId} />
+                                    )}
+                                </main>
                             )}
 
-                        </main>
-                    )}
-
-                    {section !== "work" && !projectId && <Footer />}
+                            {showFooter && <Footer />}
+                        </div>
+                    </div>
                 </div>
+
             </div>
+
         </>
     );
 }

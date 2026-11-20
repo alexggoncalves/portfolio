@@ -14,7 +14,7 @@
 // ===========
 #hero {
     position: relative;
-    height: var(--hero-height, 100svh);
+    height: 100svh;
 
     display: flex;
     justify-content: space-between;

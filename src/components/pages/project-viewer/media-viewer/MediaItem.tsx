@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent, type RefObject } from "react";
 import type { Media } from "../../../../data/content";
 import { PlayIcon } from "../../../ui/Icons";
-
-const toMobileSrc = (src: string) => src.replace(/\.[^./]+$/, "-mobile.webp");
+import { imageSrcSet, toPosterSrc } from "../../../../utils/mediaSrc";
 
 type Props = {
     item: Media;
@@ -14,6 +13,7 @@ type Props = {
 function MediaItem({ item, active, near, videoRef }: Props) {
     const localVideo = useRef<HTMLVideoElement | null>(null);
 
+    const [loaded, setLoaded] = useState(false)
     const [mobileMissing, setMobileMissing] = useState(false);
     const [ratio, setRatio] = useState<number>();
     const [paused, setPaused] = useState(true);
@@ -32,6 +32,7 @@ function MediaItem({ item, active, near, videoRef }: Props) {
     const readImageRatio = (img: HTMLImageElement | null) => {
         if (img?.complete && img.naturalWidth) {
             setRatio(img.naturalWidth / img.naturalHeight);
+            setLoaded(true);
         }
     };
 
@@ -43,9 +44,9 @@ function MediaItem({ item, active, near, videoRef }: Props) {
                         key={mobileMissing ? "full" : "responsive"}
                         ref={readImageRatio}
                         src={item.src}
-                        srcSet={mobileMissing ? undefined : `${toMobileSrc(item.src)} 1280w, ${item.src} 2560w`}
+                        srcSet={mobileMissing ? undefined : imageSrcSet(item.src)}
                         sizes="100vw"
-                        className="media"
+                        className={`media ${loaded ? "media--loaded" : ""}`}
                         decoding="async"
                         alt={""}
                         draggable={false}
@@ -61,9 +62,10 @@ function MediaItem({ item, active, near, videoRef }: Props) {
                             localVideo.current = el;
                             if (videoRef) videoRef.current = el;
                         }}
-                        src={`${item.src}#t=0.001`}
+                        src={item.src}
+                        poster={toPosterSrc(item.src)}
                         className="media"
-                        preload={near ? "auto" : "metadata"}
+                        preload={active || near ? "auto" : "metadata"}
                         controls={false}
                         autoPlay={false}
                         playsInline

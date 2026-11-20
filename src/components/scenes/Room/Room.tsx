@@ -1,5 +1,5 @@
 import { useGLTF, useTexture } from "@react-three/drei"
-import { Object3D, SRGBColorSpace, type Mesh } from "three"
+import { LinearFilter, Object3D, SRGBColorSpace, type Mesh } from "three"
 import type { GLTF } from "three/examples/jsm/Addons.js"
 import Moon from "./Dynamic/Moon"
 import Ocean from "./Dynamic/Ocean"
@@ -41,7 +41,12 @@ const Room = () => {
 
     // Load textures
     const textures = useTexture(Object.fromEntries(textureNames.map(n => [n, `/room/textures/${n}.webp`])))
-    Object.values(textures).forEach(t => { t.flipY = false; t.colorSpace = SRGBColorSpace })
+    Object.values(textures).forEach(t => {
+        t.flipY = false;
+        t.colorSpace = SRGBColorSpace;
+        t.generateMipmaps = false;
+        t.minFilter = LinearFilter;
+    })
 
     const moonTargetPosition = useMemo(() => (isMobile ? nodes.Moon_Target_Mobile.position : nodes.Moon_Target.position), [isMobile, nodes])
 
@@ -84,7 +89,7 @@ const Room = () => {
             <meshBasicMaterial color={[1.3, 1.3, 1.3]} toneMapped={false} />
         </mesh>
         <mesh geometry={nodes.NintendoScreens.geometry} position={nodes.NintendoScreens.position} rotation={nodes.NintendoScreens.rotation}>
-            <meshBasicMaterial map={textures.nintendo_screens} color={[1.2, 1.2, 1.2]} toneMapped={false} />
+            <meshBasicMaterial map={textures.nintendo_screens} color={[1.1, 1.1, 1.1]} toneMapped={false} />
         </mesh>
 
 

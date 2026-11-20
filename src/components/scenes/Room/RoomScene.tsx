@@ -54,7 +54,7 @@ function RoomScene({ active, paused = false }: { active: boolean; paused?: boole
                     <SceneReady />
                 </Suspense>
                 
-                {!isMobile && <EffectComposer multisampling={0} autoClear={false}>
+                {!isMobile && <EffectComposer autoClear={false}>
                     <Bloom
                         mipmapBlur
                         luminanceThreshold={1.1}

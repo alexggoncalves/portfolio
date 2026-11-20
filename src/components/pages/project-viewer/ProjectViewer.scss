@@ -41,11 +41,9 @@ html:has(.project-viewer.open) .menu-button {
 }
 
 // Lock the page behind the viewer while it's open
-html:has(.project-viewer.open),
-html:has(.project-viewer.open) body {
-    overflow: hidden;
+html:has(.project-viewer.open) .scroll-container {
+    overflow-y: hidden;
 }
-
 .project-viewer__overlay {
     height: 100%;
     width: 100%;
@@ -220,7 +218,7 @@ html:has(.project-viewer.open) main::before {
 // Once covered, hide the page so nothing shows through the bars and the scenes stop drawing
 html:has(.project-viewer.open)
     body.revealed
-    :is(.page main > :not(.project-viewer), .room__scene, .app-canvas) {
+    :is(.page main > :not(.project-viewer), .room__scene) {
     visibility: hidden;
     transition: visibility 0s linear var(--page-slide-duration);
 }

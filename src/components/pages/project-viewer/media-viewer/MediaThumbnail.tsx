@@ -1,8 +1,7 @@
 import { memo, useState } from "react";
 import type { Media } from "../../../../data/content";
 import { PlayIcon } from "../../../ui/Icons";
-
-const toThumbSrc = (src: string) => src.replace(/\.[^./]+$/, "-thumbnail.webp");
+import { toThumbSrc } from "../../../../utils/mediaSrc";
 
 function MediaThumbnail({ media }: { media: Media }) {
     const [loaded, setLoaded] = useState(false);

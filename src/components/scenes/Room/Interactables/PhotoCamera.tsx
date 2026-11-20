@@ -1,6 +1,6 @@
 import { Html, useCursor, useEnvironment, useGLTF, useTexture } from "@react-three/drei"
 import { useEffect, useMemo, useRef, useState } from "react"
-import { Group, MathUtils, MeshStandardMaterial, Object3D, PerspectiveCamera, SRGBColorSpace, Vector3, type Mesh } from "three"
+import { Group, LinearFilter, MathUtils, MeshStandardMaterial, Object3D, PerspectiveCamera, SRGBColorSpace, Vector3, type Mesh } from "three"
 import type { GLTF } from "three/examples/jsm/Addons.js"
 import { useFrame } from "@react-three/fiber"
 
@@ -56,6 +56,8 @@ const PhotoCamera = () => {
     const env = useEnvironment({ files: '/room/environments/camera.hdr' })
     camTex.flipY = false
     camTex.colorSpace = SRGBColorSpace
+    camTex.generateMipmaps = false;
+    camTex.minFilter = LinearFilter
 
     // Create material
     const camMat = useMemo(() => new MeshStandardMaterial({
@@ -178,9 +180,26 @@ const PhotoCamera = () => {
                 </div>
             </Html>
 
+            {/* Camera Hit Target */}
+            <group
+                position={nodes.PhotoCam.position}
+                rotation={nodes.PhotoCam.rotation}
+                scale={nodes.PhotoCam.scale}
+            >
+                <mesh
+                    position={nodes.PhotoCam_Body.position}
+                    rotation={nodes.PhotoCam_Body.rotation}
+                    onPointerOver={(e) => { e.stopPropagation(); setHovered(true) }}
+                    onPointerOut={() => setHovered(false)}
+                    onClick={() => setView('Camera')}
+                >
+                    <boxGeometry args={[CAM_W + 0.02, CAM_H + 0.03, 0.01]}></boxGeometry>
+                    <meshBasicMaterial transparent opacity={0}></meshBasicMaterial>
+                </mesh>
+            </group>
+
+
             <group ref={cameraRef} position={nodes.PhotoCam.position} rotation={nodes.PhotoCam.rotation} scale={nodes.PhotoCam.scale}>
-
-
                 <group ref={yawRef}>
                     {/* Body */}
                     <mesh
@@ -189,17 +208,6 @@ const PhotoCamera = () => {
                         position={nodes.PhotoCam_Body.position}
                         rotation={nodes.PhotoCam_Body.rotation}
                     />
-                    {/* Camera Collider */}
-                    <mesh
-                        position={nodes.PhotoCam_Body.position}
-                        rotation={nodes.PhotoCam_Body.rotation}
-                        onPointerOver={(e) => { e.stopPropagation(); setHovered(true) }}
-                        onPointerOut={() => setHovered(false)}
-                        onClick={() => setView('Camera')}
-                    >
-                        <boxGeometry args={[CAM_W + 0.02, CAM_H + 0.03, 0.01]}></boxGeometry>
-                        <meshBasicMaterial transparent opacity={0}></meshBasicMaterial>
-                    </mesh>
 
                     {/* Lens Glass */}
                     <mesh

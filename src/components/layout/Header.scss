@@ -235,9 +235,8 @@ header {
 }
 
 // Lock scrolling while the menu is open
-html:has(.menu__window--open),
-html:has(.menu__window--open) body {
-    overflow: hidden;
+html:has(.menu__window--open) .scroll-container {
+    overflow-y: hidden;
 }
 
 @include mobile {

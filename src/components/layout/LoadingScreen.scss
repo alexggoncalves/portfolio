@@ -90,7 +90,6 @@
     margin-bottom: 30px;
 }
 
-html:has(.loading-screen:not(.loading-screen--exiting)),
-html:has(.loading-screen:not(.loading-screen--exiting)) body {
-    overflow: hidden;
+html:has(.loading-screen:not(.loading-screen--exiting)) .scroll-container {
+    overflow-y: hidden;
 }

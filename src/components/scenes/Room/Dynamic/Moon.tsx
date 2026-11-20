@@ -4,7 +4,7 @@ import { Mesh, SRGBColorSpace, Vector3 } from "three"
 
 
 const Moon = ({ from, target }: { from: Vector3; target: Vector3 }) => {
-    const moonTex = useTexture('/room/textures/moon.webp', (t) => { t.colorSpace = SRGBColorSpace })
+    const moonTex = useTexture('/room/textures/moon_stylized.webp', (t) => { t.colorSpace = SRGBColorSpace })
     const offset = useMemo(() => target.clone().sub(from).normalize().multiplyScalar(80), [from, target])
 
     return (

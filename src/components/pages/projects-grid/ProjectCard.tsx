@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { type Project } from "../../../data/content";
 import useMediaQuery, { MOBILE_QUERY } from "../../../utils/useMediaQuery";
 import ProjectCardTags from "./ProjectCardTags";
+import { prefetchProject } from "../../../utils/prefetchMedia";
 
 type ProjectCardProps = {
     project: Project;
@@ -11,15 +12,22 @@ type ProjectCardProps = {
     variant?: "full" | "thumbnail";
 };
 
+
+
 function ProjectCard({ project, route, variant = "full" }: ProjectCardProps) {
     const isMobile = useMediaQuery(MOBILE_QUERY);
     const maxTags = isMobile ? 3 : 2;
+
+    const warm = () => { prefetchProject(project); };
     
     return (
         <Link
             to={route}
             className={`project-card project-card--${variant}`}
             draggable={false}
+            onPointerEnter={warm} 
+            onFocus={warm} 
+            onPointerDown={warm}
         >
             <div className="project-card__image">
                 <img

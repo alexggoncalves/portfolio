@@ -90,7 +90,7 @@ const Ocean = ({ moonDir, level = -2, tilt = 0.1, size = 160 }: OceanProps) => {
     uMoonDir: { value: new Vector3(0, 0, -1) },
     uDeep: { value: new Color('#303b3b') },
     uHorizon: { value: new Color('#161616') },
-    uMoonColor: { value: new Color('#596666') },
+    uMoonColor: { value: new Color('#5b6a65') },
     uFadeStart: { value: size * 0.06 },
     uFadeEnd: { value: size * 0.47 },
   }), [size])
